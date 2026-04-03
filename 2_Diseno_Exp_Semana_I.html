@@ -1,0 +1,2372 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Material de estudio autónomo sobre Diseños Completamente Aleatorizados y Modelo de Efectos Fijos en ANOVA.">
+    <meta name="author" content="Javier Mauricio Sierra">
+    <meta name="keywords" content="ANOVA, diseño experimental, efectos fijos, estadística, Fisher, varianza">
+    <title>Diseños Completamente Aleatorizados - Modelo de Efectos Fijos</title>
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- External Resources -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- KaTeX for LaTeX rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Highlight.js VS Code Dark+ -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+
+    <!-- Chart.js for interactive charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3D008D',
+                        secondary: '#ED1E79',
+                        navy: '#001A4D',
+                        gold: '#FDB913',
+                        bg: '#F8FAFC',
+                        surface: '#FFFFFF',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #F8FAFC;
+            color: #1E293B;
+            scroll-behavior: smooth;
+        }
+
+        code,
+        pre {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* USTA Gradient Background */
+        .usta-gradient {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+        }
+
+        /* USTA Navy Header */
+        .usta-header {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+        }
+
+        /* USTA Card Style */
+        .usta-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .usta-card:hover {
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+            transform: translateY(-4px);
+        }
+
+        /* Tip box USTA style */
+        .tip-box {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.08) 0%, rgba(237, 30, 121, 0.08) 100%);
+            border: 1px solid rgba(61, 0, 141, 0.2);
+        }
+
+        /* Step connector for pipeline */
+        .step-connector::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #3D008D, #ED1E79);
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .step-connector:last-child::after {
+            display: none;
+        }
+
+        /* ===== SIDEBAR DARK STYLE (matching reference) ===== */
+        #sidebar-panel {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+            flex-shrink: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            width: 16rem;
+            min-width: 16rem;
+            transition: width 0.3s ease, min-width 0.3s ease, opacity 0.25s ease;
+            z-index: 40;
+        }
+
+        #sidebar-panel.collapsed {
+            width: 0;
+            min-width: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+
+        .sidebar-brand {
+            padding: 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .sidebar-brand h2 {
+            color: white;
+            font-weight: 700;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin: 0;
+            padding: 0;
+            border: none;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .sidebar-brand h2 i {
+            flex-shrink: 0;
+            margin-top: 0.15rem;
+        }
+
+        .sidebar-brand p {
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 0.35rem;
+            margin-bottom: 0;
+            text-align: left;
+            line-height: 1.4;
+        }
+
+        .sidebar-nav {
+            padding: 1rem;
+        }
+
+        .sidebar-nav-item {
+            width: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 0.5rem;
+            padding: 0.6rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            line-height: 1.4;
+            border-radius: 0.5rem;
+            text-align: left;
+            margin-bottom: 0.25rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: rgba(255, 255, 255, 0.6);
+            background: transparent;
+        }
+
+        .sidebar-nav-item:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-nav-item.active {
+            color: white;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            box-shadow: 0 4px 12px rgba(61, 0, 141, 0.3);
+        }
+
+        .sidebar-nav-item .check-mark {
+            color: #10B981;
+            flex-shrink: 0;
+        }
+
+        /* Floating sidebar toggle button */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 50;
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(61, 0, 141, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-toggle-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 18px rgba(61, 0, 141, 0.5);
+        }
+
+        /* Layout adjustment when sidebar is open/closed */
+        .main-layout {
+            display: flex;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        /* Scroll to top button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 3.5rem;
+            height: 3.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(61, 0, 141, 0.4);
+            transition: all 0.3s ease;
+            z-index: 50;
+            border: none;
+        }
+
+        .scroll-to-top.visible {
+            display: flex;
+        }
+
+        .scroll-to-top:hover {
+            background: linear-gradient(140deg, #4A00A8 0%, #FF2D8A 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(61, 0, 141, 0.5);
+        }
+
+        /* Fade-in animation */
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #3D008D, #ED1E79);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #4A00A8, #FF2D8A);
+        }
+
+        /* Code scrollbar */
+        .code-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .code-scroll::-webkit-scrollbar-track {
+            background: #2d2d2d;
+        }
+
+        .code-scroll::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #3D008D, #ED1E79);
+            border-radius: 4px;
+        }
+
+        /* Focus styles for accessibility */
+        button:focus-visible,
+        a:focus-visible {
+            outline: 2px solid #ED1E79;
+            outline-offset: 2px;
+        }
+
+        /* Legacy syntax highlighting (mapped to VS Code Dark+ colors) */
+        .syntax-kwd { color: #569cd6; font-weight: bold; }
+        .syntax-cls { color: #4ec9b0; }
+        .syntax-str { color: #ce9178; }
+        .syntax-com { color: #6a9955; font-style: italic; }
+        .syntax-func { color: #dcdcaa; }
+        .syntax-self { color: #9cdcfe; font-style: italic; }
+        .syntax-num { color: #b5cea8; }
+        .comentario { color: #6a9955; font-style: italic; }
+
+        /* Content Styling */
+        .module-content h2 {
+            color: #3D008D;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid #ED1E79;
+        }
+
+        .module-content h3 {
+            color: #3D008D;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.75rem 0 1rem 0;
+        }
+
+        .module-content h4 {
+            color: #ED1E79;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        .module-content p {
+            margin-bottom: 1rem;
+            text-align: justify;
+            line-height: 1.8;
+        }
+
+        .module-content ul,
+        .module-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .module-content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.7;
+        }
+
+        .module-content aside {
+            background: linear-gradient(135deg, rgba(253, 185, 19, 0.1) 0%, rgba(253, 185, 19, 0.05) 100%);
+            border-left: 4px solid #FDB913;
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .module-content aside strong {
+            color: #B8860B;
+        }
+
+        .module-content .formula-box {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.03) 0%, rgba(237, 30, 121, 0.03) 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            border: 1px solid rgba(61, 0, 141, 0.15);
+            overflow-x: auto;
+        }
+
+        .module-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .module-content th,
+        .module-content td {
+            padding: 1rem 1.25rem;
+            text-align: center;
+        }
+
+        .module-content th {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .module-content tr:nth-child(even) {
+            background: rgba(61, 0, 141, 0.03);
+        }
+
+        .module-content tr:hover {
+            background: rgba(61, 0, 141, 0.08);
+        }
+
+        .module-content code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #3D008D;
+            background: rgba(61, 0, 141, 0.08);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        .module-content pre code {
+            background: transparent;
+            padding: 0;
+            color: #d4d4d4;
+        }
+
+        /* ===== VS Code Style Code Blocks ===== */
+        .sourceCode-wrapper {
+            position: relative;
+            margin: 1.75rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #1e1e1e;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255,255,255,0.05);
+        }
+
+        .sourceCode-titlebar {
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            height: 36px;
+            background: #323233;
+            border-bottom: 1px solid #252526;
+            user-select: none;
+        }
+
+        .sourceCode-dots { display: flex; gap: 8px; }
+        .sourceCode-dots span { width: 12px; height: 12px; border-radius: 50%; display: block; }
+        .sourceCode-dots .dot-close { background: #ff5f57; }
+        .sourceCode-dots .dot-min { background: #ffbd2e; }
+        .sourceCode-dots .dot-max { background: #28c940; }
+
+        .sourceCode-tab {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 12px;
+            height: 100%;
+            background: #1e1e1e;
+            border-top: 2px solid #007acc;
+            border-right: 1px solid #252526;
+            font-size: 0.78rem;
+            color: #cccccc;
+            font-family: 'Segoe UI', 'Montserrat', sans-serif;
+        }
+
+        .sourceCode-tab .tab-icon { width: 14px; height: 14px; }
+        .sourceCode-tab .tab-icon.python { color: #f7c948; }
+
+        .sourceCode-actions {
+            display: flex;
+            gap: 4px;
+            margin-left: auto;
+        }
+
+        .sourceCode-actions button {
+            background: transparent;
+            border: none;
+            color: #858585;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-family: 'Segoe UI', 'Montserrat', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .sourceCode-actions button:hover { background: #3c3c3c; color: #cccccc; }
+        .sourceCode-actions button.copied { color: #4ec9b0; }
+
+        .sourceCode-body {
+            display: flex;
+            margin: 0;
+            overflow-x: auto;
+            background: #1e1e1e;
+        }
+
+        .sourceCode-body.collapsed { display: none; }
+
+        .sourceCode-gutter {
+            padding: 16px 0;
+            text-align: right;
+            user-select: none;
+            color: #858585;
+            font-size: 0.82rem;
+            line-height: 1.65;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            min-width: 40px;
+            padding-right: 12px;
+            padding-left: 12px;
+            border-right: 1px solid #2d2d2d;
+            background: #1e1e1e;
+            flex-shrink: 0;
+        }
+
+        .sourceCode-gutter div { height: 1.65em; }
+
+        .sourceCode-wrapper pre {
+            margin: 0;
+            padding: 16px;
+            overflow-x: auto;
+            background: #1e1e1e;
+            flex: 1;
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+        }
+
+        .sourceCode-wrapper code {
+            font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+            font-size: 0.87rem;
+            line-height: 1.65;
+            color: #d4d4d4;
+            background: transparent !important;
+        }
+
+        .sourceCode-minimap {
+            width: 28px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.01) 100%);
+            border-left: 1px solid #2d2d2d;
+            flex-shrink: 0;
+        }
+
+        .sourceCode-wrapper pre::-webkit-scrollbar { height: 8px; }
+        .sourceCode-wrapper pre::-webkit-scrollbar-track { background: #1e1e1e; }
+        .sourceCode-wrapper pre::-webkit-scrollbar-thumb { background: rgba(121,121,121,0.4); border-radius: 4px; }
+        .sourceCode-wrapper pre::-webkit-scrollbar-thumb:hover { background: rgba(121,121,121,0.7); }
+
+        /* VS Code Dark+ Syntax Highlighting */
+        .hljs-keyword { color: #569cd6; }
+        .hljs-built_in { color: #4ec9b0; }
+        .hljs-type { color: #4ec9b0; }
+        .hljs-literal { color: #569cd6; }
+        .hljs-number { color: #b5cea8; }
+        .hljs-string { color: #ce9178; }
+        .hljs-comment { color: #6a9955; font-style: italic; }
+        .hljs-function { color: #dcdcaa; }
+        .hljs-title { color: #dcdcaa; }
+        .hljs-params { color: #9cdcfe; }
+        .hljs-operator { color: #d4d4d4; }
+        .hljs-punctuation { color: #d4d4d4; }
+        .hljs-variable { color: #9cdcfe; }
+        .hljs-attr { color: #9cdcfe; }
+        .hljs-class .hljs-title { color: #4ec9b0; }
+        .hljs-meta { color: #c586c0; }
+
+        .module-content .output {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            border-left: 4px solid #10B981;
+            margin: 1rem 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+        }
+
+        .module-content .output strong {
+            color: #059669;
+        }
+
+        /* Tooltip Styles */
+        .tooltip-term {
+            position: relative;
+            border-bottom: 2px dotted #ED1E79;
+            cursor: help;
+            font-weight: 600;
+            color: #3D008D;
+        }
+
+        .tooltip-term:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #3D008D 0%, #2D0066 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 400;
+            width: 280px;
+            text-align: left;
+            line-height: 1.5;
+            box-shadow: 0 10px 25px rgba(61, 0, 141, 0.3);
+            z-index: 1000;
+            margin-bottom: 8px;
+        }
+
+        .tooltip-term:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: #3D008D;
+            margin-bottom: -8px;
+            z-index: 1001;
+        }
+
+        .module-content .ejercicio {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.08) 0%, rgba(237, 30, 121, 0.05) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #ED1E79;
+            margin: 1.5rem 0;
+        }
+
+        .module-content .ejercicio h4 {
+            color: #3D008D;
+            margin-top: 0;
+        }
+
+        .module-content .resumen {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.06) 0%, rgba(237, 30, 121, 0.04) 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-left: 4px solid #3D008D;
+            margin-bottom: 1.5rem;
+        }
+
+        .module-content .resumen h4 {
+            margin-top: 0;
+            color: #3D008D;
+        }
+
+        .module-content strong {
+            color: #3D008D;
+        }
+
+        .module-content em {
+            color: #ED1E79;
+        }
+
+        /* KaTeX display */
+        .katex-display {
+            margin: 1.25em 0;
+            overflow-x: auto;
+        }
+
+        /* Module banner image */
+        .module-banner {
+            width: 100%;
+            max-height: 240px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 1.75rem;
+            box-shadow: 0 8px 24px rgba(61, 0, 141, 0.12);
+            display: block;
+        }
+
+        /* Concepto clave box */
+        .concepto-clave {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.06) 0%, rgba(237, 30, 121, 0.04) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #3D008D;
+            margin: 1.5rem 0;
+        }
+
+        .concepto-clave h4 {
+            color: #3D008D;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Nota box */
+        .nota {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-left: 4px solid #10B981;
+            margin: 1.5rem 0;
+        }
+
+        .nota h4 {
+            color: #059669;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+
+
+
+    <!-- Floating Sidebar Toggle Button -->
+    <button class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Mostrar/Ocultar menú" aria-label="Toggle sidebar">
+        <i class="fas fa-bars text-sm" id="sidebarToggleIcon"></i>
+    </button>
+
+    <div class="main-layout">
+
+        <!-- Sidebar Navigation (dark navy style) -->
+        <div id="sidebar-panel">
+            <div class="sidebar-brand">
+                <h2><i class="fas fa-flask text-secondary"></i> DCA <span style="color: #FDB913;">2026</span></h2>
+                <p>Diseño de Experimentos • Semana I • USTA</p>
+            </div>
+            <nav class="sidebar-nav" id="module-nav">
+                <!-- Nav items injected via JS -->
+            </nav>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-grow flex flex-col" style="min-width:0;">
+            <main class="flex-grow bg-white rounded-tl-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div id="content-area" class="p-6 md:p-10 module-content">
+                    <!-- Content injected via JS -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="usta-header mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <i class="fas fa-book-open"></i> Referencias Bibliográficas
+            </h3>
+            <ul class="space-y-3 text-white/90 text-sm">
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Montgomery, D. C. (2017). <em class="text-gold">Design and Analysis of Experiments</em> (9th
+                        ed.). Wiley.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Box, G. E. P., Hunter, J. S., & Hunter, W. G. (2005). <em class="text-gold">Statistics for
+                            Experimenters</em> (2nd ed.). Wiley.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Kutner, M. H., et al. (2005). <em class="text-gold">Applied Linear Statistical Models</em>
+                        (5th ed.). McGraw-Hill.</span>
+                </li>
+            </ul>
+            <div class="mt-6 pt-6 border-t border-white/20 text-center">
+                <p class="text-white font-medium">Diseñado por <span class="text-gold">Javier Mauricio Sierra</span></p>
+                <p class="text-xs mt-1 text-white/60">Diseño de Experimentos • Semana I • USTA 2026</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="Volver arriba">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Module Content Templates -->
+    <template id="module-1">
+        <div class="animate-fade-in">
+            <img class="module-banner"
+                src="/Users/javiermauriciosierra/.gemini/antigravity/brain/9d9eb128-8808-4010-8811-a04dfce7ed7e/module1_intro_anova_1771633809967.png"
+                alt="Introducción a ANOVA y Diseño Experimental">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 1</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">1.1 Introducción y
+                    Ejemplos</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Comprender el contexto y motivación del
+                            Análisis de la Varianza de un factor.</p>
+                    </div>
+                </div>
+            </div>
+
+            <p>En la investigación científica es frecuente encontrarse con la necesidad de comparar entre sí diversas
+                alternativas. Algunas de estas situaciones pueden ser las siguientes:</p>
+
+            <ul class="space-y-3 mt-4">
+                <li class="flex items-start gap-3"><span class="text-primary mt-1"><i
+                            class="fas fa-flask"></i></span><span>Una compañía algodonera que emplea diversos
+                        fertilizantes desea comprobar si éstos tienen efectos diferentes sobre el rendimiento de la
+                        semilla de algodón.</span></li>
+                <li class="flex items-start gap-3"><span class="text-primary mt-1"><i
+                            class="fas fa-chalkboard-teacher"></i></span><span>Una profesora de estadística que imparte
+                        en grupos experimentales de alumnos, en los que explica la misma materia pero siguiendo
+                        distintos métodos de enseñanza, desea comprobar si el método de enseñanza utilizado influye en
+                        las calificaciones de los alumnos.</span></li>
+                <li class="flex items-start gap-3"><span class="text-primary mt-1"><i
+                            class="fas fa-industry"></i></span><span>Una industria química, que obtiene un determinado
+                        producto, está interesada en comprobar si los cambios de temperatura influyen en la cantidad de
+                        producto obtenido.</span></li>
+            </ul>
+
+            <p>Todas estas situaciones tienen en común que su interés está centrado en un solo factor con varios niveles
+                o tratamientos que pueden producir efectos distintos y, por ello, pueden ser abordadas mediante la
+                técnica estadística del <strong>Análisis de la Varianza de un factor o una vía</strong>.</p>
+
+            <p>El análisis de la varianza fue desarrollado por <strong>Fisher en 1925</strong> con el objetivo de
+                comparar entre sí varios grupos o tratamientos mediante la descomposición de la variabilidad total de un
+                experimento en componentes independientes que puedan atribuirse a distintas causas.</p>
+
+            <aside>
+                <strong>Nota conceptual:</strong> En los ejemplos anteriores, aparte del factor mencionado, también
+                pueden influir otros muchos factores que se suponen de poca importancia. El resultado de todas estas
+                causas o factores no controlados influyen en la variable respuesta; este conjunto de factores no
+                analizados recibe el nombre de <strong>perturbación o error experimental</strong>.
+            </aside>
+
+            <p>Para abordar esta situación, se seguirá la siguiente metodología:</p>
+            <ol>
+                <li>Establecer un modelo de comportamiento, que se puede formalizar matemáticamente.</li>
+                <li>Estimar los parámetros del modelo.</li>
+                <li>Contrastar la hipótesis de igualdad de medias de los tratamientos.</li>
+                <li>Comprobar la idoneidad del modelo.</li>
+            </ol>
+
+            <h4>Ejemplo 1.1: Rendimiento del algodón</h4>
+            <p>Una compañía algodonera, interesada en maximizar el rendimiento de la semilla de algodón, desea comprobar
+                si dicho rendimiento depende del tipo de fertilizante utilizado. A su disposición tiene 5 tipos de
+                fertilizantes:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fertilizante 1</th>
+                        <th>Fertilizante 2</th>
+                        <th>Fertilizante 3</th>
+                        <th>Fertilizante 4</th>
+                        <th>Fertilizante 5</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>51</td>
+                        <td>56</td>
+                        <td>48</td>
+                        <td>47</td>
+                        <td>43</td>
+                    </tr>
+                    <tr>
+                        <td>49</td>
+                        <td>60</td>
+                        <td>50</td>
+                        <td>48</td>
+                        <td>43</td>
+                    </tr>
+                    <tr>
+                        <td>50</td>
+                        <td>56</td>
+                        <td>53</td>
+                        <td>49</td>
+                        <td>46</td>
+                    </tr>
+                    <tr>
+                        <td>49</td>
+                        <td>56</td>
+                        <td>44</td>
+                        <td>44</td>
+                        <td>47</td>
+                    </tr>
+                    <tr>
+                        <td>50</td>
+                        <td>51</td>
+                        <td>57</td>
+                        <td>45</td>
+                        <td>45</td>
+                    </tr>
+                    <tr>
+                        <td>46</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>46</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>En este experimento, se han considerado 5 tipos de fertilizantes que se han aplicado, respectivamente, a
+                6, 5, 5, 4 y 6 parcelas. La variable de interés o variable respuesta es el rendimiento de la semilla en
+                peso por unidad de superficie.</p>
+        </div>
+    </template>
+
+    <template id="module-2">
+        <div class="animate-fade-in">
+            <img class="module-banner"
+                src="/Users/javiermauriciosierra/.gemini/antigravity/brain/9d9eb128-8808-4010-8811-a04dfce7ed7e/module2_model_1771633830788.png"
+                alt="Planteamiento del Modelo Estadístico">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 2</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">1.2 Planteamiento del
+                    Modelo</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Formalizar matemáticamente el modelo
+                            estadístico para experimentos unifactoriales.</p>
+                    </div>
+                </div>
+            </div>
+
+            <p>Supongamos un factor con $I$ niveles y que para el nivel $i$-ésimo se obtienen $n_i$ observaciones de la
+                variable respuesta. Entonces se puede postular el siguiente modelo:</p>
+
+            <div class="formula-box">
+                $$y_{ij} = \mu + \tau_i + u_{ij} \tag{1.1}$$
+            </div>
+
+            <p>donde:</p>
+            <ul class="space-y-3 mt-4">
+                <li class="flex items-start gap-3"><span class="text-secondary mt-1"><i
+                            class="fas fa-square"></i></span><span>$y_{ij}$ es la variable aleatoria que representa la
+                        observación $j$-ésima del $i$-ésimo tratamiento.</span></li>
+                <li class="flex items-start gap-3"><span class="text-secondary mt-1"><i
+                            class="fas fa-square"></i></span><span>$\mu$ es un efecto constante, común a todos los
+                        niveles, denominado <strong>media global</strong>.</span></li>
+                <li class="flex items-start gap-3"><span class="text-secondary mt-1"><i
+                            class="fas fa-square"></i></span><span>$\tau_i$ es la parte de $y_{ij}$ debida a la acción
+                        del nivel $i$-ésimo, llamado <strong>efecto del tratamiento $i$-ésimo</strong>.</span></li>
+                <li class="flex items-start gap-3"><span class="text-secondary mt-1"><i
+                            class="fas fa-square"></i></span><span>$u_{ij}$ son las <strong>perturbaciones o error
+                            experimental</strong>.</span></li>
+            </ul>
+
+            <p>Estas perturbaciones deben verificar las siguientes condiciones:</p>
+            <ul class="space-y-3 mt-4">
+                <li class="flex items-start gap-3"><span class="text-secondary mt-1"><i
+                            class="fas fa-check-circle"></i></span><span><strong>Media cero:</strong> $E[u_{ij}] = 0
+                        \quad \forall i,j$</span></li>
+                <li class="flex items-start gap-3"><span class="text-secondary mt-1"><i
+                            class="fas fa-check-circle"></i></span><span><strong>Varianza constante
+                            (homocedasticidad):</strong> $\text{Var}[u_{ij}] = \sigma^2 \quad \forall i,j$</span></li>
+                <li class="flex items-start gap-3"><span class="text-secondary mt-1"><i
+                            class="fas fa-check-circle"></i></span><span><strong>Independencia estadística:</strong>
+                        $E[u_{ij}u_{rk}] = 0 \quad i \neq r \text{ ó } j \neq k$</span></li>
+                <li class="flex items-start gap-3"><span class="text-secondary mt-1"><i
+                            class="fas fa-check-circle"></i></span><span><strong>Distribución normal</strong></span>
+                </li>
+            </ul>
+
+            <p>En este modelo, la asignación de las unidades experimentales a los distintos niveles del factor se debe
+                realizar de forma completamente al azar. Este modelo recibe el nombre de <strong>Diseño Completamente
+                    Aleatorizado</strong>.</p>
+
+            <h3>Modelos de Efectos Fijos vs. Efectos Aleatorios</h3>
+
+            <h4>Modelo de Efectos Fijos</h4>
+            <p>En el modelo de efectos fijos el experimentador decide qué niveles concretos se van a considerar y las
+                conclusiones obtenidas son aplicables sólo a dichos niveles.</p>
+
+            <h4>Modelo de Efectos Aleatorios</h4>
+            <p>En el modelo de efectos aleatorios, los niveles del factor se seleccionan al azar; es decir, los niveles
+                estudiados son una muestra aleatoria de una población de niveles.</p>
+
+            <aside>
+                <strong>Distinción importante:</strong> En el modelo de efectos fijos, el interés se centra en la
+                comparación de las medias de los niveles considerados. En el modelo de efectos aleatorios, el interés se
+                centra en la variabilidad que produce el cambio de niveles.
+            </aside>
+        </div>
+    </template>
+
+    <template id="module-3">
+        <div class="animate-fade-in">
+            <img class="module-banner"
+                src="/Users/javiermauriciosierra/.gemini/antigravity/brain/9d9eb128-8808-4010-8811-a04dfce7ed7e/module3_fixed_effects_1771633851303.png"
+                alt="Modelo de Efectos Fijos">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 3</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">1.3 Modelo de Efectos
+                    Fijos</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Desarrollar el modelo de efectos fijos y
+                            formular las hipótesis del contraste ANOVA.</p>
+                    </div>
+                </div>
+            </div>
+
+            <p>En este modelo, los efectos $\tau_i$ son constantes desconocidas que estamos interesados en estimar.
+                Podemos reescribir el modelo en la forma:</p>
+
+            <div class="formula-box">
+                $$y_{ij} = \mu_i + u_{ij} \tag{1.2}$$
+            </div>
+
+            <p>donde $\mu_i$ es la media correspondiente al nivel $i$-ésimo.</p>
+
+            <p>Las condiciones del modelo se resumen en:</p>
+            <ol>
+                <li>$y_{ij} = \mu_i + u_{ij}$</li>
+                <li>$u_{ij} \sim N(0, \sigma^2)$</li>
+                <li>$u_{ij}$ son independientes entre sí</li>
+            </ol>
+
+            <p>Si expresamos $\mu_i$ como suma de dos términos:</p>
+
+            <div class="formula-box">
+                $$\mu_i = \mu + \tau_i \tag{1.3}$$
+            </div>
+
+            <p>donde el efecto producido por el nivel $i$-ésimo se define como la diferencia entre la media $\mu_i$ del
+                nivel $i$ y la media general $\mu$. Se debe verificar:</p>
+
+            <div class="formula-box">
+                $$\sum_{i=1}^{I} n_i \tau_i = 0 \tag{1.4}$$
+            </div>
+
+            <div class="concepto-clave">
+                <h4><i class="fas fa-lightbulb"></i> ¿Por qué debe cumplirse esta restricción?</h4>
+                <p>Esta condición es necesaria para garantizar la <span class="tooltip-term"
+                        data-tooltip="Un modelo es identificable cuando sus parámetros pueden determinarse de forma única a partir de los datos observados. Sin restricciones adicionales, diferentes combinaciones de parámetros podrían producir exactamente las mismas predicciones.">identificabilidad
+                        del modelo</span>. Sin
+                    ella, tendríamos infinitas soluciones equivalentes, ya que podríamos sumar cualquier constante $c$ a
+                    $\mu$ y restarla de todos los $\tau_i$ obteniendo el mismo modelo.</p>
+                <p class="mt-3">La restricción surge de la definición de $\mu$ como media ponderada de las medias
+                    poblacionales:</p>
+                <p class="text-center my-3">$$\mu = \frac{\sum_{i=1}^{I} n_i \mu_i}{N}$$</p>
+                <p>Sustituyendo $\mu_i = \mu + \tau_i$ en esta expresión:</p>
+                <p class="text-center my-3">$$\mu = \frac{\sum_{i=1}^{I} n_i (\mu + \tau_i)}{N} = \mu +
+                    \frac{\sum_{i=1}^{I} n_i \tau_i}{N}$$</p>
+                <p>Para que esta igualdad se cumpla, necesariamente $\sum_{i=1}^{I} n_i \tau_i = 0$.</p>
+            </div>
+
+            <h4>Hipótesis del Contraste</h4>
+            <p>En este modelo se trata de contrastar si todos los niveles del factor producen el mismo efecto:</p>
+
+            <div class="formula-box">
+                $$H_0: \tau_i = 0 \quad \forall i$$
+            </div>
+
+            <p>frente a la alternativa:</p>
+
+            <div class="formula-box">
+                $$H_1: \tau_i \neq 0 \text{ por lo menos para algún } i$$
+            </div>
+
+            <p>o, equivalentemente, si todos los tratamientos tienen la misma media:</p>
+
+            <div class="formula-box">
+                $$H_0: \mu_1 = \mu_2 = \cdots = \mu_I = \mu$$
+            </div>
+
+            <h4>Notación</h4>
+            <ul class="space-y-3 mt-4">
+                <li class="flex items-start gap-3"><span class="text-primary mt-1"><i
+                            class="fas fa-angle-right"></i></span><span>$N$ es el número total de observaciones: $N =
+                        \sum_{i=1}^{I} n_i$</span></li>
+                <li class="flex items-start gap-3"><span class="text-primary mt-1"><i
+                            class="fas fa-angle-right"></i></span><span>$y_{i.}$ es el total de las observaciones bajo
+                        el $i$-ésimo tratamiento: $y_{i.} = \sum_{j=1}^{n_i} y_{ij}$</span></li>
+                <li class="flex items-start gap-3"><span class="text-primary mt-1"><i
+                            class="fas fa-angle-right"></i></span><span>$\bar{y}_{i.}$ es el promedio del $i$-ésimo
+                        tratamiento: $\bar{y}_{i.} = \frac{y_{i.}}{n_i}$</span></li>
+                <li class="flex items-start gap-3"><span class="text-primary mt-1"><i
+                            class="fas fa-angle-right"></i></span><span>$\bar{y}_{..}$ es la media general:
+                        $\bar{y}_{..} = \frac{y_{..}}{N}$</span></li>
+            </ul>
+
+            <aside>
+                <strong>Nota sobre notación:</strong> La notación de "punto" en el subíndice indica la suma que se ha
+                realizado sobre el subíndice reemplazado por el punto.
+            </aside>
+
+            <p>Si los tamaños $n_i$ de las muestras son distintos, el modelo recibe el nombre de <strong>modelo
+                    no-equilibrado o no-balanceado</strong>. Si todas las muestras tienen el mismo tamaño, $n_i = n$, el
+                modelo se llama <strong>modelo equilibrado o balanceado</strong>.</p>
+        </div>
+    </template>
+
+    <template id="module-4">
+        <div class="animate-fade-in">
+            <img class="module-banner"
+                src="/Users/javiermauriciosierra/.gemini/antigravity/brain/9d9eb128-8808-4010-8811-a04dfce7ed7e/module4_mle_1771633869275.png"
+                alt="Estimación por Máxima Verosimilitud">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 4</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">1.3.1 Estimación por
+                    Máxima Verosimilitud</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Derivar los estimadores máximo-verosímiles de
+                            los parámetros del modelo ANOVA.</p>
+                    </div>
+                </div>
+            </div>
+
+            <p>La hipótesis de normalidad sobre los términos de error permite construir la función de verosimilitud:</p>
+
+            <div class="formula-box">
+                $$L(\mu, \tau_i, \sigma^2) = (2\pi\sigma^2)^{-\frac{N}{2}} \exp\left\{-\frac{1}{2\sigma^2}
+                \sum_{i=1}^{I} \sum_{j=1}^{n_i} [y_{ij} - \mu - \tau_i]^2\right\}$$
+            </div>
+
+            <p>Maximizando el logaritmo de la verosimilitud:</p>
+
+            <div class="formula-box">
+                $$\ln(L) = -\frac{N}{2}\ln(2\pi) - \frac{N}{2}\ln(\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}^{I}
+                \sum_{j=1}^{n_i} [y_{ij} - \mu - \tau_i]^2$$
+            </div>
+
+            <h4>Estimador de la Media Global</h4>
+            <div class="formula-box">
+                $$\hat{\mu} = \bar{y}_{..} = \frac{\sum_{i=1}^{I} \sum_{j=1}^{n_i} y_{ij}}{N}$$
+            </div>
+
+            <h4>Estimador de los Efectos de Tratamiento</h4>
+            <div class="formula-box">
+                $$\hat{\tau}_i = \bar{y}_{i.} - \bar{y}_{..}$$
+            </div>
+
+            <h4>Estimador de la Varianza</h4>
+            <div class="formula-box">
+                $$\hat{\sigma}^2 = \frac{1}{N} \sum_{i=1}^{I} \sum_{j=1}^{n_i} [y_{ij} - \bar{y}_{i.}]^2 = \frac{1}{N}
+                \sum_{i=1}^{I} n_i s_i^2$$
+            </div>
+
+            <h4>Residuos</h4>
+            <p>Los residuos se definen como:</p>
+            <div class="formula-box">
+                $$e_{ij} = y_{ij} - \hat{y}_{ij} = y_{ij} - \bar{y}_{i.}$$
+            </div>
+
+            <h4>Propiedades de los Estimadores</h4>
+            <p><strong>Para $\hat{\mu}$:</strong></p>
+            <ul class="space-y-2 mt-3">
+                <li class="flex items-start gap-3"><span class="text-emerald-500 mt-1"><i
+                            class="fas fa-check"></i></span><span>Es centrado: $E[\hat{\mu}] = \mu$</span></li>
+                <li class="flex items-start gap-3"><span class="text-emerald-500 mt-1"><i
+                            class="fas fa-check"></i></span><span>$\text{Var}[\hat{\mu}] = \frac{\sigma^2}{N}$</span>
+                </li>
+                <li class="flex items-start gap-3"><span class="text-emerald-500 mt-1"><i
+                            class="fas fa-check"></i></span><span>$\hat{\mu} \sim N\left(\mu,
+                        \frac{\sigma^2}{N}\right)$</span></li>
+            </ul>
+
+            <p><strong>Para $\hat{\tau}_i$:</strong></p>
+            <ul class="space-y-2 mt-3">
+                <li class="flex items-start gap-3"><span class="text-emerald-500 mt-1"><i
+                            class="fas fa-check"></i></span><span>Es centrado: $E[\hat{\tau}_i] = \tau_i$</span></li>
+                <li class="flex items-start gap-3"><span class="text-emerald-500 mt-1"><i
+                            class="fas fa-check"></i></span><span>$\text{Var}[\hat{\tau}_i] =
+                        \frac{(N-n_i)\sigma^2}{Nn_i}$</span></li>
+            </ul>
+
+            <p><strong>Para $\hat{\sigma}^2$:</strong> Es sesgado. El estimador insesgado (varianza residual) es:</p>
+            <div class="formula-box">
+                $$S_R^2 = \frac{\sum_{i=1}^{I} \sum_{j=1}^{n_i} e_{ij}^2}{N-I}$$
+            </div>
+
+            <div class="concepto-clave">
+                <h4><i class="fas fa-calculator"></i> Cálculo del Valor Esperado de $\hat{\sigma}^2_{MV}$</h4>
+
+                <p>El estimador de máxima verosimilitud para la varianza es:</p>
+                <div class="formula-box" style="background: rgba(255,255,255,0.5);">
+                    $$\hat{\sigma}^2_{MV} = \frac{1}{N}\sum_{i=1}^{I} \sum_{j=1}^{n_i} e_{ij}^2 =
+                    \frac{1}{N}\sum_{i=1}^{I} \sum_{j=1}^{n_i} (y_{ij} - \bar{y}_{i.})^2$$
+                </div>
+
+                <p class="mt-4"><strong>Paso 1:</strong> Expresamos $y_{ij} - \bar{y}_{i.}$ en términos del modelo</p>
+                <p>Usando $y_{ij} = \mu + \tau_i + u_{ij}$ y $\bar{y}_{i.} = \mu + \tau_i + \bar{u}_{i.}$:</p>
+                <div class="formula-box" style="background: rgba(255,255,255,0.5);">
+                    $$y_{ij} - \bar{y}_{i.} = u_{ij} - \bar{u}_{i.}$$
+                </div>
+
+                <p class="mt-4"><strong>Paso 2:</strong> Calculamos $E\left[\sum_{j=1}^{n_i}(u_{ij} -
+                    \bar{u}_{i.})^2\right]$</p>
+                <p>Desarrollando el cuadrado:</p>
+                <div class="formula-box" style="background: rgba(255,255,255,0.5);">
+                    $$\sum_{j=1}^{n_i}(u_{ij} - \bar{u}_{i.})^2 = \sum_{j=1}^{n_i} u_{ij}^2 - n_i\bar{u}_{i.}^2$$
+                </div>
+
+                <p class="mt-4"><strong>Paso 3:</strong> Tomamos esperanza</p>
+                <p>Usando que $E[u_{ij}^2] = \sigma^2$ y $E[\bar{u}_{i.}^2] = \text{Var}[\bar{u}_{i.}] =
+                    \frac{\sigma^2}{n_i}$:</p>
+                <div class="formula-box" style="background: rgba(255,255,255,0.5);">
+                    $$E\left[\sum_{j=1}^{n_i}(u_{ij} - \bar{u}_{i.})^2\right] = n_i\sigma^2 - n_i \cdot
+                    \frac{\sigma^2}{n_i} = (n_i - 1)\sigma^2$$
+                </div>
+
+                <p class="mt-4"><strong>Paso 4:</strong> Sumamos sobre todos los tratamientos</p>
+                <div class="formula-box" style="background: rgba(255,255,255,0.5);">
+                    $$E\left[\sum_{i=1}^{I}\sum_{j=1}^{n_i}(y_{ij} - \bar{y}_{i.})^2\right] = \sum_{i=1}^{I}(n_i -
+                    1)\sigma^2 = (N - I)\sigma^2$$
+                </div>
+
+                <p class="mt-4"><strong>Conclusión:</strong></p>
+                <div class="formula-box" style="background: rgba(255,255,255,0.5);">
+                    $$E[\hat{\sigma}^2_{MV}] = \frac{(N-I)\sigma^2}{N} = \frac{N-I}{N}\sigma^2 \neq \sigma^2$$
+                </div>
+
+                <p class="mt-4">El sesgo es $-\frac{I}{N}\sigma^2$. Al dividir entre $N-I$ en lugar de $N$, obtenemos el
+                    estimador insesgado:</p>
+                <div class="formula-box" style="background: rgba(255,255,255,0.5);">
+                    $$E[S_R^2] = E\left[\frac{\sum_{i=1}^{I}\sum_{j=1}^{n_i}e_{ij}^2}{N-I}\right] =
+                    \frac{(N-I)\sigma^2}{N-I} = \sigma^2 \quad \checkmark$$
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="module-5">
+        <div class="animate-fade-in">
+            <img class="module-banner"
+                src="/Users/javiermauriciosierra/.gemini/antigravity/brain/9d9eb128-8808-4010-8811-a04dfce7ed7e/module5_ols_1771633884183.png"
+                alt="Estimación por Mínimos Cuadrados Ordinarios">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 5</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">1.3.2 Estimación por
+                    Mínimos Cuadrados</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Obtener estimadores mediante el método de
+                            mínimos cuadrados y demostrar su equivalencia con MV.</p>
+                    </div>
+                </div>
+            </div>
+
+            <p>Las hipótesis del modelo se pueden relajar: las perturbaciones son variables aleatorias que verifican:
+            </p>
+            <ol>
+                <li>$E[u_{ij}] = 0 \quad \forall i,j$</li>
+                <li>$\text{Var}[u_{ij}] = \sigma^2 \quad \forall i,j$</li>
+                <li>$\text{Cov}[u_{ij}, u_{rk}] = 0 \quad i \neq r \text{ ó } j \neq k$</li>
+            </ol>
+
+            <aside>
+                <strong>Observación:</strong> No se hace ninguna referencia a la distribución específica de las
+                perturbaciones. En estas condiciones, la estimación se aborda mediante mínimos cuadrados.
+            </aside>
+
+            <p>Consideremos la suma de cuadrados de los errores:</p>
+
+            <div class="formula-box">
+                $$Q = \sum_{i=1}^{I} \sum_{j=1}^{n_i} u_{ij}^2 = \sum_{i=1}^{I} \sum_{j=1}^{n_i} [y_{ij} - \mu -
+                \tau_i]^2$$
+            </div>
+
+            <p>Los estimadores de mínimos cuadrados son los valores de $\mu$ y $\tau_i$ que hacen mínima la suma $Q$.
+            </p>
+
+            <h4>Ecuaciones Normales</h4>
+            <p>Derivando e igualando a cero:</p>
+            <div class="formula-box">
+                $$\frac{\partial Q}{\partial \mu} = -2 \sum_{i=1}^{I} \sum_{j=1}^{n_i} [y_{ij} - \mu - \tau_i] = 0$$
+                $$\frac{\partial Q}{\partial \tau_i} = -2 \sum_{j=1}^{n_i} [y_{ij} - \mu - \tau_i] = 0 \quad i = 1,
+                \ldots, I$$
+            </div>
+
+            <h4>Soluciones</h4>
+            <p>Los estimadores de mínimos cuadrados coinciden con los de máxima verosimilitud:</p>
+            <div class="formula-box">
+                $$\hat{\mu} = \bar{y}_{..}$$
+                $$\hat{\tau}_i = \bar{y}_{i.} - \bar{y}_{..}$$
+            </div>
+
+            <div class="ejercicio">
+                <h4>Teorema de Gauss-Markov</h4>
+                <p>Los estimadores de mínimos cuadrados son los mejores estimadores lineales insesgados (BLUE: Best
+                    Linear Unbiased Estimators) de $\mu$ y $\tau_i$.</p>
+            </div>
+        </div>
+    </template>
+
+    <template id="module-6">
+        <div class="animate-fade-in">
+            <img class="module-banner"
+                src="/Users/javiermauriciosierra/.gemini/antigravity/brain/9d9eb128-8808-4010-8811-a04dfce7ed7e/module6_anova_decomp_1771633902557.png"
+                alt="Descomposición ANOVA y Sumas de Cuadrados">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 6</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">1.3.3 Descomposición
+                    de la Variabilidad</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Comprender la descomposición de la
+                            variabilidad total, la ortogonalidad de los componentes y construir la tabla ANOVA.</p>
+                    </div>
+                </div>
+            </div>
+
+            <p>Para comparar los efectos de los distintos niveles de un factor se emplea la técnica estadística
+                denominada <strong>análisis de la varianza</strong>, abreviadamente ANOVA, que está basada en la
+                descomposición de la variabilidad total de los datos en distintas componentes.</p>
+
+            <p>Se considera la siguiente identidad:</p>
+
+            <div class="formula-box">
+                $$y_{ij} = \bar{y}_{..} + (\bar{y}_{i.} - \bar{y}_{..}) + (y_{ij} - \bar{y}_{i.}) \tag{1.23}$$
+            </div>
+
+            <p>que expresa cada variable $y_{ij}$ como la suma de tres términos:</p>
+            <ul class="space-y-3 mt-4">
+                <li class="flex items-start gap-3"><span class="text-primary mt-1"><i
+                            class="fas fa-square"></i></span><span>La media total $\bar{y}_{..}$, es decir el estimador
+                        de $\mu$</span></li>
+                <li class="flex items-start gap-3"><span class="text-secondary mt-1"><i
+                            class="fas fa-square"></i></span><span>El efecto producido por el tratamiento $i$-ésimo
+                        (desviación de la media del $i$-ésimo nivel del factor respecto de la media total),
+                        $\bar{y}_{i.} - \bar{y}_{..}$, es decir el estimador de $\tau_i$</span></li>
+                <li class="flex items-start gap-3"><span class="text-amber-500 mt-1"><i
+                            class="fas fa-square"></i></span><span>La desviación entre los valores observados y los
+                        valores previstos por el modelo, $y_{ij} - \bar{y}_{i.}$, es decir el estimador de
+                        $u_{ij}$</span></li>
+            </ul>
+
+            <p>Por tanto, la expresión (1.23) también se puede poner en la forma:</p>
+
+            <div class="formula-box">
+                $$y_{ij} = \hat{\mu} + \hat{\tau}_i + e_{ij} \tag{1.24}$$
+            </div>
+
+            <h4>Forma Vectorial</h4>
+            <p>Consideramos esta descomposición para todas las observaciones, que expresada en forma vectorial resulta:
+            </p>
+
+            <div class="formula-box">
+                $$\mathbf{Y} = \hat{\boldsymbol{\mu}} + \hat{\boldsymbol{\tau}} + \mathbf{e} \tag{1.25}$$
+            </div>
+
+            <p>donde:</p>
+            <ul class="space-y-3 mt-4">
+                <li class="flex items-start gap-3"><span class="text-blue-500 mt-1"><i
+                            class="fas fa-cube"></i></span><span>$\mathbf{Y} = (y_{11}, \ldots, y_{1n_1}, y_{21},
+                        \ldots, y_{2n_2}, \ldots, y_{I1}, \ldots, y_{In_I})$ contiene $N$ términos independientes
+                        $y_{ij}$. Tiene, por tanto, <strong>$N$ grados de libertad</strong>.</span></li>
+                <li class="flex items-start gap-3"><span class="text-emerald-500 mt-1"><i
+                            class="fas fa-cube"></i></span><span>$\hat{\boldsymbol{\mu}}$ contiene $N$ coordenadas
+                        iguales a $\bar{y}_{..}$. Tiene, por tanto, <strong>1 grado de libertad</strong>.</span></li>
+                <li class="flex items-start gap-3"><span class="text-secondary mt-1"><i
+                            class="fas fa-cube"></i></span><span>$\hat{\boldsymbol{\tau}}$ contiene $I$ valores
+                        distintos $\bar{y}_{i.} - \bar{y}_{..}$, cada uno repetido $n_i$ veces y sujetos a una ecuación
+                        de restricción $\sum_{i} n_i(\bar{y}_{i.} - \bar{y}_{..}) = 0$. Tiene, por tanto, <strong>$I-1$
+                            grados de libertad</strong>.</span></li>
+                <li class="flex items-start gap-3"><span class="text-red-400 mt-1"><i
+                            class="fas fa-cube"></i></span><span>$\mathbf{e}$ contiene los $N$ residuos sujetos a $I$
+                        ecuaciones de restricción $\sum_{j}(y_{ij} - \bar{y}_{i.}) = 0$ para $i = 1, \ldots, I$. Tiene,
+                        por tanto, <strong>$N-I$ grados de libertad</strong>.</span></li>
+            </ul>
+
+            <div class="concepto-clave">
+                <h4><i class="fas fa-lightbulb"></i> Ortogonalidad de los Componentes</h4>
+                <p>La descomposición (1.25) está formada por componentes ortogonales dos a dos, ya que se verifica:</p>
+                <div class="formula-box" style="background: rgba(255,255,255,0.5);">
+                    $$\hat{\boldsymbol{\mu}}' \times \hat{\boldsymbol{\tau}} = \bar{y}_{..} \sum_{i=1}^{I}
+                    \sum_{j=1}^{n_i} \hat{\tau}_i = 0$$
+                    $$\hat{\boldsymbol{\mu}}' \times \mathbf{e} = \bar{y}_{..} \sum_{i=1}^{I} \sum_{j=1}^{n_i} e_{ij} =
+                    0$$
+                    $$\hat{\boldsymbol{\tau}}' \times \mathbf{e} = \sum_{i=1}^{I} \sum_{j=1}^{n_i} \hat{\tau}_i e_{ij} =
+                    0$$
+                </div>
+            </div>
+
+            <h4>Descomposición de la Variabilidad</h4>
+            <p>La ecuación (1.23) también se puede expresar de la siguiente forma:</p>
+
+            <div class="formula-box">
+                $$y_{ij} - \bar{y}_{..} = (\bar{y}_{i.} - \bar{y}_{..}) + (y_{ij} - \bar{y}_{i.}) \tag{1.26}$$
+            </div>
+
+            <p>Si elevamos al cuadrado los dos miembros de la expresión anterior y sumamos para todas las observaciones,
+                tenemos:</p>
+
+            <div class="formula-box">
+                $$\sum_{i=1}^{I} \sum_{j=1}^{n_i} (y_{ij} - \bar{y}_{..})^2 = \sum_{i=1}^{I} \sum_{j=1}^{n_i}
+                [(\bar{y}_{i.} - \bar{y}_{..}) + (y_{ij} - \bar{y}_{i.})]^2$$
+            </div>
+
+            <p>Desarrollando el cuadrado:</p>
+            <div class="formula-box">
+                $$= \sum_{i=1}^{I} n_i (\bar{y}_{i.} - \bar{y}_{..})^2 + \sum_{i=1}^{I} \sum_{j=1}^{n_i} (y_{ij} -
+                \bar{y}_{i.})^2 + 2\sum_{i=1}^{I} \sum_{j=1}^{n_i} (\bar{y}_{i.} - \bar{y}_{..})(y_{ij} -
+                \bar{y}_{i.})$$
+            </div>
+
+            <p>Los dobles productos se anulan, ya que los términos son ortogonales, por lo que dicha ecuación queda en
+                la forma:</p>
+
+            <div class="formula-box">
+                $$\sum_{i=1}^{I} \sum_{j=1}^{n_i} (y_{ij} - \bar{y}_{..})^2 = \sum_{i=1}^{I} n_i (\bar{y}_{i.} -
+                \bar{y}_{..})^2 + \sum_{i=1}^{I} \sum_{j=1}^{n_i} (y_{ij} - \bar{y}_{i.})^2 \tag{1.28}$$
+            </div>
+
+            <div class="ejercicio">
+                <h4><i class="fas fa-star"></i> Ecuación Básica del ANOVA</h4>
+                <p>La expresión (1.28) representa la <strong>ecuación básica del análisis de la varianza</strong>, que
+                    simbólicamente podemos escribir:</p>
+                <div class="formula-box" style="background: rgba(255,255,255,0.5);">
+                    $$SCT = SCTr + SCR$$
+                </div>
+            </div>
+
+            <p>Donde hemos desglosado la variabilidad total de los datos denominada <strong>suma total de
+                    cuadrados</strong>, en dos partes:</p>
+
+            <ol class="space-y-4 mt-4 list-none">
+                <li class="flex items-start gap-3">
+                    <span
+                        class="bg-emerald-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold flex-shrink-0">1</span>
+                    <span><strong>$SCTr = \sum_{i=1}^{I} n_i (\bar{y}_{i.} - \bar{y}_{..})^2$</strong>: la suma de
+                        cuadrados de las desviaciones de las medias de los tratamientos respecto de la media general,
+                        denominada <strong>suma de cuadrados entre tratamientos</strong> o <strong>variabilidad
+                            explicada</strong>.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span
+                        class="bg-red-400 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold flex-shrink-0">2</span>
+                    <span><strong>$SCR = \sum_{i=1}^{I} \sum_{j=1}^{n_i} (y_{ij} - \bar{y}_{i.})^2$</strong>: la suma de
+                        cuadrados de las desviaciones de las observaciones de cada nivel respecto de su media,
+                        denominada <strong>suma de cuadrados dentro de los tratamientos</strong>, <strong>variabilidad
+                            no-explicada</strong> o <strong>residual</strong>.</span>
+                </li>
+            </ol>
+
+            <h4>Cuadrados Medios</h4>
+            <p>A partir de las sumas de cuadrados anteriores se pueden construir los denominados <strong>cuadrados
+                    medios</strong>, definidos como los cocientes entre dichas sumas de cuadrados y sus correspondientes
+                grados de libertad:</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
+                <div class="formula-box text-center">
+                    <p class="text-sm font-semibold text-gray-600 mb-2">Cuadrado medio total</p>
+                    $$S_T^2 = \frac{SCT}{N-1}$$
+                </div>
+                <div class="formula-box text-center">
+                    <p class="text-sm font-semibold text-gray-600 mb-2">Cuadrado medio tratamientos</p>
+                    $$S_{Tr}^2 = \frac{SCTr}{I-1}$$
+                </div>
+                <div class="formula-box text-center">
+                    <p class="text-sm font-semibold text-gray-600 mb-2">Cuadrado medio residual</p>
+                    $$S_R^2 = \frac{SCR}{N-I}$$
+                </div>
+            </div>
+
+            <aside>
+                <strong>Nota:</strong> Una notación muy utilizada también en la práctica para los cuadrados medios
+                total, entre tratamientos y residual es, respectivamente, CMT, CMTr y CMR o CME.
+            </aside>
+
+            <h4>Esperanzas de los Cuadrados Medios</h4>
+            <p>Consideremos las expresiones de $y_{i.}$, $\bar{y}_{i.}$, $y_{..}$ e $\bar{y}_{..}$, en función de los
+                parámetros del modelo. Teniendo en cuenta que $\sum_{i} n_i \tau_i = 0$:</p>
+
+            <div class="formula-box">
+                $$y_{i.} = n_i\mu + n_i\tau_i + u_{i.} \quad ; \quad \bar{y}_{i.} = \mu + \tau_i + \bar{u}_{i.}$$
+                $$y_{..} = N\mu + \sum_{i} n_i\tau_i + u_{..} \quad ; \quad \bar{y}_{..} = \mu + \bar{u}_{..}
+                \tag{1.32}$$
+            </div>
+
+            <p>El cuadrado medio entre grupos se puede expresar como:</p>
+
+            <div class="formula-box">
+                $$S_{Tr}^2 = \frac{\sum_{i=1}^{I} n_i(\bar{y}_{i.} - \bar{y}_{..})^2}{I-1} = \frac{\sum_{i=1}^{I}
+                n_i[\tau_i + (\bar{u}_{i.} - \bar{u}_{..})]^2}{I-1}$$
+            </div>
+
+            <p>y su esperanza matemática será:</p>
+
+            <div class="concepto-clave">
+                <h4><i class="fas fa-calculator"></i> Esperanzas de los Cuadrados Medios</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="formula-box" style="background: rgba(255,255,255,0.5);">
+                        <p class="text-sm font-semibold text-emerald-600 mb-2">Cuadrado medio tratamientos</p>
+                        $$E[S_{Tr}^2] = \sigma^2 + \frac{\sum_{i=1}^{I} n_i \tau_i^2}{I-1}$$
+                    </div>
+                    <div class="formula-box" style="background: rgba(255,255,255,0.5);">
+                        <p class="text-sm font-semibold text-red-500 mb-2">Cuadrado medio residual</p>
+                        $$E[S_R^2] = \sigma^2$$
+                    </div>
+                </div>
+            </div>
+
+            <h4>Estadístico de Contraste</h4>
+            <p>El estadístico de contraste para $H_0: \tau_1 = \tau_2 = \cdots = \tau_I = 0$ resulta:</p>
+
+            <div class="formula-box">
+                $$F = \frac{S_{Tr}^2}{S_R^2} \sim F_{(I-1, N-I)} \text{ bajo } H_0$$
+            </div>
+
+            <div class="nota">
+                <h4><i class="fas fa-info-circle"></i> Interpretación</h4>
+                <ul class="space-y-3 mt-4">
+                    <li class="flex items-start gap-3"><span class="text-emerald-500 mt-1"><i
+                                class="fas fa-equals"></i></span><span><strong>Si $H_0$ es verdadera:</strong>
+                            $E[S_{Tr}^2] = \sigma^2 = E[S_R^2]$, por lo que $F \approx 1$</span></li>
+                    <li class="flex items-start gap-3"><span class="text-red-500 mt-1"><i
+                                class="fas fa-chevron-up"></i></span><span><strong>Si $H_0$ es falsa:</strong>
+                            $E[S_{Tr}^2] > \sigma^2 = E[S_R^2]$, por lo que $F > 1$</span></li>
+                </ul>
+            </div>
+
+            <h4>Tabla ANOVA</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fuente de Variación</th>
+                        <th>SC</th>
+                        <th>GL</th>
+                        <th>CM</th>
+                        <th>F</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Tratamientos</td>
+                        <td>$SCTr$</td>
+                        <td>$I-1$</td>
+                        <td>$S_{Tr}^2$</td>
+                        <td>$F$</td>
+                    </tr>
+                    <tr>
+                        <td>Residual</td>
+                        <td>$SCR$</td>
+                        <td>$N-I$</td>
+                        <td>$S_R^2$</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td>$SCT$</td>
+                        <td>$N-1$</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Regla de Decisión</h4>
+            <p>Se rechaza $H_0$ si $F > F_{\alpha, I-1, N-I}$, o equivalentemente, si el p-valor $< \alpha$.</p>
+        </div>
+    </template>
+
+    <!-- MODULE 7: Simulador Señal vs Ruido -->
+    <template id="module-7">
+        <div class="animate-fade-in">
+            <img class="module-banner"
+                src="/Users/javiermauriciosierra/.gemini/antigravity/brain/9d9eb128-8808-4010-8811-a04dfce7ed7e/module7_signal_noise_1771633928333.png"
+                alt="Simulador Señal vs Ruido">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 7</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Simulador Interactivo:
+                    Señal vs Ruido</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Comprender intuitivamente cómo el estadístico
+                            F compara la variabilidad entre grupos (señal) con la variabilidad dentro de grupos (ruido).
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concepto-clave">
+                <h4><i class="fas fa-lightbulb"></i> La Intuición Central del ANOVA</h4>
+                <p>El ANOVA responde a una pregunta fundamental: <strong>"¿La diferencia que observamos entre las medias
+                        de nuestros grupos (la señal) es lo suficientemente fuerte como para distinguirla de la
+                        variación aleatoria dentro de cada grupo (el ruido)?"</strong></p>
+
+                <p>El estadístico F es simplemente esta relación:</p>
+                <p class="text-center text-xl my-4">
+                    $$F = \frac{\text{Señal}}{\text{Ruido}} = \frac{MS_{entre}}{MS_{dentro}}$$
+                </p>
+            </div>
+
+            <h3>Experimenta con el Simulador</h3>
+            <p>Usa los controles para ajustar la separación entre grupos (señal) y la dispersión dentro de cada grupo
+                (ruido). Observa cómo cambia el estadístico F:</p>
+
+            <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 my-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                    <div class="md:col-span-1 space-y-6">
+                        <div>
+                            <label for="signalSlider7" class="block text-sm font-medium text-gray-700 mb-2">📢 Señal
+                                (Separación entre grupos)</label>
+                            <input id="signalSlider7" type="range" min="0" max="100" value="50"
+                                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-secondary">
+                        </div>
+                        <div>
+                            <label for="noiseSlider7" class="block text-sm font-medium text-gray-700 mb-2">🔇 Ruido
+                                (Dispersión dentro de grupos)</label>
+                            <input id="noiseSlider7" type="range" min="1" max="100" value="50"
+                                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-secondary">
+                        </div>
+                        <div id="fStatDisplayM7"
+                            class="text-center bg-gradient-to-r from-primary/10 to-secondary/10 p-4 rounded-lg">
+                            <span class="text-lg font-semibold block">Estadístico F:</span>
+                            <span id="fValueM7" class="text-3xl font-bold text-secondary">1.00</span>
+                            <p id="fConclusionM7" class="text-sm text-gray-500 mt-2">Señal y ruido son similares.</p>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div style="height: 350px;">
+                            <canvas id="signalNoiseChartM7"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nota mt-6">
+                <h4><i class="fas fa-info-circle"></i> Interpretación</h4>
+                <ul class="space-y-3 mt-4">
+                    <li class="flex items-start gap-3"><span class="text-emerald-500 mt-1"><i
+                                class="fas fa-chevron-up"></i></span><span><strong>F > 4:</strong> La señal domina
+                            claramente sobre el ruido. Las diferencias entre grupos son probablemente reales.</span>
+                    </li>
+                    <li class="flex items-start gap-3"><span class="text-amber-500 mt-1"><i
+                                class="fas fa-equals"></i></span><span><strong>F ≈ 1:</strong> Señal y ruido son
+                            similares. No hay evidencia suficiente de diferencias entre grupos.</span></li>
+                    <li class="flex items-start gap-3"><span class="text-red-500 mt-1"><i
+                                class="fas fa-chevron-down"></i></span><span><strong>F < 1:</strong> El ruido ahoga la
+                                    señal. Las medias de los grupos son muy similares.</span></li>
+                </ul>
+            </div>
+        </div>
+    </template>
+
+    <!-- MODULE 8: Aplicación Fertilizantes -->
+    <template id="module-8">
+        <div class="animate-fade-in">
+            <img class="module-banner"
+                src="/Users/javiermauriciosierra/.gemini/antigravity/brain/9d9eb128-8808-4010-8811-a04dfce7ed7e/module8_fertilizer_1771633953044.png"
+                alt="Aplicación: Experimento de Fertilizantes">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 8</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Aplicación Real:
+                    Experimento con Fertilizantes</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Aplicar el ANOVA a un caso concreto de
+                            agricultura experimental y visualizar por qué una diferencia significativa requiere análisis
+                            adicional.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>El Experimento</h3>
+            <p>Un agrónomo desea comparar tres mezclas de fertilizantes para el cultivo de tomate. Asigna aleatoriamente
+                10 plantas a cada mezcla y mide el rendimiento en kg/planta.</p>
+
+            <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 my-6">
+                <h4 class="text-xl font-semibold mb-4 text-center">Rendimiento de Tomates por Fertilizante</h4>
+                <div style="height: 300px;">
+                    <canvas id="fertilizerChartM8"></canvas>
+                </div>
+
+                <div class="text-center mt-6 space-x-4">
+                    <button id="showAnovaResultM8"
+                        class="px-6 py-2 bg-secondary hover:bg-secondary/90 text-white rounded-lg font-medium transition-colors">
+                        Mostrar Resultado ANOVA
+                    </button>
+                </div>
+
+                <div id="anovaResultM8" class="hidden mt-6 p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+                    <h4 class="font-bold text-emerald-800 text-lg">Resultado del ANOVA:</h4>
+                    <p class="mt-2"><strong>F = 16.67</strong>, <strong>p-valor < 0.001</strong>
+                    </p>
+                    <p class="mt-2 text-emerald-700">✅ <strong>Conclusión:</strong> Rechazamos $H_0$. Hay diferencias
+                        significativas entre al menos dos fertilizantes.</p>
+                    <p class="mt-4 text-amber-700 font-medium">⚠️ Pero... ¿cuáles son diferentes entre sí? El ANOVA solo
+                        nos dice que hay diferencias, no dónde están. Necesitamos <strong>pruebas post-hoc</strong>.</p>
+                </div>
+            </div>
+
+            <div class="concepto-clave">
+                <h4><i class="fas fa-lightbulb"></i> Tamaño del Efecto: η² (Eta cuadrado)</h4>
+                <p>Un p-valor pequeño indica significancia estadística, pero no dice nada sobre la <strong>importancia
+                        práctica</strong>. El tamaño del efecto sí lo hace:</p>
+                <p class="text-center my-4">$$\eta^2 = \frac{SC_{Trat}}{SC_{Total}}$$</p>
+                <p>En este ejemplo, <strong>η² = 0.55</strong>, lo que significa que el 55% de la variación en el
+                    rendimiento se explica por el tipo de fertilizante. ¡Es un efecto muy importante!</p>
+            </div>
+        </div>
+    </template>
+
+    <!-- MODULE 9: Pruebas Post-Hoc -->
+    <template id="module-9">
+        <div class="animate-fade-in">
+            <img class="module-banner"
+                src="/Users/javiermauriciosierra/.gemini/antigravity/brain/9d9eb128-8808-4010-8811-a04dfce7ed7e/module9_posthoc_1771633970238.png"
+                alt="Pruebas Post-Hoc: Tukey, Bonferroni, LSD">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 9</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Pruebas Post-Hoc:
+                    ¿Dónde Están las Diferencias?</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Comprender cuándo y cómo usar las pruebas de
+                            comparaciones múltiples después de un ANOVA significativo.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nota">
+                <h4><i class="fas fa-exclamation-triangle"></i> El Problema de las Comparaciones Múltiples</h4>
+                <p>Si realizamos muchas pruebas t por pares, el error Tipo I se acumula. Con 3 grupos hay 3
+                    comparaciones, y la probabilidad de al menos un falso positivo sube de 5% a ~14%.</p>
+            </div>
+
+            <h3>Principales Pruebas Post-Hoc</h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+                <div class="bg-white p-5 rounded-xl shadow border border-gray-100">
+                    <h4 class="font-bold text-primary text-lg">Tukey HSD</h4>
+                    <p class="text-sm text-gray-600 mt-2">La más común. Controla el FWER comparando todas las parejas de
+                        grupos. Ideal cuando quieres comparar todos los tratamientos entre sí.</p>
+                    <span class="inline-block mt-3 text-xs bg-primary/10 text-primary px-2 py-1 rounded">Uso
+                        general</span>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow border border-gray-100">
+                    <h4 class="font-bold text-primary text-lg">Bonferroni</h4>
+                    <p class="text-sm text-gray-600 mt-2">Divide α entre el número de comparaciones. Muy conservador.
+                        Útil cuando el número de comparaciones es pequeño.</p>
+                    <span
+                        class="inline-block mt-3 text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded">Conservador</span>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow border border-gray-100">
+                    <h4 class="font-bold text-primary text-lg">Dunnett</h4>
+                    <p class="text-sm text-gray-600 mt-2">Compara cada tratamiento contra un único grupo de control. Más
+                        potente que Tukey para este caso específico.</p>
+                    <span class="inline-block mt-3 text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded">vs
+                        Control</span>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow border border-gray-100">
+                    <h4 class="font-bold text-primary text-lg">Scheffé</h4>
+                    <p class="text-sm text-gray-600 mt-2">Permite cualquier tipo de contraste, no solo comparaciones por
+                        pares. El más flexible pero también el más conservador.</p>
+                    <span
+                        class="inline-block mt-3 text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">Contrastes</span>
+                </div>
+            </div>
+
+            <h3>Ejemplo: Resultados Post-Hoc (Tukey HSD)</h3>
+            <p>Continuando con el experimento de fertilizantes:</p>
+
+            <table class="my-4">
+                <thead>
+                    <tr>
+                        <th>Comparación</th>
+                        <th>Diferencia</th>
+                        <th>IC 95%</th>
+                        <th>p-valor ajustado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Mezcla 3 vs Mezcla 2</td>
+                        <td>1.0 kg</td>
+                        <td>[0.4, 1.6]</td>
+                        <td class="font-bold text-emerald-600">0.002 *</td>
+                    </tr>
+                    <tr>
+                        <td>Mezcla 3 vs Mezcla 1</td>
+                        <td>2.0 kg</td>
+                        <td>[1.4, 2.6]</td>
+                        <td class="font-bold text-emerald-600">
+                            < 0.001 ***</td>
+                    </tr>
+                    <tr>
+                        <td>Mezcla 2 vs Mezcla 1</td>
+                        <td>1.0 kg</td>
+                        <td>[0.4, 1.6]</td>
+                        <td class="font-bold text-emerald-600">0.002 *</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="ejercicio">
+                <h4><i class="fas fa-code"></i> Implementación en Python</h4>
+                <pre><code><span class="comentario"># Prueba de Tukey con statsmodels</span>
+from statsmodels.stats.multicomp import pairwise_tukeyhsd
+
+tukey = pairwise_tukeyhsd(df['rendimiento'], df['fertilizante'], alpha=0.05)
+print(tukey.summary())</code></pre>
+            </div>
+        </div>
+    </template>
+
+    <!-- MODULE 10: Resumen y Buenas Prácticas -->
+    <template id="module-10">
+        <div class="animate-fade-in">
+            <img class="module-banner"
+                src="/Users/javiermauriciosierra/.gemini/antigravity/brain/9d9eb128-8808-4010-8811-a04dfce7ed7e/module10_summary_1771634004897.png"
+                alt="Resumen y Buenas Prácticas">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 10</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Resumen y Buenas
+                    Prácticas</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Consolidar los conceptos clave del ANOVA de
+                            una vía y conocer las buenas prácticas para su correcta aplicación.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Flujo de Trabajo del ANOVA</h3>
+            <div class="flex flex-wrap items-center justify-center gap-2 my-6 text-sm">
+                <span class="bg-primary text-white px-3 py-2 rounded-lg">1. Verificar Supuestos</span>
+                <span class="text-gray-400">→</span>
+                <span class="bg-primary/80 text-white px-3 py-2 rounded-lg">2. Realizar ANOVA</span>
+                <span class="text-gray-400">→</span>
+                <span class="bg-secondary text-white px-3 py-2 rounded-lg">3. ¿F significativo?</span>
+                <span class="text-gray-400">→</span>
+                <span class="bg-emerald-500 text-white px-3 py-2 rounded-lg">4. Post-Hoc</span>
+                <span class="text-gray-400">→</span>
+                <span class="bg-amber-500 text-white px-3 py-2 rounded-lg">5. Reportar η²</span>
+            </div>
+
+            <h3>Buenas Prácticas</h3>
+
+            <!-- Accordion -->
+            <div id="accordionM10" class="space-y-3 my-6">
+                <div class="bg-white rounded-lg shadow border border-gray-100 overflow-hidden">
+                    <button
+                        class="accordion-btn w-full flex justify-between items-center p-4 text-left font-semibold hover:bg-gray-50"
+                        data-target="acc1">
+                        <span>✅ Siempre verifica los supuestos</span>
+                        <span class="transform transition-transform duration-300 text-secondary">+</span>
+                    </button>
+                    <div id="acc1" class="accordion-content hidden p-4 pt-0 bg-gray-50 border-t">
+                        <p>Antes de confiar en los resultados, verifica:</p>
+                        <ul class="list-disc ml-6 mt-2">
+                            <li><strong>Independencia:</strong> Las observaciones no deben estar correlacionadas.</li>
+                            <li><strong>Normalidad:</strong> Los residuos deben distribuirse normalmente (test de
+                                Shapiro-Wilk).</li>
+                            <li><strong>Homogeneidad de varianzas:</strong> Las varianzas deben ser similares (test de
+                                Levene).</li>
+                        </ul>
+                        <p class="mt-2 text-amber-700">Si no se cumplen, considera la prueba de Kruskal-Wallis (no
+                            paramétrica).</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow border border-gray-100 overflow-hidden">
+                    <button
+                        class="accordion-btn w-full flex justify-between items-center p-4 text-left font-semibold hover:bg-gray-50"
+                        data-target="acc2">
+                        <span>❗ No te detengas en la prueba F</span>
+                        <span class="transform transition-transform duration-300 text-secondary">+</span>
+                    </button>
+                    <div id="acc2" class="accordion-content hidden p-4 pt-0 bg-gray-50 border-t">
+                        <p>Un resultado F significativo es solo el comienzo. Te dice que <em>hay</em> una diferencia,
+                            pero no <em>dónde</em>. Siempre realiza pruebas post-hoc para identificar qué grupos son
+                            diferentes.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow border border-gray-100 overflow-hidden">
+                    <button
+                        class="accordion-btn w-full flex justify-between items-center p-4 text-left font-semibold hover:bg-gray-50"
+                        data-target="acc3">
+                        <span>📊 Informa siempre el tamaño del efecto</span>
+                        <span class="transform transition-transform duration-300 text-secondary">+</span>
+                    </button>
+                    <div id="acc3" class="accordion-content hidden p-4 pt-0 bg-gray-50 border-t">
+                        <p>La significancia estadística (p-valor) no es lo mismo que la significancia práctica. El
+                            tamaño del efecto (η², ω²) te dice qué tan importante es la diferencia en el mundo real.</p>
+                        <p class="mt-2"><strong>Guía para η²:</strong> 0.01 (pequeño), 0.06 (mediano), 0.14+ (grande)
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow border border-gray-100 overflow-hidden">
+                    <button
+                        class="accordion-btn w-full flex justify-between items-center p-4 text-left font-semibold hover:bg-gray-50"
+                        data-target="acc4">
+                        <span>🔬 ANOVA = Regresión con variables dummy</span>
+                        <span class="transform transition-transform duration-300 text-secondary">+</span>
+                    </button>
+                    <div id="acc4" class="accordion-content hidden p-4 pt-0 bg-gray-50 border-t">
+                        <p>El ANOVA es un caso especial de regresión lineal. Podemos codificar los grupos con variables
+                            dummy (0/1) y obtener exactamente el mismo estadístico F.</p>
+                        <p class="mt-2">Por ejemplo, con 3 grupos necesitamos 2 variables dummy. El grupo de referencia
+                            tiene todos los valores en 0.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concepto-clave">
+                <h4><i class="fas fa-star"></i> Resumen Final</h4>
+                <p>El ANOVA de una vía es una herramienta poderosa para comparar 3+ grupos evitando la inflación del
+                    error Tipo I. Recuerda: verifica supuestos → analiza → post-hoc si es significativo → reporta el
+                    tamaño del efecto.</p>
+            </div>
+        </div>
+    </template>
+
+    <script>
+
+        // --- COURSE DATA ---
+        const courseData = {
+            title: "Diseños Completamente Aleatorizados",
+            modules: [
+                { id: 1, title: "Introducción y Ejemplos", shortTitle: "Intro", duration: "15 min" },
+                { id: 2, title: "Planteamiento del Modelo", shortTitle: "Modelo", duration: "15 min" },
+                { id: 3, title: "Modelo de Efectos Fijos", shortTitle: "Fijos", duration: "20 min" },
+                { id: 4, title: "Estimación MV", shortTitle: "MV", duration: "15 min" },
+                { id: 5, title: "Estimación MCO", shortTitle: "MCO", duration: "15 min" },
+                { id: 6, title: "Descomposición ANOVA", shortTitle: "SC", duration: "15 min" },
+                { id: 7, title: "Simulador Señal vs Ruido", shortTitle: "Señal", duration: "10 min", interactive: true },
+                { id: 8, title: "Aplicación: Fertilizantes", shortTitle: "Ejemplo", duration: "10 min", interactive: true },
+                { id: 9, title: "Pruebas Post-Hoc", shortTitle: "Post-Hoc", duration: "10 min" },
+                { id: 10, title: "Resumen y Buenas Prácticas", shortTitle: "Resumen", duration: "10 min" }
+            ]
+        };
+
+        // --- STATE MANAGEMENT ---
+        let currentModuleIndex = 0;
+        let completedModules = new Set();
+
+        // --- DOM ELEMENTS ---
+        const moduleNav = document.getElementById('module-nav');
+        const contentArea = document.getElementById('content-area');
+
+        // --- INIT ---
+        function init() {
+            renderNav();
+            loadModule(0);
+        }
+
+
+        function renderNav() {
+            moduleNav.innerHTML = '';
+            courseData.modules.forEach((mod, index) => {
+                const btn = document.createElement('button');
+                const isActive = index === currentModuleIndex;
+                const isDone = completedModules.has(index);
+                btn.className = `sidebar-nav-item${isActive ? ' active' : ''}`;
+
+                btn.innerHTML = `
+                    <span style="line-height:1.3;">${mod.title}</span>
+                    ${isDone ? '<span class="check-mark">✓</span>' : ''}
+                `;
+                btn.onclick = () => loadModule(index);
+                moduleNav.appendChild(btn);
+            });
+        }
+
+        function loadModule(index) {
+            currentModuleIndex = index;
+            renderNav();
+
+            // Get template content
+            const template = document.getElementById(`module-${index + 1}`);
+            if (template) {
+                contentArea.innerHTML = '';
+                const content = template.content.cloneNode(true);
+                contentArea.appendChild(content);
+
+                // Add navigation buttons
+                const navButtons = document.createElement('div');
+                navButtons.className = 'mt-10 pt-6 border-t border-gray-200 flex justify-between items-center';
+                navButtons.innerHTML = `
+                    ${index > 0 ? `
+                    <button onclick="loadModule(${index - 1})" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-secondary transition-colors">
+                        <span>←</span> Anterior
+                    </button>` : '<div></div>'}
+                    <button onclick="markComplete(${index})" class="px-4 py-2 text-sm font-medium text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors ${completedModules.has(index) ? 'opacity-50' : ''}">
+                        ${completedModules.has(index) ? '✓ Completado' : 'Marcar como completado'}
+                    </button>
+                    ${index < courseData.modules.length - 1 ? `
+                    <button onclick="loadModule(${index + 1})" class="flex items-center gap-2 px-4 py-2 bg-secondary hover:bg-secondary/90 text-white rounded-lg text-sm font-medium transition-colors">
+                        Siguiente Módulo <span>→</span>
+                    </button>` : `
+                    <div class="text-center">
+                        <span class="text-emerald-600 font-bold">🎉 ¡Tema Completado!</span>
+                    </div>`}
+                `;
+                contentArea.appendChild(navButtons);
+
+                // Render LaTeX
+                if (typeof renderMathInElement !== 'undefined') {
+                    renderMathInElement(contentArea, {
+                        delimiters: [
+                            { left: '$$', right: '$$', display: true },
+                            { left: '$', right: '$', display: false }
+                        ],
+                        throwOnError: false
+                    });
+                }
+
+                // VS Code style code blocks
+                setupCodeBlocks();
+
+                // Initialize interactive elements
+                setTimeout(() => initModuleInteractives(index + 1), 50);
+            }
+
+            // Scroll to top of content
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- INTERACTIVE MODULES ---
+        let signalNoiseChart = null;
+        let fertilizerChart = null;
+
+        function initModuleInteractives(moduleId) {
+            if (moduleId === 7) initSignalNoiseSimulator();
+            if (moduleId === 8) initFertilizerChart();
+            if (moduleId === 10) initAccordion();
+        }
+
+        function initSignalNoiseSimulator() {
+            const canvas = document.getElementById('signalNoiseChartM7');
+            if (!canvas) return;
+
+            const signalSlider = document.getElementById('signalSlider7');
+            const noiseSlider = document.getElementById('noiseSlider7');
+            const fValueEl = document.getElementById('fValueM7');
+            const fConclusionEl = document.getElementById('fConclusionM7');
+
+            const generateGroupData = (mean, stdDev, n = 30) => {
+                let data = [];
+                for (let i = 0; i < n; i++) {
+                    let u = 0, v = 0;
+                    while (u === 0) u = Math.random();
+                    while (v === 0) v = Math.random();
+                    let num = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+                    data.push({ x: mean + num * stdDev, y: Math.random() * 10 });
+                }
+                return data;
+            };
+
+            const calculateStats = (datasets) => {
+                const allData = datasets.flat();
+                const grandMean = allData.reduce((acc, p) => acc + p.x, 0) / allData.length;
+                let ssBetween = 0, ssWithin = 0;
+                datasets.forEach(group => {
+                    const groupMean = group.reduce((acc, p) => acc + p.x, 0) / group.length;
+                    ssBetween += group.length * Math.pow(groupMean - grandMean, 2);
+                    group.forEach(p => { ssWithin += Math.pow(p.x - groupMean, 2); });
+                });
+                const k = datasets.length, N = allData.length;
+                const msBetween = ssBetween / (k - 1);
+                const msWithin = ssWithin / (N - k);
+                return msWithin > 0 ? msBetween / msWithin : Infinity;
+            };
+
+            const updateChart = () => {
+                const signal = parseInt(signalSlider.value) / 50;
+                const noise = parseInt(noiseSlider.value) / 50;
+                const baseMean = 10, separation = signal * 5;
+
+                const group1 = generateGroupData(baseMean - separation, noise * 2);
+                const group2 = generateGroupData(baseMean, noise * 2);
+                const group3 = generateGroupData(baseMean + separation, noise * 2);
+
+                signalNoiseChart.data.datasets[0].data = group1;
+                signalNoiseChart.data.datasets[1].data = group2;
+                signalNoiseChart.data.datasets[2].data = group3;
+                signalNoiseChart.update('none');
+
+                const fStat = calculateStats([group1, group2, group3]);
+                fValueEl.textContent = fStat.toFixed(2);
+
+                if (fStat > 4) {
+                    fConclusionEl.textContent = "¡La señal domina sobre el ruido!";
+                    fConclusionEl.className = "text-sm text-emerald-600 mt-2 font-semibold";
+                } else if (fStat < 0.5) {
+                    fConclusionEl.textContent = "El ruido ahoga la señal.";
+                    fConclusionEl.className = "text-sm text-red-600 mt-2 font-semibold";
+                } else {
+                    fConclusionEl.textContent = "Señal y ruido son similares.";
+                    fConclusionEl.className = "text-sm text-gray-500 mt-2";
+                }
+            };
+
+            if (signalNoiseChart) signalNoiseChart.destroy();
+            signalNoiseChart = new Chart(canvas.getContext('2d'), {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        { label: 'Grupo A', data: [], backgroundColor: 'rgba(237, 30, 121, 0.7)' },
+                        { label: 'Grupo B', data: [], backgroundColor: 'rgba(61, 0, 141, 0.7)' },
+                        { label: 'Grupo C', data: [], backgroundColor: 'rgba(16, 185, 129, 0.7)' }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { x: { min: -5, max: 25, title: { display: true, text: 'Valor Medido' } }, y: { display: false } },
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+            signalSlider.addEventListener('input', updateChart);
+            noiseSlider.addEventListener('input', updateChart);
+            updateChart();
+        }
+
+        function initFertilizerChart() {
+            const canvas = document.getElementById('fertilizerChartM8');
+            if (!canvas) return;
+            if (fertilizerChart) fertilizerChart.destroy();
+            fertilizerChart = new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Mezcla 1', 'Mezcla 2', 'Mezcla 3'],
+                    datasets: [{ label: 'Rendimiento (kg/planta)', data: [4.8, 5.8, 6.8], backgroundColor: ['#FBBF24', '#60A5FA', '#34D399'], borderColor: ['#F59E0B', '#3B82F6', '#10B981'], borderWidth: 2 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 8, title: { display: true, text: 'Rendimiento (kg/planta)' } } }, plugins: { legend: { display: false } } }
+            });
+            const showBtn = document.getElementById('showAnovaResultM8');
+            const resultDiv = document.getElementById('anovaResultM8');
+            if (showBtn && resultDiv) {
+                showBtn.addEventListener('click', () => {
+                    resultDiv.classList.toggle('hidden');
+                    showBtn.textContent = resultDiv.classList.contains('hidden') ? 'Mostrar Resultado ANOVA' : 'Ocultar Resultado';
+                });
+            }
+        }
+
+        function initAccordion() {
+            document.querySelectorAll('.accordion-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetId = btn.dataset.target;
+                    const content = document.getElementById(targetId);
+                    const icon = btn.querySelector('span:last-child');
+                    if (content) {
+                        content.classList.toggle('hidden');
+                        if (icon) icon.textContent = content.classList.contains('hidden') ? '+' : '−';
+                    }
+                });
+            });
+        }
+
+        function markComplete(index) {
+            if (!completedModules.has(index)) {
+                completedModules.add(index);
+                renderNav();
+                loadModule(index); // Refresh to update button state
+            }
+        }
+
+        // Scroll to Top Button functionality
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('visible');
+            } else {
+                scrollToTopBtn.classList.remove('visible');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // ===== Sidebar Toggle =====
+        const sidebarPanel = document.getElementById('sidebar-panel');
+        const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+        const sidebarToggleIcon = document.getElementById('sidebarToggleIcon');
+        let sidebarOpen = true;
+
+        sidebarToggleBtn.addEventListener('click', () => {
+            sidebarOpen = !sidebarOpen;
+            if (sidebarOpen) {
+                sidebarPanel.classList.remove('collapsed');
+                sidebarPanel.style.opacity = '1';
+                sidebarToggleIcon.className = 'fas fa-times text-sm';
+            } else {
+                sidebarPanel.classList.add('collapsed');
+                sidebarPanel.style.opacity = '0';
+                sidebarToggleIcon.className = 'fas fa-bars text-sm';
+            }
+        });
+
+        // ===== VS Code Style Code Blocks =====
+        function setupCodeBlocks() {
+            var pres = contentArea.querySelectorAll('pre');
+            pres.forEach(function(pre) {
+                if (pre.closest('.sourceCode-wrapper')) return;
+
+                var code = pre.querySelector('code');
+                if (!code) return;
+
+                var lang = code.getAttribute('data-language') || 'Python';
+                var fileName = 'anova_analysis.py';
+                var langIcon = '<svg class="tab-icon python" viewBox="0 0 24 24" fill="currentColor"><path d="M9.585 11.692h4.328s2.432.039 2.432-2.35V5.391S16.714 3 11.936 3C7.362 3 7.647 4.983 7.647 4.983l.006 2.055h4.363v.617H5.92s-2.927-.332-2.927 4.282 2.555 4.45 2.555 4.45h1.524v-2.141s-.083-2.554 2.513-2.554zm-.056-6.009a.784.784 0 1 1 0-1.569.784.784 0 0 1 0 1.569z"/><path d="M18.452 7.532h-1.524v2.141s.083 2.554-2.513 2.554h-4.328s-2.432-.04-2.432 2.35v3.951s-.369 2.391 4.409 2.391c4.573 0 4.288-1.983 4.288-1.983l-.006-2.054h-4.363v-.617h6.097s2.927.332 2.927-4.282-2.555-4.451-2.555-4.451zm-4.597 10.477a.784.784 0 1 1 0 1.569.784.784 0 0 1 0-1.569z"/></svg>';
+
+                // Strip manual syntax spans and get raw text
+                var rawText = code.textContent;
+                code.innerHTML = '';
+                code.textContent = rawText;
+
+                var wrapper = document.createElement('div');
+                wrapper.className = 'sourceCode-wrapper';
+
+                var titlebar = document.createElement('div');
+                titlebar.className = 'sourceCode-titlebar';
+                titlebar.innerHTML =
+                    '<div class="sourceCode-dots">' +
+                        '<span class="dot-close"></span>' +
+                        '<span class="dot-min"></span>' +
+                        '<span class="dot-max"></span>' +
+                    '</div>' +
+                    '<div class="sourceCode-tab">' +
+                        langIcon +
+                        '<span>' + fileName + '</span>' +
+                    '</div>' +
+                    '<div class="sourceCode-actions">' +
+                        '<button type="button" onclick="toggleCodeBlock(this)" title="Ocultar/Mostrar">' +
+                            '<i class="fas fa-eye"></i> Ocultar' +
+                        '</button>' +
+                        '<button type="button" onclick="copyCodeBlock(this)" title="Copiar código">' +
+                            '<i class="fas fa-copy"></i> Copiar' +
+                        '</button>' +
+                    '</div>';
+
+                var lines = rawText.split('\n');
+                if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+                var gutterHTML = '';
+                for (var i = 1; i <= lines.length; i++) {
+                    gutterHTML += '<div>' + i + '</div>';
+                }
+                var gutter = document.createElement('div');
+                gutter.className = 'sourceCode-gutter';
+                gutter.innerHTML = gutterHTML;
+
+                var minimap = document.createElement('div');
+                minimap.className = 'sourceCode-minimap';
+
+                var bodyWrapper = document.createElement('div');
+                bodyWrapper.className = 'sourceCode-body';
+
+                if (window.hljs) {
+                    code.classList.add('language-python');
+                    hljs.highlightElement(code);
+                }
+
+                pre.parentNode.insertBefore(wrapper, pre);
+                bodyWrapper.appendChild(gutter);
+                bodyWrapper.appendChild(pre);
+                bodyWrapper.appendChild(minimap);
+                wrapper.appendChild(titlebar);
+                wrapper.appendChild(bodyWrapper);
+            });
+        }
+
+        function toggleCodeBlock(btn) {
+            var wrapper = btn.closest('.sourceCode-wrapper');
+            var body = wrapper.querySelector('.sourceCode-body');
+            if (body.classList.contains('collapsed')) {
+                body.classList.remove('collapsed');
+                btn.innerHTML = '<i class="fas fa-eye"></i> Ocultar';
+            } else {
+                body.classList.add('collapsed');
+                btn.innerHTML = '<i class="fas fa-eye-slash"></i> Mostrar';
+            }
+        }
+
+        function copyCodeBlock(btn) {
+            var wrapper = btn.closest('.sourceCode-wrapper');
+            var code = wrapper.querySelector('code');
+            if (!code) return;
+            var text = code.textContent || code.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+                var originalHTML = btn.innerHTML;
+                btn.classList.add('copied');
+                btn.innerHTML = '<i class="fas fa-check"></i> Copiado';
+                setTimeout(function() {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = originalHTML;
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Error al copiar:', err);
+            });
+        }
+
+        // Wait for KaTeX to load, then init
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(init, 100);
+        });
+    </script>
+</body>
+
+</html>

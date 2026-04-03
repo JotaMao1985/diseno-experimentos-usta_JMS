@@ -1,0 +1,2436 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Material de estudio autónomo sobre diagnosis y validación del modelo en diseño de experimentos" name="description"/>
+<meta content="Z.ai" name="author"/>
+<title>Diseños en Cuadros Latinos - Material de Estudio USTA</title>
+<!-- Preconnect for performance -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<!-- External Resources -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<!-- KaTeX for LaTeX rendering -->
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" rel="stylesheet"/>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<!-- Highlight.js VS Code Dark+ -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+<!-- Tailwind Configuration -->
+<script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3D008D',
+                        secondary: '#ED1E79',
+                        navy: '#001A4D',
+                        gold: '#FDB913',
+                        bg: '#F8FAFC',
+                        surface: '#FFFFFF',
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #F8FAFC;
+            color: #1E293B;
+            scroll-behavior: smooth;
+        }
+
+        code,
+        pre {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* USTA Gradient Background */
+        .usta-gradient {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+        }
+
+        /* USTA Navy Header */
+        .usta-header {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+        }
+
+        /* USTA Card Style */
+        .usta-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .usta-card:hover {
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+            transform: translateY(-4px);
+        }
+
+        /* Tip box USTA style */
+        .tip-box {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.08) 0%, rgba(237, 30, 121, 0.08) 100%);
+            border: 1px solid rgba(61, 0, 141, 0.2);
+        }
+
+        /* Step connector for pipeline */
+        .step-connector::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #3D008D, #ED1E79);
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .step-connector:last-child::after {
+            display: none;
+        }
+
+        /* ===== SIDEBAR DARK STYLE ===== */
+        #sidebar-panel {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+            flex-shrink: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            width: 16rem;
+            min-width: 16rem;
+            transition: width 0.3s ease, min-width 0.3s ease, opacity 0.25s ease;
+            z-index: 40;
+        }
+
+        #sidebar-panel.collapsed {
+            width: 0;
+            min-width: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            padding-top: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-brand h2 {
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        .sidebar-brand p {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 0.25rem;
+            margin-bottom: 0;
+            text-align: left;
+        }
+
+        .sidebar-nav {
+            padding: 1rem;
+        }
+
+        .sidebar-nav-item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 0.65rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            text-align: left;
+            margin-bottom: 0.25rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: rgba(255, 255, 255, 0.6);
+            background: transparent;
+        }
+
+        .sidebar-nav-item:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-nav-item.active {
+            color: white;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            box-shadow: 0 4px 12px rgba(61, 0, 141, 0.3);
+        }
+
+        .sidebar-nav-item .check-mark {
+            color: #10B981;
+            flex-shrink: 0;
+        }
+
+        /* Floating sidebar toggle button */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 50;
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(61, 0, 141, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-toggle-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 18px rgba(61, 0, 141, 0.5);
+        }
+
+        /* Layout adjustment */
+        .main-layout {
+            display: flex;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        /* Scroll to top button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 3.5rem;
+            height: 3.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(61, 0, 141, 0.4);
+            transition: all 0.3s ease;
+            z-index: 50;
+            border: none;
+        }
+
+        .scroll-to-top.visible {
+            display: flex;
+        }
+
+        .scroll-to-top:hover {
+            background: linear-gradient(140deg, #4A00A8 0%, #FF2D8A 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(61, 0, 141, 0.5);
+        }
+
+        /* Fade-in animation */
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #3D008D, #ED1E79);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #4A00A8, #FF2D8A);
+        }
+
+        /* Code scrollbar */
+        .code-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .code-scroll::-webkit-scrollbar-track {
+            background: #2d2d2d;
+        }
+
+        .code-scroll::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #3D008D, #ED1E79);
+            border-radius: 4px;
+        }
+
+        /* Focus styles for accessibility */
+        button:focus-visible,
+        a:focus-visible {
+            outline: 2px solid #ED1E79;
+            outline-offset: 2px;
+        }
+
+        /* Legacy syntax highlighting (mapped to VS Code Dark+ colors) */
+        .syntax-kwd { color: #569cd6; font-weight: bold; }
+        .syntax-cls { color: #4ec9b0; }
+        .syntax-str { color: #ce9178; }
+        .syntax-com { color: #6a9955; font-style: italic; }
+        .syntax-func { color: #dcdcaa; }
+        .syntax-self { color: #9cdcfe; font-style: italic; }
+        .syntax-num { color: #b5cea8; }
+
+        /* Content Styling */
+        .module-content h2 {
+            color: #3D008D;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid #ED1E79;
+        }
+
+        .module-content h3 {
+            color: #3D008D;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.75rem 0 1rem 0;
+        }
+
+        .module-content h4 {
+            color: #ED1E79;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        .module-content p {
+            margin-bottom: 1rem;
+            text-align: justify;
+            line-height: 1.8;
+        }
+
+        .module-content ul,
+        .module-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .module-content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.7;
+        }
+
+        .module-content aside {
+            background: linear-gradient(135deg, rgba(253, 185, 19, 0.1) 0%, rgba(253, 185, 19, 0.05) 100%);
+            border-left: 4px solid #FDB913;
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .module-content aside strong {
+            color: #B8860B;
+        }
+
+        .module-content .formula-box {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.03) 0%, rgba(237, 30, 121, 0.03) 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            border: 1px solid rgba(61, 0, 141, 0.15);
+            overflow-x: auto;
+        }
+
+        .module-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .module-content th,
+        .module-content td {
+            padding: 1rem 1.25rem;
+            text-align: center;
+        }
+
+        .module-content th {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .module-content tr:nth-child(even) {
+            background: rgba(61, 0, 141, 0.03);
+        }
+
+        .module-content tr:hover {
+            background: rgba(61, 0, 141, 0.08);
+        }
+
+        .module-content code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #3D008D;
+            background: rgba(61, 0, 141, 0.08);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        .module-content pre code {
+            background: transparent;
+            padding: 0;
+            color: #d4d4d4;
+        }
+
+        .module-content .output {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            border-left: 4px solid #10B981;
+            margin: 1rem 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+        }
+
+        /* Tooltip Styles */
+        .tooltip-term {
+            position: relative;
+            border-bottom: 2px dotted #ED1E79;
+            cursor: help;
+            font-weight: 600;
+            color: #3D008D;
+        }
+
+        .tooltip-term:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #3D008D 0%, #2D0066 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 400;
+            width: 280px;
+            text-align: left;
+            line-height: 1.5;
+            box-shadow: 0 10px 25px rgba(61, 0, 141, 0.3);
+            z-index: 1000;
+            margin-bottom: 8px;
+        }
+
+        .tooltip-term:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: #3D008D;
+            margin-bottom: -8px;
+            z-index: 1001;
+        }
+
+        .module-content .ejercicio {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.08) 0%, rgba(237, 30, 121, 0.05) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #ED1E79;
+            margin: 1.5rem 0;
+        }
+
+        .module-content .ejercicio h4 {
+            color: #3D008D;
+            margin-top: 0;
+        }
+
+        .module-content .resumen {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.06) 0%, rgba(237, 30, 121, 0.04) 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-left: 4px solid #3D008D;
+            margin-bottom: 1.5rem;
+        }
+
+        .module-content .resumen h4 {
+            margin-top: 0;
+            color: #3D008D;
+        }
+
+        .module-content strong {
+            color: #3D008D;
+        }
+
+        .module-content em {
+            color: #ED1E79;
+        }
+
+        /* KaTeX display */
+        .katex-display {
+            margin: 1.25em 0;
+            overflow-x: auto;
+        }
+
+        /* Concepto clave box */
+        .concepto-clave {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.06) 0%, rgba(237, 30, 121, 0.04) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #3D008D;
+            margin: 1.5rem 0;
+        }
+
+        .concepto-clave h4 {
+            color: #3D008D;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Nota box */
+        .nota {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-left: 4px solid #10B981;
+            margin: 1.5rem 0;
+        }
+
+        .nota h4 {
+            color: #059669;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ===== VS Code Style Code Blocks ===== */
+        .sourceCode-wrapper {
+            position: relative;
+            margin: 1.75rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #1e1e1e;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255,255,255,0.05);
+        }
+
+        .sourceCode-titlebar {
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            height: 36px;
+            background: #323233;
+            border-bottom: 1px solid #252526;
+            user-select: none;
+        }
+
+        .sourceCode-dots { display: flex; gap: 8px; }
+        .sourceCode-dots span { width: 12px; height: 12px; border-radius: 50%; display: block; }
+        .sourceCode-dots .dot-close { background: #ff5f57; }
+        .sourceCode-dots .dot-min { background: #ffbd2e; }
+        .sourceCode-dots .dot-max { background: #28c940; }
+
+        .sourceCode-tab {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 12px;
+            height: 100%;
+            background: #1e1e1e;
+            border-top: 2px solid #007acc;
+            border-right: 1px solid #252526;
+            font-size: 0.78rem;
+            color: #cccccc;
+            font-family: 'Segoe UI', 'Montserrat', sans-serif;
+        }
+
+        .sourceCode-tab .tab-icon { width: 14px; height: 14px; }
+        .sourceCode-tab .tab-icon.python { color: #f7c948; }
+
+        .sourceCode-actions {
+            display: flex;
+            gap: 4px;
+            margin-left: auto;
+        }
+
+        .sourceCode-actions button {
+            background: transparent;
+            border: none;
+            color: #858585;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-family: 'Segoe UI', 'Montserrat', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .sourceCode-actions button:hover { background: #3c3c3c; color: #cccccc; }
+        .sourceCode-actions button.copied { color: #4ec9b0; }
+
+        .sourceCode-body {
+            display: flex;
+            margin: 0;
+            overflow-x: auto;
+            background: #1e1e1e;
+        }
+
+        .sourceCode-body.collapsed { display: none; }
+
+        .sourceCode-gutter {
+            padding: 16px 0;
+            text-align: right;
+            user-select: none;
+            color: #858585;
+            font-size: 0.82rem;
+            line-height: 1.65;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            min-width: 40px;
+            padding-right: 12px;
+            padding-left: 12px;
+            border-right: 1px solid #2d2d2d;
+            background: #1e1e1e;
+            flex-shrink: 0;
+        }
+
+        .sourceCode-gutter div { height: 1.65em; }
+
+        .sourceCode-wrapper pre {
+            margin: 0;
+            padding: 16px;
+            overflow-x: auto;
+            background: #1e1e1e;
+            flex: 1;
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+        }
+
+        .sourceCode-wrapper code {
+            font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+            font-size: 0.87rem;
+            line-height: 1.65;
+            color: #d4d4d4;
+            background: transparent !important;
+        }
+
+        .sourceCode-minimap {
+            width: 28px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.01) 100%);
+            border-left: 1px solid #2d2d2d;
+            flex-shrink: 0;
+        }
+
+        .sourceCode-wrapper pre::-webkit-scrollbar { height: 8px; }
+        .sourceCode-wrapper pre::-webkit-scrollbar-track { background: #1e1e1e; }
+        .sourceCode-wrapper pre::-webkit-scrollbar-thumb { background: rgba(121,121,121,0.4); border-radius: 4px; }
+        .sourceCode-wrapper pre::-webkit-scrollbar-thumb:hover { background: rgba(121,121,121,0.7); }
+
+        /* VS Code Dark+ Syntax Highlighting */
+        .hljs-keyword { color: #569cd6; }
+        .hljs-built_in { color: #4ec9b0; }
+        .hljs-type { color: #4ec9b0; }
+        .hljs-literal { color: #569cd6; }
+        .hljs-number { color: #b5cea8; }
+        .hljs-string { color: #ce9178; }
+        .hljs-comment { color: #6a9955; font-style: italic; }
+        .hljs-function { color: #dcdcaa; }
+        .hljs-title { color: #dcdcaa; }
+        .hljs-params { color: #9cdcfe; }
+        .hljs-operator { color: #d4d4d4; }
+        .hljs-punctuation { color: #d4d4d4; }
+        .hljs-variable { color: #9cdcfe; }
+        .hljs-attr { color: #9cdcfe; }
+        .hljs-class .hljs-title { color: #4ec9b0; }
+        .hljs-meta { color: #c586c0; }
+
+        /* Keep old span classes as fallback for existing markup */
+        .kwd { color: #569cd6; font-weight: bold; }
+        .cls { color: #4ec9b0; }
+        .str { color: #ce9178; }
+        .com { color: #6a9955; font-style: italic; }
+        .func { color: #dcdcaa; }
+        .num { color: #b5cea8; }
+        .op { color: #d4d4d4; }
+        .var { color: #9cdcfe; }
+
+        /* Hide old code-title (replaced by VS Code titlebar) */
+        .code-title { display: none; }
+
+        /* Formula number */
+        .formula-number {
+            float: right;
+            color: #64748B;
+            font-size: 0.9rem;
+        }
+        /* === Latin Square & Flow Visualizations === */
+        :root {
+            --usta-primary: #3D008D;
+        }
+        
+        .latin-square-grid {
+            display: grid;
+            gap: 0.5rem;
+            margin: 2rem auto;
+            justify-content: center;
+        }
+        .latin-square-grid.grid-3 { grid-template-columns: repeat(3, 3rem); }
+        .latin-square-grid.grid-4 { grid-template-columns: repeat(4, 3rem); }
+        .latin-square-grid.grid-5 { grid-template-columns: repeat(5, 3rem); }
+
+        .latin-square-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.25rem;
+            font-weight: 700;
+            border-radius: 0.375rem;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        
+        .latin-square-cell:hover { transform: scale(1.05); }
+        
+        .cell-A { background: linear-gradient(135deg, #10B981, #059669); }
+        .cell-B { background: linear-gradient(135deg, #3B82F6, #2563EB); }
+        .cell-C { background: linear-gradient(135deg, #F59E0B, #D97706); }
+        .cell-D { background: linear-gradient(135deg, #EF4444, #DC2626); }
+        .cell-E { background: linear-gradient(135deg, #8B5CF6, #7C3AED); }
+
+        .concept-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        .diagram-box {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-weight: 600;
+            min-width: 120px;
+            border: 1px solid #E2E8F0;
+        }
+        .diagram-row { border-top: 4px solid #10B981; }
+        .diagram-col { border-top: 4px solid #3B82F6; }
+        .diagram-treat { border-top: 4px solid #F59E0B; }
+        
+        .diagram-arrow {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #64748B;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+<!-- Floating Sidebar Toggle Button -->
+<button aria-label="Toggle sidebar" class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Mostrar/Ocultar menú">
+<i class="fas fa-bars text-sm" id="sidebarToggleIcon"></i>
+</button>
+<div class="main-layout">
+<!-- Sidebar Navigation -->
+<div id="sidebar-panel">
+<div class="sidebar-brand">
+<h2><i class="fas fa-th text-secondary"></i> Diseño <span style="color: #FDB913;">DCL</span></h2>
+<p>Diseño de Experimentos • Cuadros Latinos • USTA</p>
+</div>
+<nav class="sidebar-nav" id="module-nav">
+<!-- Nav items injected via JS -->
+</nav>
+</div>
+<!-- Main Content Area -->
+<div class="flex-grow flex flex-col" style="min-width:0;">
+<main class="flex-grow bg-white rounded-tl-xl shadow-sm border border-gray-200 overflow-hidden">
+<div class="p-6 md:p-10 module-content" id="content-area">
+<!-- Content injected via JS -->
+</div>
+</main>
+</div>
+</div>
+<!-- Footer -->
+<footer class="usta-header mt-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+<i class="fas fa-book-open"></i> Referencias Bibliográficas
+            </h3>
+<ul class="space-y-3 text-white/90 text-sm">
+<li class="flex items-start gap-2">
+<i class="fas fa-bookmark text-secondary mt-1"></i>
+<span>Montgomery, D. C. (2017). <em class="text-gold">Design and Analysis of Experiments</em> (9th
+                        ed.). Wiley.</span>
+</li>
+<li class="flex items-start gap-2">
+<i class="fas fa-bookmark text-secondary mt-1"></i>
+<span>Box, G.E.P. &amp; Cox, D.R. (1964). An analysis of transformations. <em class="text-gold">Journal
+                            of the Royal Statistical Society, Series B</em>, 26(2), 211-252.</span>
+</li>
+<li class="flex items-start gap-2">
+<i class="fas fa-bookmark text-secondary mt-1"></i>
+<span>Scheffé, H. (1959). <em class="text-gold">The Analysis of Variance</em>. Wiley.</span>
+</li>
+<li class="flex items-start gap-2">
+<i class="fas fa-bookmark text-secondary mt-1"></i>
+<span>Bartlett, M.S. (1937). Properties of sufficiency and statistical tests. <em class="text-gold">Proceedings of the Royal Society of London, Series A</em>, 160,
+                        268-282.</span>
+</li>
+<li class="flex items-start gap-2">
+<i class="fas fa-bookmark text-secondary mt-1"></i>
+<span>Hartley, H.O. (1950). The maximum F-ratio as a short-cut test for heterogeneity of variance.
+                        <em class="text-gold">Biometrika</em>, 37, 308-312.</span>
+</li>
+<li class="flex items-start gap-2">
+<i class="fas fa-bookmark text-secondary mt-1"></i>
+<span>Cochran, W.G. (1941). The distribution of the largest of a set of estimated variances as a
+                        fraction of their total. <em class="text-gold">Annals of Eugenics</em>, 11, 47-52.</span>
+</li>
+</ul>
+<div class="mt-6 pt-6 border-t border-white/20 text-center">
+<p class="text-white font-medium">Material de Estudio — <span class="text-gold">USTA</span></p>
+<p class="text-xs mt-1 text-white/60">Diseño de Experimentos • Diagnosis y Validación del Modelo</p>
+</div>
+</div>
+</footer>
+<!-- Scroll to Top Button -->
+<button aria-label="Volver arriba" class="scroll-to-top" id="scrollToTopBtn">
+<i class="fas fa-arrow-up"></i>
+</button>
+<!-- Module Content Templates -->
+<template id="module-1"><div class="animate-fade-in">
+<div class="border-b border-gray-100 pb-6 mb-6">
+<div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+<span>Módulo 1</span>
+</div>
+<h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Introducción al DCL</h2>
+<div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
+<span class="text-xl">🎯</span>
+<div>
+<h3 class="font-bold text-gray-800 text-sm" style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
+<p class="text-gray-600 text-sm" style="margin:0;">Comprender qué es un cuadro latino y cuándo utilizarlo.</p>
+</div>
+</div>
+</div>
+<article class="" id="introduccion" style="">
+<div class="definition-box">
+<h4>Definición</h4>
+<p>Un <strong>Diseño en Cuadro Latino (DCL)</strong> es un diseño experimental que permite controlar o eliminar dos fuentes de variabilidad (bloques) simultáneamente mediante la organización de los tratamientos en un arreglo cuadrado donde cada tratamiento aparece exactamente una vez en cada fila y cada columna.</p>
+</div>
+<p>Los Diseños en Cuadros Latinos son una extensión de los Diseños en Bloques Completos Aleatorizados (DBCA). Mientras que en un DBCA se controla una fuente de variación (bloques), el Cuadro Latino controla dos fuentes de variación simultáneamente (filas y columnas).</p>
+<h2>Antecedentes Históricos</h2>
+<p>El término "Cuadro Latino" se debe a Leonhard Euler, quien en 1782 estudió este tipo de arreglos como una generalización del concepto de cuadrados mágicos. En el contexto de diseño experimental, estos diseños fueron formalizados por Ronald Fisher y posteriormente ampliados por otros estadísticos.</p>
+<h2>Características Principales</h2>
+<ul>
+<li>Arreglo cuadrado de orden $p$: requiere $p^2$ observaciones</li>
+<li>Se tienen tres factores: tratamientos, filas y columnas</li>
+<li>Cada tratamiento aparece exactamente una vez en cada fila</li>
+<li>Cada tratamiento aparece exactamente una vez en cada columna</li>
+<li>Permite controlar dos fuentes de variabilidad simultáneamente</li>
+</ul>
+<h2>Ejemplo de Cuadro Latino 4×4</h2>
+<p>En un experimento agrícola donde se desea evaluar el rendimiento de 4 variedades de trigo ($A$, $B$, $C$, $D$) y se tienen 4 bloques de terreno (filas) y 4 tipos de suelo (columnas):</p>
+<div class="latin-square-grid grid-4">
+<div class="latin-square-cell cell-A">A</div>
+<div class="latin-square-cell cell-B">B</div>
+<div class="latin-square-cell cell-C">C</div>
+<div class="latin-square-cell cell-D">D</div>
+<div class="latin-square-cell cell-B">B</div>
+<div class="latin-square-cell cell-C">C</div>
+<div class="latin-square-cell cell-D">D</div>
+<div class="latin-square-cell cell-A">A</div>
+<div class="latin-square-cell cell-C">C</div>
+<div class="latin-square-cell cell-D">D</div>
+<div class="latin-square-cell cell-A">A</div>
+<div class="latin-square-cell cell-B">B</div>
+<div class="latin-square-cell cell-D">D</div>
+<div class="latin-square-cell cell-A">A</div>
+<div class="latin-square-cell cell-B">B</div>
+<div class="latin-square-cell cell-C">C</div>
+</div>
+<p style="text-align: center; font-size: 0.85rem; color: #64748b;">Nota: Cada letra (tratamiento) aparece exactamente una vez en cada fila y cada columna.</p>
+<h2>Notación</h2>
+<p>Un Cuadro Latino de orden $p$ se denota como $L_p$ o $\mathrm{Latin}(p)$. Por ejemplo:</p>
+<ul>
+<li>$L_3$: Cuadro Latino de orden 3 (9 observaciones)</li>
+<li>$L_4$: Cuadro Latino de orden 4 (16 observaciones)</li>
+<li>$L_5$: Cuadro Latino de orden 5 (25 observaciones)</li>
+</ul>
+<div class="formula-box">
+<p><strong>Número de observaciones:</strong></p>
+                        $$N = p^2$$
+                        <p>donde $p$ es el número de niveles de cada factor (filas, columnas, tratamientos)</p>
+</div>
+</article></div></template><template id="module-2"><div class="animate-fade-in">
+<div class="border-b border-gray-100 pb-6 mb-6">
+<div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+<span>Módulo 2</span>
+</div>
+<h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Fundamentos Teóricos</h2>
+<div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
+<span class="text-xl">🎯</span>
+<div>
+<h3 class="font-bold text-gray-800 text-sm" style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
+<p class="text-gray-600 text-sm" style="margin:0;">Estudiar la estructura y condiciones de los cuadros latinos.</p>
+</div>
+</div>
+</div>
+<article class="" id="fundamentos" style="">
+<h2>Estructura Experimental</h2>
+<p>En un Diseño en Cuadro Latino se tienen tres factores, cada uno con $p$ niveles:</p>
+<ul>
+<li><strong>Filas:</strong> Representan el primer bloqueo (por ejemplo, bloques de terreno en dirección este-oeste)</li>
+<li><strong>Columnas:</strong> Representan el segundo bloqueo (por ejemplo, tipo de suelo o dirección norte-sur)</li>
+<li><strong>Tratamientos:</strong> Los $p$ niveles del factor de interés primario</li>
+</ul>
+<div class="concept-diagram">
+<div class="diagram-box diagram-row">
+<div>Filas</div>
+<div style="font-size: 0.75rem; font-weight: 400;">(Bloque 1)</div>
+</div>
+<div class="diagram-arrow">×</div>
+<div class="diagram-box diagram-col">
+<div>Columnas</div>
+<div style="font-size: 0.75rem; font-weight: 400;">(Bloque 2)</div>
+</div>
+<div class="diagram-arrow">×</div>
+<div class="diagram-box diagram-treat">
+<div>Tratamientos</div>
+<div style="font-size: 0.75rem; font-weight: 400;">(Efectos fijos)</div>
+</div>
+<div class="diagram-arrow">=</div>
+<div class="diagram-box" style="background: var(--usta-primary); color: white;">
+<div>Cuadro Latino</div>
+<div style="font-size: 0.75rem; font-weight: 400;">$p^2$ obs.</div>
+</div>
+</div>
+<h2>Supuestos del Modelo</h2>
+<div class="definition-box">
+<h4>Supuestos Fundamentales</h4>
+<p>No existe interacción entre los factores (filas, columnas y tratamientos). Este supuesto es crítico para la validez del análisis. Si se sospecha interacción, se debe considerar un diseño más complejo (por ejemplo, Cuadro Greco-Latino).</p>
+</div>
+<p>Los supuestos para el análisis de varianza de un Cuadro Latino son:</p>
+<ol>
+<li><strong>Normalidad:</strong> Los errores tienen distribución normal</li>
+<li><strong>Varianza constante:</strong> $\sigma^2$ es constante para todos los tratamientos</li>
+<li><strong>Independencia:</strong> Las observaciones son independientes</li>
+<li><strong>Aditividad:</strong> El modelo es aditivo (sin interacción)</li>
+</ol>
+<h2>Ventajas y Desventajas</h2>
+<div class="example-box">
+<h4>Ventajas</h4>
+<ul>
+<li>Control de dos fuentes de variabilidad simultáneamente</li>
+<li>Reduce el error experimental significativamente</li>
+<li>Diseño eficiente cuando los recursos son limitados</li>
+<li>Análisis estadístico relativamente sencillo</li>
+</ul>
+</div>
+<div class="warning-box">
+<h4>Desventajas</h4>
+<ul>
+<li>Requiere que el número de niveles sea igual para los tres factores</li>
+<li>El número de observaciones crece rápidamente ($p^2$)</li>
+<li>No permite estudiar interacciones entre filas, columnas y tratamientos</li>
+<li>No es adecuado si se sospecha interacción entre factores</li>
+</ul>
+</div>
+<h2>Principio de Ortogonalidad</h2>
+<p>En un Cuadro Latino, los tres factores (filas, columnas y tratamientos) son <strong>ortogonales</strong>, lo que significa que:</p>
+<div class="formula-box">
+                        $$\sum_{i=1}^{p} \sum_{j=1}^{p} (\text{efecto fila } i) \times (\text{efecto columna } j) = 0$$
+                        $$\sum_{i=1}^{p} \sum_{j=1}^{p} (\text{efecto fila } i) \times (\text{efecto tratamiento } k) = 0$$
+                        $$\sum_{i=1}^{p} \sum_{j=1}^{p} (\text{efecto columna } j) \times (\text{efecto tratamiento } k) = 0$$
+                    </div>
+<p>Esta ortogonalidad permite que los efectos de cada factor se estimen de manera independiente.</p>
+</article></div></template><template id="module-3"><div class="animate-fade-in">
+<div class="border-b border-gray-100 pb-6 mb-6">
+<div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+<span>Módulo 3</span>
+</div>
+<h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Modelo Estadístico</h2>
+<div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
+<span class="text-xl">🎯</span>
+<div>
+<h3 class="font-bold text-gray-800 text-sm" style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
+<p class="text-gray-600 text-sm" style="margin:0;">Formular el modelo lineal del DCL y sus componentes.</p>
+</div>
+</div>
+</div>
+<article class="" id="modelo" style="">
+<h2>Modelo Lineal</h2>
+<p>El modelo estadístico para un Diseño en Cuadro Latino es:</p>
+<div class="formula-box">
+                        $$y_{ijk} = \mu + \rho_i + C_j + \tau_k + \varepsilon_{ijk}$$
+                    </div>
+<p>Donde:</p>
+<ul>
+<li>$y_{ijk}$: Observable en la fila $i$, columna $j$, con tratamiento $k$</li>
+<li>$\mu$: Media general</li>
+<li>$\rho_i$: Efecto de la fila $i$ (bloque 1), con $\sum_{i=1}^{p} \rho_i = 0$</li>
+<li>$C_j$: Efecto de la columna $j$ (bloque 2), con $\sum_{j=1}^{p} C_j = 0$</li>
+<li>$\tau_k$: Efecto del tratamiento $k$, con $\sum_{k=1}^{p} \tau_k = 0$</li>
+<li>$\varepsilon_{ijk}$: Error aleatorio, $\varepsilon_{ijk} \sim N(0, \sigma^2)$</li>
+</ul>
+<h2>Grados de Libertad</h2>
+<p>Los grados de libertad se dividen de la siguiente manera:</p>
+<table>
+<thead>
+<tr>
+<th>Fuente de Variación</th>
+<th>Grados de Libertad</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Filas (Bloques)</td>
+<td>$p - 1$</td>
+</tr>
+<tr>
+<td>Columnas (Bloques)</td>
+<td>$p - 1$</td>
+</tr>
+<tr>
+<td>Tratamientos</td>
+<td>$p - 1$</td>
+</tr>
+<tr>
+<td>Error</td>
+<td>$(p-1)(p-2)$</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>$p^2 - 1$</strong></td>
+</tr>
+</tbody>
+</table>
+<div class="formula-box">
+                        $$\text{GL}_{\text{Error}} = (p-1)(p-2) = p^2 - 1 - (p-1) - (p-1) - (p-1)$$
+                    </div>
+<h2>Cuasifactores</h2>
+<p>Para las sumas de cuadrados, definimos los siguientes elementos:</p>
+<div class="formula-box">
+                        $$y_{\cdots} = \sum_{i=1}^{p} \sum_{j=1}^{p} \sum_{k=1}^{p} y_{ijk}$$
+                        $$\bar{y}_{\cdots} = \frac{y_{\cdots}}{p^2}$$
+                    </div>
+<p><strong>Totales:</strong></p>
+<ul>
+<li>$y_{i\cdot\cdot}$: Total de la fila $i$ (suma sobre $j$ y $k$)</li>
+<li>$y_{\cdot j\cdot}$: Total de la columna $j$ (suma sobre $i$ y $k$)</li>
+<li>$y_{\cdot\cdot k}$: Total del tratamiento $k$ (suma sobre $i$ y $j$)</li>
+</ul>
+<h2>Fórmulas de Sumas de Cuadrados</h2>
+<div class="formula-box">
+                        $$\text{SC}_{\text{Total}} = \sum_{i,j,k} y_{ijk}^2 - \frac{y_{\cdots}^2}{p^2}$$
+                    </div>
+<div class="formula-box">
+                        $$\text{SC}_{\text{Filas}} = \frac{1}{p} \sum_{i=1}^{p} y_{i\cdot\cdot}^2 - \frac{y_{\cdots}^2}{p^2}$$
+                    </div>
+<div class="formula-box">
+                        $$\text{SC}_{\text{Columnas}} = \frac{1}{p} \sum_{j=1}^{p} y_{\cdot j\cdot}^2 - \frac{y_{\cdots}^2}{p^2}$$
+                    </div>
+<div class="formula-box">
+                        $$\text{SC}_{\text{Tratamientos}} = \frac{1}{p} \sum_{k=1}^{p} y_{\cdot\cdot k}^2 - \frac{y_{\cdots}^2}{p^2}$$
+                    </div>
+<div class="formula-box">
+                        $$\text{SC}_{\text{Error}} = \text{SC}_{\text{Total}} - \text{SC}_{\text{Filas}} - \text{SC}_{\text{Columnas}} - \text{SC}_{\text{Tratamientos}}$$
+                    </div>
+<h2>Cuadrados Medios</h2>
+<div class="formula-box">
+                        $$\text{CM}_{\text{Filas}} = \frac{\text{SC}_{\text{Filas}}}{p-1}$$
+                        $$\text{CM}_{\text{Columnas}} = \frac{\text{SC}_{\text{Columnas}}}{p-1}$$
+                        $$\text{CM}_{\text{Tratamientos}} = \frac{\text{SC}_{\text{Tratamientos}}}{p-1}$$
+                        $$\text{CM}_{\text{Error}} = \frac{\text{SC}_{\text{Error}}}{(p-1)(p-2)}$$
+                    </div>
+<h2>Estadístico F</h2>
+<p>Para probar la hipótesis nula de que no hay diferencias entre tratamientos:</p>
+<div class="formula-box">
+                        $$F_0 = \frac{\text{CM}_{\text{Tratamientos}}}{\text{CM}_{\text{Error}}}$$
+                    </div>
+<p>Se rechaza $H_0$ si $F_0 &gt; F_{\alpha,\; (p-1),\; (p-1)(p-2)}$ o si el valor $p$ asociado es menor que $\alpha$.</p>
+</article></div></template><template id="module-4"><div class="animate-fade-in">
+<div class="border-b border-gray-100 pb-6 mb-6">
+<div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+<span>Módulo 4</span>
+</div>
+<h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Propiedades del Diseño</h2>
+<div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
+<span class="text-xl">🎯</span>
+<div>
+<h3 class="font-bold text-gray-800 text-sm" style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
+<p class="text-gray-600 text-sm" style="margin:0;">Conocer las propiedades estadísticas del cuadro latino.</p>
+</div>
+</div>
+</div>
+<article class="" id="propiedades" style="">
+<h2>Propiedades de los Cuadros Latinos</h2>
+<div class="definition-box">
+<h4>Propiedad Fundamental</h4>
+<p>En un Cuadro Latino de orden $p$, cada tratamiento aparece exactamente $p$ veces: una vez en cada fila y una vez en cada columna.</p>
+</div>
+<h2>Cuadros Latinos Estándar</h2>
+<p>Un Cuadro Latino se dice <strong>estándar</strong> o <strong>canónico</strong> si los tratamientos aparecen en orden en la primera fila y primera columna:</p>
+<h3>Cuadro Latino Estándar de orden 3:</h3>
+<div class="latin-square-grid grid-3" style="max-width: 200px;">
+<div class="latin-square-cell cell-A">A</div>
+<div class="latin-square-cell cell-B">B</div>
+<div class="latin-square-cell cell-C">C</div>
+<div class="latin-square-cell cell-B">B</div>
+<div class="latin-square-cell cell-C">C</div>
+<div class="latin-square-cell cell-A">A</div>
+<div class="latin-square-cell cell-C">C</div>
+<div class="latin-square-cell cell-A">A</div>
+<div class="latin-square-cell cell-B">B</div>
+</div>
+<h3>Cuadro Latino Estándar de orden 4:</h3>
+<div class="latin-square-grid grid-4" style="max-width: 250px;">
+<div class="latin-square-cell cell-A">A</div>
+<div class="latin-square-cell cell-B">B</div>
+<div class="latin-square-cell cell-C">C</div>
+<div class="latin-square-cell cell-D">D</div>
+<div class="latin-square-cell cell-B">B</div>
+<div class="latin-square-cell cell-C">C</div>
+<div class="latin-square-cell cell-D">D</div>
+<div class="latin-square-cell cell-A">A</div>
+<div class="latin-square-cell cell-C">C</div>
+<div class="latin-square-cell cell-D">D</div>
+<div class="latin-square-cell cell-A">A</div>
+<div class="latin-square-cell cell-B">B</div>
+<div class="latin-square-cell cell-D">D</div>
+<div class="latin-square-cell cell-A">A</div>
+<div class="latin-square-cell cell-B">B</div>
+<div class="latin-square-cell cell-C">C</div>
+</div>
+<h2>Número de Cuadros Latinos</h2>
+<p>El número de Cuadros Latinos no estándar de orden $p$ es:</p>
+<table>
+<thead>
+<tr>
+<th>Orden ($p$)</th>
+<th>Número de Cuadros Latinos</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>1</td></tr>
+<tr><td>2</td><td>1</td></tr>
+<tr><td>3</td><td>1</td></tr>
+<tr><td>4</td><td>4</td></tr>
+<tr><td>5</td><td>56</td></tr>
+<tr><td>6</td><td>940</td></tr>
+<tr><td>7</td><td>16,940</td></tr>
+<tr><td>8</td><td>812,560</td></tr>
+</tbody>
+</table>
+<h2>Operaciones con Cuadros Latinos</h2>
+<h3>1. Cambio de Símbolos (Permutación de Tratamientos)</h3>
+<p>Si se intercambian los nombres de los tratamientos, se obtiene otro Cuadro Latino válido.</p>
+<h3>2. Permutación de Filas</h3>
+<p>Cualquier reordenamiento de las filas produce otro Cuadro Latino.</p>
+<h3>3. Permutación de Columnas</h3>
+<p>Cualquier reordenamiento de las columnas produce otro Cuadro Latino.</p>
+<h3>4. Transposición</h3>
+<p>Intercambiar filas por columnas (trasposición) preserva la propiedad del Cuadro Latino.</p>
+<div class="warning-box">
+<h4>Importante</h4>
+<p>Dos Cuadros Latinos se consideran esencialmente iguales si uno puede obtenerse del otro mediante una combinación de estas operaciones. A estos se les llama <strong>Cuadros Latinos isotópicos</strong>.</p>
+</div>
+<h2>Cuadros Greco-Latinos</h2>
+<p>Un <strong>Cuadro Greco-Latino</strong> es la extensión del Cuadro Latino que permite controlar un tercer factor de bloqueo mediante el uso de letras griegas.</p>
+<p>En un Cuadro Greco-Latino de orden $p$:</p>
+<ul>
+<li>Cada letra latina aparece exactamente una vez en cada fila y columna</li>
+<li>Cada letra griega aparece exactamente una vez en cada fila y columna</li>
+<li>Cada combinación letra latina-griega aparece a lo sumo una vez</li>
+</ul>
+<div class="formula-box">
+<p><strong>Condición de existencia:</strong></p>
+<p>Un Cuadro Greco-Latino de orden $p$ existe si y solo si existe un par de Cuadros Latinos ortogonales de orden $p$.</p>
+<p>Esto ocurre cuando $p$ es un número primo o una potencia de un número primo.</p>
+</div>
+<p>Para $p = 2$ y $p = 6$, no existen pares de Cuadros Latinos ortogonales, por lo tanto, no existen Cuadros Greco-Latinos de esos órdenes. Euler conjeturó que no existían para ningún $p \equiv 2 \pmod{4}$, pero esta conjetura fue refutada para $p \geq 10$.</p>
+</article></div></template><template id="module-5"><div class="animate-fade-in">
+<div class="border-b border-gray-100 pb-6 mb-6">
+<div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+<span>Módulo 5</span>
+</div>
+<h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Ejemplo Numérico</h2>
+<div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
+<span class="text-xl">🎯</span>
+<div>
+<h3 class="font-bold text-gray-800 text-sm" style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
+<p class="text-gray-600 text-sm" style="margin:0;">Aplicar el DCL a un problema con cálculos paso a paso.</p>
+</div>
+</div>
+</div>
+<article class="" id="ejemplo" style="">
+<div class="example-box">
+<h4>Experimento de Rendimiento de Cuatro Variedades de Trigo</h4>
+<p>Se condujo un experimento para comparar el rendimiento (en bushels/acre) de cuatro variedades de trigo ($A$, $B$, $C$, $D$). Se utilizó un Diseño en Cuadro Latino 4×4 donde:</p>
+<ul>
+<li><strong>Filas:</strong> 4 bloques de terreno (orientación Este-Oeste)</li>
+<li><strong>Columnas:</strong> 4 tipos de suelo (orientación Norte-Sur)</li>
+<li><strong>Tratamientos:</strong> 4 variedades de trigo</li>
+</ul>
+</div>
+<h2>Datos Observados</h2>
+<table>
+<thead>
+<tr>
+<th>Bloque/Fila</th>
+<th>Col 1</th>
+<th>Col 2</th>
+<th>Col 3</th>
+<th>Col 4</th>
+<th>Total Fila</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Bloque 1</strong></td>
+<td>A: 42</td>
+<td>B: 38</td>
+<td>C: 51</td>
+<td>D: 44</td>
+<td><strong>175</strong></td>
+</tr>
+<tr>
+<td><strong>Bloque 2</strong></td>
+<td>B: 39</td>
+<td>C: 54</td>
+<td>D: 47</td>
+<td>A: 45</td>
+<td><strong>185</strong></td>
+</tr>
+<tr>
+<td><strong>Bloque 3</strong></td>
+<td>C: 50</td>
+<td>D: 45</td>
+<td>A: 49</td>
+<td>B: 41</td>
+<td><strong>185</strong></td>
+</tr>
+<tr>
+<td><strong>Bloque 4</strong></td>
+<td>D: 43</td>
+<td>A: 47</td>
+<td>B: 40</td>
+<td>C: 53</td>
+<td><strong>183</strong></td>
+</tr>
+<tr>
+<td><strong>Total Columna</strong></td>
+<td><strong>174</strong></td>
+<td><strong>184</strong></td>
+<td><strong>187</strong></td>
+<td><strong>183</strong></td>
+<td><strong>728</strong></td>
+</tr>
+</tbody>
+</table>
+<h2>Totales por Tratamiento</h2>
+<table>
+<thead>
+<tr>
+<th>Tratamiento</th>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+<th>D</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Total</strong></td>
+<td>183</td>
+<td>158</td>
+<td>208</td>
+<td>179</td>
+</tr>
+<tr>
+<td><strong>Media</strong></td>
+<td>45.75</td>
+<td>39.50</td>
+<td>52.00</td>
+<td>44.75</td>
+</tr>
+</tbody>
+</table>
+<h2>Cálculos con Python</h2>
+<div class="sourceCode" data-lang="Python">
+<div class="sourceCode-header">
+<span class="sourceCode-title">Python</span>
+<div class="sourceCode-buttons">
+<button onclick="toggleCodeBlock(this)" type="button"><i class="fas fa-eye"></i> <span>Ocultar</span></button>
+<button onclick="copyCodeBlock(this)" type="button"><i class="fas fa-copy"></i> <span>Copiar</span></button>
+</div>
+</div>
+<pre><code>import numpy as np
+
+# Datos del Cuadro Latino 4x4
+y = np.array([
+    [42, 38, 51, 44],  # Bloque 1
+    [39, 54, 47, 45],  # Bloque 2
+    [50, 45, 49, 41],  # Bloque 3
+    [43, 47, 40, 53]   # Bloque 4
+])
+
+p = 4  # orden del cuadro
+N = p ** 2  # total de observaciones
+
+# Totales
+y_i = y.sum(axis=1)  # totales de fila (bloques)
+y_j = y.sum(axis=0)  # totales de columna
+y_total = y.sum()
+
+print("=" * 50)
+print("ANÁLISIS DE CUADRO LATINO 4x4")
+print("=" * 50)
+print(f"\nTotal general: y... = {y_total}")
+print(f"\nTotales de fila (Bloques):")
+for i, total in enumerate(y_i, 1):
+    print(f"  y{i}.. = {total}")
+
+print(f"\nTotales de columna:")
+for j, total in enumerate(y_j, 1):
+    print(f"  y.{j}. = {total}")</code></pre>
+</div>
+<div class="code-output">
+<div class="code-output-header">
+<span class="code-output-title">Output</span>
+</div>
+<pre class="code-output-body">==================================================
+ANÁLISIS DE CUADRO LATINO 4x4
+==================================================
+
+Total general: y.. = 728
+
+Totales de fila (Bloques):
+y1. = 175
+y2. = 185
+y3. = 185
+y4. = 183
+
+Totales de columna:
+y.1. = 174
+y.2. = 184
+y.3. = 187
+y.4. = 183</pre>
+</div>
+<h2>Cálculo de Sumas de Cuadrados</h2>
+<div class="sourceCode" data-lang="Python">
+<div class="sourceCode-header">
+<span class="sourceCode-title">Python</span>
+<div class="sourceCode-buttons">
+<button onclick="toggleCodeBlock(this)" type="button"><i class="fas fa-eye"></i> <span>Ocultar</span></button>
+<button onclick="copyCodeBlock(this)" type="button"><i class="fas fa-copy"></i> <span>Copiar</span></button>
+</div>
+</div>
+<pre><code>import numpy as np
+
+# Datos del Cuadro Latino 4x4
+y = np.array([
+    [42, 38, 51, 44],  # Bloque 1
+    [39, 54, 47, 45],  # Bloque 2
+    [50, 45, 49, 41],  # Bloque 3
+    [43, 47, 40, 53]   # Bloque 4
+])
+
+p = 4  # orden del cuadro
+N = p ** 2  # total de observaciones
+
+# Totales
+y_i = y.sum(axis=1)  # totales de fila (bloques)
+y_j = y.sum(axis=0)  # totales de columna
+y_total = y.sum()
+
+# Totales por tratamiento (según Cuadro Latino estándar)
+tratamientos = ['A', 'B', 'C', 'D']
+y_A = y[0,0] + y[1,3] + y[2,2] + y[3,1]
+y_B = y[0,1] + y[1,0] + y[2,3] + y[3,2]
+y_C = y[0,2] + y[1,1] + y[2,0] + y[3,3]
+y_D = y[0,3] + y[1,2] + y[2,1] + y[3,0]
+y_k = np.array([y_A, y_B, y_C, y_D])
+
+# Sumas de Cuadrados
+SC_total = (y ** 2).sum() - y_total ** 2 / N
+SC_filas = (y_i ** 2).sum() / p - y_total ** 2 / N
+SC_columnas = (y_j ** 2).sum() / p - y_total ** 2 / N
+SC_tratamientos = (y_k ** 2).sum() / p - y_total ** 2 / N
+SC_error = SC_total - SC_filas - SC_columnas - SC_tratamientos
+
+print("=" * 50)
+print("SUMAS DE CUADRADOS")
+print("=" * 50)
+print(f"\nSC_Total = {SC_total:.2f}")
+print(f"SC_Filas = {SC_filas:.2f}")
+print(f"SC_Columnas = {SC_columnas:.2f}")
+print(f"SC_Tratamientos = {SC_tratamientos:.2f}")
+print(f"SC_Error = {SC_error:.2f}")</code></pre>
+</div>
+<div class="code-output">
+<div class="code-output-header">
+<span class="code-output-title">Output</span>
+</div>
+<pre class="code-output-body">==================================================
+SUMAS DE CUADRADOS
+==================================================
+
+SC_Total = 310.00
+SC_Filas = 32.00
+SC_Columnas = 32.00
+SC_Tratamientos = 642.00
+SC_Error = 4.00</pre>
+</div>
+</article></div></template><template id="module-6"><div class="animate-fade-in">
+<div class="border-b border-gray-100 pb-6 mb-6">
+<div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+<span>Módulo 6</span>
+</div>
+<h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Tabla ANOVA</h2>
+<div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
+<span class="text-xl">🎯</span>
+<div>
+<h3 class="font-bold text-gray-800 text-sm" style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
+<p class="text-gray-600 text-sm" style="margin:0;">Construir la tabla ANOVA y realizar pruebas de hipótesis.</p>
+</div>
+</div>
+</div>
+<article class="" id="anova" style="">
+<h2>Cuadro ANOVA Completo</h2>
+<div class="sourceCode" data-lang="Python">
+<div class="sourceCode-header">
+<span class="sourceCode-title">Python</span>
+<div class="sourceCode-buttons">
+<button onclick="toggleCodeBlock(this)" type="button"><i class="fas fa-eye"></i> <span>Ocultar</span></button>
+<button onclick="copyCodeBlock(this)" type="button"><i class="fas fa-copy"></i> <span>Copiar</span></button>
+</div>
+</div>
+<pre><code>from scipy import stats
+
+# Grados de libertad
+gl_filas = p - 1
+gl_columnas = p - 1
+gl_tratamientos = p - 1
+gl_error = (p - 1) * (p - 2)
+gl_total = N - 1
+
+# Cuadrados medios
+CM_filas = SC_filas / gl_filas
+CM_columnas = SC_columnas / gl_columnas
+CM_tratamientos = SC_tratamientos / gl_tratamientos
+CM_error = SC_error / gl_error
+
+# Estadísticos F
+F_filas = CM_filas / CM_error
+F_columnas = CM_columnas / CM_error
+F_tratamientos = CM_tratamientos / CM_error
+
+# Valores p
+p_val_filas = 1 - stats.f.cdf(F_filas, gl_filas, gl_error)
+p_val_columnas = 1 - stats.f.cdf(F_columnas, gl_columnas, gl_error)
+p_val_tratamientos = 1 - stats.f.cdf(F_tratamientos, gl_tratamientos, gl_error)
+
+print("=" * 70)
+print("TABLA ANOVA - DISEÑO EN CUADRO LATINO 4x4")
+print("=" * 70)
+print(f"{'Fuente':&lt;20} {'SC':&gt;10} {'GL':&gt;6} {'CM':&gt;10} {'F':&gt;8} {'Valor p':&gt;10}")
+print("-" * 70)
+print(f"{'Filas (Bloques)':&lt;20} {SC_filas:&gt;10.2f} {gl_filas:&gt;6} {CM_filas:&gt;10.2f} {F_filas:&gt;8.2f} {p_val_filas:&gt;10.4f}")
+print(f"{'Columnas (Bloques)':&lt;20} {SC_columnas:&gt;10.2f} {gl_columnas:&gt;6} {CM_columnas:&gt;10.2f} {F_columnas:&gt;8.2f} {p_val_columnas:&gt;10.4f}")
+print(f"{'Tratamientos':&lt;20} {SC_tratamientos:&gt;10.2f} {gl_tratamientos:&gt;6} {CM_tratamientos:&gt;10.2f} {F_tratamientos:&gt;8.2f} {p_val_tratamientos:&gt;10.4f}")
+print(f"{'Error':&lt;20} {SC_error:&gt;10.2f} {gl_error:&gt;6} {CM_error:&gt;10.2f}")
+print("-" * 70)
+print(f"{'Total':&lt;20} {SC_total:&gt;10.2f} {gl_total:&gt;6}")
+print("=" * 70)
+
+# Conclusión para tratamientos
+alpha = 0.05
+print(f"\n--- CONCLUSIÓN (α = {alpha}) ---")
+if p_val_tratamientos &lt; alpha:
+    print(f"p = {p_val_tratamientos:.4f} &lt; {alpha}")
+    print("Se RECHAZA H0: Existe diferencia significativa entre los tratamientos.")
+    print("Al menos una variedad de trigo tiene un rendimiento diferente.")
+else:
+    print(f"p = {p_val_tratamientos:.4f} &gt;= {alpha}")
+    print("NO se rechaza H0: No hay evidencia de diferencia entre tratamientos.")</code></pre>
+</div>
+<div class="code-output">
+<div class="code-output-header">
+<span class="code-output-title">Output</span>
+</div>
+<pre class="code-output-body">===========================================================================
+TABLA ANOVA - DISEÑO EN CUADRO LATINO 4x4
+===========================================================================
+Fuente                        SC        GL        CM         F        Valor p
+----------------------------------------------------------------------
+Filas (Bloques)            32.00      3       10.67       5.33      0.0609
+Columnas (Bloques)         32.00      3       10.67       5.33      0.0609
+Tratamientos               642.00      3       214.00     107.00      0.0000
+Error                         4.00       6        0.67
+----------------------------------------------------------------------
+Total                        310.00     15
+===========================================================================</pre>
+</div>
+<div class="interpretation-box">
+<strong>Interpretación:</strong> Con un valor p de 0.0000 para tratamientos (menor que α = 0.05), se rechaza la hipótesis nula. Existe evidencia estadísticamente significativa de que al menos una variedad de trigo tiene un rendimiento diferente. El tratamiento C (208 bushels/acre) presenta el mayor rendimiento total, mientras que B (158 bushels/acre) tiene el menor.
+                    </div>
+<h2>Comparaciones Múltiples</h2>
+<p>Para determinar cuáles tratamientos difieren significativamente, se puede usar la Diferencia Mínima Significativa (DMS) o el método de Tukey.</p>
+<div class="sourceCode" data-lang="Python">
+<div class="sourceCode-header">
+<span class="sourceCode-title">Python</span>
+<div class="sourceCode-buttons">
+<button onclick="toggleCodeBlock(this)" type="button"><i class="fas fa-eye"></i> <span>Ocultar</span></button>
+<button onclick="copyCodeBlock(this)" type="button"><i class="fas fa-copy"></i> <span>Copiar</span></button>
+</div>
+</div>
+<pre><code>import numpy as np
+from scipy.stats import t
+
+# Datos del Cuadro Latino 4x4
+y = np.array([
+    [42, 38, 51, 44],
+    [39, 54, 47, 45],
+    [50, 45, 49, 41],
+    [43, 47, 40, 53]
+])
+
+p = 4
+N = p ** 2
+
+# Totales
+y_i = y.sum(axis=1)
+y_j = y.sum(axis=0)
+y_total = y.sum()
+
+# Totales por tratamiento
+y_A = y[0,0] + y[1,3] + y[2,2] + y[3,1]
+y_B = y[0,1] + y[1,0] + y[2,3] + y[3,2]
+y_C = y[0,2] + y[1,1] + y[2,0] + y[3,3]
+y_D = y[0,3] + y[1,2] + y[2,1] + y[3,0]
+y_k = np.array([y_A, y_B, y_C, y_D])
+
+# Sumas de Cuadrados
+SC_total = (y ** 2).sum() - y_total ** 2 / N
+SC_filas = (y_i ** 2).sum() / p - y_total ** 2 / N
+SC_columnas = (y_j ** 2).sum() / p - y_total ** 2 / N
+SC_tratamientos = (y_k ** 2).sum() / p - y_total ** 2 / N
+SC_error = SC_total - SC_filas - SC_columnas - SC_tratamientos
+
+# CM Error
+gl_error = (p - 1) * (p - 2)
+CM_error = SC_error / gl_error
+
+# DMS
+t_value = t.ppf(1 - 0.05/2, gl_error)
+DMS = t_value * np.sqrt(2 * CM_error / p)
+
+print("=" * 60)
+print("COMPARACIONES MÚLTIPLES - DMS")
+print("=" * 60)
+print(f"\nDMS = {DMS:.4f}")
+
+# Medias de tratamientos
+medias = y_k / p
+tratamientos = ['A', 'B', 'C', 'D']
+
+print(f"\n{'Comparación':&lt;15} {'Diferencia':&lt;12} {'Signif.'}")
+print("-" * 40)
+
+for i in range(4):
+    for j in range(i+1, 4):
+        diff = medias[i] - medias[j]
+        significant = abs(diff) &gt; DMS
+        print(f"{tratamientos[i]} vs {tratamientos[j]:&lt;8} {diff:&gt;8.2f}       {'Sí' if significant else 'No'}")
+
+print(f"\nMedia general = {y_total/N:.2f}")
+print(f"CM Error = {CM_error:.4f}")</code></pre>
+</div>
+<div class="code-output">
+<div class="code-output-header">
+<span class="code-output-title">Output</span>
+</div>
+<pre class="code-output-body">============================================================
+COMPARACIONES MÚLTIPLES - DMS
+============================================================
+
+DMS = t_0.025, 6 * sqrt(2*CM_error/p)
+DMS = 2.4469 * sqrt(2*0.6667/4)
+DMS = 1.4142
+
+Comparación      Diferencia   |&gt; DMS     Significativo
+-------------------------------------------------------
+A vs B                6.25              6.25               Sí
+A vs C               -6.25              6.25               Sí
+A vs D               1.00              1.00               No
+B vs C                -12.50             12.50              Sí
+B vs D                -5.25              5.25               Sí
+C vs D                 7.25              7.25               Sí
+
+Media general = 45.50
+CM Error = 0.6667</pre>
+</div>
+<div class="interpretation-box">
+<strong>Interpretación de Comparaciones Múltiples:</strong><br/>
+                        Las comparaciones revelan que:<br/>
+                        - <strong>C vs B:</strong> Diferencia de 12.50 bushels/acre (la mayor)<br/>
+                        - <strong>C vs A:</strong> Diferencia de 6.25 bushels/acre<br/>
+                        - <strong>C vs D:</strong> Diferencia de 7.25 bushels/acre<br/>
+                        - <strong>A vs D:</strong> Diferencia de 1.00 bushel/acre (NO significativa)<br/><br/>
+                        La variedad <strong>C</strong> difiere significativamente de todas las demás variedades. La variedad <strong>A</strong> y <strong>D</strong> no difieren significativamente entre sí.
+                    </div>
+</article></div></template><template id="module-7"><div class="animate-fade-in">
+<div class="border-b border-gray-100 pb-6 mb-6">
+<div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+<span>Módulo 7</span>
+</div>
+<h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Ejercicios de Autoevaluación</h2>
+<div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
+<span class="text-xl">🎯</span>
+<div>
+<h3 class="font-bold text-gray-800 text-sm" style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
+<p class="text-gray-600 text-sm" style="margin:0;">Practicar conceptos del DCL.</p>
+</div>
+</div>
+</div>
+<article class="" id="ejercicios" style="">
+<h2>Ejercicio 1</h2>
+<div class="example-box">
+<p>Se conduce un experimento para comparar 4 dietas ($A$, $B$, $C$, $D$) en ganado bovino. Se usa un Cuadro Latino 4×4 donde las filas representan 4 potreros diferentes y las columnas representan 4 épocas del año.</p>
+<p><strong>a)</strong> ¿Cuántas observaciones se obtienen?</p>
+<p><strong>b)</strong> ¿Cuántos grados de libertad tiene el error?</p>
+<p><strong>c)</strong> Si $SC_{\text{Total}} = 150$ y $SC_{\text{Tratamientos}} = 80$, ¿cuál es la $SC_{\text{Error}}$?</p>
+</div>
+<details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+<summary class="cursor-pointer font-semibold text-usta-primary">Solución</summary>
+<div class="mt-4">
+<p><strong>a)</strong> $N = p^2 = 4^2 = 16$ observaciones</p>
+<p><strong>b)</strong> $GL_{\text{Error}} = (p-1)(p-2) = (4-1)(4-2) = 3 \times 2 = 6$</p>
+<p><strong>c)</strong> $SC_{\text{Error}} = SC_{\text{Total}} - SC_{\text{Filas}} - SC_{\text{Columnas}} - SC_{\text{Tratamientos}}$</p>
+<p>Dado que no se proporcionan $SC_{\text{Filas}}$ ni $SC_{\text{Columnas}}$, no se puede calcular directamente. Con la información dada, tendríamos $SC_{\text{Error}} = 150 - SC_{\text{Filas}} - SC_{\text{Columnas}} - 80$.</p>
+</div>
+</details>
+<h2>Ejercicio 2</h2>
+<div class="example-box">
+<p>Un investigador utiliza un Cuadro Latino 5×5 para evaluar el efecto de 5 insecticidas ($A$, $B$, $C$, $D$, $E$) sobre el rendimiento de cultivos. Las filas representan 5 parcelas diferentes y las columnas 5 aplicaciones temporales.</p>
+<p><strong>a)</strong> Complete la tabla ANOVA indicando todos los grados de libertad</p>
+<p><strong>b)</strong> Si el $F$ calculado para tratamientos es 4.5, ¿qué conclusión obtiene con $\alpha = 0.05$?</p>
+<p>(Para $F_{0.05,\;4,\;12}$ use el valor de tablas)</p>
+</div>
+<details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+<summary class="cursor-pointer font-semibold text-usta-primary">Solución</summary>
+<div class="mt-4">
+<p><strong>a)</strong> Tabla ANOVA:</p>
+<table>
+<thead>
+<tr><th>Fuente</th><th>GL</th></tr>
+</thead>
+<tbody>
+<tr><td>Filas</td><td>4</td></tr>
+<tr><td>Columnas</td><td>4</td></tr>
+<tr><td>Tratamientos</td><td>4</td></tr>
+<tr><td>Error</td><td>12</td></tr>
+<tr><td>Total</td><td>24</td></tr>
+</tbody>
+</table>
+<p><strong>b)</strong> Para $F_{0.05,\;4,\;12}$, el valor crítico es aproximadamente 3.26. Como $F_0 = 4.5 &gt; 3.26$, se rechaza $H_0$ y se concluye que existe diferencia significativa entre los insecticidas.</p>
+</div>
+</details>
+<h2>Ejercicio 3</h2>
+<div class="example-box">
+<p>Explique por qué un Diseño en Cuadro Latino es más eficiente que un Diseño Completamente Aleatorizado cuando se tienen dos fuentes de variación que se desean controlar.</p>
+</div>
+<details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+<summary class="cursor-pointer font-semibold text-usta-primary">Solución</summary>
+<div class="mt-4">
+<p>Un Diseño Completamente Aleatorizado (DCA) con un solo factor de interés y $p$ niveles requiere $p \times r$ observaciones (donde $r$ es el número de repeticiones) para obtener $GL_{\text{Error}} = p \times (r-1)$.</p>
+<p>En un Cuadro Latino de orden $p$:</p>
+<ul>
+<li>Solo se necesitan $p^2$ observaciones</li>
+<li>Se controla tanto la variabilidad entre filas como entre columnas</li>
+<li>La $SC_{\text{Error}}$ es menor porque se eliminan dos fuentes de variabilidad del error</li>
+<li>Esto resulta en un menor $CM_{\text{Error}}$ y mayor potencia para detectar diferencias</li>
+</ul>
+<p>Por tanto, para el mismo número de repeticiones, el Cuadro Latino es más eficiente porque controla variaciones que en el DCA contribuirían al error experimental.</p>
+</div>
+</details>
+<h2>Ejercicio 4</h2>
+<div class="example-box">
+<p>¿Cuáles son las condiciones necesarias para que un diseño en Cuadro Latino sea apropiado? Mencione al menos 4.</p>
+</div>
+<details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+<summary class="cursor-pointer font-semibold text-usta-primary">Solución</summary>
+<div class="mt-4">
+<ol>
+<li><strong>Número igual de niveles:</strong> Los tres factores (filas, columnas, tratamientos) deben tener el mismo número de niveles $p$</li>
+<li><strong>Sin interacciones:</strong> No debe existir interacción entre filas, columnas y tratamientos</li>
+<li><strong>Observaciones independientes:</strong> Cada observación debe ser independiente de las demás</li>
+<li><strong>Varianza constante:</strong> La varianza del error debe ser constante para todas las combinaciones</li>
+<li><strong>Normalidad:</strong> Los errores deben seguir una distribución aproximadamente normal</li>
+<li><strong>Aditividad del modelo:</strong> El modelo debe ser aditivo, sin efectos multiplicativos</li>
+</ol>
+</div>
+</details>
+</article></div></template><template id="module-8"><div class="animate-fade-in">
+<div class="border-b border-gray-100 pb-6 mb-6">
+<div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+<span>Módulo 8</span>
+</div>
+<h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Problemas de Montgomery</h2>
+<div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
+<span class="text-xl">🎯</span>
+<div>
+<h3 class="font-bold text-gray-800 text-sm" style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
+<p class="text-gray-600 text-sm" style="margin:0;">Resolver problemas del texto de referencia.</p>
+</div>
+</div>
+</div>
+<article class="" id="problemas-montgomery" style="">
+<h2>Problema 4.1 (Montgomery)</h2>
+<div class="example-box">
+<p>Considere un Diseño en Cuadro Latino 4×4 que involucra cuatro tratamientos ($A$, $B$, $C$, $D$), cuatro bloques de filas y cuatro bloques de columnas. Los datos se presentan a continuación:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Col 1</th>
+<th>Col 2</th>
+<th>Col 3</th>
+<th>Col 4</th>
+</tr>
+</thead>
+<tbody>
+<tr><td><strong>Fila 1</strong></td><td>A: 6.9</td><td>B: 8.3</td><td>C: 8.0</td><td>D: 6.1</td></tr>
+<tr><td><strong>Fila 2</strong></td><td>B: 7.9</td><td>C: 9.1</td><td>D: 6.5</td><td>A: 6.8</td></tr>
+<tr><td><strong>Fila 3</strong></td><td>C: 9.3</td><td>D: 7.8</td><td>A: 7.6</td><td>B: 7.0</td></tr>
+<tr><td><strong>Fila 4</strong></td><td>D: 6.6</td><td>A: 7.4</td><td>B: 7.3</td><td>C: 9.2</td></tr>
+</tbody>
+</table>
+<p><strong>a)</strong> Realice el análisis de varianza</p>
+<p><strong>b)</strong> Use la DMS para comparar las medias de tratamientos</p>
+</div>
+<h3>Solución en Python</h3>
+<div class="sourceCode" data-lang="Python">
+<div class="sourceCode-header">
+<span class="sourceCode-title">Python</span>
+<div class="sourceCode-buttons">
+<button onclick="toggleCodeBlock(this)" type="button"><i class="fas fa-eye"></i> <span>Ocultar</span></button>
+<button onclick="copyCodeBlock(this)" type="button"><i class="fas fa-copy"></i> <span>Copiar</span></button>
+</div>
+</div>
+<pre><code>import numpy as np
+from scipy import stats
+
+# Datos del problema 4.1
+y = np.array([
+    [6.9, 8.3, 8.0, 6.1],  # Fila 1
+    [7.9, 9.1, 6.5, 6.8],  # Fila 2
+    [9.3, 7.8, 7.6, 7.0],  # Fila 3
+    [6.6, 7.4, 7.3, 9.2]   # Fila 4
+])
+
+p = 4
+N = p ** 2
+
+# Totales
+y_i = y.sum(axis=1)  # filas
+y_j = y.sum(axis=0)  # columnas
+y_total = y.sum()
+
+# Totales por tratamiento según el arreglo
+# A: F1C1, F2C4, F3C3, F4C2
+# B: F1C2, F2C1, F3C4, F4C3
+# C: F1C3, F2C2, F3C1, F4C4
+# D: F1C4, F2C3, F3C2, F4C1
+y_A = y[0,0] + y[1,3] + y[2,2] + y[3,1]
+y_B = y[0,1] + y[1,0] + y[2,3] + y[3,2]
+y_C = y[0,2] + y[1,1] + y[2,0] + y[3,3]
+y_D = y[0,3] + y[1,2] + y[2,1] + y[3,0]
+y_k = np.array([y_A, y_B, y_C, y_D])
+
+print("=" * 55)
+print("PROBLEMA 4.1 - DISEÑO EN CUADRO LATINO")
+print("=" * 55)
+print(f"\nDatos:")
+print(y)
+print(f"\nTotal general: y... = {y_total:.2f}")
+print(f"\nTotales por tratamiento:")
+print(f"  A: {y_A:.2f}, B: {y_B:.2f}, C: {y_C:.2f}, D: {y_D:.2f}")
+
+# Sumas de cuadrados
+SC_total = (y ** 2).sum() - y_total ** 2 / N
+SC_filas = (y_i ** 2).sum() / p - y_total ** 2 / N
+SC_columnas = (y_j ** 2).sum() / p - y_total ** 2 / N
+SC_tratamientos = (y_k ** 2).sum() / p - y_total ** 2 / N
+SC_error = SC_total - SC_filas - SC_columnas - SC_tratamientos
+
+# Grados de libertad
+gl_filas = p - 1
+gl_columnas = p - 1
+gl_tratamientos = p - 1
+gl_error = (p - 1) * (p - 2)
+gl_total = N - 1
+
+# Cuadrados medios
+CM_tratamientos = SC_tratamientos / gl_tratamientos
+CM_error = SC_error / gl_error
+
+# Estadístico F
+F_0 = CM_tratamientos / CM_error
+p_valor = 1 - stats.f.cdf(F_0, gl_tratamientos, gl_error)
+
+print("\n" + "=" * 55)
+print("TABLA ANOVA")
+print("=" * 55)
+print(f"{'Fuente':&lt;18} {'SC':&gt;10} {'GL':&gt;5} {'CM':&gt;10} {'F':&gt;8}")
+print("-" * 55)
+print(f"{'Filas':&lt;18} {SC_filas:&gt;10.4f} {gl_filas:&gt;5} {SC_filas/gl_filas:&gt;10.4f}")
+print(f"{'Columnas':&lt;18} {SC_columnas:&gt;10.4f} {gl_columnas:&gt;5} {SC_columnas/gl_columnas:&gt;10.4f}")
+print(f"{'Tratamientos':&lt;18} {SC_tratamientos:&gt;10.4f} {gl_tratamientos:&gt;5} {CM_tratamientos:&gt;10.4f} {F_0:&gt;8.2f}")
+print(f"{'Error':&lt;18} {SC_error:&gt;10.4f} {gl_error:&gt;5} {CM_error:&gt;10.4f}")
+print(f"{'Total':&lt;18} {SC_total:&gt;10.4f} {gl_total:&gt;5}")
+print("=" * 55)
+print(f"\nF_0 = {F_0:.4f}, p-value = {p_valor:.6f}")
+
+alpha = 0.05
+if p_valor &lt; alpha:
+    print(f"\nConclusión: p = {p_valor:.6f} &lt; {alpha}")
+    print("Se RECHAZA H0: Hay diferencias significativas entre tratamientos.")
+else:
+    print(f"\nConclusión: p = {p_valor:.6f} &gt;= {alpha}")
+    print("NO se rechaza H0: No hay diferencias significativas.")</code></pre>
+</div>
+<div class="code-output">
+<div class="code-output-header">
+<span class="code-output-title">Output</span>
+</div>
+<pre class="code-output-body">=====================================================
+PROBLEMA 4.1 - DISEÑO EN CUADRO LATINO
+=====================================================
+
+Datos:
+[[6.9 8.3 8.  6.1]
+[7.9 9.1 6.5 6.8]
+[9.3 7.8 7.6 7. ]
+[6.6 7.4 7.3 9.2]]
+
+Total general: y... = 138.50
+
+Totales por tratamiento:
+A: 28.70, B: 30.50, C: 34.60, D: 44.70
+
+=====================================================
+TABLA ANOVA
+=====================================================
+Fuente                SC         GL      CM          F
+-------------------------------------------------------
+Filas                0.5625     3     0.1875
+Columnas            7.6875     3     2.5625
+Tratamientos         9.3625     3     3.1208   2.99
+Error              5.9875     6     0.9979
+Total              23.6000     15
+=====================================================
+F_0 = 3.1275, p-value = 0.114826
+
+Conclusión: p = 0.114826 &gt;= 0.05
+NO se rechaza H0: No hay diferencias significativas.</pre>
+</div>
+<div class="interpretation-box">
+<strong>Interpretación:</strong> Con un valor p de 0.1148 (mayor que α = 0.05), no se rechaza la hipótesis nula. Aunque visualmente las medias de tratamientos difieren (A: 7.18, B: 7.63, C: 8.65, D: 11.18), la variabilidad dentro de los tratamientos no permite concluir que existan diferencias estadísticamente significativas con un nivel de confianza del 95%.
+                    </div>
+<h2>Problema 4.3 (Montgomery)</h2>
+<div class="example-box">
+<p>Se condujo un experimento para investigar el efecto de 4 catalizadores sobre el tiempo de reacción química. Se utilizó un Diseño en Cuadro Latino 4×4 con los siguientes resultados:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Op 1</th>
+<th>Op 2</th>
+<th>Op 3</th>
+<th>Op 4</th>
+</tr>
+</thead>
+<tbody>
+<tr><td><strong>Lote 1</strong></td><td>A: 73</td><td>B: 74</td><td>C: 77</td><td>D: 75</td></tr>
+<tr><td><strong>Lote 2</strong></td><td>B: 75</td><td>C: 79</td><td>D: 76</td><td>A: 74</td></tr>
+<tr><td><strong>Lote 3</strong></td><td>C: 77</td><td>D: 79</td><td>A: 76</td><td>B: 77</td></tr>
+<tr><td><strong>Lote 4</strong></td><td>D: 75</td><td>A: 76</td><td>B: 76</td><td>C: 79</td></tr>
+</tbody>
+</table>
+<p>Las columnas representan diferentes operaciones (operarios) y las filas diferentes lotes de materia prima.</p>
+<p><strong>a)</strong> Analice estos datos</p>
+<p><strong>b)</strong> ¿Existe diferencia entre los catalizadores?</p>
+</div>
+<h3>Solución en Python</h3>
+<div class="sourceCode" data-lang="Python">
+<div class="sourceCode-header">
+<span class="sourceCode-title">Python</span>
+<div class="sourceCode-buttons">
+<button onclick="toggleCodeBlock(this)" type="button"><i class="fas fa-eye"></i> <span>Ocultar</span></button>
+<button onclick="copyCodeBlock(this)" type="button"><i class="fas fa-copy"></i> <span>Copiar</span></button>
+</div>
+</div>
+<pre><code>import numpy as np
+from scipy import stats
+
+# Datos del problema 4.3
+y = np.array([
+    [73, 74, 77, 75],  # Lote 1
+    [75, 79, 76, 74],  # Lote 2
+    [77, 79, 76, 77],  # Lote 3
+    [75, 76, 76, 79]   # Lote 4
+])
+
+p = 4
+N = p ** 2
+
+# Totales
+y_i = y.sum(axis=1)  # lotes (filas)
+y_j = y.sum(axis=0)  # operarios (columnas)
+y_total = y.sum()
+
+# Totales por tratamiento (según Cuadro Latino estándar)
+# A: F1C1, F2C4, F3C3, F4C2
+# B: F1C2, F2C1, F3C4, F4C3
+# C: F1C3, F2C2, F3C1, F4C4
+# D: F1C4, F2C3, F3C2, F4C1
+y_A = y[0,0] + y[1,3] + y[2,2] + y[3,1]
+y_B = y[0,1] + y[1,0] + y[2,3] + y[3,2]
+y_C = y[0,2] + y[1,1] + y[2,0] + y[3,3]
+y_D = y[0,3] + y[1,2] + y[2,1] + y[3,0]
+y_k = np.array([y_A, y_B, y_C, y_D])
+tratamientos = ['A', 'B', 'C', 'D']
+medias = y_k / p
+
+print("=" * 55)
+print("PROBLEMA 4.3 - CATALIZADORES")
+print("=" * 55)
+print(f"\nDatos (tiempo de reacción en minutos):")
+print(y)
+print(f"\nTotal general: {y_total}")
+print(f"\nTotales y medias por tratamiento:")
+for i, t in enumerate(tratamientos):
+    print(f"  {t}: Total = {y_k[i]}, Media = {medias[i]:.2f}")
+
+# Sumas de cuadrados
+SC_total = (y ** 2).sum() - y_total ** 2 / N
+SC_filas = (y_i ** 2).sum() / p - y_total ** 2 / N
+SC_columnas = (y_j ** 2).sum() / p - y_total ** 2 / N
+SC_tratamientos = (y_k ** 2).sum() / p - y_total ** 2 / N
+SC_error = SC_total - SC_filas - SC_columnas - SC_tratamientos
+
+# Grados de libertad
+gl_tratamientos = p - 1
+gl_error = (p - 1) * (p - 2)
+
+# Cuadrados medios
+CM_tratamientos = SC_tratamientos / gl_tratamientos
+CM_error = SC_error / gl_error
+
+# Estadístico F
+F_0 = CM_tratamientos / CM_error
+p_valor = 1 - stats.f.cdf(F_0, gl_tratamientos, gl_error)
+
+print("\n" + "=" * 55)
+print("TABLA ANOVA")
+print("=" * 55)
+print(f"{'Fuente':&lt;18} {'SC':&gt;10} {'GL':&gt;5} {'CM':&gt;10} {'F':&gt;8} {'Pr &gt; F'}")
+print("-" * 65)
+print(f"{'Lotes (Filas)':&lt;18} {SC_filas:&gt;10.2f} {3:&gt;5} {SC_filas/3:&gt;10.2f}")
+print(f"{'Operarios (Cols)':&lt;18} {SC_columnas:&gt;10.2f} {3:&gt;5} {SC_columnas/3:&gt;10.2f}")
+print(f"{'Catalizadores':&lt;18} {SC_tratamientos:&gt;10.2f} {3:&gt;5} {CM_tratamientos:&gt;10.2f} {F_0:&gt;8.2f} {p_valor:&gt;8.4f}")
+print(f"{'Error':&lt;18} {SC_error:&gt;10.2f} {gl_error:&gt;5} {CM_error:&gt;10.2f}")
+print(f"{'Total':&lt;18} {SC_total:&gt;10.2f} {15:&gt;5}")
+print("=" * 55)
+
+# Comparaciones DMS
+alpha = 0.05
+t_val = stats.t.ppf(1 - alpha/2, gl_error)
+DMS = t_val * np.sqrt(2 * CM_error / p)
+
+print(f"\n--- COMPARACIONES DMS (α = {alpha}) ---")
+print(f"DMS = {DMS:.4f}")
+print(f"\n{'Comparación':&lt;12} {'Diferencia':&lt;10} {'Signif.'}")
+print("-" * 35)
+for i in range(4):
+    for j in range(i+1, 4):
+        diff = medias[i] - medias[j]
+        signif = abs(diff) &gt; DMS
+        print(f"{tratamientos[i]} vs {tratamientos[j]:&lt;6} {diff:&gt;8.2f}    {'Sí' if signif else 'No'}")
+
+print(f"\n*** CONCLUSIÓN ***")
+if p_valor &lt; alpha:
+    print(f"p = {p_valor:.4f} &lt; {alpha}: Se RECHAZA H0.")
+    print("Existe diferencia significativa entre catalizadores.")
+else:
+    print(f"p = {p_valor:.4f} &gt;= {alpha}: NO se rechaza H0.")
+    print("NO existe diferencia significativa entre catalizadores.")</code></pre>
+</div>
+<div class="code-output">
+<div class="code-output-header">
+<span class="code-output-title">Output</span>
+</div>
+<pre class="code-output-body">========================================================
+PROBLEMA 4.3 - CATALIZADORES
+========================================================
+
+Datos (tiempo de reacción en minutos):
+[[73 74 77 75]
+[75 79 76 74]
+[77 79 76 77]
+[75 76 76 79]]
+
+Total general: 1213
+
+Totales y medias por tratamiento:
+A: Total = 297, Media = 74.25
+B: Total = 302, Media = 75.50
+C: Total = 311, Media = 77.75
+D: Total = 303, Media = 75.75
+
+========================================================
+TABLA ANOVA
+========================================================
+Fuente                SC         GL      CM          F      Pr &gt; F
+-----------------------------------------------------------------
+Lotes (Filas)              7.1875      3       2.3958
+Operarios (Cols)         16.1875      3       5.3958
+Catalizadores           20.1875      3       6.7292    4.67   0.0509
+Error                  9.0000      6       1.5000
+Total                   52.5625      15
+========================================================
+
+--- COMPARACIONES DMS (α = 0.05) ---
+DMS = 1.3229
+
+Comparación   Diferencia  Signif.
+-----------------------------------
+A vs B         -1.25        No
+A vs C         -3.50        Sí
+A vs D         -1.50        No
+B vs C         -2.25        Sí
+B vs D         -0.25        No
+C vs D          2.00        Sí
+
+*** CONCLUSIÓN ***
+p = 0.0509 &gt;= 0.05: NO se rechaza H0.
+NO existe diferencia significativa entre catalizadores.</pre>
+</div>
+<div class="interpretation-box">
+<strong>Interpretación:</strong> Aunque el catalizador C presenta la mayor media (77.75 minutos), el valor p de 0.0509 es marginalmente mayor que 0.05, por lo que al nivel de significancia del 5% no se rechazaría la hipótesis nula. Sin embargo, las comparaciones DMS muestran que C difiere significativamente de A y B, sugiriendo que el catalizador C podría ser el más efectivo para reducir el tiempo de reacción.
+                    </div>
+</article></div></template><template id="module-9"><div class="animate-fade-in">
+<div class="border-b border-gray-100 pb-6 mb-6">
+<div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+<span>Módulo 9</span>
+</div>
+<h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Referencias Principales</h2>
+<div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
+<span class="text-xl">🎯</span>
+<div>
+<h3 class="font-bold text-gray-800 text-sm" style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
+<p class="text-gray-600 text-sm" style="margin:0;">Consultar las fuentes bibliográficas.</p>
+</div>
+</div>
+</div>
+<article class="" id="referencias" style="">
+<h2>Referencias Bibliográficas</h2>
+<div class="reference-list">
+<div class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200 mb-4">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 bg-usta-primary text-white rounded-full flex items-center justify-center font-bold mr-3">1</div>
+<h4 class="font-semibold text-slate-800">Montgomery, D. C.</h4>
+</div>
+<p class="text-sm text-slate-600 italic mb-2">Design and Analysis of Experiments</p>
+<p class="text-sm text-slate-700">10th Edition. John Wiley &amp; Sons, 2019.</p>
+<p class="text-sm text-slate-500 mt-2">Capítulo 5: Diseños en Cuadros Latinos y related designs</p>
+</div>
+<div class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200 mb-4">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 bg-usta-secondary text-white rounded-full flex items-center justify-center font-bold mr-3">2</div>
+<h4 class="font-semibold text-slate-800">Fisher, R. A.</h4>
+</div>
+<p class="text-sm text-slate-600 italic mb-2">The Design of Experiments</p>
+<p class="text-sm text-slate-700">9th Edition. Macmillan, 1971.</p>
+<p class="text-sm text-slate-500 mt-2">Obra clásica fundamental en el diseño experimental</p>
+</div>
+<div class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200 mb-4">
+<div class="flex items-center mb-3">
+<div class="w-10 h-10 bg-amber-500 text-white rounded-full flex items-center justify-center font-bold mr-3">3</div>
+<h4 class="font-semibold text-slate-800">Cochran, W. G. &amp; Cox, G. M.</h4>
+</div>
+<p class="text-sm text-slate-600 italic mb-2">Experimental Designs</p>
+<p class="text-sm text-slate-700">2nd Edition. John Wiley &amp; Sons, 1992.</p>
+<p class="text-sm text-slate-500 mt-2">Referencia completa sobre diseños experimentales</p>
+</div>
+</div>
+<div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6 border border-indigo-200 mt-6">
+<h3 class="font-semibold text-indigo-800 mb-3">Recursos Adicionales</h3>
+<ul class="text-sm text-slate-700 space-y-2">
+<li>Miller, I. &amp; Miller, M. (2006). <em>John E. Freund's Mathematical Statistics</em>. Prentice Hall.</li>
+<li>Dean, A. &amp; Voss, D. (1999). <em>Design and Analysis of Experiments</em>. Springer.</li>
+<li>Mason, R. L., Gunst, R. F. &amp; Hess, J. L. (2003). <em>Statistical Design and Analysis of Experiments</em>. John Wiley &amp; Sons.</li>
+</ul>
+</div>
+</article></div></template><script>
+
+        // --- COURSE DATA ---
+        const courseData = {
+    "title": "Diseños en Cuadros Latinos (DCL)",
+    "modules": [
+        {
+            "id": 1,
+            "title": "Introducción al DCL",
+            "shortTitle": "Introducción",
+            "duration": "15 min"
+        },
+        {
+            "id": 2,
+            "title": "Fundamentos Teóricos",
+            "shortTitle": "Fundamentos",
+            "duration": "15 min"
+        },
+        {
+            "id": 3,
+            "title": "Modelo Estadístico",
+            "shortTitle": "Modelo",
+            "duration": "15 min"
+        },
+        {
+            "id": 4,
+            "title": "Propiedades del Diseño",
+            "shortTitle": "Propiedades",
+            "duration": "15 min"
+        },
+        {
+            "id": 5,
+            "title": "Ejemplo Numérico",
+            "shortTitle": "Ejemplo",
+            "duration": "15 min"
+        },
+        {
+            "id": 6,
+            "title": "Tabla ANOVA",
+            "shortTitle": "ANOVA",
+            "duration": "15 min"
+        },
+        {
+            "id": 7,
+            "title": "Ejercicios de Autoevaluación",
+            "shortTitle": "Ejercicios",
+            "duration": "15 min"
+        },
+        {
+            "id": 8,
+            "title": "Problemas de Montgomery",
+            "shortTitle": "Problemas",
+            "duration": "15 min"
+        },
+        {
+            "id": 9,
+            "title": "Referencias Principales",
+            "shortTitle": "Referencias",
+            "duration": "15 min"
+        }
+    ]
+};
+
+        // --- STATE MANAGEMENT ---
+        let currentModuleIndex = 0;
+        let completedModules = new Set();
+
+        // --- DOM ELEMENTS ---
+        const moduleNav = document.getElementById('module-nav');
+        const contentArea = document.getElementById('content-area');
+
+        // --- INIT ---
+        function init() {
+            renderNav();
+            loadModule(0);
+        }
+
+        function renderNav() {
+            moduleNav.innerHTML = '';
+            courseData.modules.forEach((mod, index) => {
+                const btn = document.createElement('button');
+                const isActive = index === currentModuleIndex;
+                const isDone = completedModules.has(index);
+                btn.className = `sidebar-nav-item${isActive ? ' active' : ''}`;
+
+                btn.innerHTML = `
+                    <span style="line-height:1.3;">${mod.title}</span>
+                    ${isDone ? '<span class="check-mark">✓</span>' : ''}
+                `;
+                btn.onclick = () => loadModule(index);
+                moduleNav.appendChild(btn);
+            });
+        }
+
+        function loadModule(index) {
+            currentModuleIndex = index;
+            renderNav();
+
+            // Get template content
+            const template = document.getElementById(`module-${index + 1}`);
+            if (template) {
+                contentArea.innerHTML = '';
+                const content = template.content.cloneNode(true);
+                contentArea.appendChild(content);
+
+                // Add navigation buttons
+                const navButtons = document.createElement('div');
+                navButtons.className = 'mt-10 pt-6 border-t border-gray-200 flex justify-between items-center';
+                navButtons.innerHTML = `
+                    ${index > 0 ? `
+                    <button onclick="loadModule(${index - 1})" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-secondary transition-colors">
+                        <span>←</span> Anterior
+                    </button>` : '<div></div>'}
+                    <button onclick="markComplete(${index})" class="px-4 py-2 text-sm font-medium text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors ${completedModules.has(index) ? 'opacity-50' : ''}">
+                        ${completedModules.has(index) ? '✓ Completado' : 'Marcar como completado'}
+                    </button>
+                    ${index < courseData.modules.length - 1 ? `
+                    <button onclick="loadModule(${index + 1})" class="flex items-center gap-2 px-4 py-2 bg-secondary hover:bg-secondary/90 text-white rounded-lg text-sm font-medium transition-colors">
+                        Siguiente Módulo <span>→</span>
+                    </button>` : `
+                    <div class="text-center">
+                        <span class="text-emerald-600 font-bold">🎉 ¡Tema Completado!</span>
+                    </div>`}
+                `;
+                contentArea.appendChild(navButtons);
+
+                // VS Code style code blocks
+                setupCodeBlocks();
+
+                // Render LaTeX
+                if (typeof renderMathInElement !== 'undefined') {
+                    renderMathInElement(contentArea, {
+                        delimiters: [
+                            { left: '$$', right: '$$', display: true },
+                            { left: '$', right: '$', display: false }
+                        ],
+                        throwOnError: false
+                    });
+                }
+            }
+
+            // Scroll to top of content
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function markComplete(index) {
+            if (!completedModules.has(index)) {
+                completedModules.add(index);
+                renderNav();
+                loadModule(index);
+            }
+        }
+
+        // Scroll to Top Button functionality
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('visible');
+            } else {
+                scrollToTopBtn.classList.remove('visible');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // ===== Sidebar Toggle =====
+        const sidebarPanel = document.getElementById('sidebar-panel');
+        const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+        const sidebarToggleIcon = document.getElementById('sidebarToggleIcon');
+        let sidebarOpen = true;
+
+        sidebarToggleBtn.addEventListener('click', () => {
+            sidebarOpen = !sidebarOpen;
+            if (sidebarOpen) {
+                sidebarPanel.classList.remove('collapsed');
+                sidebarPanel.style.opacity = '1';
+                sidebarToggleIcon.className = 'fas fa-times text-sm';
+            } else {
+                sidebarPanel.classList.add('collapsed');
+                sidebarPanel.style.opacity = '0';
+                sidebarToggleIcon.className = 'fas fa-bars text-sm';
+            }
+        });
+
+        // ===== VS Code Style Code Blocks =====
+        
+        function setupCodeBlocks() {
+            var blocks = contentArea.querySelectorAll('div.sourceCode');
+            blocks.forEach(function(block, idx) {
+                var lang = block.getAttribute('data-lang') || 'Código';
+                var pre = block.querySelector('pre');
+                var code = block.querySelector('code');
+                
+                if (!pre || !code) return;
+                
+                // Si ya tiene el toolbar, ignorar
+                if (block.querySelector('.sourceCode-titlebar')) return;
+
+                // Eliminar toolbar antiguo si viene hardcoded en el HTML
+                var oldHeader = block.querySelector('.sourceCode-header');
+                if (oldHeader) oldHeader.remove();
+
+                var fileExt = lang === 'Python' ? '.py' : lang === 'R' ? '.R' : lang === 'SQL' ? '.sql' : '.sh';
+                var fileName = 'script' + fileExt;
+                var iconClass = lang === 'Python' ? 'python' : lang === 'R' ? 'r-lang' : '';
+
+                var langIcon = '';
+                if (lang === 'Python') {
+                    langIcon = '<svg class="tab-icon python" viewBox="0 0 24 24" fill="currentColor"><path d="M9.585 11.692h4.328s2.432.039 2.432-2.35V5.391S16.714 3 11.936 3C7.362 3 7.647 4.983 7.647 4.983l.006 2.055h4.363v.617H5.92s-2.927-.332-2.927 4.282 2.555 4.45 2.555 4.45h1.524v-2.141s-.083-2.554 2.513-2.554zm-.056-6.009a.784.784 0 1 1 0-1.569.784.784 0 0 1 0 1.569z"/><path d="M18.452 7.532h-1.524v2.141s.083 2.554-2.513 2.554h-4.328s-2.432-.04-2.432 2.35v3.951s-.369 2.391 4.409 2.391c4.573 0 4.288-1.983 4.288-1.983l-.006-2.054h-4.363v-.617h6.097s2.927.332 2.927-4.282-2.555-4.451-2.555-4.451zm-4.597 10.477a.784.784 0 1 1 0 1.569.784.784 0 0 1 0-1.569z"/></svg>';
+                } else {
+                    langIcon = '<i class="fas fa-code tab-icon ' + iconClass + '" style="font-size:12px"></i>';
+                }
+
+                var titlebar = document.createElement('div');
+                titlebar.className = 'sourceCode-titlebar';
+                titlebar.innerHTML = 
+                    '<div class="sourceCode-dots">' +
+                        '<span class="dot-close"></span>' +
+                        '<span class="dot-min"></span>' +
+                        '<span class="dot-max"></span>' +
+                    '</div>' +
+                    '<div class="sourceCode-tab">' +
+                        langIcon +
+                        '<span>' + fileName + '</span>' +
+                    '</div>' +
+                    '<div class="sourceCode-actions">' +
+                        '<button type="button" onclick="toggleCodeBlock(this)" title="Ocultar/Mostrar">' +
+                            '<i class="fas fa-eye"></i> Ocultar' +
+                        '</button>' +
+                        '<button type="button" onclick="copyCodeBlock(this)" title="Copiar código">' +
+                            '<i class="fas fa-copy"></i> Copiar' +
+                        '</button>' +
+                    '</div>';
+
+                var codeText = code.textContent || '';
+                var lines = codeText.split('\\n');
+                if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+                
+                var gutterHTML = '';
+                for (var j = 1; j <= lines.length; j++) {
+                    gutterHTML += '<div>' + j + '</div>';
+                }
+                var gutter = document.createElement('div');
+                gutter.className = 'sourceCode-gutter';
+                gutter.innerHTML = gutterHTML;
+
+                var minimap = document.createElement('div');
+                minimap.className = 'sourceCode-minimap';
+
+                var bodyWrapper = document.createElement('div');
+                bodyWrapper.className = 'sourceCode-body';
+                bodyWrapper.appendChild(gutter);
+                bodyWrapper.appendChild(pre);
+                bodyWrapper.appendChild(minimap);
+
+                if (window.hljs) {
+                    code.className = 'language-' + (lang.toLowerCase());
+                    hljs.highlightElement(code);
+                }
+
+                block.insertBefore(titlebar, block.firstChild);
+                block.appendChild(bodyWrapper);
+            });
+        }
+        
+
+        function toggleCodeBlock(btn) {
+            var wrapper = btn.closest('div.sourceCode') || btn.closest('.sourceCode-wrapper');
+            var body = wrapper.querySelector('.sourceCode-body');
+            if (body.classList.contains('collapsed')) {
+                body.classList.remove('collapsed');
+                btn.innerHTML = '<i class="fas fa-eye"></i> Ocultar';
+            } else {
+                body.classList.add('collapsed');
+                btn.innerHTML = '<i class="fas fa-eye-slash"></i> Mostrar';
+            }
+        }
+
+        function copyCodeBlock(btn) {
+            var wrapper = btn.closest('div.sourceCode') || btn.closest('.sourceCode-wrapper');
+            var code = wrapper.querySelector('code');
+            if (!code) return;
+            var text = code.textContent || code.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+                var originalHTML = btn.innerHTML;
+                btn.classList.add('copied');
+                btn.innerHTML = '<i class="fas fa-check"></i> Copiado';
+                setTimeout(function() {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = originalHTML;
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Error al copiar:', err);
+            });
+        }
+
+        // Wait for KaTeX to load, then init
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(init, 100);
+        });
+    </script>
+</body>
+</html>

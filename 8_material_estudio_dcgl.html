@@ -1,0 +1,3221 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Material de estudio sobre Diseños en Cuadros Greco-Latinos para Diseño de Experimentos - Universidad Santo Tomás">
+    <meta name="author" content="Z.ai">
+    <meta content="#3D008D" name="theme-color" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>" />
+    <title>Diseños en Cuadros Greco-Latinos - Material de Estudio USTA</title>
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- External Resources -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- KaTeX for LaTeX rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Highlight.js VS Code Dark+ -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3D008D',
+                        secondary: '#ED1E79',
+                        navy: '#001A4D',
+                        gold: '#FDB913',
+                        bg: '#F8FAFC',
+                        surface: '#FFFFFF',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --usta-primary: #3D008D;
+            --usta-secondary: #ED1E79;
+            --usta-navy: #001A4D;
+            --usta-navy-light: #002868;
+            --usta-gold: #FDB913;
+            --usta-bg: #F8FAFC;
+            --usta-surface: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #F8FAFC;
+            color: #1E293B;
+            scroll-behavior: smooth;
+        }
+
+        code, pre {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* USTA Gradient Background */
+        .usta-gradient {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+        }
+
+        /* USTA Navy Header */
+        .usta-header {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+        }
+
+        /* USTA Card Style */
+        .usta-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .usta-card:hover {
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+            transform: translateY(-4px);
+        }
+
+        /* ===== SIDEBAR DARK STYLE ===== */
+        #sidebar-panel {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+            flex-shrink: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            width: 16rem;
+            min-width: 16rem;
+            transition: width 0.3s ease, min-width 0.3s ease, opacity 0.25s ease;
+            z-index: 40;
+        }
+
+        #sidebar-panel.collapsed {
+            width: 0;
+            min-width: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            padding-top: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-brand h2 {
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        .sidebar-brand p {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 0.25rem;
+            margin-bottom: 0;
+            text-align: left;
+        }
+
+        .sidebar-nav {
+            padding: 1rem;
+        }
+
+        .sidebar-nav-item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 0.65rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            text-align: left;
+            margin-bottom: 0.25rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: rgba(255, 255, 255, 0.6);
+            background: transparent;
+        }
+
+        .sidebar-nav-item:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-nav-item.active {
+            color: white;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            box-shadow: 0 4px 12px rgba(61, 0, 141, 0.3);
+        }
+
+        .sidebar-nav-item .check-mark {
+            color: #10B981;
+            flex-shrink: 0;
+        }
+
+        /* Floating sidebar toggle button */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 50;
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(61, 0, 141, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-toggle-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 18px rgba(61, 0, 141, 0.5);
+        }
+
+        /* Layout adjustment */
+        .main-layout {
+            display: flex;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        /* Scroll to top button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 3.5rem;
+            height: 3.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(61, 0, 141, 0.4);
+            transition: all 0.3s ease;
+            z-index: 50;
+            border: none;
+        }
+
+        .scroll-to-top.visible {
+            display: flex;
+        }
+
+        .scroll-to-top:hover {
+            background: linear-gradient(140deg, #4A00A8 0%, #FF2D8A 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(61, 0, 141, 0.5);
+        }
+
+        /* Fade-in animation */
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #3D008D, #ED1E79); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #4A00A8, #FF2D8A); }
+
+        /* Code scrollbar */
+        .code-scroll::-webkit-scrollbar { height: 8px; }
+        .code-scroll::-webkit-scrollbar-track { background: #2d2d2d; }
+        .code-scroll::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #3D008D, #ED1E79); border-radius: 4px; }
+
+        /* Focus styles for accessibility */
+        button:focus-visible, a:focus-visible {
+            outline: 2px solid #ED1E79;
+            outline-offset: 2px;
+        }
+
+        /* Content Styling */
+        .module-content h2 {
+            color: #3D008D;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid #ED1E79;
+        }
+
+        .module-content h3 {
+            color: #3D008D;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.75rem 0 1rem 0;
+        }
+
+        .module-content h4 {
+            color: #ED1E79;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        .module-content p {
+            margin-bottom: 1rem;
+            text-align: justify;
+            line-height: 1.8;
+        }
+
+        .module-content ul, .module-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .module-content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.7;
+        }
+
+        .module-content aside {
+            background: linear-gradient(135deg, rgba(253, 185, 19, 0.1) 0%, rgba(253, 185, 19, 0.05) 100%);
+            border-left: 4px solid #FDB913;
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .module-content aside strong {
+            color: #B8860B;
+        }
+
+        .module-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .module-content th, .module-content td {
+            padding: 1rem 1.25rem;
+            text-align: center;
+        }
+
+        .module-content th {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .module-content tr:nth-child(even) {
+            background: rgba(61, 0, 141, 0.03);
+        }
+
+        .module-content tr:hover {
+            background: rgba(61, 0, 141, 0.08);
+        }
+
+        .module-content code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #3D008D;
+            background: rgba(61, 0, 141, 0.08);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        .module-content pre code {
+            background: transparent;
+            padding: 0;
+            color: #d4d4d4;
+        }
+
+        .module-content strong {
+            color: #3D008D;
+        }
+
+        .module-content em {
+            color: #ED1E79;
+        }
+
+        /* KaTeX display */
+        .katex-display {
+            margin: 1.25em 0;
+            overflow-x: auto;
+        }
+
+        /* ===== Concepto clave box (from file 3) ===== */
+        .concepto-clave {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.06) 0%, rgba(237, 30, 121, 0.04) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #3D008D;
+            margin: 1.5rem 0;
+        }
+
+        .concepto-clave h4 {
+            color: #3D008D;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Nota box (from file 3) */
+        .nota {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-left: 4px solid #10B981;
+            margin: 1.5rem 0;
+        }
+
+        .nota h4 {
+            color: #059669;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Ejercicio box (from file 3) */
+        .module-content .ejercicio {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.08) 0%, rgba(237, 30, 121, 0.05) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #ED1E79;
+            margin: 1.5rem 0;
+        }
+
+        .module-content .ejercicio h4 {
+            color: #3D008D;
+            margin-top: 0;
+        }
+
+        /* Output box (from file 3) */
+        .module-content .output {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            border-left: 4px solid #10B981;
+            margin: 1rem 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+        }
+
+        /* ===== CUSTOM BOXES (from file 8 - preserved) ===== */
+        .definition-box {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-left: 4px solid #3b82f6;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .definition-box h4 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: #1e40af;
+            background: transparent;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+        }
+
+        .example-box {
+            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+            border-left: 4px solid var(--usta-primary);
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .example-box h4 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: var(--usta-primary);
+            background: transparent;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border-left: 4px solid #ef4444;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .warning-box h4 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: #991b1b;
+            background: transparent;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid var(--usta-gold);
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .concept-box h4 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: #92400e;
+            font-weight: 700;
+            background: transparent;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+        }
+
+        .formula-box {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.05) 0%, rgba(237, 30, 121, 0.05) 100%);
+            border: 1px solid rgba(61, 0, 141, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            overflow-x: auto;
+        }
+
+        .interpretation-box {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border-left: 4px solid #10b981;
+            padding: 1rem 1.25rem;
+            margin: 1rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .interpretation-box strong {
+            color: #065f46;
+        }
+
+        /* ===== GRECO-LATIN GRID (from file 8) ===== */
+        .greco-latin-grid {
+            display: grid;
+            gap: 2px;
+            margin: 2rem auto;
+            max-width: 550px;
+        }
+
+        .greco-cell {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            color: white;
+            flex-direction: column;
+            line-height: 1.2;
+            position: relative;
+        }
+
+        .greco-cell .cell-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .greco-cell .cell-letter { font-size: 1.1rem; }
+        .greco-cell .cell-value { font-size: 0.9rem; opacity: 0.9; }
+        .greco-cell.header-cell { font-size: 0.75rem; }
+
+        .grid-4 { grid-template-columns: repeat(4, 1fr); }
+        .grid-5 { grid-template-columns: repeat(5, 1fr); }
+
+        .cell-A { background: var(--usta-primary); }
+        .cell-B { background: var(--usta-secondary); }
+        .cell-C { background: var(--usta-navy); color: white; }
+        .cell-D { background: var(--usta-gold); color: var(--usta-navy); }
+
+        .greek-alpha { border: 4px solid #2563eb; }
+        .greek-beta { border: 4px solid #059669; }
+        .greek-gamma { border: 4px solid #ea580c; }
+        .greek-delta { border: 4px solid #7c3aed; }
+
+        .greco-cell .greek-badge {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            font-size: 0.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
+        .greek-badge .badge-alpha { color: #2563eb; }
+        .greek-badge .badge-beta { color: #059669; }
+        .greek-badge .badge-gamma { color: #ea580c; }
+        .greek-badge .badge-delta { color: #7c3aed; }
+
+        .greco-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #f8f8f8;
+            border-radius: 8px;
+        }
+
+        .legend-section {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-section-title {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #333;
+            margin-right: 0.5rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.8rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+
+        .legend-border {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 3px solid;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            background: white;
+        }
+
+        /* ===== CONCEPT DIAGRAM (from file 8) ===== */
+        .concept-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .diagram-box {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .diagram-row { background: #dbeafe; color: #1e40af; }
+        .diagram-col { background: #fce7f3; color: #9d174d; }
+        .diagram-treat { background: #d1fae5; color: #065f46; }
+        .diagram-greek { background: #fef3c7; color: #92400e; }
+        .diagram-arrow { font-size: 1.5rem; color: #64748b; }
+
+        /* ===== VS Code Style Code Blocks ===== */
+        .sourceCode-wrapper {
+            position: relative;
+            margin: 1.75rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #1e1e1e;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255,255,255,0.05);
+        }
+
+        .sourceCode-titlebar {
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            height: 36px;
+            background: #323233;
+            border-bottom: 1px solid #252526;
+            user-select: none;
+        }
+
+        .sourceCode-dots { display: flex; gap: 8px; }
+        .sourceCode-dots span { width: 12px; height: 12px; border-radius: 50%; display: block; }
+        .sourceCode-dots .dot-close { background: #ff5f57; }
+        .sourceCode-dots .dot-min { background: #ffbd2e; }
+        .sourceCode-dots .dot-max { background: #28c940; }
+
+        .sourceCode-tab {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 12px;
+            height: 100%;
+            background: #1e1e1e;
+            border-top: 2px solid #007acc;
+            border-right: 1px solid #252526;
+            font-size: 0.78rem;
+            color: #cccccc;
+            font-family: 'Segoe UI', 'Montserrat', sans-serif;
+        }
+
+        .sourceCode-tab .tab-icon { width: 14px; height: 14px; }
+        .sourceCode-tab .tab-icon.python { color: #f7c948; }
+
+        .sourceCode-actions {
+            display: flex;
+            gap: 4px;
+            margin-left: auto;
+        }
+
+        .sourceCode-actions button {
+            background: transparent;
+            border: none;
+            color: #858585;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-family: 'Segoe UI', 'Montserrat', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .sourceCode-actions button:hover { background: #3c3c3c; color: #cccccc; }
+        .sourceCode-actions button.copied { color: #4ec9b0; }
+
+        .sourceCode-body {
+            display: flex;
+            margin: 0;
+            overflow-x: auto;
+            background: #1e1e1e;
+        }
+
+        .sourceCode-body.collapsed { display: none; }
+
+        .sourceCode-gutter {
+            padding: 16px 0;
+            text-align: right;
+            user-select: none;
+            color: #858585;
+            font-size: 0.82rem;
+            line-height: 1.65;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            min-width: 40px;
+            padding-right: 12px;
+            padding-left: 12px;
+            border-right: 1px solid #2d2d2d;
+            background: #1e1e1e;
+            flex-shrink: 0;
+        }
+
+        .sourceCode-gutter div { height: 1.65em; }
+
+        .sourceCode-wrapper pre {
+            margin: 0;
+            padding: 16px;
+            overflow-x: auto;
+            background: #1e1e1e;
+            flex: 1;
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+        }
+
+        .sourceCode-wrapper code {
+            font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+            font-size: 0.87rem;
+            line-height: 1.65;
+            color: #d4d4d4;
+            background: transparent !important;
+        }
+
+        .sourceCode-minimap {
+            width: 28px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.01) 100%);
+            border-left: 1px solid #2d2d2d;
+            flex-shrink: 0;
+        }
+
+        .sourceCode-wrapper pre::-webkit-scrollbar { height: 8px; }
+        .sourceCode-wrapper pre::-webkit-scrollbar-track { background: #1e1e1e; }
+        .sourceCode-wrapper pre::-webkit-scrollbar-thumb { background: rgba(121,121,121,0.4); border-radius: 4px; }
+        .sourceCode-wrapper pre::-webkit-scrollbar-thumb:hover { background: rgba(121,121,121,0.7); }
+
+        /* VS Code Dark+ Syntax Highlighting */
+        .hljs-keyword { color: #569cd6; }
+        .hljs-built_in { color: #4ec9b0; }
+        .hljs-type { color: #4ec9b0; }
+        .hljs-literal { color: #569cd6; }
+        .hljs-number { color: #b5cea8; }
+        .hljs-string { color: #ce9178; }
+        .hljs-comment { color: #6a9955; font-style: italic; }
+        .hljs-function { color: #dcdcaa; }
+        .hljs-title { color: #dcdcaa; }
+        .hljs-params { color: #9cdcfe; }
+        .hljs-operator { color: #d4d4d4; }
+        .hljs-punctuation { color: #d4d4d4; }
+        .hljs-variable { color: #9cdcfe; }
+        .hljs-attr { color: #9cdcfe; }
+        .hljs-class .hljs-title { color: #4ec9b0; }
+        .hljs-meta { color: #c586c0; }
+
+        /* Hide old code-title */
+        .code-title { display: none; }
+
+        /* Formula number */
+        .formula-number {
+            float: right;
+            color: #64748B;
+            font-size: 0.9rem;
+        }
+
+        /* ===== Code Output (from file 8) ===== */
+        .code-output {
+            background: #1a1a2e;
+            border: 1px solid #2d2d4a;
+            border-radius: 0 0 8px 8px;
+            margin-top: -8px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .code-output-header {
+            background: rgba(76, 175, 80, 0.15);
+            padding: 0.4rem 1rem;
+            border-bottom: 1px solid #2d2d4a;
+        }
+
+        .code-output-title {
+            color: #4CAF50;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+        }
+
+        .code-output-body {
+            padding: 1rem;
+            color: #e0e0e0;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.875rem;
+            white-space: pre-wrap;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* ===== Ejercicios details (from file 8) ===== */
+        .ejercicio-details {
+            margin-bottom: 1.5rem;
+            padding: 1.25rem;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .ejercicio-details summary {
+            cursor: pointer;
+            font-weight: 700;
+            color: var(--usta-primary);
+            font-size: 0.95rem;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .ejercicio-details summary:hover {
+            color: var(--usta-secondary);
+        }
+
+        .ejercicio-details > div {
+            margin-top: 1rem;
+        }
+
+        /* ===== Reference cards (from file 8) ===== */
+        .reference-card {
+            background: linear-gradient(to right, #f8fafc, #f1f5f9);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 1rem;
+        }
+
+        .reference-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .reference-number {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: white;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .reference-card h4 {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #1e293b;
+            background: transparent;
+            padding: 0;
+            border: none;
+        }
+
+        .reference-card p {
+            margin: 0.25rem 0;
+            font-size: 0.85rem;
+        }
+
+        .reference-card .ref-title { color: #475569; font-style: italic; }
+        .reference-card .ref-edition { color: #334155; }
+        .reference-card .ref-chapter { color: #64748b; margin-top: 0.5rem; }
+
+        .recursos-box {
+            background: linear-gradient(135deg, #eff6ff, #f5f3ff);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #c7d2fe;
+            margin-top: 1.5rem;
+        }
+
+        .recursos-box h3 {
+            color: #3730a3;
+            font-size: 1rem;
+            margin-top: 0;
+            background: transparent;
+            padding: 0;
+            border: none;
+        }
+
+        .recursos-box ul {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #334155;
+        }
+
+        .recursos-box li {
+            margin-bottom: 0.4rem;
+        }
+
+        /* ===== Solución Parcial Colapsable (from file 8) ===== */
+        .solucion-parcial {
+            margin-bottom: 1.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .solucion-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1.25rem;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            cursor: pointer;
+            font-weight: 700;
+            color: var(--usta-primary);
+            font-size: 0.95rem;
+            transition: background 0.2s ease;
+        }
+
+        .solucion-header:hover {
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+        }
+
+        .solucion-header i {
+            transition: transform 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .solucion-header i.rotated {
+            transform: rotate(90deg);
+        }
+
+        .solucion-content {
+            display: none;
+            padding: 1.25rem;
+            background: #f8fafc;
+        }
+
+        .solucion-content.open {
+            display: block;
+        }
+
+        /* ===== Table Responsive ===== */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 1.5rem 0;
+        }
+
+        .table-responsive table {
+            margin: 0;
+        }
+
+        /* ===== Tooltip Styles ===== */
+        .tooltip-term {
+            position: relative;
+            border-bottom: 2px dotted #ED1E79;
+            cursor: help;
+            font-weight: 600;
+            color: #3D008D;
+        }
+
+        .tooltip-term:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #3D008D 0%, #2D0066 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 400;
+            width: 280px;
+            text-align: left;
+            line-height: 1.5;
+            box-shadow: 0 10px 25px rgba(61, 0, 141, 0.3);
+            z-index: 1000;
+            margin-bottom: 8px;
+        }
+
+        .tooltip-term:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: #3D008D;
+            margin-bottom: -8px;
+            z-index: 1001;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 480px) {
+            .greco-latin-grid { max-width: 100%; }
+            .greco-cell { width: 70px; height: 70px; font-size: 0.6rem; }
+            .greco-cell .cell-letter { font-size: 0.85rem; }
+            .greco-cell .cell-value { font-size: 0.7rem; }
+        }
+
+        @media (max-width: 1024px) {
+            .greco-latin-grid.grid-5 { max-width: 100%; }
+            .greco-cell { width: 85px; height: 85px; }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+
+    <!-- Floating Sidebar Toggle Button -->
+    <button class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Mostrar/Ocultar menú" aria-label="Toggle sidebar">
+        <i class="fas fa-bars text-sm" id="sidebarToggleIcon"></i>
+    </button>
+
+    <div class="main-layout">
+
+        <!-- Sidebar Navigation -->
+        <div id="sidebar-panel">
+            <div class="sidebar-brand">
+                <h2><i class="fas fa-th text-secondary"></i> DCGL <span style="color: #FDB913;">Greco-Latinos</span></h2>
+                <p>Diseño de Experimentos &bull; USTA 2026</p>
+            </div>
+            <nav class="sidebar-nav" id="module-nav">
+                <!-- Nav items injected via JS -->
+            </nav>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-grow flex flex-col" style="min-width:0;">
+            <main class="flex-grow bg-white rounded-tl-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div id="content-area" class="p-6 md:p-10 module-content">
+                    <!-- Content injected via JS -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="usta-header mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <i class="fas fa-book-open"></i> Referencias Bibliográficas
+            </h3>
+            <ul class="space-y-3 text-white/90 text-sm">
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Montgomery, D. C. (2019). <em class="text-gold">Design and Analysis of Experiments</em> (10th ed.). Wiley.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>García Leal, J. &amp; Lara Porras, A.M. (1998). <em class="text-gold">Diseño Estadístico de Experimentos. Análisis de la Varianza</em>. Grupo Editorial Universitario.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Cochran, W. G. &amp; Cox, G. M. (1992). <em class="text-gold">Experimental Designs</em> (2nd ed.). Wiley.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Fisher, R. A. (1971). <em class="text-gold">The Design of Experiments</em> (9th ed.). Macmillan.</span>
+                </li>
+            </ul>
+            <div class="mt-6 pt-6 border-t border-white/20 text-center">
+                <p class="text-white font-medium">Material de Estudio — <span class="text-gold">USTA</span></p>
+                <p class="text-xs mt-1 text-white/60">Diseño de Experimentos &bull; Diseños en Cuadros Greco-Latinos</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="Volver arriba">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Module Content Templates -->
+    
+    <template id="module-1">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 1</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Introducción al DCGL</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Comprender qué es un cuadro greco-latino y su relación con el cuadro latino.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="definition-box">
+                        <h4>Definición</h4>
+                        <p>Un <strong>Diseño en Cuadro Greco-Latino (DCGL)</strong> es una extensión del Cuadro Latino
+                            que incluye una tercera variable de control o variable de bloqueo. Se obtiene por
+                            superposición de dos Cuadros Latinos del mismo orden y ortogonales entre sí: uno con letras
+                            latinas y otro con letras griegas.</p>
+                    </div>
+
+                    <p>El modelo en Cuadro Greco-Latino es una fracción del diseño completo en bloques aleatorizados con
+                        un factor principal y tres factores secundarios. Mientras que el diseño completo requeriría
+                        $K^4$ observaciones, el Cuadro Greco-Latino solo requiere $K^2$ observaciones.</p>
+
+                    <h2>Antecedentes Históricos</h2>
+                    <p>Los Cuadros Greco-Latinos fueron estudiados extensivamente por Euler, quien demostró que no
+                        existen Cuadros Greco-Latinos de orden 6. Esta limitación es conocida como el "problema de los
+                        36 oficiales" de Euler.</p>
+
+                    <h2>Características Principales</h2>
+                    <ul>
+                        <li>Arreglo cuadrado de orden $K$: requiere $K^2$ observaciones</li>
+                        <li>Se tienen cuatro factores: filas, columnas, letras latinas y letras griegas</li>
+                        <li>Cada tratamiento (combinación letra latina + griega) aparece exactamente una vez</li>
+                        <li>Permite controlar tres fuentes de variabilidad simultáneamente</li>
+                    </ul>
+
+                    <h2>Ejemplo de Cuadro Greco-Latino 4×4</h2>
+                    <p>En la tabla siguiente se muestra un Cuadro Greco-Latino para $K = 4$:</p>
+
+                    <div class="greco-latin-grid grid-4">
+                        <div class="greco-cell cell-A greek-alpha">A&alpha;</div>
+                        <div class="greco-cell cell-B greek-beta">B&beta;</div>
+                        <div class="greco-cell cell-C greek-gamma">C&gamma;</div>
+                        <div class="greco-cell cell-D greek-delta">D&delta;</div>
+                        <div class="greco-cell cell-D greek-gamma">D&gamma;</div>
+                        <div class="greco-cell cell-C greek-delta">C&delta;</div>
+                        <div class="greco-cell cell-B greek-alpha">B&alpha;</div>
+                        <div class="greco-cell cell-A greek-beta">A&beta;</div>
+                        <div class="greco-cell cell-B greek-delta">B&delta;</div>
+                        <div class="greco-cell cell-A greek-gamma">A&gamma;</div>
+                        <div class="greco-cell cell-D greek-beta">D&beta;</div>
+                        <div class="greco-cell cell-C greek-alpha">C&alpha;</div>
+                        <div class="greco-cell cell-C greek-beta">C&beta;</div>
+                        <div class="greco-cell cell-D greek-alpha">D&alpha;</div>
+                        <div class="greco-cell cell-A greek-delta">A&delta;</div>
+                        <div class="greco-cell cell-B greek-gamma">B&gamma;</div>
+                    </div>
+
+                    <p style="text-align: center; font-size: 0.85rem; color: #64748b;">Nota: Cada letra latina y griega
+                        aparece exactamente una vez en cada fila y columna. Cada combinación letra latina-griega aparece
+                        a lo sumo una vez.</p>
+
+                    <div class="warning-box">
+                        <h4>Limitación Importante</h4>
+                        <p>No es posible formar Cuadros Greco-Latinos de orden 6. Esto se conoce como el "problema de
+                            los 36 oficiales" de Euler, quien preguntó si era posible disponer 36 oficiales de 6
+                            regimientos diferentes y 6 rangos en un cuadrado de modo que cada regimiento y cada rango
+                            aparezca exactamente una vez en cada fila y columna.</p>
+                    </div>
+
+                    <h2>Notación</h2>
+                    <p>Un Cuadro Greco-Latino de orden $K$ se denota como $\mathrm{GreekLatin}(K)$. El número de
+                        observaciones es:</p>
+
+                    <div class="formula-box">
+                        $$N = K^2$$
+                        <p>donde $K$ es el número de niveles de cada factor</p>
+                    </div>
+        </div>
+    </template>
+
+    <template id="module-2">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 2</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Fundamentos Teóricos</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Estudiar la estructura, supuestos y condiciones de existencia.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Estructura Experimental</h2>
+                    <p>En un Diseño en Cuadro Greco-Latino se tienen cuatro factores, cada uno con $K$ niveles:</p>
+
+                    <ul>
+                        <li><strong>Filas:</strong> Representan el primer bloqueo (factor principal)</li>
+                        <li><strong>Columnas:</strong> Representan el segundo bloqueo</li>
+                        <li><strong>Letras Latinas:</strong> Representan el tercer factor de bloqueo</li>
+                        <li><strong>Letras Griegas:</strong> Representan el cuarto factor de bloqueo</li>
+                    </ul>
+
+                    <div class="concept-diagram">
+                        <div class="diagram-box diagram-row">
+                            <div>Filas</div>
+                            <div style="font-size: 0.75rem; font-weight: 400;">(Bloque 1)</div>
+                        </div>
+                        <div class="diagram-arrow">×</div>
+                        <div class="diagram-box diagram-col">
+                            <div>Columnas</div>
+                            <div style="font-size: 0.75rem; font-weight: 400;">(Bloque 2)</div>
+                        </div>
+                        <div class="diagram-arrow">×</div>
+                        <div class="diagram-box diagram-treat">
+                            <div>Letras Latinas</div>
+                            <div style="font-size: 0.75rem; font-weight: 400;">(Bloque 3)</div>
+                        </div>
+                        <div class="diagram-arrow">×</div>
+                        <div class="diagram-box diagram-greek">
+                            <div>Letras Griegas</div>
+                            <div style="font-size: 0.75rem; font-weight: 400;">(Bloque 4)</div>
+                        </div>
+                        <div class="diagram-arrow">=</div>
+                        <div class="diagram-box" style="background: var(--usta-primary); color: white;">
+                            <div>Cuadro Greco-Latino</div>
+                            <div style="font-size: 0.75rem; font-weight: 400;">$K^2$ obs.</div>
+                        </div>
+                    </div>
+
+                    <h2>Supuestos del Modelo</h2>
+                    <div class="definition-box">
+                        <h4>Supuestos Fundamentales</h4>
+                        <p>No existe interacción entre los factores (filas, columnas, letras latinas y letras griegas).
+                            Este supuesto es crítico para la validez del análisis.</p>
+                    </div>
+
+                    <p>Los supuestos para el análisis de varianza de un Cuadro Greco-Latino son:</p>
+                    <ol>
+                        <li><strong>Normalidad:</strong> Los errores tienen distribución normal</li>
+                        <li><strong>Varianza constante:</strong> $\sigma^2$ es constante para todos los tratamientos
+                        </li>
+                        <li><strong>Independencia:</strong> Las observaciones son independientes</li>
+                        <li><strong>Aditividad:</strong> El modelo es aditivo (sin interacción)</li>
+                    </ol>
+
+                    <h2>Condición de Existencia</h2>
+                    <div class="formula-box">
+                        <p><strong>Teorema:</strong></p>
+                        <p>Un Cuadro Greco-Latino de orden $K$ existe si y solo si existe un par de Cuadros Latinos
+                            ortogonales de orden $K$.</p>
+                        <p>Esto ocurre cuando $K$ es un número primo o una potencia de un número primo.</p>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Orden ($K$)</th>
+                                <th>¿Existe Cuadro Greco-Latino?</th>
+                                <th>Razón</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2</td>
+                                <td>Sí</td>
+                                <td>$2 = 2^1$ (primo)</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Sí</td>
+                                <td>$3 = 3^1$ (primo)</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Sí</td>
+                                <td>$4 = 2^2$ (potencia de primo)</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>Sí</td>
+                                <td>$5 = 5^1$ (primo)</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td><strong>No</strong></td>
+                                <td>No es primo ni potencia de primo</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>Sí</td>
+                                <td>$7 = 7^1$ (primo)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h2>Ventajas y Desventajas</h2>
+
+                    <div class="example-box">
+                        <h4>Ventajas</h4>
+                        <ul>
+                            <li>Control de tres fuentes de variabilidad simultáneamente</li>
+                            <li>Reduce significativamente el error experimental</li>
+                            <li>Diseño eficiente cuando los recursos son limitados</li>
+                            <li>Permite estudiar cuatro factores con solo $K^2$ observaciones</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>Desventajas</h4>
+                        <ul>
+                            <li>Requiere que el número de niveles sea igual para los cuatro factores</li>
+                            <li>No permite estudiar interacciones entre factores</li>
+                            <li>No existe para orden 6</li>
+                            <li>El análisis es más complejo que en el Cuadro Latino</li>
+                        </ul>
+                    </div>
+        </div>
+    </template>
+
+    <template id="module-3">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 3</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Modelo Estadístico</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Formular el modelo lineal, estimadores, residuos, SC y pruebas F.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ 3.1 Modelo Lineal ═══ -->
+                    <h2>Modelo Lineal</h2>
+                    <p>El modelo estadístico para un Diseño en Cuadro Greco-Latino es:</p>
+
+                    <div class="formula-box">
+                        $$y_{ij(hp)} = \mu + \tau_i + \beta_j + \gamma_h + \delta_p + \varepsilon_{ij(hp)}$$
+                    </div>
+
+                    <p>Sus componentes son:</p>
+                    <ul>
+                        <li><strong>$y_{ij(hp)}$</strong> — Observación en la fila $i$, columna $j$, con letra latina $h$ y letra griega $p$</li>
+                        <li><strong>$\mu$</strong> — Media general del experimento</li>
+                        <li><strong>$\tau_i$</strong> — Efecto de la fila $i$ (factor principal), con la restricción $\sum_{i=1}^{K} \tau_i = 0$</li>
+                        <li><strong>$\beta_j$</strong> — Efecto de la columna $j$ (bloque 2), con $\sum_{j=1}^{K} \beta_j = 0$</li>
+                        <li><strong>$\gamma_h$</strong> — Efecto de la letra latina $h$ (bloque 3), con $\sum_{h=1}^{K} \gamma_h = 0$</li>
+                        <li><strong>$\delta_p$</strong> — Efecto de la letra griega $p$ (bloque 4), con $\sum_{p=1}^{K} \delta_p = 0$</li>
+                        <li><strong>$\varepsilon_{ij(hp)}$</strong> — Error aleatorio, variables independientes con distribución $N(0, \sigma^2)$</li>
+                    </ul>
+
+                    <div class="interpretation-box">
+                        <strong><i class="fas fa-info-circle"></i> Nota sobre la notación:</strong>
+                        La expresión $y_{ij(hp)}$ indica que, dado un Cuadro Greco-Latino específico, los índices de fila $i$ y columna $j$ determinan unívocamente los niveles $h$ (letra latina) y $p$ (letra griega). Es decir, los subíndices $h$ y $p$ toman valores que dependen de la celdilla $(i, j)$.
+                    </div>
+
+                    <!-- ═══ 3.2 Notación y Totales ═══ -->
+                    <h2>Notación y Totales Marginales</h2>
+
+                    <p>Se utiliza la siguiente notación, donde $N = K^2$ es el número total de observaciones:</p>
+
+                    <ul>
+                        <li><strong>Gran total:</strong> $y_{\cdots} = \displaystyle\sum_{i=1}^{K} \sum_{j=1}^{K} y_{ij(\cdot\cdot)}$</li>
+                        <li><strong>Media general:</strong> $\bar{y}_{\cdots} = \dfrac{y_{\cdots}}{K^2}$</li>
+                    </ul>
+
+                    <p><strong>Totales y promedios marginales por factor:</strong></p>
+                    <ul>
+                        <li><strong>Fila $i$:</strong> $y_{i\cdots} = \displaystyle\sum_{j=1}^{K} y_{ij(\cdot\cdot)}$ &emsp; y &emsp; $\bar{y}_{i\cdots} = \dfrac{y_{i\cdots}}{K}$
+                            <br><span style="font-size: 0.85rem; color: #64748b;">Suma de las $K$ observaciones en la fila $i$.</span></li>
+                        <li><strong>Columna $j$:</strong> $y_{\cdot j\cdot\cdot} = \displaystyle\sum_{i=1}^{K} y_{ij(\cdot\cdot)}$ &emsp; y &emsp; $\bar{y}_{\cdot j\cdot\cdot} = \dfrac{y_{\cdot j\cdot\cdot}}{K}$
+                            <br><span style="font-size: 0.85rem; color: #64748b;">Suma de las $K$ observaciones en la columna $j$.</span></li>
+                        <li><strong>Letra latina $h$:</strong> $y_{\cdot\cdot h\cdot} = \displaystyle\sum_{i,j} y_{ij(h\cdot)}$ &emsp; y &emsp; $\bar{y}_{\cdot\cdot h\cdot} = \dfrac{y_{\cdot\cdot h\cdot}}{K}$
+                            <br><span style="font-size: 0.85rem; color: #64748b;">Suma de las $K$ observaciones donde la letra latina está fijada al nivel $h$. Estas celdas están dispersas en el cuadro (una por fila y una por columna).</span></li>
+                        <li><strong>Letra griega $p$:</strong> $y_{\cdots p} = \displaystyle\sum_{i,j} y_{ij(\cdot p)}$ &emsp; y &emsp; $\bar{y}_{\cdots p} = \dfrac{y_{\cdots p}}{K}$
+                            <br><span style="font-size: 0.85rem; color: #64748b;">Suma de las $K$ observaciones donde la letra griega está fijada al nivel $p$. Igualmente dispersas en el cuadro.</span></li>
+                    </ul>
+
+                    <!-- ═══ 3.3 Grados de Libertad ═══ -->
+                    <h2>Grados de Libertad</h2>
+
+                    <p>La variabilidad total ($K^2 - 1$ GL) se descompone en cinco fuentes:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fuente de Variación</th>
+                                <th>Grados de Libertad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Filas (Factor principal)</td>
+                                <td>$K - 1$</td>
+                            </tr>
+                            <tr>
+                                <td>Columnas (Bloque 2)</td>
+                                <td>$K - 1$</td>
+                            </tr>
+                            <tr>
+                                <td>Letras Latinas (Bloque 3)</td>
+                                <td>$K - 1$</td>
+                            </tr>
+                            <tr>
+                                <td>Letras Griegas (Bloque 4)</td>
+                                <td>$K - 1$</td>
+                            </tr>
+                            <tr>
+                                <td>Error</td>
+                                <td>$(K-1)(K-3)$</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total</strong></td>
+                                <td><strong>$K^2 - 1$</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="warning-box">
+                        <h4>Nota sobre los GL del Error</h4>
+                        <p>Los GL del error resultan de restar los GL de los cuatro factores al total:</p>
+                        <p>$$\text{GL}_{\text{Error}} = (K^2 - 1) - 4(K-1) = (K-1)(K-3)$$</p>
+                        <p>Para $K = 4$: $\text{GL}_{\text{Error}} = 3 \times 1 = 3$. Para $K = 5$: $\text{GL}_{\text{Error}} = 4 \times 2 = 8$.</p>
+                    </div>
+
+                    <!-- ═══ 3.4 Estimación de Parámetros ═══ -->
+                    <h2>Estimación de los Parámetros</h2>
+
+                    <p>Siguiendo el método de máxima verosimilitud, los estimadores de los parámetros del modelo son:</p>
+
+                    <ul>
+                        <li><strong>Media general:</strong>
+                            $$\hat{\mu} = \bar{y}_{\cdots}$$
+                        </li>
+                        <li><strong>Efecto de fila $i$:</strong>
+                            $$\hat{\tau}_i = \bar{y}_{i\cdots} - \bar{y}_{\cdots}$$
+                        </li>
+                        <li><strong>Efecto de columna $j$:</strong>
+                            $$\hat{\beta}_j = \bar{y}_{\cdot j \cdot \cdot} - \bar{y}_{\cdots}$$
+                        </li>
+                        <li><strong>Efecto de letra latina $h$:</strong>
+                            $$\hat{\gamma}_h = \bar{y}_{\cdot \cdot h \cdot} - \bar{y}_{\cdots}$$
+                        </li>
+                        <li><strong>Efecto de letra griega $p$:</strong>
+                            $$\hat{\delta}_p = \bar{y}_{\cdots p} - \bar{y}_{\cdots}$$
+                        </li>
+                        <li><strong>Varianza (MV):</strong>
+                            $$\hat{\sigma}^2 = \frac{1}{N} \sum_{i,j} \left[ y_{ij(\cdot\cdot)} - \hat{\mu} - \hat{\tau}_i - \hat{\beta}_j - \hat{\gamma}_h - \hat{\delta}_p \right]^2$$
+                        </li>
+                    </ul>
+
+                    <!-- ═══ 3.5 Residuos ═══ -->
+                    <h3>Residuos</h3>
+
+                    <p>Los residuos del modelo adoptan la expresión:</p>
+
+                    <div class="formula-box">
+                        $$e_{ij(hp)} = y_{ij(hp)} - \hat{y}_{ij(hp)} = y_{ij(hp)} - \bar{y}_{i\cdots} - \bar{y}_{\cdot j \cdot \cdot} - \bar{y}_{\cdot \cdot h \cdot} - \bar{y}_{\cdots p} + 3\bar{y}_{\cdots}$$
+                    </div>
+
+                    <p>Como en el diseño en cuadro latino, los residuos suman cero por filas, por columnas, para cada letra latina y para cada letra griega. La varianza residual estimada (insesgada) es:</p>
+
+                    <div class="formula-box">
+                        $$\tilde{\sigma}^2 = \hat{S}_R^2 = \frac{\displaystyle\sum_{i=1}^{K}\sum_{j=1}^{K} e_{ij(hp)}^2}{(K-1)(K-3)}$$
+                    </div>
+
+                    <!-- ═══ 3.6 Descomposición de la Variabilidad ═══ -->
+                    <h2>Descomposición de la Variabilidad</h2>
+
+                    <p>La ecuación básica del análisis de la varianza para el cuadro greco-latino descompone la variabilidad total en cinco componentes:</p>
+
+                    <div class="formula-box">
+                        $$\underbrace{\sum_{i}\sum_{j}(y_{ij(hp)} - \bar{y}_{\cdots})^2}_{SCT} \;=\;
+                        \underbrace{K\sum_{i}(\bar{y}_{i\cdots} - \bar{y}_{\cdots})^2}_{SCF} \;+\;
+                        \underbrace{K\sum_{j}(\bar{y}_{\cdot j\cdot\cdot} - \bar{y}_{\cdots})^2}_{SCC}$$
+                    </div>
+                    <div class="formula-box">
+                        $$+\;\underbrace{K\sum_{h}(\bar{y}_{\cdot\cdot h\cdot} - \bar{y}_{\cdots})^2}_{SCL} \;+\;
+                        \underbrace{K\sum_{p}(\bar{y}_{\cdots p} - \bar{y}_{\cdots})^2}_{SCG} \;+\;
+                        \underbrace{\sum_{i}\sum_{j}(y_{ij(hp)} - \bar{y}_{i\cdots} - \bar{y}_{\cdot j\cdot\cdot} - \bar{y}_{\cdot\cdot h\cdot} - \bar{y}_{\cdots p} + 3\bar{y}_{\cdots})^2}_{SCR}$$
+                    </div>
+
+                    <p>Simbólicamente:</p>
+
+                    <div class="formula-box">
+                        $$SCT = SCF + SCC + SCL + SCG + SCR$$
+                    </div>
+
+                    <p>donde cada sigla representa:</p>
+                    <ul>
+                        <li><strong>$SCT$</strong> — Suma de cuadrados total</li>
+                        <li><strong>$SCF$</strong> — Suma de cuadrados debida al efecto fila</li>
+                        <li><strong>$SCC$</strong> — Suma de cuadrados debida al efecto columna</li>
+                        <li><strong>$SCL$</strong> — Suma de cuadrados debida a las letras latinas</li>
+                        <li><strong>$SCG$</strong> — Suma de cuadrados debida a las letras griegas</li>
+                        <li><strong>$SCR$</strong> — Suma de cuadrados del error (residual)</li>
+                    </ul>
+
+                    <!-- ═══ 3.7 Fórmulas Computacionales ═══ -->
+                    <h2>Fórmulas Computacionales de Sumas de Cuadrados</h2>
+
+                    <p>Las expresiones abreviadas para el cálculo son:</p>
+
+                    <p><strong>SC Total:</strong></p>
+                    <div class="formula-box">
+                        $$SCT = \sum_{i=1}^{K} \sum_{j=1}^{K} y_{ij(\cdot\cdot)}^2 - \frac{y_{\cdots}^2}{K^2}$$
+                    </div>
+
+                    <p><strong>SC Filas</strong> (factor principal):</p>
+                    <div class="formula-box">
+                        $$SCF = \frac{1}{K} \sum_{i=1}^{K} y_{i\cdots}^2 - \frac{y_{\cdots}^2}{K^2}$$
+                    </div>
+
+                    <p><strong>SC Columnas</strong> (bloque 2):</p>
+                    <div class="formula-box">
+                        $$SCC = \frac{1}{K} \sum_{j=1}^{K} y_{\cdot j\cdot\cdot}^2 - \frac{y_{\cdots}^2}{K^2}$$
+                    </div>
+
+                    <p><strong>SC Letras Latinas</strong> (bloque 3):</p>
+                    <div class="formula-box">
+                        $$SCL = \frac{1}{K} \sum_{h=1}^{K} y_{\cdot\cdot h\cdot}^2 - \frac{y_{\cdots}^2}{K^2}$$
+                    </div>
+
+                    <p><strong>SC Letras Griegas</strong> (bloque 4):</p>
+                    <div class="formula-box">
+                        $$SCG = \frac{1}{K} \sum_{p=1}^{K} y_{\cdots p}^2 - \frac{y_{\cdots}^2}{K^2}$$
+                    </div>
+
+                    <p><strong>SC Error</strong> (por diferencia):</p>
+                    <div class="formula-box">
+                        $$SCR = SCT - SCF - SCC - SCL - SCG$$
+                    </div>
+
+                    <!-- ═══ 3.8 Cuadrados Medios y Valores Esperados ═══ -->
+                    <h2>Cuadrados Medios y Valores Esperados</h2>
+
+                    <p>Los cuadrados medios se obtienen dividiendo cada SC entre sus grados de libertad. La columna $E(\text{CM})$ muestra el valor esperado, que justifica por qué se usa el cociente $F$:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fuente</th>
+                                <th>Cuadrado Medio</th>
+                                <th>Valor Esperado $E(\text{CM})$</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Filas</td>
+                                <td>$\hat{S}_F^2 = \dfrac{SCF}{K-1}$</td>
+                                <td>$\sigma^2 + \dfrac{K\sum\tau_i^2}{K-1}$</td>
+                            </tr>
+                            <tr>
+                                <td>Columnas</td>
+                                <td>$\hat{S}_C^2 = \dfrac{SCC}{K-1}$</td>
+                                <td>$\sigma^2 + \dfrac{K\sum\beta_j^2}{K-1}$</td>
+                            </tr>
+                            <tr>
+                                <td>L. Latinas</td>
+                                <td>$\hat{S}_L^2 = \dfrac{SCL}{K-1}$</td>
+                                <td>$\sigma^2 + \dfrac{K\sum\gamma_h^2}{K-1}$</td>
+                            </tr>
+                            <tr>
+                                <td>L. Griegas</td>
+                                <td>$\hat{S}_G^2 = \dfrac{SCG}{K-1}$</td>
+                                <td>$\sigma^2 + \dfrac{K\sum\delta_p^2}{K-1}$</td>
+                            </tr>
+                            <tr>
+                                <td>Error</td>
+                                <td>$\hat{S}_R^2 = \dfrac{SCR}{(K-1)(K-3)}$</td>
+                                <td>$\sigma^2$</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="interpretation-box">
+                        <strong><i class="fas fa-info-circle"></i> Interpretación:</strong>
+                        Si un factor no tiene efecto (e.g., todos los $\tau_i = 0$), entonces $E(\hat{S}_F^2) = \sigma^2 = E(\hat{S}_R^2)$ y el cociente $F$ debería ser cercano a 1. Si el factor sí tiene efecto, $E(\hat{S}_F^2) > \sigma^2$ y el cociente $F$ será grande.
+                    </div>
+
+                    <!-- ═══ 3.9 Pruebas de Hipótesis ═══ -->
+                    <h2>Pruebas de Hipótesis</h2>
+
+                    <p>Se plantean cuatro contrastes ortogonales, uno por cada factor:</p>
+
+                    <div class="definition-box">
+                        <h4>Hipótesis Nulas</h4>
+                        <ul>
+                            <li><strong>Filas:</strong> $H_{0\tau}: \tau_i = 0, \;\forall\, i$ (no hay efecto del factor fila)</li>
+                            <li><strong>Columnas:</strong> $H_{0\beta}: \beta_j = 0, \;\forall\, j$ (no hay efecto del factor columna)</li>
+                            <li><strong>Letras Latinas:</strong> $H_{0\gamma}: \gamma_h = 0, \;\forall\, h$ (no hay efecto de las letras latinas)</li>
+                            <li><strong>Letras Griegas:</strong> $H_{0\delta}: \delta_p = 0, \;\forall\, p$ (no hay efecto de las letras griegas)</li>
+                        </ul>
+                    </div>
+
+                    <p>Los estadísticos de contraste para verificar cada hipótesis son:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Factor</th>
+                                <th>Estadístico $F$</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Filas</td>
+                                <td>$F_\tau = \hat{S}_F^2 \;/\; \hat{S}_R^2$</td>
+                            </tr>
+                            <tr>
+                                <td>Columnas</td>
+                                <td>$F_\beta = \hat{S}_C^2 \;/\; \hat{S}_R^2$</td>
+                            </tr>
+                            <tr>
+                                <td>Letras Latinas</td>
+                                <td>$F_\gamma = \hat{S}_L^2 \;/\; \hat{S}_R^2$</td>
+                            </tr>
+                            <tr>
+                                <td>Letras Griegas</td>
+                                <td>$F_\delta = \hat{S}_G^2 \;/\; \hat{S}_R^2$</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="definition-box">
+                        <h4>Regla de Decisión</h4>
+                        <p>Bajo las hipótesis nulas, cada estadístico $F$ sigue una distribución $F$ de Snedecor con $K-1$ y $(K-1)(K-3)$ grados de libertad. Por lo tanto:</p>
+                        <ul>
+                            <li><strong>Criterio:</strong> Se rechaza $H_0$ si $F_{\text{exp}} > F_{\alpha,\;(K-1),\;(K-1)(K-3)}$</li>
+                            <li><strong>Equivalente:</strong> Se rechaza $H_0$ si el valor $p$ asociado es menor que $\alpha$</li>
+                        </ul>
+                    </div>
+        </div>
+    </template>
+
+    <template id="module-4">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 4</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Propiedades y Estructura</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Conocer ortogonalidad, construcción y relación con otros diseños.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Propiedad Fundamental</h2>
+
+                    <div class="definition-box">
+                        <h4>Propiedad de Ortogonalidad</h4>
+                        <p>En un Cuadro Greco-Latino, los cuatro factores (filas, columnas, letras latinas y letras
+                            griegas) son <strong>ortogonales</strong>, lo que significa que los efectos de cada factor
+                            se estiman de manera independiente.</p>
+                    </div>
+
+                    <p>Esta ortogonalidad implica que:</p>
+
+                    <div class="formula-box">
+                        $$\sum_{i=1}^{K} \sum_{j=1}^{K} (\text{efecto fila } i) \times (\text{efecto columna } j) = 0$$
+                        $$\sum_{i=1}^{K} \sum_{h=1}^{K} (\text{efecto fila } i) \times (\text{efecto letra latina } h) =
+                        0$$
+                        $$\sum_{i=1}^{K} \sum_{p=1}^{K} (\text{efecto fila } i) \times (\text{efecto letra griega } p) =
+                        0$$
+                    </div>
+
+                    <h2>Construcción de Cuadros Greco-Latinos</h2>
+                    <p>Un Cuadro Greco-Latino de orden $K$ se construye superponiendo dos Cuadros Latinos ortogonales de
+                        orden $K$:</p>
+
+                    <ol>
+                        <li>Se selecciona un Cuadro Latino de orden $K$ con letras latinas ($A$, $B$, $C$, ...)</li>
+                        <li>Se selecciona otro Cuadro Latino de orden $K$ ortogonal al primero, con letras griegas
+                            ($\alpha$, $\beta$, $\gamma$, ...)</li>
+                        <li>Se superponen los dos cuadros, de modo que cada combinación letra latina-griega aparezca a
+                            lo sumo una vez</li>
+                    </ol>
+
+                    <h2>Cuadros Greco-Latinos Estándar</h2>
+                    <p>Un Cuadro Greco-Latino se dice <strong>estándar</strong> si:</p>
+                    <ul>
+                        <li>Las letras latinas aparecen en orden en la primera fila</li>
+                        <li>Las letras griegas aparecen en orden en la primera columna</li>
+                    </ul>
+
+                    <h3>Cuadro Greco-Latino Estándar de orden 3:</h3>
+                    <div class="greco-latin-grid grid-4" style="max-width: 220px;">
+                        <div class="greco-cell header-cell" style="background: #ddd; color: #333;">Fila/Col</div>
+                        <div class="greco-cell header-cell" style="background: #ddd; color: #333;">&alpha;</div>
+                        <div class="greco-cell header-cell" style="background: #ddd; color: #333;">&beta;</div>
+                        <div class="greco-cell header-cell" style="background: #ddd; color: #333;">&gamma;</div>
+                        <div class="greco-cell header-cell" style="background: #ddd; color: #333;">A</div>
+                        <div class="greco-cell cell-A greek-alpha">
+                            <span class="greek-badge badge-alpha">&alpha;</span>
+                            <span class="cell-text">A&alpha;</span>
+                        </div>
+                        <div class="greco-cell cell-B greek-beta">
+                            <span class="greek-badge badge-beta">&beta;</span>
+                            <span class="cell-text">B&beta;</span>
+                        </div>
+                        <div class="greco-cell cell-C greek-gamma">
+                            <span class="greek-badge badge-gamma">&gamma;</span>
+                            <span class="cell-text">C&gamma;</span>
+                        </div>
+                        <div class="greco-cell header-cell" style="background: #ddd; color: #333;">B</div>
+                        <div class="greco-cell cell-B greek-gamma">
+                            <span class="greek-badge badge-gamma">&gamma;</span>
+                            <span class="cell-text">B&gamma;</span>
+                        </div>
+                        <div class="greco-cell cell-C greek-alpha">
+                            <span class="greek-badge badge-alpha">&alpha;</span>
+                            <span class="cell-text">C&alpha;</span>
+                        </div>
+                        <div class="greco-cell cell-A greek-beta">
+                            <span class="greek-badge badge-beta">&beta;</span>
+                            <span class="cell-text">A&beta;</span>
+                        </div>
+                        <div class="greco-cell header-cell" style="background: #ddd; color: #333;">C</div>
+                        <div class="greco-cell cell-C greek-beta">
+                            <span class="greek-badge badge-beta">&beta;</span>
+                            <span class="cell-text">C&beta;</span>
+                        </div>
+                        <div class="greco-cell cell-A greek-gamma">
+                            <span class="greek-badge badge-gamma">&gamma;</span>
+                            <span class="cell-text">A&gamma;</span>
+                        </div>
+                        <div class="greco-cell cell-B greek-alpha">
+                            <span class="greek-badge badge-alpha">&alpha;</span>
+                            <span class="cell-text">B&alpha;</span>
+                        </div>
+                    </div>
+
+                    <h2>Relación con Otros Diseños</h2>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Diseño</th>
+                                <th>Factores Controlados</th>
+                                <th>Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Completamente Aleatorizado</td>
+                                <td>0</td>
+                                <td>$K \times r$</td>
+                            </tr>
+                            <tr>
+                                <td>DBCA</td>
+                                <td>1</td>
+                                <td>$K \times r$</td>
+                            </tr>
+                            <tr>
+                                <td>Cuadro Latino</td>
+                                <td>2</td>
+                                <td>$K^2$</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cuadro Greco-Latino</strong></td>
+                                <td><strong>3</strong></td>
+                                <td><strong>$K^2$</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>El Cuadro Greco-Latino es una extensión natural del Cuadro Latino, añadiendo un cuarto factor de
+                        bloqueo mediante letras griegas.</p>
+        </div>
+    </template>
+
+    <template id="module-5">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 5</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Tabla ANOVA General</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Presentar la forma general de la tabla ANOVA y el coeficiente R².</p>
+                    </div>
+                </div>
+            </div>
+
+            <p>La tabla ANOVA genérica para un diseño en Cuadro Greco-Latino de orden $K$ se presenta a continuación (Tabla 5-10 del PDF):</p>
+
+                    <h2>Forma Práctica (Tabla 5-10)</h2>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fuente de Variación</th>
+                                <th>Suma de Cuadrados</th>
+                                <th>GL</th>
+                                <th>CM</th>
+                                <th>$F_{\text{exp}}$</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>E. fila</td>
+                                <td>$\frac{1}{K}\sum_i y_{i\cdots}^2 - \frac{y_{\cdots}^2}{K^2}$</td>
+                                <td>$K-1$</td>
+                                <td>$\hat{S}_F^2$</td>
+                                <td>$\hat{S}_F^2 / \hat{S}_R^2$</td>
+                            </tr>
+                            <tr>
+                                <td>E. columna</td>
+                                <td>$\frac{1}{K}\sum_j y_{\cdot j\cdot\cdot}^2 - \frac{y_{\cdots}^2}{K^2}$</td>
+                                <td>$K-1$</td>
+                                <td>$\hat{S}_C^2$</td>
+                                <td>$\hat{S}_C^2 / \hat{S}_R^2$</td>
+                            </tr>
+                            <tr>
+                                <td>E. letra latina</td>
+                                <td>$\frac{1}{K}\sum_h y_{\cdot\cdot h\cdot}^2 - \frac{y_{\cdots}^2}{K^2}$</td>
+                                <td>$K-1$</td>
+                                <td>$\hat{S}_L^2$</td>
+                                <td>$\hat{S}_L^2 / \hat{S}_R^2$</td>
+                            </tr>
+                            <tr>
+                                <td>E. letra griega</td>
+                                <td>$\frac{1}{K}\sum_p y_{\cdots p}^2 - \frac{y_{\cdots}^2}{K^2}$</td>
+                                <td>$K-1$</td>
+                                <td>$\hat{S}_G^2$</td>
+                                <td>$\hat{S}_G^2 / \hat{S}_R^2$</td>
+                            </tr>
+                            <tr>
+                                <td>Residual</td>
+                                <td>$SCT - SCF - SCC - SCL - SCG$</td>
+                                <td>$(K-1)(K-3)$</td>
+                                <td>$\hat{S}_R^2$</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><strong>TOTAL</strong></td>
+                                <td>$\sum_{i}\sum_{j} y_{ij(hp)}^2 - \frac{y_{\cdots}^2}{K^2}$</td>
+                                <td><strong>$K^2 - 1$</strong></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="definition-box">
+                        <h4>Regla de Decisión</h4>
+                        <p>Para cada factor, se rechaza $H_0$ si $F_{\text{exp}} > F_{\alpha,\;(K-1),\;(K-1)(K-3)}$. Bajo $H_0$, cada $F$ sigue una distribución $F$ con $K-1$ y $(K-1)(K-3)$ grados de libertad.</p>
+                    </div>
+
+                    <h2>Coeficiente de Determinación</h2>
+
+                    <div class="formula-box">
+                        $$R^2 = \frac{SCF + SCC + SCL + SCG}{SCT} = R_\tau^2 + R_\beta^2 + R_\gamma^2 + R_\delta^2$$
+                    </div>
+
+                    <p>Donde $R_\tau^2$, $R_\beta^2$, $R_\gamma^2$ y $R_\delta^2$ son los <strong>coeficientes de determinación parciales</strong> que miden la proporción de variabilidad explicada por cada factor.</p>
+        </div>
+    </template>
+
+    <template id="module-6">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 6</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Ejemplo Completo</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Aplicar el DCGL 4×4 con cálculos manuales y verificación Python.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="example-box">
+                        <h4>Ejemplo: Producción Química con Cuatro Procedimientos</h4>
+                        <p>En la obtención de un determinado producto químico se está interesado en comparar cuatro
+                            procedimientos. Se supone que también pueden influir la temperatura, presión y tipo de
+                            catalizador empleado. Se decide realizar un experimento en Cuadro Greco-Latino con cuatro
+                            niveles de cada factor:</p>
+                        <ul>
+                            <li><strong>Filas:</strong> 4 procedimientos (factor principal)</li>
+                            <li><strong>Columnas:</strong> 4 temperaturas</li>
+                            <li><strong>Letras Latinas:</strong> 4 presiones</li>
+                            <li><strong>Letras Griegas:</strong> 4 catalizadores</li>
+                        </ul>
+                    </div>
+
+                    <h2>Arreglo del Cuadro Greco-Latino</h2>
+
+                    <div class="greco-latin-grid grid-5">
+                        <div class="greco-cell header-cell" style="background: var(--usta-navy);">Proc./Temp.</div>
+                        <div class="greco-cell header-cell" style="background: var(--usta-navy);">T1</div>
+                        <div class="greco-cell header-cell" style="background: var(--usta-navy);">T2</div>
+                        <div class="greco-cell header-cell" style="background: var(--usta-navy);">T3</div>
+                        <div class="greco-cell header-cell" style="background: var(--usta-navy);">T4</div>
+                        <div class="greco-cell header-cell" style="background: var(--usta-secondary);">P1</div>
+                        <div class="greco-cell cell-C greek-beta">
+                            <span class="greek-badge badge-beta">&beta;</span>
+                            <div class="cell-text"><span class="cell-letter">C&beta;</span><span class="cell-value">=
+                                    5</span></div>
+                        </div>
+                        <div class="greco-cell cell-B greek-alpha">
+                            <span class="greek-badge badge-alpha">&alpha;</span>
+                            <div class="cell-text"><span class="cell-letter">B&alpha;</span><span class="cell-value">=
+                                    12</span></div>
+                        </div>
+                        <div class="greco-cell cell-A greek-delta">
+                            <span class="greek-badge badge-delta">&delta;</span>
+                            <div class="cell-text"><span class="cell-letter">A&delta;</span><span class="cell-value">=
+                                    13</span></div>
+                        </div>
+                        <div class="greco-cell cell-D greek-gamma">
+                            <span class="greek-badge badge-gamma">&gamma;</span>
+                            <div class="cell-text"><span class="cell-letter">D&gamma;</span><span class="cell-value">=
+                                    13</span></div>
+                        </div>
+                        <div class="greco-cell header-cell" style="background: var(--usta-secondary);">P2</div>
+                        <div class="greco-cell cell-B greek-gamma">
+                            <span class="greek-badge badge-gamma">&gamma;</span>
+                            <div class="cell-text"><span class="cell-letter">B&gamma;</span><span class="cell-value">=
+                                    6</span></div>
+                        </div>
+                        <div class="greco-cell cell-C greek-delta">
+                            <span class="greek-badge badge-delta">&delta;</span>
+                            <div class="cell-text"><span class="cell-letter">C&delta;</span><span class="cell-value">=
+                                    10</span></div>
+                        </div>
+                        <div class="greco-cell cell-D greek-alpha">
+                            <span class="greek-badge badge-alpha">&alpha;</span>
+                            <div class="cell-text"><span class="cell-letter">D&alpha;</span><span class="cell-value">=
+                                    15</span></div>
+                        </div>
+                        <div class="greco-cell cell-A greek-beta">
+                            <span class="greek-badge badge-beta">&beta;</span>
+                            <div class="cell-text"><span class="cell-letter">A&beta;</span><span class="cell-value">=
+                                    11</span></div>
+                        </div>
+                        <div class="greco-cell header-cell" style="background: var(--usta-secondary);">P3</div>
+                        <div class="greco-cell cell-D greek-delta">
+                            <span class="greek-badge badge-delta">&delta;</span>
+                            <div class="cell-text"><span class="cell-letter">D&delta;</span><span class="cell-value">=
+                                    7</span></div>
+                        </div>
+                        <div class="greco-cell cell-A greek-gamma">
+                            <span class="greek-badge badge-gamma">&gamma;</span>
+                            <div class="cell-text"><span class="cell-letter">A&gamma;</span><span class="cell-value">=
+                                    5</span></div>
+                        </div>
+                        <div class="greco-cell cell-B greek-beta">
+                            <span class="greek-badge badge-beta">&beta;</span>
+                            <div class="cell-text"><span class="cell-letter">B&beta;</span><span class="cell-value">=
+                                    5</span></div>
+                        </div>
+                        <div class="greco-cell cell-C greek-alpha">
+                            <span class="greek-badge badge-alpha">&alpha;</span>
+                            <div class="cell-text"><span class="cell-letter">C&alpha;</span><span class="cell-value">=
+                                    7</span></div>
+                        </div>
+                        <div class="greco-cell header-cell" style="background: var(--usta-secondary);">P4</div>
+                        <div class="greco-cell cell-A greek-alpha">
+                            <span class="greek-badge badge-alpha">&alpha;</span>
+                            <div class="cell-text"><span class="cell-letter">A&alpha;</span><span class="cell-value">=
+                                    11</span></div>
+                        </div>
+                        <div class="greco-cell cell-D greek-beta">
+                            <span class="greek-badge badge-beta">&beta;</span>
+                            <div class="cell-text"><span class="cell-letter">D&beta;</span><span class="cell-value">=
+                                    10</span></div>
+                        </div>
+                        <div class="greco-cell cell-C greek-gamma">
+                            <span class="greek-badge badge-gamma">&gamma;</span>
+                            <div class="cell-text"><span class="cell-letter">C&gamma;</span><span class="cell-value">=
+                                    8</span></div>
+                        </div>
+                        <div class="greco-cell cell-B greek-delta">
+                            <span class="greek-badge badge-delta">&delta;</span>
+                            <div class="cell-text"><span class="cell-letter">B&delta;</span><span class="cell-value">=
+                                    9</span></div>
+                        </div>
+                    </div>
+
+                    <div class="greco-legend">
+                        <div class="legend-section">
+                            <span class="legend-section-title">Letra Latina (Presión):</span>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: var(--usta-primary); color: white;">A</div>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: var(--usta-secondary); color: white;">B
+                                </div>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: var(--usta-navy); color: white;">C</div>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color"
+                                    style="background: var(--usta-gold); color: var(--usta-navy);">D</div>
+                            </div>
+                        </div>
+                        <div class="legend-section">
+                            <span class="legend-section-title">Letra Griega (Catalizador):</span>
+                            <div class="legend-item">
+                                <div class="legend-border" style="border-color: #2563eb;">&alpha;</div>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-border" style="border-color: #059669;">&beta;</div>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-border" style="border-color: #ea580c;">&gamma;</div>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-border" style="border-color: #7c3aed;">&delta;</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ── Tabla de datos completa (Tabla 5-11 del PDF) ── -->
+                    <h2>Tabla de Datos Completa (Tabla 5-11)</h2>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Proc.</th>
+                                <th>T1</th>
+                                <th>T2</th>
+                                <th>T3</th>
+                                <th>T4</th>
+                                <th>$y_{i\cdots}$</th>
+                                <th>$y_{i\cdots}^2$</th>
+                                <th>$\sum_j y_{ij}^2$</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>P1</strong></td>
+                                <td>C&beta; = 5</td>
+                                <td>B&alpha; = 12</td>
+                                <td>A&delta; = 13</td>
+                                <td>D&gamma; = 13</td>
+                                <td><strong>43</strong></td>
+                                <td>1849</td>
+                                <td>507</td>
+                            </tr>
+                            <tr>
+                                <td><strong>P2</strong></td>
+                                <td>B&gamma; = 6</td>
+                                <td>C&delta; = 10</td>
+                                <td>D&alpha; = 15</td>
+                                <td>A&beta; = 11</td>
+                                <td><strong>42</strong></td>
+                                <td>1764</td>
+                                <td>482</td>
+                            </tr>
+                            <tr>
+                                <td><strong>P3</strong></td>
+                                <td>D&delta; = 7</td>
+                                <td>A&gamma; = 5</td>
+                                <td>B&beta; = 5</td>
+                                <td>C&alpha; = 7</td>
+                                <td><strong>24</strong></td>
+                                <td>576</td>
+                                <td>148</td>
+                            </tr>
+                            <tr>
+                                <td><strong>P4</strong></td>
+                                <td>A&alpha; = 11</td>
+                                <td>D&beta; = 10</td>
+                                <td>C&gamma; = 8</td>
+                                <td>B&delta; = 9</td>
+                                <td><strong>38</strong></td>
+                                <td>1444</td>
+                                <td>366</td>
+                            </tr>
+                            <tr>
+                                <td><strong>$y_{\cdot j\cdot\cdot}$</strong></td>
+                                <td><strong>29</strong></td>
+                                <td><strong>37</strong></td>
+                                <td><strong>41</strong></td>
+                                <td><strong>40</strong></td>
+                                <td><strong>147</strong></td>
+                                <td>5633</td>
+                                <td>1503</td>
+                            </tr>
+                            <tr>
+                                <td><strong>$y_{\cdot j\cdot\cdot}^2$</strong></td>
+                                <td>841</td>
+                                <td>1369</td>
+                                <td>1681</td>
+                                <td>1600</td>
+                                <td>5491</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- ── Totales por Letras Latinas (Tabla 5-12) ── -->
+                    <h2>Totales por Letra Latina — Presión (Tabla 5-12)</h2>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Letra Latina</th>
+                                <th>Observaciones (posición)</th>
+                                <th>$y_{\cdot\cdot h\cdot}$</th>
+                                <th>$y_{\cdot\cdot h\cdot}^2$</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>A</strong></td>
+                                <td>11 (P4,T1) &ensp; 5 (P3,T2) &ensp; 13 (P1,T3) &ensp; 11 (P2,T4)</td>
+                                <td><strong>40</strong></td>
+                                <td>1600</td>
+                            </tr>
+                            <tr>
+                                <td><strong>B</strong></td>
+                                <td>6 (P2,T1) &ensp; 12 (P1,T2) &ensp; 5 (P3,T3) &ensp; 9 (P4,T4)</td>
+                                <td><strong>32</strong></td>
+                                <td>1024</td>
+                            </tr>
+                            <tr>
+                                <td><strong>C</strong></td>
+                                <td>5 (P1,T1) &ensp; 10 (P2,T2) &ensp; 8 (P4,T3) &ensp; 7 (P3,T4)</td>
+                                <td><strong>30</strong></td>
+                                <td>900</td>
+                            </tr>
+                            <tr>
+                                <td><strong>D</strong></td>
+                                <td>7 (P3,T1) &ensp; 10 (P4,T2) &ensp; 15 (P2,T3) &ensp; 13 (P1,T4)</td>
+                                <td><strong>45</strong></td>
+                                <td>2025</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td><strong>147</strong></td>
+                                <td><strong>5549</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- ── Totales por Letras Griegas (Tabla 5-13) ── -->
+                    <h2>Totales por Letra Griega — Catalizador (Tabla 5-13)</h2>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Letra Griega</th>
+                                <th>Observaciones (posición)</th>
+                                <th>$y_{\cdots p}$</th>
+                                <th>$y_{\cdots p}^2$</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>&alpha;</strong></td>
+                                <td>11 (P4,T1) &ensp; 12 (P1,T2) &ensp; 15 (P2,T3) &ensp; 7 (P3,T4)</td>
+                                <td><strong>45</strong></td>
+                                <td>2025</td>
+                            </tr>
+                            <tr>
+                                <td><strong>&beta;</strong></td>
+                                <td>5 (P1,T1) &ensp; 10 (P4,T2) &ensp; 5 (P3,T3) &ensp; 11 (P2,T4)</td>
+                                <td><strong>31</strong></td>
+                                <td>961</td>
+                            </tr>
+                            <tr>
+                                <td><strong>&gamma;</strong></td>
+                                <td>6 (P2,T1) &ensp; 5 (P3,T2) &ensp; 8 (P4,T3) &ensp; 13 (P1,T4)</td>
+                                <td><strong>32</strong></td>
+                                <td>1024</td>
+                            </tr>
+                            <tr>
+                                <td><strong>&delta;</strong></td>
+                                <td>7 (P3,T1) &ensp; 10 (P2,T2) &ensp; 13 (P1,T3) &ensp; 9 (P4,T4)</td>
+                                <td><strong>39</strong></td>
+                                <td>1521</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td><strong>147</strong></td>
+                                <td><strong>5531</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- ── Cálculos manuales de Sumas de Cuadrados ── -->
+                    <h2>Cálculo Manual de Sumas de Cuadrados</h2>
+
+                    <h3>Suma de Cuadrados Total (SCT)</h3>
+                    <div class="formula-box">
+                        $$SCT = \sum_{i}\sum_{j} y_{ij}^2 - \frac{y_{\cdots}^2}{K^2} = 1503 - \frac{147^2}{16} = 1503 - 1350.5625 = 152.4375$$
+                    </div>
+
+                    <h3>Suma de Cuadrados de Filas — Procedimientos (SCF)</h3>
+                    <div class="formula-box">
+                        $$SCF = \frac{1}{K}\sum_{i} y_{i\cdots}^2 - \frac{y_{\cdots}^2}{K^2} = \frac{5633}{4} - \frac{147^2}{16} = 1408.25 - 1350.5625 = 57.6875$$
+                    </div>
+
+                    <h3>Suma de Cuadrados de Columnas — Temperaturas (SCC)</h3>
+                    <div class="formula-box">
+                        $$SCC = \frac{1}{K}\sum_{j} y_{\cdot j\cdot\cdot}^2 - \frac{y_{\cdots}^2}{K^2} = \frac{5491}{4} - \frac{147^2}{16} = 1372.75 - 1350.5625 = 22.1875$$
+                    </div>
+
+                    <h3>Suma de Cuadrados de Letras Latinas — Presión (SCL)</h3>
+                    <div class="formula-box">
+                        $$SCL = \frac{1}{K}\sum_{h} y_{\cdot\cdot h\cdot}^2 - \frac{y_{\cdots}^2}{K^2} = \frac{5549}{4} - \frac{147^2}{16} = 1387.25 - 1350.5625 = 36.6875$$
+                    </div>
+
+                    <h3>Suma de Cuadrados de Letras Griegas — Catalizadores (SCG)</h3>
+                    <div class="formula-box">
+                        $$SCG = \frac{1}{K}\sum_{p} y_{\cdots p}^2 - \frac{y_{\cdots}^2}{K^2} = \frac{5531}{4} - \frac{147^2}{16} = 1382.75 - 1350.5625 = 32.1875$$
+                    </div>
+
+                    <h3>Suma de Cuadrados del Error (SCR)</h3>
+                    <div class="formula-box">
+                        $$SCR = SCT - SCF - SCC - SCL - SCG = 152.4375 - 57.6875 - 22.1875 - 36.6875 - 32.1875 = 3.6875$$
+                    </div>
+
+                    <!-- ── Verificación con Python ── -->
+                    <h2>Verificación con Python</h2>
+
+                    <pre><code data-language="Python">import numpy as np
+from scipy import stats
+
+# ══════════════════════════════════════════════════
+# Datos del Cuadro Greco-Latino 4x4 (Ejemplo 8.2)
+# ══════════════════════════════════════════════════
+y = np.array([
+    [5, 12, 13, 13],   # P1: Cβ, Bα, Aδ, Dγ
+    [6, 10, 15, 11],   # P2: Bγ, Cδ, Dα, Aβ
+    [7,  5,  5,  7],   # P3: Dδ, Aγ, Bβ, Cα
+    [11, 10,  8,  9]   # P4: Aα, Dβ, Cγ, Bδ
+])
+
+K = 4
+N = K ** 2
+
+# ── Totales de filas y columnas ──
+y_i = y.sum(axis=1)          # [43, 42, 24, 38]
+y_j = y.sum(axis=0)          # [29, 37, 41, 40]
+y_total = y.sum()             # 147
+
+# ── Totales por letra latina (Presión: A, B, C, D) ──
+y_A = y[0,2] + y[1,3] + y[2,1] + y[3,0]   # 13+11+5+11 = 40
+y_B = y[0,1] + y[1,0] + y[2,2] + y[3,3]   # 12+6+5+9  = 32
+y_C = y[0,0] + y[1,1] + y[2,3] + y[3,2]   # 5+10+7+8  = 30
+y_D = y[0,3] + y[1,2] + y[2,0] + y[3,1]   # 13+15+7+10 = 45
+y_latin = np.array([y_A, y_B, y_C, y_D])
+
+# ── Totales por letra griega (Catalizador: α, β, γ, δ) ──
+y_alpha = y[0,1] + y[1,2] + y[2,3] + y[3,0]   # 12+15+7+11 = 45
+y_beta  = y[0,0] + y[1,3] + y[2,2] + y[3,1]   # 5+11+5+10  = 31
+y_gamma = y[0,3] + y[1,0] + y[2,1] + y[3,2]   # 13+6+5+8   = 32
+y_delta = y[0,2] + y[1,1] + y[2,0] + y[3,3]   # 13+10+7+9  = 39
+y_greek = np.array([y_alpha, y_beta, y_gamma, y_delta])
+
+# ── Sumas de Cuadrados ──
+FC = y_total ** 2 / N                               # 1350.5625
+SCT = (y ** 2).sum() - FC                            # 152.4375
+SCF = (y_i ** 2).sum() / K - FC                      # 57.6875
+SCC = (y_j ** 2).sum() / K - FC                      # 22.1875
+SCL = (y_latin ** 2).sum() / K - FC                   # 36.6875
+SCG = (y_greek ** 2).sum() / K - FC                   # 32.1875
+SCR = SCT - SCF - SCC - SCL - SCG                    # 3.6875
+
+# ── Grados de libertad ──
+gl_F = gl_C = gl_L = gl_G = K - 1                    # 3
+gl_R = (K - 1) * (K - 3)                             # 3
+gl_T = N - 1                                          # 15
+
+# ── Cuadrados medios y estadísticos F ──
+CM_F = SCF / gl_F;  CM_C = SCC / gl_C
+CM_L = SCL / gl_L;  CM_G = SCG / gl_G
+CM_R = SCR / gl_R
+
+F_F = CM_F / CM_R;  F_C = CM_C / CM_R
+F_L = CM_L / CM_R;  F_G = CM_G / CM_R
+
+p_F = 1 - stats.f.cdf(F_F, gl_F, gl_R)
+p_C = 1 - stats.f.cdf(F_C, gl_C, gl_R)
+p_L = 1 - stats.f.cdf(F_L, gl_L, gl_R)
+p_G = 1 - stats.f.cdf(F_G, gl_G, gl_R)
+
+# ── Coeficiente de determinación ──
+R2 = (SCF + SCC + SCL + SCG) / SCT
+R2_F = SCF / SCT;  R2_C = SCC / SCT
+R2_L = SCL / SCT;  R2_G = SCG / SCT
+
+alpha = 0.05
+F_crit = stats.f.ppf(1 - alpha, gl_F, gl_R)
+
+print("=" * 75)
+print("TABLA ANOVA - CUADRO GRECO-LATINO 4x4")
+print("=" * 75)
+print(f"{'Fuente':<25} {'SC':>10} {'GL':>5} {'CM':>10} {'F':>8} {'p':>8}")
+print("-" * 75)
+print(f"{'Filas (Proc.)':<25} {SCF:>10.4f} {gl_F:>5} {CM_F:>10.4f} {F_F:>8.2f} {p_F:>8.4f}")
+print(f"{'Columnas (Temp.)':<25} {SCC:>10.4f} {gl_C:>5} {CM_C:>10.4f} {F_C:>8.2f} {p_C:>8.4f}")
+print(f"{'L. Latinas (Pres.)':<25} {SCL:>10.4f} {gl_L:>5} {CM_L:>10.4f} {F_L:>8.2f} {p_L:>8.4f}")
+print(f"{'L. Griegas (Catal.)':<25} {SCG:>10.4f} {gl_G:>5} {CM_G:>10.4f} {F_G:>8.2f} {p_G:>8.4f}")
+print(f"{'Error':<25} {SCR:>10.4f} {gl_R:>5} {CM_R:>10.4f}")
+print("-" * 75)
+print(f"{'TOTAL':<25} {SCT:>10.4f} {gl_T:>5}")
+print("=" * 75)
+
+print(f"\nF crítico (α={alpha}, {gl_F}, {gl_R}) = {F_crit:.2f}")
+print(f"\nR² = {R2:.4f} ({R2*100:.1f}% de variabilidad explicada)")
+print(f"  R²_Filas = {R2_F:.4f}  R²_Col = {R2_C:.4f}")
+print(f"  R²_Lat   = {R2_L:.4f}  R²_Gri = {R2_G:.4f}")
+
+print(f"\n--- CONCLUSIONES (α = {alpha}) ---")
+for nombre, F_val, p_val in [
+    ("Filas (Procedimientos)", F_F, p_F),
+    ("Columnas (Temperaturas)", F_C, p_C),
+    ("L. Latinas (Presión)", F_L, p_L),
+    ("L. Griegas (Catalizadores)", F_G, p_G)]:
+    sig = "SIGNIFICATIVO" if p_val < alpha else "No significativo"
+    print(f"  {nombre}: F={F_val:.2f}, p={p_val:.4f} → {sig}")</code></pre>
+
+                    <div class="code-output">
+                        <div class="code-output-header"><span class="code-output-title"><i class="fas fa-terminal"></i>
+                                Output</span></div>
+                        <pre class="code-output-body">===========================================================================
+TABLA ANOVA - CUADRO GRECO-LATINO 4x4
+===========================================================================
+Fuente                         SC    GL         CM        F        p
+---------------------------------------------------------------------------
+Filas (Proc.)            57.6875     3    19.2292    15.64   0.0252
+Columnas (Temp.)         22.1875     3     7.3958     6.02   0.0786
+L. Latinas (Pres.)       36.6875     3    12.2292     9.95   0.0348
+L. Griegas (Catal.)      32.1875     3    10.7292     8.73   0.0494
+Error                     3.6875     3     1.2292
+---------------------------------------------------------------------------
+TOTAL                   152.4375    15
+===========================================================================
+
+F crítico (α=0.05, 3, 3) = 9.28
+
+R² = 0.9758 (97.6% de variabilidad explicada)
+  R²_Filas = 0.3784  R²_Col = 0.1455
+  R²_Lat   = 0.2406  R²_Gri = 0.2112
+
+--- CONCLUSIONES (α = 0.05) ---
+  Filas (Procedimientos): F=15.64, p=0.0252 → SIGNIFICATIVO
+  Columnas (Temperaturas): F=6.02, p=0.0786 → No significativo
+  L. Latinas (Presión): F=9.95, p=0.0348 → SIGNIFICATIVO
+  L. Griegas (Catalizadores): F=8.73, p=0.0494 → No significativo</pre>
+                    </div>
+
+                    <!-- ── Tabla ANOVA numérica ── -->
+                    <h2>Tabla ANOVA del Ejemplo</h2>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fuente de Variación</th>
+                                <th>SC</th>
+                                <th>GL</th>
+                                <th>CM</th>
+                                <th>$F_{\text{exp}}$</th>
+                                <th>Valor p</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Filas (Procedimientos)</td>
+                                <td>57.6875</td>
+                                <td>3</td>
+                                <td>19.2292</td>
+                                <td>15.64</td>
+                                <td>0.0252</td>
+                            </tr>
+                            <tr>
+                                <td>Columnas (Temperaturas)</td>
+                                <td>22.1875</td>
+                                <td>3</td>
+                                <td>7.3958</td>
+                                <td>6.02</td>
+                                <td>0.0786</td>
+                            </tr>
+                            <tr>
+                                <td>L. Latinas (Presión)</td>
+                                <td>36.6875</td>
+                                <td>3</td>
+                                <td>12.2292</td>
+                                <td>9.95</td>
+                                <td>0.0348</td>
+                            </tr>
+                            <tr>
+                                <td>L. Griegas (Catalizadores)</td>
+                                <td>32.1875</td>
+                                <td>3</td>
+                                <td>10.7292</td>
+                                <td>8.73</td>
+                                <td>0.0494</td>
+                            </tr>
+                            <tr>
+                                <td>Error</td>
+                                <td>3.6875</td>
+                                <td>3</td>
+                                <td>1.2292</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><strong>TOTAL</strong></td>
+                                <td><strong>152.4375</strong></td>
+                                <td><strong>15</strong></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- ── Conclusiones e Interpretación ── -->
+                    <h2>Conclusiones</h2>
+
+                    <div class="interpretation-box">
+                        <strong><i class="fas fa-chart-line"></i> Interpretación (α = 0.05, F<sub>crít</sub> = 9.28):</strong>
+                        <ul>
+                            <li><strong>Procedimientos:</strong> F = 15.64 > 9.28, p = 0.0252. <strong>Significativo.</strong> Al menos un procedimiento produce diferente cantidad de producto.</li>
+                            <li><strong>Presión (L. Latinas):</strong> F = 9.95 > 9.28, p = 0.0348. <strong>Significativo.</strong> Al menos un nivel de presión afecta la producción.</li>
+                            <li><strong>Catalizadores (L. Griegas):</strong> F = 8.73 &lt; 9.28, p = 0.0494. <strong>No significativo</strong> (al criterio F, aunque borderline por valor p).</li>
+                            <li><strong>Temperaturas:</strong> F = 6.02 &lt; 9.28, p = 0.0786. <strong>No significativo.</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="formula-box">
+                        <strong>Coeficiente de determinación:</strong>
+                        $$R^2 = \frac{SCF + SCC + SCL + SCG}{SCT} = \frac{148.75}{152.4375} = 0.9758$$
+                        <p style="margin-top: 0.5rem; font-size: 0.9rem;">El modelo explica el <strong>97.6%</strong> de la variabilidad total. Los coeficientes parciales son: $R_\tau^2 = 0.378$, $R_\beta^2 = 0.146$, $R_\gamma^2 = 0.241$, $R_\delta^2 = 0.211$.</p>
+                    </div>
+        </div>
+    </template>
+
+    <template id="module-7">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 7</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Ejercicios de Autoevaluación</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Practicar conceptos del DCGL.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Ejercicio 1</h2>
+                    <div class="example-box">
+                        <p>¿Cuál es la principal diferencia entre un Diseño en Cuadro Latino y un Diseño en Cuadro
+                            Greco-Latino?</p>
+                    </div>
+
+                    <details class="ejercicio-details">
+                        <summary>Solución</summary>
+                        <div>
+                            <p>La principal diferencia radica en el número de factores de bloqueo:</p>
+                            <ul>
+                                <li><strong>Cuadro Latino:</strong> Controla dos fuentes de variabilidad (filas y
+                                    columnas) mediante un solo arreglo. Solo tiene letras latinas para los tratamientos.
+                                </li>
+                                <li><strong>Cuadro Greco-Latino:</strong> Controla tres fuentes de variabilidad (filas,
+                                    columnas y un tercer factor) mediante la superposición de dos Cuadros Latinos
+                                    ortogonales. Tiene tanto letras latinas como letras griegas.</li>
+                            </ul>
+                            <p>En términos del modelo, el Cuadro Greco-Latino añade un término más ($\delta_p$) al
+                                modelo del Cuadro Latino.</p>
+                        </div>
+                    </details>
+
+                    <h2>Ejercicio 2</h2>
+                    <div class="example-box">
+                        <p>¿Por qué no existe un Cuadro Greco-Latino de orden 6?</p>
+                    </div>
+
+                    <details class="ejercicio-details">
+                        <summary>Solución</summary>
+                        <div>
+                            <p>Un Cuadro Greco-Latino de orden $K$ existe si y solo si existen dos Cuadros Latinos
+                                ortogonales de orden $K$.</p>
+                            <p>Esto ocurre cuando $K$ es un número primo o una potencia de un número primo. El número 6
+                                no es primo ($6 = 2 \times 3$) ni es potencia de primo, por lo tanto, no existen Cuadros
+                                Latinos ortogonales de orden 6 y, en consecuencia, no existe el Cuadro Greco-Latino de
+                                orden 6.</p>
+                            <p>Este problema es famoso como el "problema de los 36 oficiales" de Euler (1779), quien
+                                demostró que no es posible disponer 36 oficiales de 6 regimientos diferentes y 6 rangos
+                                en un cuadrado de modo que cada regimiento y cada rango aparezca exactamente una vez en
+                                cada fila y columna.</p>
+                        </div>
+                    </details>
+
+                    <h2>Ejercicio 3</h2>
+                    <div class="example-box">
+                        <p>En un Diseño en Cuadro Greco-Latino de orden 5, ¿cuántos grados de libertad tiene el error?
+                        </p>
+                    </div>
+
+                    <details class="ejercicio-details">
+                        <summary>Solución</summary>
+                        <div>
+                            <p>Para un Cuadro Greco-Latino de orden $K$:</p>
+                            <p>$$\text{GL}_{\text{Error}} = (K-1)(K-3)$$</p>
+                            <p>Para $K = 5$:</p>
+                            <p>$$\text{GL}_{\text{Error}} = (5-1)(5-3) = 4 \times 2 = 8$$</p>
+                        </div>
+                    </details>
+
+                    <h2>Ejercicio 4</h2>
+                    <div class="example-box">
+                        <p>¿Cuáles son las ventajas del Diseño en Cuadro Greco-Latino frente al Diseño en Cuadro Latino?
+                        </p>
+                    </div>
+
+                    <details class="ejercicio-details">
+                        <summary>Solución</summary>
+                        <div>
+                            <ol>
+                                <li><strong>Mayor control de variabilidad:</strong> Controla tres fuentes de
+                                    variabilidad en lugar de dos, lo que reduce potencialmente el error experimental.
+                                </li>
+                                <li><strong>Más eficiente:</strong> Permite estudiar cuatro factores con solo $K^2$
+                                    observaciones en lugar de las $K^4$ que requeriría un diseño factorial completo.
+                                </li>
+                                <li><strong>Más información:</strong> Se puede evaluar el efecto de un factor adicional
+                                    (las letras griegas) sin aumentar el número de observaciones.</li>
+                            </ol>
+                        </div>
+                    </details>
+
+                    <h2>Ejercicio 5</h2>
+                    <div class="example-box">
+                        <p>En un experimento se utiliza un Cuadro Greco-Latino 4×4. Los totales por letra latina son: A
+                            = 45, B = 38, C = 42, D = 35. Si el total general es 160 y $K = 4$, calcule la suma de
+                            cuadrados para letras latinas.</p>
+                    </div>
+
+                    <details class="ejercicio-details">
+                        <summary>Solución</summary>
+                        <div>
+                            <p>La fórmula es:</p>
+                            <p>$$\text{SC}_{\text{Letras Latinas}} = \frac{1}{K} \sum_{h=1}^{K} y_{\cdot\cdot h\cdot}^2
+                                - \frac{y_{\cdots}^2}{K^2}$$</p>
+                            <p>$$\text{SC}_{\text{Latinas}} = \frac{1}{4}(45^2 + 38^2 + 42^2 + 35^2) -
+                                \frac{160^2}{16}$$</p>
+                            <p>$$= \frac{1}{4}(2025 + 1444 + 1764 + 1225) - \frac{25600}{16}$$</p>
+                            <p>$$= \frac{6458}{4} - 1600 = 1614.5 - 1600 = 14.5$$</p>
+                        </div>
+                    </details>
+        </div>
+    </template>
+
+    <template id="module-8">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 8</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Problemas Propuestos</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Resolver problemas numéricos avanzados (DCGL 5×5, interpretación).</p>
+                    </div>
+                </div>
+            </div>
+
+            <p>Los siguientes problemas están basados en ejercicios del Capítulo 5 de Montgomery (2019). Se recomienda resolverlos manualmente y luego verificar con Python.</p>
+
+                    <h2>Problema 1 — DCGL 5×5: Rendimiento de Cultivos</h2>
+                    <div class="example-box">
+                        <h4>Enunciado</h4>
+                        <p>Un ingeniero agrónomo desea comparar 5 variedades de fertilizante (A, B, C, D, E) en un campo dividido en 5 filas y 5 columnas. Además, se sospecha que el tipo de riego ($\alpha, \beta, \gamma, \delta, \epsilon$) también afecta el rendimiento. Se diseña un DCGL 5×5 con los siguientes datos de rendimiento (kg/parcela):</p>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th><th>Col 1</th><th>Col 2</th><th>Col 3</th><th>Col 4</th><th>Col 5</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Fila 1</strong></td><td>A&alpha;=28</td><td>B&beta;=18</td><td>C&gamma;=25</td><td>D&delta;=22</td><td>E&epsilon;=30</td></tr>
+                            <tr><td><strong>Fila 2</strong></td><td>B&gamma;=20</td><td>C&delta;=15</td><td>D&epsilon;=24</td><td>E&alpha;=35</td><td>A&beta;=26</td></tr>
+                            <tr><td><strong>Fila 3</strong></td><td>C&epsilon;=17</td><td>D&alpha;=23</td><td>E&beta;=32</td><td>A&gamma;=29</td><td>B&delta;=19</td></tr>
+                            <tr><td><strong>Fila 4</strong></td><td>D&beta;=21</td><td>E&gamma;=33</td><td>A&delta;=27</td><td>B&epsilon;=16</td><td>C&alpha;=22</td></tr>
+                            <tr><td><strong>Fila 5</strong></td><td>E&delta;=34</td><td>A&epsilon;=25</td><td>B&alpha;=18</td><td>C&beta;=20</td><td>D&gamma;=23</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p><strong>Preguntas:</strong></p>
+                    <ol>
+                        <li>Calcule los totales por fila, columna, letra latina y letra griega</li>
+                        <li>Calcule la tabla ANOVA completa</li>
+                        <li>Con $\alpha = 0.05$, determine qué factores son significativos</li>
+                        <li>Calcule el coeficiente de determinación $R^2$</li>
+                    </ol>
+
+                    <div class="solucion-parcial">
+                        <div class="solucion-header">
+                            <i class="fas fa-chevron-right"></i> Pista
+                        </div>
+                        <div class="solucion-content">
+                            <p>El total general es $y_{\cdots} = 617$. Los GL del error son $(K-1)(K-3) = 4 \times 2 = 8$. Recuerde que $F_{\text{crit}}(0.05, 4, 8) = 3.84$.</p>
+                        </div>
+                    </div>
+
+                    <div class="solucion-parcial">
+                        <div class="solucion-header">
+                            <i class="fas fa-chevron-right"></i> Verificación con Python
+                        </div>
+                        <div class="solucion-content">
+                            <pre><code data-language="Python">import numpy as np
+from scipy import stats
+
+# ═══════════════════════════════════════════
+# Problema 1: DCGL 5×5 - Rendimiento Cultivos
+# ═══════════════════════════════════════════
+y = np.array([
+    [28, 18, 25, 22, 30],  # Fila 1
+    [20, 15, 24, 35, 26],  # Fila 2
+    [17, 23, 32, 29, 19],  # Fila 3
+    [21, 33, 27, 16, 22],  # Fila 4
+    [34, 25, 18, 20, 23]   # Fila 5
+])
+
+K = 5
+N = K ** 2
+
+# ── Totales ──
+y_i = y.sum(axis=1)
+y_j = y.sum(axis=0)
+y_total = y.sum()
+
+# Letras latinas (A-E)
+y_A = y[0,0]+y[1,4]+y[2,3]+y[3,2]+y[4,1]  # 28+26+29+27+25=135
+y_B = y[0,1]+y[1,0]+y[2,4]+y[3,3]+y[4,2]  # 18+20+19+16+18=91
+y_C = y[0,2]+y[1,1]+y[2,0]+y[3,4]+y[4,3]  # 25+15+17+22+20=99
+y_D = y[0,3]+y[1,2]+y[2,1]+y[3,0]+y[4,4]  # 22+24+23+21+23=113
+y_E = y[0,4]+y[1,3]+y[2,2]+y[3,1]+y[4,0]  # 30+35+32+33+34=164
+y_lat = np.array([y_A, y_B, y_C, y_D, y_E])
+
+# Letras griegas (α-ε)
+y_alpha = y[0,0]+y[1,3]+y[2,1]+y[3,4]+y[4,2]  # 28+35+23+22+18=126
+y_beta  = y[0,1]+y[1,4]+y[2,2]+y[3,0]+y[4,3]  # 18+26+32+21+20=117
+y_gamma = y[0,2]+y[1,0]+y[2,3]+y[3,1]+y[4,4]  # 25+20+29+33+23=130
+y_delta = y[0,3]+y[1,1]+y[2,4]+y[3,2]+y[4,0]  # 22+15+19+27+34=117
+y_epsil = y[0,4]+y[1,2]+y[2,0]+y[3,3]+y[4,1]  # 30+24+17+16+25=112
+y_gri = np.array([y_alpha, y_beta, y_gamma, y_delta, y_epsil])
+
+# ── Sumas de Cuadrados ──
+FC = y_total**2 / N
+SCT = (y**2).sum() - FC
+SCF = (y_i**2).sum()/K - FC
+SCC = (y_j**2).sum()/K - FC
+SCL = (y_lat**2).sum()/K - FC
+SCG = (y_gri**2).sum()/K - FC
+SCR = SCT - SCF - SCC - SCL - SCG
+
+# ── GL y CM ──
+gl = K - 1
+gl_R = (K-1)*(K-3)
+CM_F=SCF/gl; CM_C=SCC/gl; CM_L=SCL/gl; CM_G=SCG/gl; CM_R=SCR/gl_R
+
+F_F=CM_F/CM_R; F_C=CM_C/CM_R; F_L=CM_L/CM_R; F_G=CM_G/CM_R
+p_F=1-stats.f.cdf(F_F,gl,gl_R)
+p_C=1-stats.f.cdf(F_C,gl,gl_R)
+p_L=1-stats.f.cdf(F_L,gl,gl_R)
+p_G=1-stats.f.cdf(F_G,gl,gl_R)
+
+R2 = (SCF+SCC+SCL+SCG)/SCT
+
+print("="*70)
+print("TABLA ANOVA - DCGL 5×5 (Rendimiento Cultivos)")
+print("="*70)
+print(f"{'Fuente':<22} {'SC':>10} {'GL':>4} {'CM':>10} {'F':>8} {'p':>8}")
+print("-"*70)
+print(f"{'Filas':<22} {SCF:>10.2f} {gl:>4} {CM_F:>10.2f} {F_F:>8.2f} {p_F:>8.4f}")
+print(f"{'Columnas':<22} {SCC:>10.2f} {gl:>4} {CM_C:>10.2f} {F_C:>8.2f} {p_C:>8.4f}")
+print(f"{'L. Latinas (Fert.)':<22} {SCL:>10.2f} {gl:>4} {CM_L:>10.2f} {F_L:>8.2f} {p_L:>8.4f}")
+print(f"{'L. Griegas (Riego)':<22} {SCG:>10.2f} {gl:>4} {CM_G:>10.2f} {F_G:>8.2f} {p_G:>8.4f}")
+print(f"{'Error':<22} {SCR:>10.2f} {gl_R:>4} {CM_R:>10.2f}")
+print("-"*70)
+print(f"{'TOTAL':<22} {SCT:>10.2f} {N-1:>4}")
+print("="*70)
+print(f"\nR² = {R2:.4f} ({R2*100:.1f}%)")
+F_crit = stats.f.ppf(0.95, gl, gl_R)
+print(f"F crítico (0.05, {gl}, {gl_R}) = {F_crit:.2f}")</code></pre>
+                        </div>
+                    </div>
+
+                    <h2>Problema 2 — Análisis Conceptual</h2>
+                    <div class="example-box">
+                        <h4>Enunciado</h4>
+                        <p>Un investigador desea realizar un DCGL para comparar 7 tratamientos. Responda:</p>
+                        <ol>
+                            <li>¿Es posible construir un DCGL de orden 7? Justifique.</li>
+                            <li>¿Cuántas observaciones se necesitan?</li>
+                            <li>¿Cuántos grados de libertad tiene el error?</li>
+                            <li>Si en cambio quisiera usar $K=6$, ¿sería posible? ¿Por qué?</li>
+                        </ol>
+                    </div>
+
+                    <div class="solucion-parcial">
+                        <div class="solucion-header">
+                            <i class="fas fa-chevron-right"></i> Solución
+                        </div>
+                        <div class="solucion-content">
+                            <ol>
+                                <li><strong>Sí es posible.</strong> $7$ es primo, por lo que existen cuadros latinos ortogonales de orden 7.</li>
+                                <li>$N = K^2 = 7^2 = 49$ observaciones.</li>
+                                <li>$\text{GL}_{\text{Error}} = (K-1)(K-3) = 6 \times 4 = 24$.</li>
+                                <li><strong>No es posible</strong> con $K=6$. El número 6 no es primo ni potencia de primo ($6 = 2 \times 3$), por lo que no existen cuadros latinos ortogonales de ese orden (Problema de los 36 oficiales de Euler).</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <h2>Problema 3 — Interpretación de Resultados</h2>
+                    <div class="example-box">
+                        <h4>Enunciado</h4>
+                        <p>En un DCGL 4×4, se obtuvieron los siguientes resultados del ANOVA:</p>
+                        <table>
+                            <thead>
+                                <tr><th>Fuente</th><th>SC</th><th>GL</th><th>CM</th><th>F</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Filas</td><td>120.5</td><td>3</td><td>40.17</td><td>8.03</td></tr>
+                                <tr><td>Columnas</td><td>85.3</td><td>3</td><td>28.43</td><td>5.69</td></tr>
+                                <tr><td>L. Latinas</td><td>210.7</td><td>3</td><td>70.23</td><td>14.05</td></tr>
+                                <tr><td>L. Griegas</td><td>45.2</td><td>3</td><td>15.07</td><td>3.01</td></tr>
+                                <tr><td>Error</td><td>15.0</td><td>3</td><td>5.00</td><td></td></tr>
+                                <tr><td><strong>Total</strong></td><td><strong>476.7</strong></td><td><strong>15</strong></td><td></td><td></td></tr>
+                            </tbody>
+                        </table>
+                        <p>Con $\alpha = 0.05$ y $F_{\text{crit}}(3, 3) = 9.28$:</p>
+                        <ol>
+                            <li>Determine qué factores son estadísticamente significativos</li>
+                            <li>Calcule $R^2$ y los coeficientes parciales</li>
+                            <li>Interprete los resultados en el contexto del experimento</li>
+                        </ol>
+                    </div>
+
+                    <div class="solucion-parcial">
+                        <div class="solucion-header">
+                            <i class="fas fa-chevron-right"></i> Solución
+                        </div>
+                        <div class="solucion-content">
+                            <p><strong>1. Significancia:</strong></p>
+                            <ul>
+                                <li>Letras Latinas: $F = 14.05 > 9.28$ &rarr; <strong>Significativo</strong></li>
+                                <li>Filas: $F = 8.03 < 9.28$ &rarr; No significativo</li>
+                                <li>Columnas: $F = 5.69 < 9.28$ &rarr; No significativo</li>
+                                <li>Letras Griegas: $F = 3.01 < 9.28$ &rarr; No significativo</li>
+                            </ul>
+                            <p><strong>2. Coeficiente de determinación:</strong></p>
+                            <p>$$R^2 = \frac{120.5 + 85.3 + 210.7 + 45.2}{476.7} = \frac{461.7}{476.7} = 0.9685$$</p>
+                            <p>Parciales: $R^2_F = 0.2528$, $R^2_C = 0.1790$, $R^2_L = 0.4421$, $R^2_G = 0.0948$</p>
+                            <p><strong>3. Interpretación:</strong> Solo las letras latinas tienen efecto significativo. El factor de letras latinas explica el 44.2% de la variabilidad total, siendo la fuente dominante. El modelo global explica el 96.9% de la variabilidad.</p>
+                        </div>
+                    </div>
+        </div>
+    </template>
+
+    <template id="module-9">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 9</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Referencias</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Consultar las fuentes bibliográficas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Referencias Bibliográficas</h2>
+
+                    <div class="reference-list">
+                        <div class="reference-card">
+                            <div class="reference-card-header">
+                                <div class="reference-number" style="background: var(--usta-primary);">1</div>
+                                <h4>Montgomery, D. C.</h4>
+                            </div>
+                            <p class="ref-title">Design and Analysis of Experiments</p>
+                            <p class="ref-edition">10th Edition. John Wiley &amp; Sons, 2019.</p>
+                            <p class="ref-chapter">Capítulo 5: Diseños en Cuadros Latinos y diseños relacionados</p>
+                        </div>
+
+                        <div class="reference-card">
+                            <div class="reference-card-header">
+                                <div class="reference-number" style="background: var(--usta-secondary);">2</div>
+                                <h4>García Leal, J. &amp; Lara Porras, A.M.</h4>
+                            </div>
+                            <p class="ref-title">Diseño Estadístico de Experimentos. Análisis de la Varianza</p>
+                            <p class="ref-edition">Grupo Editorial Universitario, 1998.</p>
+                        </div>
+
+                        <div class="reference-card">
+                            <div class="reference-card-header">
+                                <div class="reference-number" style="background: #d97706;">3</div>
+                                <h4>Cochran, W. G. &amp; Cox, G. M.</h4>
+                            </div>
+                            <p class="ref-title">Experimental Designs</p>
+                            <p class="ref-edition">2nd Edition. John Wiley &amp; Sons, 1992.</p>
+                        </div>
+
+                        <div class="reference-card">
+                            <div class="reference-card-header">
+                                <div class="reference-number" style="background: #059669;">4</div>
+                                <h4>Fisher, R. A.</h4>
+                            </div>
+                            <p class="ref-title">The Design of Experiments</p>
+                            <p class="ref-edition">9th Edition. Macmillan, 1971.</p>
+                        </div>
+                    </div>
+
+                    <div class="recursos-box">
+                        <h3>Recursos Adicionales</h3>
+                        <ul>
+                            <li>Miller, I. &amp; Miller, M. (2006). <em>John E. Freund's Mathematical Statistics</em>.
+                                Prentice Hall.</li>
+                            <li>Dean, A. &amp; Voss, D. (1999). <em>Design and Analysis of Experiments</em>. Springer.
+                            </li>
+                            <li>Mason, R. L., Gunst, R. F. &amp; Hess, J. L. (2003). <em>Statistical Design and Analysis
+                                    of Experiments</em>. John Wiley &amp; Sons.</li>
+                        </ul>
+                    </div>
+        </div>
+    </template>
+
+
+    <script>
+
+        // --- COURSE DATA ---
+        const courseData = {
+            title: "Diseños en Cuadros Greco-Latinos",
+            modules: [
+                { id: 1, title: "Introducción al DCGL", shortTitle: "Introducción", duration: "15 min" },
+                { id: 2, title: "Fundamentos Teóricos", shortTitle: "Fundamentos", duration: "20 min" },
+                { id: 3, title: "Modelo Estadístico", shortTitle: "Modelo", duration: "25 min" },
+                { id: 4, title: "Propiedades y Estructura", shortTitle: "Propiedades", duration: "20 min" },
+                { id: 5, title: "Tabla ANOVA General", shortTitle: "ANOVA", duration: "15 min" },
+                { id: 6, title: "Ejemplo Completo", shortTitle: "Ejemplo", duration: "30 min" },
+                { id: 7, title: "Ejercicios de Autoevaluación", shortTitle: "Ejercicios", duration: "20 min" },
+                { id: 8, title: "Problemas Propuestos", shortTitle: "Problemas", duration: "25 min" },
+                { id: 9, title: "Referencias", shortTitle: "Referencias", duration: "5 min" }
+            ]
+        };
+
+        // --- STATE MANAGEMENT ---
+        let currentModuleIndex = 0;
+        let completedModules = new Set();
+
+        // --- DOM ELEMENTS ---
+        const moduleNav = document.getElementById('module-nav');
+        const contentArea = document.getElementById('content-area');
+
+        // --- INIT ---
+        function init() {
+            renderNav();
+            loadModule(0);
+        }
+
+        function renderNav() {
+            moduleNav.innerHTML = '';
+            courseData.modules.forEach((mod, index) => {
+                const btn = document.createElement('button');
+                const isActive = index === currentModuleIndex;
+                const isDone = completedModules.has(index);
+                btn.className = `sidebar-nav-item${isActive ? ' active' : ''}`;
+
+                btn.innerHTML = `
+                    <span style="line-height:1.3;">${mod.title}</span>
+                    ${isDone ? '<span class="check-mark">✓</span>' : ''}
+                `;
+                btn.onclick = () => loadModule(index);
+                moduleNav.appendChild(btn);
+            });
+        }
+
+        function loadModule(index) {
+            currentModuleIndex = index;
+            renderNav();
+
+            // Get template content
+            const template = document.getElementById(`module-${index + 1}`);
+            if (template) {
+                contentArea.innerHTML = '';
+                const content = template.content.cloneNode(true);
+                contentArea.appendChild(content);
+
+                // Add navigation buttons
+                const navButtons = document.createElement('div');
+                navButtons.className = 'mt-10 pt-6 border-t border-gray-200 flex justify-between items-center';
+                navButtons.innerHTML = `
+                    ${index > 0 ? `
+                    <button onclick="loadModule(${index - 1})" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-secondary transition-colors">
+                        <span>←</span> Anterior
+                    </button>` : '<div></div>'}
+                    <button onclick="markComplete(${index})" class="px-4 py-2 text-sm font-medium text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors ${completedModules.has(index) ? 'opacity-50' : ''}">
+                        ${completedModules.has(index) ? '✓ Completado' : 'Marcar como completado'}
+                    </button>
+                    ${index < courseData.modules.length - 1 ? `
+                    <button onclick="loadModule(${index + 1})" class="flex items-center gap-2 px-4 py-2 bg-secondary hover:bg-secondary/90 text-white rounded-lg text-sm font-medium transition-colors">
+                        Siguiente Módulo <span>→</span>
+                    </button>` : `
+                    <div class="text-center">
+                        <span class="text-emerald-600 font-bold">🎉 ¡Tema Completado!</span>
+                    </div>`}
+                `;
+                contentArea.appendChild(navButtons);
+
+                // VS Code style code blocks
+                setupCodeBlocks();
+
+                // Setup collapsible solutions
+                setupSolucionesParciales();
+
+                // Wrap tables for responsive
+                wrapTables();
+
+                // Render LaTeX
+                if (typeof renderMathInElement !== 'undefined') {
+                    renderMathInElement(contentArea, {
+                        delimiters: [
+                            { left: '$$', right: '$$', display: true },
+                            { left: '$', right: '$', display: false }
+                        ],
+                        throwOnError: false
+                    });
+                }
+            }
+
+            // Scroll to top of content
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function markComplete(index) {
+            if (!completedModules.has(index)) {
+                completedModules.add(index);
+                renderNav();
+                loadModule(index);
+            }
+        }
+
+        // ===== Collapsible Solutions =====
+        function setupSolucionesParciales() {
+            contentArea.querySelectorAll('.solucion-header').forEach(function(header) {
+                header.addEventListener('click', function() {
+                    var content = this.nextElementSibling;
+                    var icon = this.querySelector('i');
+                    if (content.classList.contains('open')) {
+                        content.classList.remove('open');
+                        if (icon) icon.classList.remove('rotated');
+                    } else {
+                        content.classList.add('open');
+                        if (icon) icon.classList.add('rotated');
+                    }
+                });
+            });
+        }
+
+        // ===== Responsive Tables =====
+        function wrapTables() {
+            contentArea.querySelectorAll('table').forEach(function(table) {
+                if (!table.closest('.table-responsive')) {
+                    var wrapper = document.createElement('div');
+                    wrapper.className = 'table-responsive';
+                    table.parentNode.insertBefore(wrapper, table);
+                    wrapper.appendChild(table);
+                }
+            });
+        }
+
+        // Scroll to Top Button functionality
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('visible');
+            } else {
+                scrollToTopBtn.classList.remove('visible');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // ===== Sidebar Toggle =====
+        const sidebarPanel = document.getElementById('sidebar-panel');
+        const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+        const sidebarToggleIcon = document.getElementById('sidebarToggleIcon');
+        let sidebarOpen = true;
+
+        sidebarToggleBtn.addEventListener('click', () => {
+            sidebarOpen = !sidebarOpen;
+            if (sidebarOpen) {
+                sidebarPanel.classList.remove('collapsed');
+                sidebarPanel.style.opacity = '1';
+                sidebarToggleIcon.className = 'fas fa-times text-sm';
+            } else {
+                sidebarPanel.classList.add('collapsed');
+                sidebarPanel.style.opacity = '0';
+                sidebarToggleIcon.className = 'fas fa-bars text-sm';
+            }
+        });
+
+        // ===== VS Code Style Code Blocks =====
+        function setupCodeBlocks() {
+            var pres = contentArea.querySelectorAll('pre');
+            pres.forEach(function(pre) {
+                if (pre.closest('.sourceCode-wrapper')) return;
+                if (pre.closest('.code-output')) return;
+
+                var code = pre.querySelector('code');
+                if (!code) return;
+
+                // Remove old .code-title if present
+                var prevEl = pre.previousElementSibling;
+                if (prevEl && prevEl.classList.contains('code-title')) {
+                    prevEl.remove();
+                }
+
+                var lang = code.getAttribute('data-language') || 'Python';
+                var fileExt = lang === 'Python' ? '.py' : lang === 'R' ? '.R' : '.txt';
+                var fileName = 'dcgl_analysis' + fileExt;
+                var langIcon = '';
+                if (lang === 'Python' || lang === 'python') {
+                    langIcon = '<svg class="tab-icon python" viewBox="0 0 24 24" fill="currentColor"><path d="M9.585 11.692h4.328s2.432.039 2.432-2.35V5.391S16.714 3 11.936 3C7.362 3 7.647 4.983 7.647 4.983l.006 2.055h4.363v.617H5.92s-2.927-.332-2.927 4.282 2.555 4.45 2.555 4.45h1.524v-2.141s-.083-2.554 2.513-2.554zm-.056-6.009a.784.784 0 1 1 0-1.569.784.784 0 0 1 0 1.569z"/><path d="M18.452 7.532h-1.524v2.141s.083 2.554-2.513 2.554h-4.328s-2.432-.04-2.432 2.35v3.951s-.369 2.391 4.409 2.391c4.573 0 4.288-1.983 4.288-1.983l-.006-2.054h-4.363v-.617h6.097s2.927.332 2.927-4.282-2.555-4.451-2.555-4.451zm-4.597 10.477a.784.784 0 1 1 0 1.569.784.784 0 0 1 0-1.569z"/></svg>';
+                } else {
+                    langIcon = '<i class="fas fa-code tab-icon" style="font-size:12px"></i>';
+                }
+
+                var wrapper = document.createElement('div');
+                wrapper.className = 'sourceCode-wrapper';
+
+                var titlebar = document.createElement('div');
+                titlebar.className = 'sourceCode-titlebar';
+                titlebar.innerHTML =
+                    '<div class="sourceCode-dots">' +
+                        '<span class="dot-close"></span>' +
+                        '<span class="dot-min"></span>' +
+                        '<span class="dot-max"></span>' +
+                    '</div>' +
+                    '<div class="sourceCode-tab">' +
+                        langIcon +
+                        '<span>' + fileName + '</span>' +
+                    '</div>' +
+                    '<div class="sourceCode-actions">' +
+                        '<button type="button" onclick="toggleCodeBlock(this)" title="Ocultar/Mostrar">' +
+                            '<i class="fas fa-eye"></i> Ocultar' +
+                        '</button>' +
+                        '<button type="button" onclick="copyCodeBlock(this)" title="Copiar código">' +
+                            '<i class="fas fa-copy"></i> Copiar' +
+                        '</button>' +
+                    '</div>';
+
+                // Strip manual syntax spans and re-highlight with hljs
+                var rawText = code.textContent;
+                code.innerHTML = '';
+                code.textContent = rawText;
+
+                // Line numbers
+                var lines = rawText.split('\n');
+                if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+                var gutterHTML = '';
+                for (var i = 1; i <= lines.length; i++) {
+                    gutterHTML += '<div>' + i + '</div>';
+                }
+                var gutter = document.createElement('div');
+                gutter.className = 'sourceCode-gutter';
+                gutter.innerHTML = gutterHTML;
+
+                var minimap = document.createElement('div');
+                minimap.className = 'sourceCode-minimap';
+
+                var bodyWrapper = document.createElement('div');
+                bodyWrapper.className = 'sourceCode-body';
+
+                // Highlight with hljs
+                if (window.hljs) {
+                    code.classList.add('language-python');
+                    hljs.highlightElement(code);
+                }
+
+                pre.parentNode.insertBefore(wrapper, pre);
+                bodyWrapper.appendChild(gutter);
+                bodyWrapper.appendChild(pre);
+                bodyWrapper.appendChild(minimap);
+                wrapper.appendChild(titlebar);
+                wrapper.appendChild(bodyWrapper);
+            });
+        }
+
+        function toggleCodeBlock(btn) {
+            var wrapper = btn.closest('.sourceCode-wrapper');
+            var body = wrapper.querySelector('.sourceCode-body');
+            if (body.classList.contains('collapsed')) {
+                body.classList.remove('collapsed');
+                btn.innerHTML = '<i class="fas fa-eye"></i> Ocultar';
+            } else {
+                body.classList.add('collapsed');
+                btn.innerHTML = '<i class="fas fa-eye-slash"></i> Mostrar';
+            }
+        }
+
+        function copyCodeBlock(btn) {
+            var wrapper = btn.closest('.sourceCode-wrapper');
+            var code = wrapper.querySelector('code');
+            if (!code) return;
+            var text = code.textContent || code.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+                var originalHTML = btn.innerHTML;
+                btn.classList.add('copied');
+                btn.innerHTML = '<i class="fas fa-check"></i> Copiado';
+                setTimeout(function() {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = originalHTML;
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Error al copiar:', err);
+            });
+        }
+
+        // Wait for KaTeX to load, then init
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(init, 100);
+        });
+    </script>
+</body>
+
+</html>

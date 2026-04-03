@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Investigativo — Muestreo y Diseño de Experimentos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- KaTeX for LaTeX rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Highlight.js VS Code Dark+ -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+                        display: ['Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'] // overriding display for react components that expected it
+                    },
+                    colors: {
+                        primary: '#3D008D',     // USTA purple
+                        secondary: '#ED1E79',   // USTA pink
+                        navy: '#001A4D',        // USTA navy
+                        gold: '#FDB913',        // USTA gold
+                        bg: '#F8FAFC',          // USTA bg
+                        surface: '#FFFFFF',
+                        
+                        // Fallbacks for specific custom grader/ui colors from the old design if not fully replaced
+                        accent: '#ED1E79',
+                        teal: '#001A4D',
+                        warm: '#FDB913',
+                        sand: '#FFFFFF'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Montserrat', sans-serif; background: #F8FAFC; color: #1E293B; scroll-behavior: smooth }
+        code, pre { font-family: 'Fira Code', monospace; }
+
+        /* USTA Core Styles */
+        .usta-gradient, .brand-gradient { background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%); }
+        .usta-header, .sidebar-bg { background: linear-gradient(180deg, #001A4D 0%, #002868 100%); }
+        
+        .card, .usta-card { background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,.08); transition: all .3s ease; }
+        .card:hover, .usta-card:hover { box-shadow: 0 12px 35px rgba(0,0,0,.12); transform: translateY(-4px); }
+        
+        /* Information boxes */
+        .tip-box { background: linear-gradient(135deg, rgba(61,0,141,.08) 0%, rgba(237,30,121,.08) 100%); border: 1px solid rgba(61,0,141,.2); border-radius: 12px; }
+        .warn-box, .nota { background: linear-gradient(135deg, rgba(16,185,129,.08) 0%, rgba(16,185,129,.04) 100%); border: 1px solid rgba(16,185,129,.2); border-radius: 12px; }
+        .phase-box, .concepto-clave { background: linear-gradient(135deg, rgba(61,0,141,.06) 0%, rgba(237,30,121,.04) 100%); border: 1px solid rgba(61,0,141,.15); border-radius: 12px; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #3D008D, #ED1E79); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #4A00A8, #FF2D8A); }
+        
+        .fade-in { animation: fadeIn .4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+        button:focus-visible, a:focus-visible { outline: 2px solid #ED1E79; outline-offset: 2px; }
+        
+        /* Table styles */
+        .rtable { border-collapse: collapse; width: 100%; margin: 1.5rem 0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,.08); }
+        .rtable th, .rtable td { padding: 1rem 1.25rem; font-size: 0.95rem; text-align: left; }
+        .rtable th { background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%); color: white; font-weight: 600; }
+        .rtable td { border-bottom: 1px solid rgba(61,0,141,.05); }
+        .rtable tr:nth-child(even) td { background: rgba(61,0,141,.03); }
+        .rtable tr:hover td { background: rgba(61,0,141,.08); }
+        
+        .section-num { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 3.5rem; line-height: 1; color: rgba(61,0,141,.08); position: absolute; top: -12px; right: 0; pointer-events: none; }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState } = React;
+
+        /* ---- Icons ---- */
+        const I = {
+            Book: ({s=22}) => (<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>),
+            Target: ({s=22}) => (<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>),
+            Layers: ({s=22}) => (<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>),
+            Sample: ({s=22}) => (<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>),
+            Flask: ({s=22}) => (<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 3h6"/><path d="M10 9V3"/><path d="M14 9V3"/><path d="M10 9l-4.6 7.4A2 2 0 0 0 7.1 20h9.8a2 2 0 0 0 1.7-3.6L14 9"/></svg>),
+            Database: ({s=22}) => (<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>),
+            FileText: ({s=22}) => (<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>),
+            Cal: ({s=22}) => (<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>),
+            Cpu: ({s=22}) => (<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>),
+            Award: ({s=22}) => (<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>),
+            BookOpen: ({s=22}) => (<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>),
+            Clip: ({s=22}) => (<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg>),
+            Left: ({s=22}) => (<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>),
+            Right: ({s=22}) => (<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>),
+        };
+
+        const iconMap = { Book: I.Book, Target: I.Target, Layers: I.Layers, Sample: I.Sample, Flask: I.Flask, Database: I.Database, FileText: I.FileText, Cal: I.Cal, Cpu: I.Cpu, Award: I.Award, BookOpen: I.BookOpen, Clip: I.Clip };
+
+        const SH = ({ title, iconKey }) => {
+            const Ic = iconMap[iconKey]; return (
+                <div className="flex items-center gap-3 mb-5 border-b border-gray-200 pb-3">
+                    <div className="brand-gradient p-2.5 rounded-xl shadow-md text-white">{Ic && <Ic s={24}/>}</div>
+                    <h2 className="text-2xl font-bold text-gray-900" style={{fontFamily:'Fraunces,Georgia,serif'}}>{title}</h2>
+                </div>
+            );
+        };
+
+        /* ---- Grader Tool ---- */
+        const CRITERIA = [
+            { name: 'Dise\u00F1o muestral', weight: 0.20 },
+            { name: 'Estimaci\u00F3n estad\u00EDstica', weight: 0.10 },
+            { name: 'Dise\u00F1o experimental', weight: 0.15 },
+            { name: 'An\u00E1lisis de varianza (ANOVA)', weight: 0.20 },
+            { name: 'Verificaci\u00F3n de supuestos', weight: 0.10 },
+            { name: 'Calidad de datos y reproducibilidad', weight: 0.05 },
+            { name: 'Comunicaci\u00F3n y presentaci\u00F3n', weight: 0.10 },
+            { name: 'Reflexi\u00F3n sobre uso de IA', weight: 0.05 },
+            { name: 'Integraci\u00F3n de fases', weight: 0.05 },
+        ];
+
+        const GraderTool = () => {
+            const [groupName, setGroupName] = useState('');
+            const [scores, setScores] = useState(CRITERIA.map(() => 0));
+            const [adj, setAdj] = useState(0);
+            const [obs, setObs] = useState('');
+            const [history, setHistory] = useState([]);
+
+            const setScore = (i, v) => { const ns = [...scores]; ns[i] = parseFloat(v); setScores(ns); };
+            const weighted = scores.map((s, i) => s * CRITERIA[i].weight);
+            const base = weighted.reduce((a, b) => a + b, 0);
+            const total = Math.min(5.0, Math.max(0, base + adj));
+
+            const colorFor = (s) => { if (s >= 4.5) return '#16a34a'; if (s >= 4.0) return '#65a30d'; if (s >= 3.5) return '#ca8a04'; if (s >= 3.0) return '#ea580c'; return '#dc2626'; };
+            const labelFor = (s) => { if (s >= 4.5) return 'Excelente'; if (s >= 4.0) return 'Muy bueno'; if (s >= 3.5) return 'Bueno'; if (s >= 3.0) return 'Aceptable'; if (s > 0) return 'Insuficiente'; return ''; };
+
+            const saveGroup = () => {
+                if (!groupName.trim()) { alert('Ingresa el nombre del grupo.'); return; }
+                setHistory(h => [...h, { name: groupName.trim(), scores: [...scores], adj, obs, total: Math.round(total*100)/100, base: Math.round(base*100)/100, date: new Date().toLocaleString('es-CO') }]);
+                setGroupName(''); setScores(CRITERIA.map(() => 0)); setAdj(0); setObs('');
+            };
+
+            const removeGroup = (i) => setHistory(h => h.filter((_, j) => j !== i));
+
+            const exportCSV = () => {
+                const header = ['Grupo','Fecha',...CRITERIA.map(c=>c.name),'Nota base','Ajuste sust.','Nota final','Observaciones'].join(',');
+                const rows = history.map(g => ['"'+g.name+'"','"'+g.date+'"',...g.scores.map(s=>s.toFixed(1)),g.base.toFixed(2),(g.adj>=0?'+':'')+g.adj.toFixed(1),g.total.toFixed(2),'"'+(g.obs||'')+'"'].join(','));
+                const blob = new Blob([header+'\n'+rows.join('\n')], {type:'text/csv'});
+                const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='calificaciones_proyecto.csv'; a.click();
+            };
+
+            const opts = [0,1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0];
+
+            return (<div className="space-y-6">
+                <div className="card p-6">
+                    <div className="flex gap-3 mb-5">
+                        <input value={groupName} onChange={e=>setGroupName(e.target.value)} placeholder="Nombre del grupo"
+                            className="flex-1 text-sm p-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-secondary focus:border-secondary outline-none" />
+                    </div>
+
+                    <div className="space-y-2 mb-5">
+                        {CRITERIA.map((c, i) => (
+                            <div key={i} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-gray-50 transition-colors">
+                                <div className="flex-1 min-w-0">
+                                    <div className="text-sm font-semibold text-gray-700 truncate">{c.name}</div>
+                                    <div className="text-[10px] text-gray-400 mt-0.5">Peso: {(c.weight*100).toFixed(0)}% {scores[i]>0 && <span className="ml-1" style={{color:colorFor(scores[i])}}>&#8226; {labelFor(scores[i])}</span>}</div>
+                                </div>
+                                <select value={scores[i]} onChange={e=>setScore(i,e.target.value)}
+                                    className="w-20 text-sm p-1.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-secondary focus:border-secondary outline-none bg-white text-center font-mono font-bold"
+                                    style={{color:scores[i]>0?colorFor(scores[i]):'#9ca3af'}}>
+                                    {opts.map(v => (<option key={v} value={v}>{v.toFixed(1)}</option>))}
+                                </select>
+                                <div className="w-16 text-right">
+                                    <span className="text-xs font-mono text-gray-400">{weighted[i]>0?weighted[i].toFixed(2):'—'}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-amber-50 border border-amber-200 mb-4">
+                        <div className="flex-1">
+                            <div className="text-xs font-semibold text-amber-800">Ajuste por sustentaci&oacute;n oral</div>
+                            <div className="text-[10px] text-amber-600">±0.5 puntos seg&uacute;n dominio individual</div>
+                        </div>
+                        <select value={adj} onChange={e=>setAdj(parseFloat(e.target.value))}
+                            className="w-20 text-sm p-1.5 rounded-lg border border-amber-300 focus:ring-2 focus:ring-amber-400 outline-none bg-white text-center font-mono font-bold text-amber-700">
+                            {[-0.5,-0.4,-0.3,-0.2,-0.1,0,0.1,0.2,0.3,0.4,0.5].map(v => (<option key={v} value={v}>{v>=0?'+':''}{v.toFixed(1)}</option>))}
+                        </select>
+                    </div>
+
+                    <div className="mb-4">
+                        <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Observaciones (opcional)</label>
+                        <textarea value={obs} onChange={e=>setObs(e.target.value)} rows={2}
+                            className="w-full text-sm p-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-secondary focus:border-secondary outline-none resize-none"
+                            placeholder="Comentarios sobre el grupo..." />
+                    </div>
+
+                    <div className="card p-5 mb-4" style={{background:'linear-gradient(135deg,rgba(61,0,141,0.04) 0%,rgba(237,30,121,0.04) 100%)'}}>
+                        <div className="flex justify-between items-center mb-3">
+                            <span className="text-sm font-bold text-gray-700">Nota base (ponderada)</span>
+                            <span className="text-lg font-mono font-bold" style={{color:colorFor(base)}}>{base.toFixed(2)}</span>
+                        </div>
+                        {adj !== 0 && <div className="flex justify-between items-center mb-3 text-sm">
+                            <span className="text-gray-500">Ajuste sustentaci&oacute;n</span>
+                            <span className="font-mono text-amber-600">{adj>=0?'+':''}{adj.toFixed(1)}</span>
+                        </div>}
+                        <div className="border-t border-gray-200 pt-3 flex justify-between items-center">
+                            <span className="text-lg font-bold text-gray-900">NOTA FINAL</span>
+                            <span className="text-3xl font-mono font-bold" style={{color:colorFor(total)}}>{total.toFixed(2)}</span>
+                        </div>
+                        <div className="mt-2 w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                            <div className="h-full rounded-full transition-all duration-500" style={{width:(total/5*100)+'%',background:colorFor(total)}}></div>
+                        </div>
+                        <div className="text-center mt-1 text-xs font-bold" style={{color:colorFor(total)}}>{labelFor(total)}</div>
+                    </div>
+
+                    <button onClick={saveGroup}
+                        className="w-full py-3 rounded-xl text-white font-semibold text-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
+                        style={{background:'linear-gradient(140deg,#3D008D 0%,#ED1E79 100%)'}}>
+                        <i className="fas fa-save mr-2"></i>Guardar calificaci&oacute;n del grupo
+                    </button>
+                </div>
+
+                {history.length > 0 && (
+                    <div className="card p-6">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="font-bold text-lg text-primary"><i className="fas fa-list-ol mr-2"></i>Grupos calificados ({history.length})</h3>
+                            <button onClick={exportCSV}
+                                className="px-4 py-2 rounded-lg text-white text-xs font-semibold transition-all hover:scale-105"
+                                style={{background:'linear-gradient(140deg,#3D008D 0%,#ED1E79 100%)'}}>
+                                <i className="fas fa-file-csv mr-1"></i>Exportar CSV
+                            </button>
+                        </div>
+                        <div className="space-y-2">
+                            {history.map((g, i) => (
+                                <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 border border-gray-100">
+                                    <div className="flex-1 min-w-0">
+                                        <div className="text-sm font-bold text-gray-800 truncate">{g.name}</div>
+                                        <div className="text-[10px] text-gray-400">{g.date}{g.obs && <span className="ml-2 italic">— {g.obs}</span>}</div>
+                                    </div>
+                                    <div className="text-right">
+                                        <div className="text-xl font-mono font-bold" style={{color:colorFor(g.total)}}>{g.total.toFixed(2)}</div>
+                                        <div className="text-[10px] font-bold" style={{color:colorFor(g.total)}}>{labelFor(g.total)}</div>
+                                    </div>
+                                    <button onClick={()=>removeGroup(i)} className="p-1.5 text-gray-300 hover:text-red-500 transition-colors" title="Eliminar">
+                                        <i className="fas fa-trash-alt text-xs"></i>
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                        {history.length >= 2 && (
+                            <div className="mt-4 p-3 rounded-lg bg-gray-50 border border-gray-200 text-center">
+                                <span className="text-xs text-gray-500">Promedio del curso: </span>
+                                <span className="text-sm font-mono font-bold text-primary">{(history.reduce((a,g)=>a+g.total,0)/history.length).toFixed(2)}</span>
+                                <span className="text-xs text-gray-400 ml-3">M&iacute;n: {Math.min(...history.map(g=>g.total)).toFixed(2)} | M&aacute;x: {Math.max(...history.map(g=>g.total)).toFixed(2)}</span>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>);
+        };
+
+        /* ---- Sections ---- */
+        const sections = [
+            {
+                id:'ctx', title:'Contexto y descripci\u00F3n', icon:'Book', body: () => (
+                    <div>
+                        <p className="mb-4 text-sm">Este proyecto investigativo tiene como prop&oacute;sito que los estudiantes demuestren, de manera integrada y aplicada, su comprensi&oacute;n de los fundamentos de <strong>muestreo estad&iacute;stico</strong> y <strong>dise&ntilde;o de experimentos</strong>. A diferencia de un examen tradicional, el proyecto exige que cada grupo identifique un problema real, dise&ntilde;e una estrategia de recolecci&oacute;n de datos, ejecute an&aacute;lisis rigurosos y comunique sus hallazgos en un formato profesional.</p>
+                        <p className="mb-4 text-sm">El entregable final podr&aacute; adoptar una de dos modalidades, a elecci&oacute;n del grupo:</p>
+                        <ul className="list-disc pl-5 space-y-2 text-sm mb-4">
+                            <li><strong>Informe t&eacute;cnico tipo art&iacute;culo cient&iacute;fico</strong> (formato PDF o Word, m&aacute;ximo 20 p&aacute;ginas sin anexos).</li>
+                            <li><strong>Tablero interactivo (dashboard)</strong> acompa&ntilde;ado de un documento metodol&oacute;gico de m&aacute;ximo 8 p&aacute;ginas.</li>
+                        </ul>
+                        <p className="mb-6 text-sm">Ambas modalidades ser&aacute;n evaluadas con la misma r&uacute;brica; la diferencia radica en el formato, no en la profundidad anal&iacute;tica esperada.</p>
+                        <div className="card p-5">
+                            <h4 className="font-bold text-lg text-primary mb-3"><i className="fas fa-info-circle mr-2"></i>Informaci&oacute;n General</h4>
+                            <div className="grid grid-cols-2 gap-4 text-sm">
+                                <div><strong>Programa:</strong> Estad&iacute;stica — V Semestre</div>
+                                <div><strong>Equipos:</strong> M&aacute;ximo 2 estudiantes</div>
+                                <div><strong>Plazo:</strong> 15 d&iacute;as calendario</div>
+                                <div><strong>Herramientas:</strong> R y/o Python</div>
+                                <div><strong>Datos:</strong> Exclusivamente reales</div>
+                                <div><strong>IA:</strong> Permitida como apoyo</div>
+                            </div>
+                        </div>
+                    </div>
+                )
+            },
+
+            {
+                id:'obj', title:'Objetivos', icon:'Target', body: () => (
+                    <div>
+                        <h3 className="font-bold text-lg text-primary mb-3">Objetivo General</h3>
+                        <p className="mb-6 text-sm">Evaluar la capacidad del estudiante para articular los conceptos de muestreo estad&iacute;stico y dise&ntilde;o experimental en la soluci&oacute;n de un problema real, evidenciando <strong>dominio t&eacute;cnico, pensamiento cr&iacute;tico y habilidades de comunicaci&oacute;n cient&iacute;fica</strong>.</p>
+                        <h3 className="font-bold text-lg text-primary mb-3">Objetivos Espec&iacute;ficos</h3>
+                        <ol className="list-decimal pl-5 space-y-2 text-sm">
+                            <li>Dise&ntilde;ar un plan de muestreo fundamentado te&oacute;ricamente, seleccionando y justificando el tipo de muestreo apropiado (aleatorio simple, estratificado, por conglomerados o sistem&aacute;tico).</li>
+                            <li>Calcular tama&ntilde;os de muestra, construir intervalos de confianza y, cuando aplique, emplear estimadores de raz&oacute;n o regresi&oacute;n para mejorar la precisi&oacute;n.</li>
+                            <li>Plantear y ejecutar un experimento (o an&aacute;lisis experimental con datos reales) que involucre al menos un dise&ntilde;o: CRD, RCBD, cuadrado latino o BIBD.</li>
+                            <li>Realizar ANOVA, verificar supuestos del modelo mediante an&aacute;lisis de residuos, y aplicar comparaciones m&uacute;ltiples pertinentes.</li>
+                            <li>Integrar los resultados de ambas fases en un producto comunicativo coherente, bien redactado y visualmente claro.</li>
+                            <li>Documentar de manera transparente el uso de herramientas de IA, reflexionando cr&iacute;ticamente sobre su aporte y limitaciones.</li>
+                        </ol>
+                    </div>
+                )
+            },
+
+            {
+                id:'f1', title:'Fase I: Dise\u00F1o muestral', icon:'Sample', body: () => (
+                    <div>
+                        <div className="phase-box p-4 mb-5">
+                            <p className="text-sm font-semibold text-secondary"><i className="fas fa-layer-group mr-1"></i> Esta fase abarca los contenidos de muestreo estad&iacute;stico: muestreo aleatorio simple, estratificado, por conglomerados, sistem&aacute;tico, y estimaci&oacute;n de raz&oacute;n y regresi&oacute;n.</p>
+                        </div>
+                        <h3 className="font-bold text-sm text-primary mb-2">1. Definici&oacute;n de poblaci&oacute;n y marco muestral</h3>
+                        <p className="text-sm mb-4">Identificar con precisi&oacute;n la poblaci&oacute;n objetivo y describir el marco muestral disponible, se&ntilde;alando posibles problemas de cobertura (subcobertura, sobrecobertura, duplicados).</p>
+
+                        <h3 className="font-bold text-sm text-primary mb-2">2. Selecci&oacute;n y justificaci&oacute;n del dise&ntilde;o muestral</h3>
+                        <p className="text-sm mb-4">Elegir entre muestreo aleatorio simple, estratificado, por conglomerados (una o dos etapas) o sistem&aacute;tico. La elecci&oacute;n debe estar respaldada por argumentos te&oacute;ricos y pr&aacute;cticos vinculados a la naturaleza del problema.</p>
+
+                        <h3 className="font-bold text-sm text-primary mb-2">3. C&aacute;lculo del tama&ntilde;o de muestra</h3>
+                        <p className="text-sm mb-4">Determinar el tama&ntilde;o de muestra necesario para alcanzar un nivel de precisi&oacute;n predefinido. Explicar los supuestos utilizados (varianza estimada, nivel de confianza, margen de error).</p>
+
+                        <h3 className="font-bold text-sm text-primary mb-2">4. Estimaci&oacute;n y an&aacute;lisis</h3>
+                        <p className="text-sm mb-4">Calcular estimaciones puntuales y por intervalo para los par&aacute;metros de inter&eacute;s. Si la informaci&oacute;n auxiliar lo permite, aplicar <strong>estimadores de raz&oacute;n o regresi&oacute;n</strong> y comparar su eficiencia con el estimador simple.</p>
+
+                        <h3 className="font-bold text-sm text-primary mb-2">5. Pesos muestrales</h3>
+                        <p className="text-sm mb-4">Si el dise&ntilde;o lo requiere, calcular y aplicar correctamente los pesos muestrales, incluyendo ajustes por no respuesta si es pertinente.</p>
+
+                        <div className="tip-box p-4 text-sm"><strong className="text-primary">Tip:</strong> En R use el paquete <code className="bg-gray-100 px-1 rounded">survey</code>; en Python, <code className="bg-gray-100 px-1 rounded">statsmodels</code> o c&aacute;lculos manuales con <code className="bg-gray-100 px-1 rounded">pandas</code> y <code className="bg-gray-100 px-1 rounded">scipy</code>.</div>
+                    </div>
+                )
+            },
+
+            {
+                id:'f2', title:'Fase II: Dise\u00F1o experimental', icon:'Flask', body: () => (
+                    <div>
+                        <div className="phase-box p-4 mb-5">
+                            <p className="text-sm font-semibold text-secondary"><i className="fas fa-flask mr-1"></i> Esta fase abarca los contenidos de dise&ntilde;o de experimentos: ANOVA, dise&ntilde;os CRD, RCBD, cuadrados latinos, BIBD, comparaciones m&uacute;ltiples y verificaci&oacute;n de supuestos.</p>
+                        </div>
+
+                        <h3 className="font-bold text-sm text-primary mb-2">1. Planteamiento del experimento</h3>
+                        <p className="text-sm mb-4">Definir claramente el factor (o factores), niveles de tratamiento, variable respuesta y unidades experimentales. Puede tratarse de un experimento ejecutado por el grupo o del an&aacute;lisis riguroso de datos experimentales reales de fuentes confiables.</p>
+
+                        <h3 className="font-bold text-sm text-primary mb-2">2. Selecci&oacute;n del dise&ntilde;o experimental</h3>
+                        <p className="text-sm mb-4">Elegir y justificar el dise&ntilde;o: <strong>completamente aleatorizado (CRD), bloques completos aleatorizados (RCBD), cuadrado latino, cuadrado greco-latino o BIBD</strong>. Argumentar por qu&eacute; es el m&aacute;s adecuado para el problema.</p>
+
+                        <h3 className="font-bold text-sm text-primary mb-2">3. An&aacute;lisis de varianza (ANOVA)</h3>
+                        <p className="text-sm mb-4">Presentar la <strong>tabla ANOVA completa</strong> con las pruebas F correspondientes. Interpretar los resultados en el contexto del problema. Si el factor es aleatorio, emplear el modelo de efectos aleatorios y estimar componentes de varianza.</p>
+
+                        <h3 className="font-bold text-sm text-primary mb-2">4. Verificaci&oacute;n de supuestos</h3>
+                        <p className="text-sm mb-4">Evaluar normalidad (gr&aacute;ficos Q-Q, pruebas formales), homocedasticidad (residuos vs. ajustados, prueba de Levene o Bartlett) e independencia (residuos en secuencia temporal). Discutir implicaciones si alg&uacute;n supuesto se viola.</p>
+
+                        <h3 className="font-bold text-sm text-primary mb-2">5. Comparaciones m&uacute;ltiples</h3>
+                        <p className="text-sm mb-4">Si el ANOVA resulta significativo, aplicar al menos un m&eacute;todo: <strong>Tukey</strong> (todas las parejas), <strong>Dunnett</strong> (contra un control), <strong>Scheff&eacute;</strong> (contrastes generales) u otro debidamente justificado.</p>
+
+                        <h3 className="font-bold text-sm text-primary mb-2">6. Potencia y tama&ntilde;o de muestra experimental</h3>
+                        <p className="text-sm mb-4">Analizar la potencia del dise&ntilde;o utilizado o determinar cu&aacute;ntas r&eacute;plicas ser&iacute;an necesarias para detectar una diferencia pr&aacute;cticamente relevante. Utilizar curvas de operaci&oacute;n caracter&iacute;stica o c&aacute;lculos de potencia.</p>
+
+                        <div className="tip-box p-4 text-sm"><strong className="text-primary">Tip:</strong> En R use <code className="bg-gray-100 px-1 rounded">agricolae</code>, <code className="bg-gray-100 px-1 rounded">multcomp</code>, <code className="bg-gray-100 px-1 rounded">emmeans</code>; en Python, <code className="bg-gray-100 px-1 rounded">pingouin</code>, <code className="bg-gray-100 px-1 rounded">statsmodels</code>, <code className="bg-gray-100 px-1 rounded">scipy.stats</code>.</div>
+                    </div>
+                )
+            },
+
+            {
+                id:'data', title:'Requisitos de datos', icon:'Database', body: () => (
+                    <div>
+                        <div className="warn-box p-4 mb-5">
+                            <p className="text-sm font-semibold text-accent"><i className="fas fa-exclamation-triangle mr-2"></i>Este proyecto exige el uso exclusivo de datos reales. No se aceptan datos simulados, inventados o generados artificialmente.</p>
+                        </div>
+                        <h3 className="font-bold text-lg text-primary mb-3">Fuentes aceptadas</h3>
+                        <ul className="list-disc pl-5 space-y-2 text-sm mb-6">
+                            <li><strong>Recolecci&oacute;n primaria:</strong> encuestas, mediciones en campo o laboratorio, registros observacionales realizados por el grupo.</li>
+                            <li><strong>Fuentes secundarias verificables:</strong> bases de datos p&uacute;blicas (DANE, Banco Mundial, ICFES, repositorios cient&iacute;ficos), art&iacute;culos con datos disponibles, o datos empresariales con autorizaci&oacute;n.</li>
+                        </ul>
+                        <p className="text-sm mb-6">El grupo debe documentar la procedencia de los datos con suficiente detalle para que un tercero pueda verificar su autenticidad (enlaces, referencias bibliogr&aacute;ficas, fotograf&iacute;as del proceso de recolecci&oacute;n, etc.).</p>
+
+                        <h3 className="font-bold text-lg text-primary mb-3">Contextos de aplicaci&oacute;n sugeridos</h3>
+                        <table className="rtable">
+                            <thead><tr><th>&Aacute;rea</th><th>Ejemplo de aplicaci&oacute;n</th></tr></thead>
+                            <tbody>
+                                <tr><td className="font-semibold">Agroindustria</td><td>Comparar rendimiento de cultivos bajo tratamientos de fertilizaci&oacute;n; muestrear fincas de una regi&oacute;n para estimar producci&oacute;n.</td></tr>
+                                <tr><td className="font-semibold">Salud p&uacute;blica</td><td>Evaluar intervenciones nutricionales con datos hospitalarios; estimar prevalencia mediante muestreo estratificado por localidad.</td></tr>
+                                <tr><td className="font-semibold">Educaci&oacute;n</td><td>Analizar resultados de Saber 11/Pro por estratos; comparar m&eacute;todos did&aacute;cticos con un dise&ntilde;o en bloques.</td></tr>
+                                <tr><td className="font-semibold">Industria / Calidad</td><td>Comparar proveedores o m&eacute;todos de producci&oacute;n; muestrear lotes para estimar tasas de defectos.</td></tr>
+                                <tr><td className="font-semibold">Medio ambiente</td><td>Muestrear estaciones de monitoreo para estimar contaminaci&oacute;n; comparar niveles entre zonas con ANOVA.</td></tr>
+                                <tr><td className="font-semibold">Ciencias sociales</td><td>Estimar indicadores socioecon&oacute;micos con muestreo por conglomerados; comparar percepciones entre grupos.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                )
+            },
+
+            {
+                id:'fmt', title:'Formato del entregable', icon:'FileText', body: () => (
+                    <div>
+                        <div className="warn-box p-4 mb-6">
+                            <p className="text-sm"><strong className="text-accent"><i className="fas fa-bookmark mr-1"></i> Entregable &uacute;nico:</strong> Notebook reproducible en <strong>R Markdown (.Rmd)</strong> o <strong>Jupyter Notebook (.ipynb)</strong>, renderizado a HTML o PDF. Este formato integra narrativa, c&oacute;digo y resultados en un solo documento, lo que facilita la evaluaci&oacute;n de la comprensi&oacute;n y la reproducibilidad.</p>
+                        </div>
+
+                        <h3 className="font-bold text-lg text-primary mb-3">&iquest;Por qu&eacute; un notebook?</h3>
+                        <p className="text-sm mb-4">El notebook reproducible combina las fortalezas de un art&iacute;culo cient&iacute;fico (estructura narrativa, justificaci&oacute;n te&oacute;rica, discusi&oacute;n cr&iacute;tica) con la transparencia del c&oacute;digo ejecutable. Cada afirmaci&oacute;n estad&iacute;stica queda respaldada por el c&oacute;digo que la produce, lo que elimina la ambig&uuml;edad y permite al docente verificar cada paso del an&aacute;lisis.</p>
+
+                        <h3 className="font-bold text-lg text-primary mb-3">Estructura esperada del notebook</h3>
+                        <p className="text-sm mb-3">El documento debe seguir la l&oacute;gica de un art&iacute;culo cient&iacute;fico, con celdas de texto (Markdown) que narran y justifican, alternadas con celdas de c&oacute;digo que ejecutan el an&aacute;lisis:</p>
+                        <ol className="list-decimal pl-5 space-y-2 text-sm mb-6">
+                            <li><strong>Encabezado:</strong> t&iacute;tulo del proyecto, nombres de los integrantes, fecha y resumen ejecutivo (m&aacute;ximo 250 palabras).</li>
+                            <li><strong>Introducci&oacute;n:</strong> contexto del problema, motivaci&oacute;n y objetivos. Sin c&oacute;digo en esta secci&oacute;n.</li>
+                            <li><strong>Fase I &mdash; Dise&ntilde;o muestral:</strong> definici&oacute;n de poblaci&oacute;n y marco muestral en texto, seguida de celdas de c&oacute;digo con el c&aacute;lculo del tama&ntilde;o de muestra, la selecci&oacute;n de la muestra, estimaciones puntuales e intervalos de confianza. Cada celda de c&oacute;digo debe ir precedida o seguida de una celda de texto que interprete los resultados.</li>
+                            <li><strong>Fase II &mdash; Dise&ntilde;o experimental:</strong> planteamiento del experimento en texto, seguido de celdas de c&oacute;digo con la tabla ANOVA, gr&aacute;ficos de residuos, comparaciones m&uacute;ltiples y an&aacute;lisis de potencia. Misma l&oacute;gica: c&oacute;digo + interpretaci&oacute;n.</li>
+                            <li><strong>Integraci&oacute;n y discusi&oacute;n:</strong> s&iacute;ntesis de ambas fases, limitaciones del estudio y posibles extensiones.</li>
+                            <li><strong>Conclusiones.</strong></li>
+                            <li><strong>Declaraci&oacute;n de uso de IA:</strong> secci&oacute;n obligatoria seg&uacute;n la pol&iacute;tica del proyecto.</li>
+                            <li><strong>Referencias bibliogr&aacute;ficas</strong> (normas APA 7).</li>
+                        </ol>
+
+                        <h3 className="font-bold text-lg text-primary mb-3">Requisitos t&eacute;cnicos del notebook</h3>
+                        <ul className="list-disc pl-5 space-y-2 text-sm mb-6">
+                            <li><strong>Ejecutable de inicio a fin:</strong> el notebook debe correr sin errores al ejecutar todas las celdas en orden (<em>Run All</em> / <em>Knit</em>). El docente lo verificar&aacute;.</li>
+                            <li><strong>Datos incluidos o accesibles:</strong> los datos deben estar adjuntos en la entrega o descargarse autom&aacute;ticamente desde una URL p&uacute;blica en las primeras celdas del notebook.</li>
+                            <li><strong>Dependencias declaradas:</strong> la primera celda debe listar e instalar (si es necesario) todos los paquetes requeridos.</li>
+                            <li><strong>Extensi&oacute;n:</strong> m&aacute;ximo 30 celdas de c&oacute;digo y el equivalente a 15&ndash;20 p&aacute;ginas renderizadas (sin contar salidas autom&aacute;ticas de c&oacute;digo).</li>
+                            <li><strong>Gr&aacute;ficas:</strong> todas las figuras deben tener t&iacute;tulo, etiquetas en los ejes y leyenda cuando corresponda.</li>
+                        </ul>
+
+                        <div className="tip-box p-4 text-sm mb-6">
+                            <strong className="text-primary"><i className="fas fa-lightbulb mr-1"></i> Tip:</strong> En R Markdown, use <code className="bg-gray-100 px-1 rounded">output: html_document</code> con <code className="bg-gray-100 px-1 rounded">toc: true</code> y <code className="bg-gray-100 px-1 rounded">code_folding: show</code> para generar un documento navegable donde el lector puede colapsar el c&oacute;digo y leer solo la narrativa. En Jupyter, use encabezados Markdown para crear una tabla de contenidos autom&aacute;tica con la extensi&oacute;n <code className="bg-gray-100 px-1 rounded">toc2</code>.
+                        </div>
+
+                        <h3 className="font-bold text-lg text-primary mb-3">Entregables requeridos</h3>
+                        <table className="rtable">
+                            <thead><tr><th>Entregable</th><th>Formato</th><th>Descripci&oacute;n</th></tr></thead>
+                            <tbody>
+                                <tr><td className="font-semibold">Notebook</td><td>.Rmd o .ipynb</td><td>Documento reproducible con narrativa, c&oacute;digo y resultados integrados.</td></tr>
+                                <tr><td className="font-semibold">Versi&oacute;n renderizada</td><td>HTML o PDF</td><td>El notebook renderizado (knit/export) para lectura sin ejecutar c&oacute;digo.</td></tr>
+                                <tr><td className="font-semibold">Datos</td><td>CSV/Excel o enlace</td><td>Datos originales adjuntos o enlace a repositorio verificable.</td></tr>
+                                <tr><td className="font-semibold">Sustentaci&oacute;n oral</td><td>5&ndash;10 min</td><td>Defensa individual ante el docente. Se evaluar&aacute; el dominio conceptual recorriendo celdas del notebook.</td></tr>
+                            </tbody>
+                        </table>
+
+                        <div className="phase-box p-4 text-sm mt-6">
+                            <strong className="text-secondary"><i className="fas fa-info-circle mr-1"></i> Sobre la sustentaci&oacute;n:</strong> El docente podr&aacute; seleccionar cualquier celda del notebook y pedir al estudiante que explique qu&eacute; hace el c&oacute;digo, por qu&eacute; se tom&oacute; esa decisi&oacute;n metodol&oacute;gica y qu&eacute; significan los resultados. La sustentaci&oacute;n ajusta la nota individual hasta &plusmn;0.5 puntos respecto a la nota grupal.
+                        </div>
+                    </div>
+                )
+            },
+
+            {
+                id:'cron', title:'Cronograma sugerido', icon:'Cal', body: () => (
+                    <div>
+                        <p className="text-sm mb-4">El siguiente cronograma es orientativo. Los grupos pueden reorganizar sus tiempos siempre que cumplan con la fecha de entrega final.</p>
+                        <table className="rtable">
+                            <thead><tr><th>D&iacute;as</th><th>Etapa</th><th>Actividades clave</th></tr></thead>
+                            <tbody>
+                                <tr><td className="font-semibold">1–3</td><td>Exploraci&oacute;n y planeaci&oacute;n</td><td>Selecci&oacute;n del tema y contexto. Identificaci&oacute;n de fuentes de datos. Revisi&oacute;n bibliogr&aacute;fica. Formulaci&oacute;n del problema y objetivos.</td></tr>
+                                <tr><td className="font-semibold">4–6</td><td>Dise&ntilde;o muestral (Fase I)</td><td>Definici&oacute;n de poblaci&oacute;n y marco muestral. Selecci&oacute;n del tipo de muestreo. C&aacute;lculo del tama&ntilde;o de muestra. Recolecci&oacute;n o descarga de datos.</td></tr>
+                                <tr><td className="font-semibold">7–9</td><td>Dise&ntilde;o experimental (Fase II)</td><td>Planteamiento del experimento o selecci&oacute;n de datos experimentales. Aplicaci&oacute;n del dise&ntilde;o. ANOVA y verificaci&oacute;n de supuestos.</td></tr>
+                                <tr><td className="font-semibold">10–12</td><td>An&aacute;lisis y s&iacute;ntesis</td><td>Estimaciones, intervalos de confianza, comparaciones m&uacute;ltiples. Integraci&oacute;n de ambas fases. Gr&aacute;ficas y tablas finales.</td></tr>
+                                <tr><td className="font-semibold">13–15</td><td>Redacci&oacute;n y entrega</td><td>Redacci&oacute;n del informe o construcci&oacute;n del tablero. Revisi&oacute;n de coherencia, formato y anexos. Entrega final.</td></tr>
+                            </tbody>
+                        </table>
+                        <div className="tip-box p-4 text-sm mt-5"><strong className="text-primary">Entregas tard&iacute;as:</strong> Se aplicar&aacute; una penalizaci&oacute;n de 0.5 puntos por cada d&iacute;a calendario de retraso, hasta un m&aacute;ximo de 3 d&iacute;as. Despu&eacute;s de este plazo no se recibir&aacute;n entregas.</div>
+                    </div>
+                )
+            },
+
+            {
+                id:'ia', title:'Pol\u00EDtica de IA y entregables', icon:'Cpu', body: () => (
+                    <div>
+                        <h3 className="font-bold text-lg text-primary mb-3">Pol&iacute;tica de Uso de Inteligencia Artificial</h3>
+                        <p className="text-sm mb-4">El uso de herramientas de IA (ChatGPT, Claude, Copilot, Gemini, etc.) est&aacute; <strong>permitido y es bienvenido</strong> como recurso de apoyo. Sin embargo, debe cumplir con las siguientes condiciones:</p>
+
+                        <ol className="list-decimal pl-5 space-y-3 text-sm mb-6">
+                            <li><strong>Transparencia obligatoria.</strong> El entregable debe incluir una secci&oacute;n &laquo;Declaraci&oacute;n de uso de IA&raquo; donde se indique: qu&eacute; herramientas se usaron, en qu&eacute; etapas, qu&eacute; tipo de asistencia se obtuvo, y c&oacute;mo se valid&oacute; la informaci&oacute;n proporcionada.</li>
+                            <li><strong>Comprensi&oacute;n demostrable.</strong> El estudiante debe poder explicar cada decisi&oacute;n metodol&oacute;gica y cada l&iacute;nea de c&oacute;digo. El docente podr&aacute; realizar una <strong>sustentaci&oacute;n oral</strong> (5–10 min) para verificar comprensi&oacute;n.</li>
+                            <li><strong>Valor agregado cr&iacute;tico.</strong> Se valorar&aacute; que el grupo reflexione sobre las limitaciones de la IA: &iquest;gener&oacute; c&oacute;digo incorrecto? &iquest;Propuso un dise&ntilde;o inadecuado? &iquest;Omiti&oacute; supuestos? Documentar estas experiencias demuestra pensamiento cr&iacute;tico.</li>
+                            <li><strong>Prohibici&oacute;n de delegaci&oacute;n total.</strong> Entregar un producto generado &iacute;ntegramente por IA sin evidencia de comprensi&oacute;n, personalizaci&oacute;n ni reflexi&oacute;n cr&iacute;tica constituye <strong>falta acad&eacute;mica</strong> y se calificar&aacute; con nota de <strong>0.0</strong>.</li>
+                        </ol>
+
+                        <div className="warn-box p-4 text-sm mb-6"><strong className="text-accent"><i className="fas fa-gavel mr-1"></i> Plagio y fraude acad&eacute;mico:</strong> Adem&aacute;s de la prohibici&oacute;n de delegaci&oacute;n total a IA, se aplica el reglamento estudiantil vigente para cualquier forma de plagio o fraude.</div>
+
+                        <h3 className="font-bold text-lg text-primary mb-3">Medio de entrega</h3>
+                        <ul className="list-disc pl-5 space-y-1 text-sm">
+                            <li>Plataforma institucional (Moodle, Google Classroom o la que defina el docente).</li>
+                            <li>Todos los archivos (informe, c&oacute;digo, datos) deben estar completos y correctamente nombrados.</li>
+                        </ul>
+                    </div>
+                )
+            },
+
+            {
+                id:'rub', title:'R\u00FAbrica de evaluaci\u00F3n', icon:'Award', body: () => (
+                    <div>
+                        <p className="mb-4 text-sm">Calificaci&oacute;n total sobre <strong>5.0</strong>. Cada criterio se eval&uacute;a en cinco niveles. La nota final es el promedio ponderado, con un posible ajuste de &plusmn;0.5 por la sustentaci&oacute;n oral.</p>
+
+                        <p className="mb-2 mt-6 font-bold text-primary text-sm">1. Dise&ntilde;o muestral (20%)</p>
+                        <table className="rtable mb-6"><thead><tr><th>5.0</th><th>4.0–4.9</th><th>3.5–3.9</th><th>3.0–3.4</th><th>&lt; 3.0</th></tr></thead><tbody>
+                            <tr><td>Poblaci&oacute;n y marco muestral definidos con precisi&oacute;n. Tipo de muestreo justificado te&oacute;rica y pr&aacute;cticamente. Tama&ntilde;o de muestra calculado correctamente con supuestos expl&iacute;citos. Pesos muestrales aplicados si corresponde.</td><td>Todo correcto pero la justificaci&oacute;n del tipo de muestreo es breve o los supuestos del tama&ntilde;o de muestra no se explican con profundidad.</td><td>Dise&ntilde;o muestral presente pero con justificaci&oacute;n superficial. Tama&ntilde;o de muestra calculado sin detallar supuestos.</td><td>Marco muestral definido de forma vaga. Tipo de muestreo elegido sin justificaci&oacute;n. C&aacute;lculo de tama&ntilde;o incompleto.</td><td>No se define poblaci&oacute;n o marco muestral, o el dise&ntilde;o muestral est&aacute; ausente o tiene errores conceptuales graves.</td></tr>
+                        </tbody></table>
+
+                        <p className="mb-2 font-bold text-primary text-sm">2. Estimaci&oacute;n estad&iacute;stica (10%)</p>
+                        <table className="rtable mb-6"><thead><tr><th>5.0</th><th>4.0–4.9</th><th>3.5–3.9</th><th>3.0–3.4</th><th>&lt; 3.0</th></tr></thead><tbody>
+                            <tr><td>Estimaciones puntuales e IC correctos. Estimadores de raz&oacute;n/regresi&oacute;n aplicados con comparaci&oacute;n de eficiencia. Interpretaci&oacute;n clara y contextualizada.</td><td>Estimaciones correctas. Se aplica estimador auxiliar pero la comparaci&oacute;n de eficiencia es breve.</td><td>IC correctos pero sin estimadores auxiliares. Interpretaci&oacute;n mec&aacute;nica.</td><td>IC calculados con errores menores. Sin estimadores de raz&oacute;n/regresi&oacute;n.</td><td>Estimaciones ausentes, mal calculadas o sin intervalos de confianza.</td></tr>
+                        </tbody></table>
+
+                        <p className="mb-2 font-bold text-primary text-sm">3. Dise&ntilde;o experimental (15%)</p>
+                        <table className="rtable mb-6"><thead><tr><th>5.0</th><th>4.0–4.9</th><th>3.5–3.9</th><th>3.0–3.4</th><th>&lt; 3.0</th></tr></thead><tbody>
+                            <tr><td>Dise&ntilde;o elegido y justificado con solidez. Factores, niveles, UE y respuesta bien definidos. Aleatorizaci&oacute;n documentada. An&aacute;lisis de potencia incluido.</td><td>Dise&ntilde;o correcto y justificado. Componentes bien definidos. Falta an&aacute;lisis de potencia o aleatorizaci&oacute;n no documentada.</td><td>Dise&ntilde;o presente pero justificaci&oacute;n d&eacute;bil. Alg&uacute;n componente mal definido.</td><td>Dise&ntilde;o aplicado sin justificaci&oacute;n. Componentes definidos de forma ambigua.</td><td>No se identifica un dise&ntilde;o experimental claro o tiene errores conceptuales graves.</td></tr>
+                        </tbody></table>
+
+                        <p className="mb-2 font-bold text-primary text-sm">4. An&aacute;lisis de varianza — ANOVA (20%)</p>
+                        <table className="rtable mb-6"><thead><tr><th>5.0</th><th>4.0–4.9</th><th>3.5–3.9</th><th>3.0–3.4</th><th>&lt; 3.0</th></tr></thead><tbody>
+                            <tr><td>Tabla ANOVA completa, pruebas F correctas. Comparaciones m&uacute;ltiples bien ejecutadas e interpretadas. An&aacute;lisis de potencia o determinaci&oacute;n de r&eacute;plicas incluido.</td><td>ANOVA correcto con comparaciones m&uacute;ltiples. Falta an&aacute;lisis de potencia o la interpretaci&oacute;n de comparaciones es breve.</td><td>ANOVA correcto pero sin comparaciones m&uacute;ltiples o estas no se interpretan adecuadamente.</td><td>Tabla ANOVA presente pero con errores menores. Sin comparaciones m&uacute;ltiples.</td><td>ANOVA ausente, incorrecto o con errores fundamentales (gl, SS, F mal calculados).</td></tr>
+                        </tbody></table>
+
+                        <p className="mb-2 font-bold text-primary text-sm">5. Verificaci&oacute;n de supuestos (10%)</p>
+                        <table className="rtable mb-6"><thead><tr><th>5.0</th><th>4.0–4.9</th><th>3.5–3.9</th><th>3.0–3.4</th><th>&lt; 3.0</th></tr></thead><tbody>
+                            <tr><td>Todos los supuestos evaluados (normalidad, homocedasticidad, independencia) con gr&aacute;ficos y pruebas formales. Discusi&oacute;n profunda de implicaciones ante violaciones.</td><td>Supuestos evaluados con gr&aacute;ficos y pruebas. Discusi&oacute;n presente pero sin profundidad ante violaciones.</td><td>Al menos 2 supuestos evaluados. Falta alg&uacute;n gr&aacute;fico o prueba formal.</td><td>Solo normalidad evaluada. Sin an&aacute;lisis de homocedasticidad o independencia.</td><td>No se verifican supuestos o se presentan de forma err&oacute;nea.</td></tr>
+                        </tbody></table>
+
+                        <p className="mb-2 font-bold text-primary text-sm">6. Calidad de datos y reproducibilidad (5%)</p>
+                        <table className="rtable mb-6"><thead><tr><th>5.0</th><th>4.0–4.9</th><th>3.5–3.9</th><th>3.0–3.4</th><th>&lt; 3.0</th></tr></thead><tbody>
+                            <tr><td>Datos reales documentados con detalle. C&oacute;digo completo, ejecutable y bien comentado. Repositorio o anexos que permiten replicaci&oacute;n total.</td><td>Datos documentados. C&oacute;digo ejecutable pero comentarios insuficientes.</td><td>Datos documentados parcialmente. C&oacute;digo presente pero con errores de ejecuci&oacute;n menores.</td><td>Fuente de datos mencionada pero sin detalle. C&oacute;digo incompleto.</td><td>No se puede verificar la procedencia de los datos. C&oacute;digo ausente o no ejecutable.</td></tr>
+                        </tbody></table>
+
+                        <p className="mb-2 font-bold text-primary text-sm">7. Comunicaci&oacute;n y presentaci&oacute;n (10%)</p>
+                        <table className="rtable mb-6"><thead><tr><th>5.0</th><th>4.0–4.9</th><th>3.5–3.9</th><th>3.0–3.4</th><th>&lt; 3.0</th></tr></thead><tbody>
+                            <tr><td>Redacci&oacute;n impecable (o dise&ntilde;o de dashboard excelente). Gr&aacute;ficas informativas y bien etiquetadas. Estructura l&oacute;gica. Referencias APA correctas.</td><td>Buena redacci&oacute;n con errores menores. Gr&aacute;ficas claras. Estructura coherente. Referencias presentes.</td><td>Redacci&oacute;n aceptable. Algunas gr&aacute;ficas sin etiquetas o poco informativas. Estructura algo confusa.</td><td>Redacci&oacute;n con problemas frecuentes. Gr&aacute;ficas b&aacute;sicas. Sin referencias o formato inconsistente.</td><td>Redacci&oacute;n deficiente. Sin gr&aacute;ficas o con errores graves. Sin estructura clara.</td></tr>
+                        </tbody></table>
+
+                        <p className="mb-2 font-bold text-primary text-sm">8. Reflexi&oacute;n sobre uso de IA (5%)</p>
+                        <table className="rtable mb-6"><thead><tr><th>5.0</th><th>4.0–4.9</th><th>3.5–3.9</th><th>3.0–3.4</th><th>&lt; 3.0</th></tr></thead><tbody>
+                            <tr><td>Declaraci&oacute;n completa y honesta. An&aacute;lisis cr&iacute;tico del aporte y limitaciones de la IA. Evidencia de validaci&oacute;n y criterio propio.</td><td>Declaraci&oacute;n presente con buen nivel de detalle. Reflexi&oacute;n cr&iacute;tica breve.</td><td>Declaraci&oacute;n presente pero gen&eacute;rica. Sin ejemplos concretos de limitaciones encontradas.</td><td>Menci&oacute;n vaga de uso de IA. Sin reflexi&oacute;n cr&iacute;tica.</td><td>No se declara el uso de IA o se evidencia delegaci&oacute;n total sin comprensi&oacute;n.</td></tr>
+                        </tbody></table>
+
+                        <p className="mb-2 font-bold text-primary text-sm">9. Integraci&oacute;n de fases (5%)</p>
+                        <table className="rtable mb-6"><thead><tr><th>5.0</th><th>4.0–4.9</th><th>3.5–3.9</th><th>3.0–3.4</th><th>&lt; 3.0</th></tr></thead><tbody>
+                            <tr><td>Articulaci&oacute;n fluida entre muestreo y experimento. El proyecto se percibe como un todo unificado con un hilo conductor claro.</td><td>Buena articulaci&oacute;n. Se conectan ambas fases pero la transici&oacute;n podr&iacute;a ser m&aacute;s natural.</td><td>Ambas fases presentes pero se perciben como trabajos separados con conexi&oacute;n d&eacute;bil.</td><td>Las fases est&aacute;n yuxtapuestas sin intento de integraci&oacute;n.</td><td>Falta una de las dos fases o no hay ninguna integraci&oacute;n.</td></tr>
+                        </tbody></table>
+
+                        <div className="tip-box p-4 text-sm"><strong className="text-primary">Sustentaci&oacute;n oral (ajuste &plusmn;0.5):</strong> Se reserva una sustentaci&oacute;n oral de 5–10 minutos por grupo que podr&aacute; ajustar la nota individual hasta en &plusmn;0.5 puntos respecto a la nota grupal, dependiendo del dominio demostrado por cada integrante.</div>
+                    </div>
+                )
+            },
+
+            {
+                id:'bib', title:'Recursos recomendados', icon:'BookOpen', body: () => (
+                    <div>
+                        <div className="card p-5">
+                            <h4 className="font-bold text-primary mb-3"><i className="fas fa-book mr-2"></i>Bibliograf&iacute;a principal</h4>
+                            <ol className="list-decimal pl-5 space-y-2 text-sm mb-6">
+                                <li><em>Montgomery, D. C. (2017).</em> Design and Analysis of Experiments. 9th ed., Wiley.</li>
+                                <li><em>Lohr, S. L. (2022).</em> Sampling: Design and Analysis. 3rd ed., CRC Press.</li>
+                            </ol>
+
+                            <h4 className="font-bold text-primary mb-3"><i className="fas fa-database mr-2"></i>Fuentes de datos sugeridas</h4>
+                            <table className="rtable mb-6"><thead><tr><th>Fuente</th><th>Descripci&oacute;n</th><th>Enlace</th></tr></thead><tbody>
+                                <tr><td className="font-semibold">DANE</td><td>Encuestas nacionales, censos, estad&iacute;sticas sectoriales</td><td><a href="https://www.dane.gov.co" className="text-secondary underline" target="_blank">dane.gov.co</a></td></tr>
+                                <tr><td className="font-semibold">Banco Mundial</td><td>Indicadores de desarrollo</td><td><a href="https://data.worldbank.org" className="text-secondary underline" target="_blank">data.worldbank.org</a></td></tr>
+                                <tr><td className="font-semibold">ICFES</td><td>Resultados de pruebas Saber</td><td><a href="https://www.icfes.gov.co" className="text-secondary underline" target="_blank">icfes.gov.co</a></td></tr>
+                                <tr><td className="font-semibold">Kaggle</td><td>Conjuntos de datos abiertos diversos</td><td><a href="https://www.kaggle.com" className="text-secondary underline" target="_blank">kaggle.com</a></td></tr>
+                                <tr><td className="font-semibold">UCI Repository</td><td>Datos experimentales cl&aacute;sicos</td><td><a href="https://archive.ics.uci.edu" className="text-secondary underline" target="_blank">archive.ics.uci.edu</a></td></tr>
+                            </tbody></table>
+
+                            <h4 className="font-bold text-primary mb-3"><i className="fas fa-code mr-2"></i>Paquetes y librer&iacute;as</h4>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                                <div className="p-3 rounded-lg bg-blue-50 border border-blue-100">
+                                    <div className="font-bold text-blue-800 mb-1"><i className="fab fa-r-project mr-1"></i> R</div>
+                                    <p className="text-blue-700 text-xs">survey, lme4, agricolae, multcomp, emmeans, ggplot2, car, nortest</p>
+                                </div>
+                                <div className="p-3 rounded-lg bg-yellow-50 border border-yellow-100">
+                                    <div className="font-bold text-yellow-800 mb-1"><i className="fab fa-python mr-1"></i> Python</div>
+                                    <p className="text-yellow-700 text-xs">pandas, scipy, statsmodels, pingouin, matplotlib, seaborn, plotly</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )
+            },
+
+            { id:'grader', title:'Calificador', icon:'Clip', body: () => (<GraderTool />) },
+        ];
+
+        /* ---- App ---- */
+        const App = () => {
+            const [idx, setIdx] = useState(0);
+            const [open, setOpen] = useState(true);
+            const sec = sections[idx];
+
+            return (
+                <div className="flex h-screen overflow-hidden relative">
+                    <button onClick={() => setOpen(p => !p)}
+                        className="fixed top-4 left-4 z-50 p-2.5 rounded-full shadow-lg text-white transition-all hover:scale-110"
+                        style={{background:'linear-gradient(140deg,#3D008D 0%,#ED1E79 100%)'}}>
+                        <i className={"fas " + (open ? 'fa-times' : 'fa-bars') + " text-sm"}></i>
+                    </button>
+
+                    {open && <div className="fixed inset-0 bg-black/20 z-30 lg:hidden" onClick={() => setOpen(false)} />}
+
+                    <div className="flex-shrink-0 overflow-y-auto z-40 flex flex-col"
+                        style={{background:'linear-gradient(180deg,#001A4D 0%,#002868 100%)', width: open ? '17rem' : '0', minWidth: open ? '17rem' : '0', opacity: open ? 1 : 0, transition:'width .3s,min-width .3s,opacity .25s', overflow: open ? 'visible auto' : 'hidden'}}>
+                        <div className="p-6 pt-16 border-b border-white/10">
+                            <h1 className="text-white font-bold text-lg tracking-tight" style={{fontFamily:'Fraunces,Georgia,serif'}}>
+                                <span className="text-secondary">Stat</span>Lab
+                            </h1>
+                            <p className="text-xs text-white/50 mt-1">Proyecto Investigativo</p>
+                            <p className="text-[10px] text-white/30 mt-0.5">Muestreo &amp; Dise&ntilde;o de Experimentos</p>
+                        </div>
+                        <nav className="p-3 space-y-1">
+                            {sections.map((s, i) => (
+                                <button key={s.id} onClick={() => { setIdx(i); if(window.innerWidth<1024) setOpen(false); }}
+                                    className={"w-full flex items-center gap-2.5 px-3 py-2 text-xs rounded-lg transition-all text-left " + (idx===i ? 'text-white shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/10')}
+                                    style={idx===i ? {background:'linear-gradient(140deg,#3D008D 0%,#ED1E79 100%)'} : {}}>
+                                    <span className="flex-shrink-0">{React.createElement(iconMap[s.icon],{s:16})}</span>
+                                    <span className="font-medium leading-tight">{s.title}</span>
+                                </button>
+                            ))}
+                        </nav>
+                    </div>
+
+                    <main className="flex-1 overflow-y-auto bg-bg">
+                        <div className="max-w-4xl mx-auto p-8 lg:p-12">
+                            <div className="mb-6 flex items-center justify-between">
+                                <span className="text-xs font-bold tracking-wider text-secondary uppercase">
+                                    Secci&oacute;n {idx+1} de {sections.length}
+                                </span>
+                                <div className="flex gap-2">
+                                    <button disabled={idx===0} onClick={()=>setIdx(c=>c-1)} className="p-2 rounded-full hover:bg-gray-100 disabled:opacity-30"><I.Left s={20}/></button>
+                                    <button disabled={idx===sections.length-1} onClick={()=>setIdx(c=>c+1)} className="p-2 rounded-full hover:bg-gray-100 disabled:opacity-30"><I.Right s={20}/></button>
+                                </div>
+                            </div>
+
+                            <SH title={sec.title} iconKey={sec.icon} />
+
+                            <div className="prose prose-lg text-gray-600 leading-relaxed fade-in" key={sec.id}>
+                                {sec.body()}
+                            </div>
+
+                            <footer className="mt-20">
+                                <div className="rounded-xl p-6 text-center" style={{background:'linear-gradient(180deg,#001A4D 0%,#002868 100%)'}}>
+                                    <p className="text-white font-medium text-sm">Estad&iacute;stica — V Semestre</p>
+                                    <p className="text-xs mt-1 text-white/50">Muestreo Estad&iacute;stico &bull; Dise&ntilde;o de Experimentos &bull; Proyecto Investigativo 2026-I</p>
+                                </div>
+                            </footer>
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,2429 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Material de estudio sobre Modelos Unifactoriales de Efectos Aleatorios - Diseño de Experimentos - Universidad Santo Tomás">
+    <meta name="author" content="Z.ai">
+    <meta content="#3D008D" name="theme-color" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>" />
+    <title>Modelos de Efectos Aleatorios - Material de Estudio USTA</title>
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- External Resources -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- KaTeX for LaTeX rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Highlight.js VS Code Dark+ -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3D008D',
+                        secondary: '#ED1E79',
+                        navy: '#001A4D',
+                        gold: '#FDB913',
+                        bg: '#F8FAFC',
+                        surface: '#FFFFFF',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --usta-primary: #3D008D;
+            --usta-secondary: #ED1E79;
+            --usta-navy: #001A4D;
+            --usta-navy-light: #002868;
+            --usta-gold: #FDB913;
+            --usta-bg: #F8FAFC;
+            --usta-surface: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #F8FAFC;
+            color: #1E293B;
+            scroll-behavior: smooth;
+        }
+
+        code, pre { font-family: 'Fira Code', monospace; }
+
+        .usta-gradient { background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%); }
+        .usta-header { background: linear-gradient(180deg, #001A4D 0%, #002868 100%); }
+
+        /* ===== SIDEBAR ===== */
+        #sidebar-panel {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+            flex-shrink: 0; overflow-y: auto; display: flex; flex-direction: column;
+            width: 16rem; min-width: 16rem;
+            transition: width 0.3s ease, min-width 0.3s ease, opacity 0.25s ease;
+            z-index: 40;
+        }
+        #sidebar-panel.collapsed { width: 0; min-width: 0; opacity: 0; overflow: hidden; }
+
+        .sidebar-brand {
+            padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .sidebar-brand h2 {
+            color: white; font-weight: 700; font-size: 1rem; letter-spacing: -0.02em;
+            display: flex; align-items: center; gap: 0.5rem; margin: 0; padding: 0; border: none;
+        }
+        .sidebar-brand p {
+            font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-top: 0.25rem; margin-bottom: 0; text-align: left;
+        }
+
+        .sidebar-nav { padding: 1rem; }
+        .sidebar-nav-item {
+            width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+            padding: 0.65rem 0.75rem; font-size: 0.8rem; font-weight: 500; border-radius: 0.5rem;
+            text-align: left; margin-bottom: 0.25rem; border: none; cursor: pointer;
+            transition: all 0.2s ease; color: rgba(255,255,255,0.6); background: transparent;
+        }
+        .sidebar-nav-item:hover { color: white; background: rgba(255,255,255,0.1); }
+        .sidebar-nav-item.active {
+            color: white; background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            box-shadow: 0 4px 12px rgba(61,0,141,0.3);
+        }
+        .sidebar-nav-item .check-mark { color: #10B981; flex-shrink: 0; }
+
+        .sidebar-toggle-btn {
+            position: fixed; top: 1rem; left: 1rem; z-index: 50;
+            width: 2.5rem; height: 2.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white; border: none; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 4px 12px rgba(61,0,141,0.4);
+            transition: all 0.2s ease;
+        }
+        .sidebar-toggle-btn:hover { transform: scale(1.1); box-shadow: 0 6px 18px rgba(61,0,141,0.5); }
+
+        .main-layout { display: flex; flex-grow: 1; width: 100%; }
+
+        .scroll-to-top {
+            position: fixed; bottom: 2rem; right: 2rem; width: 3.5rem; height: 3.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white; border-radius: 50%; display: none; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 6px 15px rgba(61,0,141,0.4);
+            transition: all 0.3s ease; z-index: 50; border: none;
+        }
+        .scroll-to-top.visible { display: flex; }
+        .scroll-to-top:hover {
+            background: linear-gradient(140deg, #4A00A8 0%, #FF2D8A 100%);
+            transform: translateY(-3px); box-shadow: 0 10px 25px rgba(61,0,141,0.5);
+        }
+
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #3D008D, #ED1E79); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #4A00A8, #FF2D8A); }
+
+        button:focus-visible, a:focus-visible { outline: 2px solid #ED1E79; outline-offset: 2px; }
+
+        /* ===== MODULE CONTENT ===== */
+        .module-content h2 { color: #3D008D; font-size: 1.5rem; font-weight: 700; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 3px solid #ED1E79; }
+        .module-content h3 { color: #3D008D; font-size: 1.25rem; font-weight: 600; margin: 1.75rem 0 1rem 0; }
+        .module-content h4 { color: #ED1E79; font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.75rem 0; }
+        .module-content h5 { color: #3D008D; font-size: 1rem; font-weight: 600; margin: 1.25rem 0 0.5rem 0; }
+        .module-content p { margin-bottom: 1rem; text-align: justify; line-height: 1.8; }
+        .module-content ul, .module-content ol { margin-left: 1.5rem; margin-bottom: 1rem; }
+        .module-content li { margin-bottom: 0.5rem; line-height: 1.7; }
+        .module-content aside {
+            background: linear-gradient(135deg, rgba(253,185,19,0.1) 0%, rgba(253,185,19,0.05) 100%);
+            border-left: 4px solid #FDB913; border-radius: 8px; padding: 1rem 1.25rem; margin: 1.5rem 0;
+        }
+        .module-content aside strong { color: #B8860B; }
+        .module-content table {
+            width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem;
+            border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        .module-content th, .module-content td { padding: 1rem 1.25rem; text-align: center; }
+        .module-content th { background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%); color: white; font-weight: 600; }
+        .module-content tr:nth-child(even) { background: rgba(61,0,141,0.03); }
+        .module-content tr:hover { background: rgba(61,0,141,0.08); }
+        .module-content code {
+            font-family: 'Fira Code', monospace; font-size: 0.9rem; color: #3D008D;
+            background: rgba(61,0,141,0.08); padding: 0.15rem 0.4rem; border-radius: 4px;
+        }
+        .module-content pre code { background: transparent; padding: 0; color: #d4d4d4; }
+        .module-content strong { color: #3D008D; }
+        .module-content em { color: #ED1E79; }
+        .module-content caption { caption-side: top; font-weight: 600; color: #3D008D; margin-bottom: 0.5rem; font-size: 0.9rem; }
+
+        .katex-display { margin: 1.25em 0; overflow-x: auto; }
+
+        /* ===== CONTENT BOXES ===== */
+        .definition-box {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-left: 4px solid #3b82f6; padding: 1.25rem; margin: 1.5rem 0; border-radius: 0 12px 12px 0;
+        }
+        .definition-box h4 { margin-top: 0; margin-bottom: 0.75rem; color: #1e40af; background: transparent; padding: 0; border: none; border-radius: 0; }
+
+        .example-box {
+            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+            border-left: 4px solid var(--usta-primary); padding: 1.25rem; margin: 1.5rem 0; border-radius: 0 12px 12px 0;
+        }
+        .example-box h4 { margin-top: 0; margin-bottom: 0.75rem; color: var(--usta-primary); background: transparent; padding: 0; border: none; border-radius: 0; }
+        .example-box header h4 { margin-top: 0; margin-bottom: 0.75rem; color: var(--usta-primary); background: transparent; padding: 0; border: none; border-radius: 0; }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border-left: 4px solid #ef4444; padding: 1.25rem; margin: 1.5rem 0; border-radius: 0 12px 12px 0;
+        }
+        .warning-box h4 { margin-top: 0; margin-bottom: 0.75rem; color: #991b1b; background: transparent; padding: 0; border: none; border-radius: 0; }
+
+        .formula-box {
+            background: linear-gradient(135deg, rgba(61,0,141,0.05) 0%, rgba(237,30,121,0.05) 100%);
+            border: 1px solid rgba(61,0,141,0.2); border-radius: 12px;
+            padding: 1.5rem; margin: 1.5rem 0; text-align: center; overflow-x: auto;
+        }
+
+        .nota {
+            background: linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(16,185,129,0.04) 100%);
+            padding: 1.25rem; border-radius: 12px; border-left: 4px solid #10B981; margin: 1.5rem 0;
+        }
+        .nota h4 { color: #059669; margin-top: 0; }
+
+        .concepto-clave {
+            background: linear-gradient(135deg, rgba(61,0,141,0.06) 0%, rgba(237,30,121,0.04) 100%);
+            padding: 1.5rem; border-radius: 12px; border-left: 4px solid #3D008D; margin: 1.5rem 0;
+        }
+        .concepto-clave h4 { color: #3D008D; margin-top: 0; }
+
+        .module-content .ejercicio {
+            background: linear-gradient(135deg, rgba(61,0,141,0.08) 0%, rgba(237,30,121,0.05) 100%);
+            padding: 1.5rem; border-radius: 12px; border-left: 4px solid #ED1E79; margin: 1.5rem 0;
+        }
+        .module-content .ejercicio h4 { color: #3D008D; margin-top: 0; }
+        .module-content .ejercicio header h4 { color: #3D008D; margin-top: 0; background: transparent; padding: 0; border: none; }
+
+        .interpretation-box {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border-left: 4px solid #10b981; padding: 1rem 1.25rem; margin: 1rem 0; border-radius: 0 12px 12px 0;
+        }
+        .interpretation-box strong { color: #065f46; }
+
+        /* ===== COLLAPSIBLE SOLUTIONS ===== */
+        .solucion-parcial {
+            margin-bottom: 1.5rem; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;
+        }
+        .solucion-header {
+            display: flex; align-items: center; gap: 0.5rem; padding: 0.85rem 1.25rem;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            cursor: pointer; font-weight: 700; color: var(--usta-primary); font-size: 0.95rem;
+            transition: background 0.2s ease;
+        }
+        .solucion-header:hover { background: linear-gradient(135deg, #f1f5f9, #e2e8f0); }
+        .solucion-header i { transition: transform 0.3s ease; font-size: 0.8rem; }
+        .solucion-header i.rotated { transform: rotate(90deg); }
+        .solucion-content { display: none; padding: 1.25rem; background: #f8fafc; }
+        .solucion-content.open { display: block; }
+
+        /* ===== PASOS (from file 9) ===== */
+        .pasos { list-style: none; padding-left: 0; }
+        .pasos li {
+            position: relative; padding-left: 2rem; margin-bottom: 1rem;
+            line-height: 1.7; counter-increment: paso-counter;
+        }
+        .pasos li::before {
+            content: counter(paso-counter); position: absolute; left: 0; top: 0.15em;
+            width: 1.5rem; height: 1.5rem; border-radius: 50%;
+            background: linear-gradient(135deg, var(--usta-primary), var(--usta-secondary));
+            color: white; font-size: 0.75rem; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .pasos { counter-reset: paso-counter; }
+
+        /* ===== DIAGRAMA (from file 9) ===== */
+        .diagrama {
+            background: #f8fafc; border-radius: 12px; padding: 1.5rem;
+            border: 1px solid #e2e8f0; margin: 1.5rem 0;
+        }
+        .diagrama h4 { color: var(--usta-primary); margin-top: 0; background: transparent; padding: 0; border: none; }
+        .diagrama svg { width: 100%; max-width: 900px; margin: 0 auto; display: block; }
+
+        /* ===== TABLE RESPONSIVE ===== */
+        .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 1.5rem 0; }
+        .table-responsive table { margin: 0; }
+
+        /* ===== VS Code Code Blocks ===== */
+        .sourceCode-wrapper {
+            position: relative; margin: 1.75rem 0; border-radius: 8px; overflow: hidden;
+            background: #1e1e1e; box-shadow: 0 8px 30px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05);
+        }
+        .sourceCode-titlebar {
+            display: flex; align-items: center; padding: 0 12px; height: 36px;
+            background: #323233; border-bottom: 1px solid #252526; user-select: none;
+        }
+        .sourceCode-dots { display: flex; gap: 8px; }
+        .sourceCode-dots span { width: 12px; height: 12px; border-radius: 50%; display: block; }
+        .sourceCode-dots .dot-close { background: #ff5f57; }
+        .sourceCode-dots .dot-min { background: #ffbd2e; }
+        .sourceCode-dots .dot-max { background: #28c940; }
+        .sourceCode-tab {
+            display: flex; align-items: center; gap: 6px; padding: 0 12px; height: 100%;
+            background: #1e1e1e; border-top: 2px solid #007acc; border-right: 1px solid #252526;
+            font-size: 0.78rem; color: #cccccc; font-family: 'Segoe UI', 'Montserrat', sans-serif;
+        }
+        .sourceCode-tab .tab-icon { width: 14px; height: 14px; }
+        .sourceCode-tab .tab-icon.python { color: #f7c948; }
+        .sourceCode-actions { display: flex; gap: 4px; margin-left: auto; }
+        .sourceCode-actions button {
+            background: transparent; border: none; color: #858585; cursor: pointer;
+            padding: 4px 8px; border-radius: 4px; font-size: 0.72rem;
+            font-family: 'Segoe UI', 'Montserrat', sans-serif;
+            display: flex; align-items: center; gap: 4px; transition: all 0.2s ease;
+        }
+        .sourceCode-actions button:hover { background: #3c3c3c; color: #cccccc; }
+        .sourceCode-actions button.copied { color: #4ec9b0; }
+        .sourceCode-body { display: flex; margin: 0; overflow-x: auto; background: #1e1e1e; }
+        .sourceCode-body.collapsed { display: none; }
+        .sourceCode-gutter {
+            padding: 16px 0; text-align: right; user-select: none; color: #858585;
+            font-size: 0.82rem; line-height: 1.65; font-family: 'Fira Code', 'Consolas', monospace;
+            min-width: 40px; padding-right: 12px; padding-left: 12px;
+            border-right: 1px solid #2d2d2d; background: #1e1e1e; flex-shrink: 0;
+        }
+        .sourceCode-gutter div { height: 1.65em; }
+        .sourceCode-wrapper pre {
+            margin: 0; padding: 16px; overflow-x: auto; background: #1e1e1e;
+            flex: 1; border-radius: 0; border: none; box-shadow: none;
+        }
+        .sourceCode-wrapper code {
+            font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+            font-size: 0.87rem; line-height: 1.65; color: #d4d4d4; background: transparent !important;
+        }
+        .sourceCode-minimap {
+            width: 28px; background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.01) 100%);
+            border-left: 1px solid #2d2d2d; flex-shrink: 0;
+        }
+        .sourceCode-wrapper pre::-webkit-scrollbar { height: 8px; }
+        .sourceCode-wrapper pre::-webkit-scrollbar-track { background: #1e1e1e; }
+        .sourceCode-wrapper pre::-webkit-scrollbar-thumb { background: rgba(121,121,121,0.4); border-radius: 4px; }
+
+        .hljs-keyword { color: #569cd6; }
+        .hljs-built_in { color: #4ec9b0; }
+        .hljs-type { color: #4ec9b0; }
+        .hljs-literal { color: #569cd6; }
+        .hljs-number { color: #b5cea8; }
+        .hljs-string { color: #ce9178; }
+        .hljs-comment { color: #6a9955; font-style: italic; }
+        .hljs-function { color: #dcdcaa; }
+        .hljs-title { color: #dcdcaa; }
+        .hljs-params { color: #9cdcfe; }
+        .hljs-operator { color: #d4d4d4; }
+        .hljs-punctuation { color: #d4d4d4; }
+        .hljs-variable { color: #9cdcfe; }
+        .hljs-attr { color: #9cdcfe; }
+        .hljs-class .hljs-title { color: #4ec9b0; }
+        .hljs-meta { color: #c586c0; }
+
+        .code-title { display: none; }
+        .formula-number { float: right; color: #64748B; font-size: 0.9rem; }
+
+        /* ===== Code Output ===== */
+        .code-output {
+            background: #1a1a2e; border: 1px solid #2d2d4a;
+            border-radius: 0 0 8px 8px; margin-top: -8px; margin-bottom: 1.5rem; overflow: hidden;
+        }
+        .code-output-header {
+            background: rgba(76,175,80,0.15); padding: 0.4rem 1rem; border-bottom: 1px solid #2d2d4a;
+        }
+        .code-output-title {
+            color: #4CAF50; font-weight: 700; font-family: 'Montserrat', sans-serif; font-size: 0.85rem;
+        }
+        .code-output-body {
+            padding: 1rem; color: #e0e0e0; font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.85rem; white-space: pre-wrap; line-height: 1.6; margin: 0;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+
+    <!-- Floating Sidebar Toggle Button -->
+    <button class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Mostrar/Ocultar menú" aria-label="Toggle sidebar">
+        <i class="fas fa-bars text-sm" id="sidebarToggleIcon"></i>
+    </button>
+
+    <div class="main-layout">
+
+        <!-- Sidebar Navigation -->
+        <div id="sidebar-panel">
+            <div class="sidebar-brand">
+                <h2><i class="fas fa-random text-secondary"></i> Efectos <span style="color: #FDB913;">Aleatorios</span></h2>
+                <p>Diseño de Experimentos &bull; USTA 2026</p>
+            </div>
+            <nav class="sidebar-nav" id="module-nav">
+                <!-- Nav items injected via JS -->
+            </nav>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-grow flex flex-col" style="min-width:0;">
+            <main class="flex-grow bg-white rounded-tl-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div id="content-area" class="p-6 md:p-10 module-content">
+                    <!-- Content injected via JS -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="usta-header mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <i class="fas fa-book-open"></i> Referencias Bibliográficas
+            </h3>
+            <ul class="space-y-3 text-white/90 text-sm">
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Montgomery, D. C. (2017). <em class="text-gold">Design and Analysis of Experiments</em> (9th ed.). Wiley.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>García Leal, J. &amp; Lara Porras, A.M. (1998). <em class="text-gold">Diseño Estadístico de Experimentos. Análisis de la Varianza</em>. Grupo Editorial Universitario.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Lara Porras, A.M. (2000). <em class="text-gold">Diseño Estadístico de Experimentos, Análisis de la Varianza y Temas Relacionados</em>. ProyectoSur de Ediciones.</span>
+                </li>
+            </ul>
+            <div class="mt-6 pt-6 border-t border-white/20 text-center">
+                <p class="text-white font-medium">Material de Estudio — <span class="text-gold">USTA</span></p>
+                <p class="text-xs mt-1 text-white/60">Diseño de Experimentos &bull; Modelos de Efectos Aleatorios</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="Volver arriba">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Module Content Templates -->
+    
+    <template id="module-1">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 1</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Fundamentos Teóricos</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Comprender el modelo de efectos aleatorios, sus hipótesis y la descomposición de la varianza.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>1.1 Definición del Modelo de Efectos Aleatorios</h3>
+                <div class="definition-box">
+                    <p><strong>Modelo de Efectos Aleatorios:</strong> En este modelo, los niveles del factor
+                        constituyen una muestra aleatoria extraída de una población de niveles. A diferencia del modelo
+                        de efectos fijos, donde los niveles son seleccionados deliberadamente por el investigador, en el
+                        modelo de efectos aleatorios los niveles se eligen aleatoriamente de un conjunto potencialmente
+                        grande (posiblemente infinito) de niveles disponibles.</p>
+                </div>
+                <p>El modelo de efectos aleatorios surge cuando existe la necesidad de estudiar un factor que presenta
+                    un número elevado de posibles niveles. Las conclusiones obtenidas a partir de este diseño se
+                    generalizan a toda la población de niveles del factor, dado que los niveles empleados en el
+                    experimento fueron seleccionados de manera aleatoria. Esta característica fundamental distingue al
+                    modelo de efectos aleatorios del modelo de efectos fijos, donde las conclusiones se restringen
+                    únicamente a los niveles específicamente incluidos en el estudio.</p>
+                <h3>1.2 Expresión Formal del Modelo</h3>
+                <p>La expresión matemática del modelo de efectos aleatorios presenta la misma estructura que el modelo
+                    de efectos fijos:</p>
+                <div class="formula-box">
+                    <div>$$ y_{ij} = \mu + \tau_i + u_{ij} $$</div>
+                </div>
+                <p>Sin embargo, existe una diferencia fundamental: en el modelo de efectos aleatorios, los efectos $
+                    \tau_i $ son variables aleatorias en lugar de constantes fijas. Esta distinción tiene implicaciones
+                    profundas en el análisis estadístico y en la interpretación de los resultados obtenidos.</p>
+                <h3>1.3 Hipótesis del Modelo</h3>
+                <p>El modelo de efectos aleatorios requiere que se cumplan las siguientes condiciones estadísticas:</p>
+                <ul class="pasos">
+                    <li><strong>Independencia:</strong> Las variables $ \tau_i $ y $ u_{ij} $ deben ser mutuamente
+                        independientes.</li>
+                    <li><strong>Normalidad de $ \tau_i $:</strong> Los efectos $ \tau_i $ siguen una distribución
+                        normal con media cero y varianza $ \sigma^2_\tau $, es decir, $ \tau_i \sim N(0,
+                        \sigma^2_\tau) $.</li>
+                    <li><strong>Normalidad de $ u_{ij} $:</strong> Los errores $ u_{ij} $ siguen una distribución
+                        normal con media cero y varianza constante $ \sigma^2 $, es decir, $ u_{ij} \sim N(0,
+                        \sigma^2) $.</li>
+                </ul>
+                <div class="nota">
+                    <p><strong>Nota importante:</strong> A diferencia del modelo de efectos fijos, donde se impone la
+                        restricción $ \sum n_i \tau_i = 0 $, en el modelo de efectos aleatorios esta restricción no
+                        puede aplicarse porque los $ \tau_i $ son variables aleatorias independientes. Imponer dicha
+                        restricción introduciría dependencia entre los efectos, violando los supuestos del modelo.</p>
+                </div>
+                <h3>1.4 Descomposición de la Varianza</h3>
+                <p>Por la independencia entre las variables $ \tau_i $ y $ u_{ij} $, la varianza de cualquier
+                    observación de la muestra (varianza total) se puede expresar como:</p>
+                <div class="formula-box">
+                    <div>$$ \sigma^2_T = \sigma^2_\tau + \sigma^2 $$</div>
+                </div>
+                <p>Esta ecuación establece que la variabilidad total observada en los datos se descompone en dos
+                    componentes: la variabilidad atribuible a las diferencias entre los niveles del factor ($
+                    \sigma^2_\tau $) y la variabilidad residual o error experimental ($ \sigma^2 $). Esta
+                    descomposición constituye la base del método de componentes de varianza.</p>
+                <h3>1.5 Hipótesis Estadísticas a Contrastar</h3>
+                <p>En el modelo de efectos aleatorios, carece de sentido probar hipótesis sobre los efectos de
+                    tratamiento individuales, ya que estos son considerados variables aleatorias. En su lugar, el
+                    contraste de interés se formula en términos de la varianza de los efectos:</p>
+                <div class="formula-box">
+                    <div>$$ H_0: \sigma^2_\tau = 0 $$</div>
+                    <div>$$ H_1: \sigma^2_\tau &gt; 0 $$</div>
+                </div>
+                <p>La interpretación de estas hipótesis es la siguiente: si se acepta $ H_0 $ ($ \sigma^2_\tau = 0
+                    $), significa que todos los tratamientos son idénticos, es decir, no existe variabilidad
+                    sistemática entre los niveles del factor. Por el contrario, si se acepta $ H_1 $ ($ \sigma^2_\tau
+                    &gt; 0 $), se concluye que existe variabilidad entre los tratamientos, lo cual indica que el factor
+                    estudiado influye en la variable respuesta.</p>
+        </div>
+    </template>
+
+    <template id="module-2">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 2</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Diagrama Conceptual</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Visualizar la estructura jerárquica del diseño de efectos aleatorios.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>2.1 Descripción Estructural del Diseño Experimental</h3>
+                <div class="diagrama">
+                    <h4>Estructura del Modelo de Efectos Aleatorios</h4>
+                    <p>
+                        <strong>Representación jerárquica:</strong>
+                    </p>
+                    <p>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 950"
+                            font-family="'Segoe UI', 'Helvetica Neue', sans-serif">
+                            <defs>
+                                <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#060810" />
+                                    <stop offset="50%" style="stop-color:#0b0f1c" />
+                                    <stop offset="100%" style="stop-color:#060810" />
+                                </linearGradient>
+                                <linearGradient id="popGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#8b5cf6" />
+                                    <stop offset="100%" style="stop-color:#a78bfa" />
+                                </linearGradient>
+                                <linearGradient id="selGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#0ea5e9" />
+                                    <stop offset="100%" style="stop-color:#38bdf8" />
+                                </linearGradient>
+                                <linearGradient id="levelGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#f59e0b" />
+                                    <stop offset="100%" style="stop-color:#fbbf24" />
+                                </linearGradient>
+                                <linearGradient id="modelGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#10b981" />
+                                    <stop offset="100%" style="stop-color:#34d399" />
+                                </linearGradient>
+                                <linearGradient id="flowLine" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#ffffff; stop-opacity:0.7" />
+                                    <stop offset="100%" style="stop-color:#ffffff; stop-opacity:0.3" />
+                                </linearGradient>
+                                <!-- Branch gradient purple→amber -->
+                                <linearGradient id="branchGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#38bdf8; stop-opacity:0.9" />
+                                    <stop offset="100%" style="stop-color:#fbbf24; stop-opacity:0.9" />
+                                </linearGradient>
+                                <!-- Branch gradient amber→green -->
+                                <linearGradient id="branchGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#fbbf24; stop-opacity:0.85" />
+                                    <stop offset="100%" style="stop-color:#34d399; stop-opacity:0.85" />
+                                </linearGradient>
+
+                                <!-- Glows -->
+                                <filter id="gPurple" x="-12%" y="-15%" width="124%" height="130%">
+                                    <feGaussianBlur stdDeviation="5" result="b" />
+                                    <feFlood flood-color="#8b5cf6" flood-opacity="0.25" />
+                                    <feComposite in2="b" operator="in" />
+                                    <feMerge>
+                                        <feMergeNode />
+                                        <feMergeNode in="SourceGraphic" />
+                                    </feMerge>
+                                </filter>
+                                <filter id="gCyan" x="-12%" y="-15%" width="124%" height="130%">
+                                    <feGaussianBlur stdDeviation="5" result="b" />
+                                    <feFlood flood-color="#0ea5e9" flood-opacity="0.22" />
+                                    <feComposite in2="b" operator="in" />
+                                    <feMerge>
+                                        <feMergeNode />
+                                        <feMergeNode in="SourceGraphic" />
+                                    </feMerge>
+                                </filter>
+                                <filter id="gAmber" x="-12%" y="-15%" width="124%" height="130%">
+                                    <feGaussianBlur stdDeviation="4" result="b" />
+                                    <feFlood flood-color="#f59e0b" flood-opacity="0.2" />
+                                    <feComposite in2="b" operator="in" />
+                                    <feMerge>
+                                        <feMergeNode />
+                                        <feMergeNode in="SourceGraphic" />
+                                    </feMerge>
+                                </filter>
+                                <filter id="gGreen" x="-12%" y="-15%" width="124%" height="130%">
+                                    <feGaussianBlur stdDeviation="5" result="b" />
+                                    <feFlood flood-color="#10b981" flood-opacity="0.22" />
+                                    <feComposite in2="b" operator="in" />
+                                    <feMerge>
+                                        <feMergeNode />
+                                        <feMergeNode in="SourceGraphic" />
+                                    </feMerge>
+                                </filter>
+                            </defs>
+
+                            <!-- ═══ BACKGROUND ═══ -->
+                            <rect width="900" height="950" fill="url(#bg)" rx="16" />
+
+                            <!-- ═══ TITLE ═══ -->
+                            <text x="450" y="36" text-anchor="middle" fill="#ffffff" font-size="11" letter-spacing="4"
+                                opacity="0.35" font-weight="400">ANOVA · EFECTOS ALEATORIOS</text>
+                            <text x="450" y="62" text-anchor="middle" fill="#ffffff" font-size="19" font-weight="700"
+                                letter-spacing="0.5">Modelo de Efectos Aleatorios — Muestreo</text>
+
+                            <!-- ═══ STEP NUMBERS (left rail) ═══ -->
+                            <circle cx="55" cy="145" r="17" fill="none" stroke="#8b5cf6" stroke-width="1.3"
+                                opacity="0.35" />
+                            <text x="55" y="151" text-anchor="middle" fill="#8b5cf6" font-size="13" font-weight="700"
+                                opacity="0.5">1</text>
+
+                            <circle cx="55" cy="330" r="17" fill="none" stroke="#0ea5e9" stroke-width="1.3"
+                                opacity="0.35" />
+                            <text x="55" y="336" text-anchor="middle" fill="#0ea5e9" font-size="13" font-weight="700"
+                                opacity="0.5">2</text>
+
+                            <circle cx="55" cy="555" r="17" fill="none" stroke="#f59e0b" stroke-width="1.3"
+                                opacity="0.35" />
+                            <text x="55" y="561" text-anchor="middle" fill="#f59e0b" font-size="13" font-weight="700"
+                                opacity="0.5">3</text>
+
+                            <circle cx="55" cy="780" r="17" fill="none" stroke="#10b981" stroke-width="1.3"
+                                opacity="0.35" />
+                            <text x="55" y="786" text-anchor="middle" fill="#10b981" font-size="13" font-weight="700"
+                                opacity="0.5">4</text>
+
+                            <!-- ════════════════════════════════════════════════════════════ -->
+                            <!-- STAGE 1: POBLACIÓN DE N NIVELES                              -->
+                            <!-- ════════════════════════════════════════════════════════════ -->
+                            <g filter="url(#gPurple)">
+                                <rect x="110" y="100" width="680" height="95" rx="12" fill="#140f24" stroke="#8b5cf6"
+                                    stroke-width="1.8" opacity="0.95" />
+                            </g>
+                            <rect x="110" y="100" width="6" height="95" rx="3" fill="url(#popGrad)" />
+
+                            <!-- Tag -->
+                            <rect x="136" y="110" width="240" height="22" rx="11" fill="#8b5cf6" opacity="0.12" />
+                            <text x="256" y="125" text-anchor="middle" fill="#a78bfa" font-size="11" font-weight="700"
+                                letter-spacing="1">POBLACIÓN DE <tspan font-style="italic"
+                                    font-family="'Georgia', 'Times New Roman', serif">N</tspan> NIVELES</text>
+
+                            <!-- Icon -->
+                            <text x="755" y="148" text-anchor="middle" font-size="26" opacity="0.45">🌐</text>
+
+                            <!-- Content -->
+                            <text x="136" y="155" fill="#ffffff" font-size="14" font-weight="600">Universo de niveles
+                                del factor</text>
+                            <text x="136" y="178" fill="#ffffff" font-size="12" opacity="0.45">
+                                <tspan font-style="italic" font-family="'Georgia', 'Times New Roman', serif">N</tspan>
+                                puede ser infinito o muy grande — los niveles observados son una muestra
+                            </text>
+
+                            <!-- Infinity decoration -->
+                            <rect x="655" y="110" width="55" height="22" rx="11" fill="#8b5cf6" opacity="0.08"
+                                stroke="#8b5cf6" stroke-width="0.6" />
+                            <text x="682" y="126" text-anchor="middle" fill="#c084fc" font-size="14"
+                                font-family="'Georgia', 'Times New Roman', serif">
+                                <tspan font-style="italic">N</tspan> → ∞
+                            </text>
+
+                            <!-- ═══ ARROW 1→2 ═══ -->
+                            <line x1="450" y1="195" x2="450" y2="258" stroke="url(#flowLine)" stroke-width="2" />
+                            <polygon points="450,265 445,255 455,255" fill="#ffffff" opacity="0.7" />
+
+                            <!-- Random sampling label -->
+                            <rect x="462" y="218" width="130" height="20" rx="10" fill="#0ea5e9" opacity="0.12"
+                                stroke="#0ea5e9" stroke-width="0.8" />
+                            <text x="527" y="232" text-anchor="middle" fill="#38bdf8" font-size="9"
+                                font-weight="600">muestreo aleatorio</text>
+
+                            <!-- ════════════════════════════════════════════════════════════ -->
+                            <!-- STAGE 2: SELECCIÓN ALEATORIA                                 -->
+                            <!-- ════════════════════════════════════════════════════════════ -->
+                            <g filter="url(#gCyan)">
+                                <rect x="110" y="270" width="680" height="120" rx="12" fill="#0b1520" stroke="#0ea5e9"
+                                    stroke-width="1.8" opacity="0.95" />
+                            </g>
+                            <rect x="110" y="270" width="6" height="120" rx="3" fill="url(#selGrad)" />
+
+                            <!-- Tag -->
+                            <rect x="136" y="280" width="310" height="22" rx="11" fill="#0ea5e9" opacity="0.12" />
+                            <text x="291" y="295" text-anchor="middle" fill="#22d3ee" font-size="11" font-weight="700"
+                                letter-spacing="1">SELECCIÓN ALEATORIA DE <tspan font-style="italic"
+                                    font-family="'Georgia', 'Times New Roman', serif">i</tspan> NIVELES</text>
+
+                            <!-- Icon -->
+                            <text x="755" y="330" text-anchor="middle" font-size="26" opacity="0.45">🎲</text>
+
+                            <!-- Content -->
+                            <text x="136" y="325" fill="#ffffff" font-size="14" font-weight="600">
+                                <tspan font-style="italic" font-family="'Georgia', 'Times New Roman', serif">i</tspan> =
+                                1, …, <tspan font-style="italic" font-family="'Georgia', 'Times New Roman', serif">I
+                                </tspan> niveles seleccionados al azar
+                            </text>
+
+                            <!-- Distribution formula box -->
+                            <rect x="136" y="340" width="420" height="40" rx="8" fill="#0ea5e9" opacity="0.06"
+                                stroke="#0ea5e9" stroke-width="0.6" />
+                            <!-- τ_i ~ N(0, σ²_τ) rendered with proper math typography -->
+                            <text x="160" y="367" fill="#22d3ee" font-size="18"
+                                font-family="'Georgia', 'Times New Roman', serif" font-style="italic">
+                                τ<tspan font-size="12" baseline-shift="sub">i</tspan>
+                            </text>
+                            <text x="192" y="367" fill="#22d3ee" font-size="16" font-family="'Segoe UI', sans-serif"> ~
+                            </text>
+                            <text x="225" y="367" fill="#22d3ee" font-size="18"
+                                font-family="'Georgia', 'Times New Roman', serif">
+                                <tspan font-style="normal" font-weight="400">𝒩</tspan>
+                                <tspan font-size="16">(0, </tspan>
+                                <tspan font-style="italic">σ</tspan>
+                                <tspan font-size="11" baseline-shift="super">2</tspan>
+                                <tspan font-size="11" baseline-shift="sub" dx="-4">τ</tspan>
+                                <tspan font-size="16">)</tspan>
+                            </text>
+                            <text x="420" y="367" fill="#ffffff" font-size="11" opacity="0.4">— efecto aleatorio del
+                                nivel <tspan font-style="italic">i</tspan></text>
+
+                            <!-- ═══ BRANCHING ARROWS 2→3 ═══ -->
+                            <!-- Central trunk -->
+                            <line x1="450" y1="390" x2="450" y2="440" stroke="url(#branchGrad)" stroke-width="2.5"
+                                opacity="0.8" />
+
+                            <!-- Branch left -->
+                            <path d="M450,440 Q450,455 340,455 L215,455 Q195,455 195,470 L195,495" fill="none"
+                                stroke="url(#branchGrad)" stroke-width="2.5" opacity="0.75" />
+                            <!-- Branch center -->
+                            <line x1="450" y1="440" x2="450" y2="495" stroke="url(#branchGrad)" stroke-width="2.5"
+                                opacity="0.75" />
+                            <!-- Branch right -->
+                            <path d="M450,440 Q450,455 560,455 L685,455 Q705,455 705,470 L705,495" fill="none"
+                                stroke="url(#branchGrad)" stroke-width="2.5" opacity="0.75" />
+
+                            <!-- Arrow tips -->
+                            <polygon points="195,500 190,490 200,490" fill="#fbbf24" opacity="0.8" />
+                            <polygon points="450,500 445,490 455,490" fill="#fbbf24" opacity="0.8" />
+                            <polygon points="705,500 700,490 710,490" fill="#fbbf24" opacity="0.8" />
+
+                            <!-- ════════════════════════════════════════════════════════════ -->
+                            <!-- STAGE 3: NIVELES INDIVIDUALES                                -->
+                            <!-- ════════════════════════════════════════════════════════════ -->
+
+                            <!-- Nivel 1 -->
+                            <g filter="url(#gAmber)">
+                                <rect x="115" y="505" width="160" height="105" rx="10" fill="#1a1508" stroke="#f59e0b"
+                                    stroke-width="1.4" opacity="0.95" />
+                            </g>
+                            <!-- Header -->
+                            <rect x="115" y="505" width="160" height="40" rx="10" fill="#f59e0b" opacity="0.07" />
+                            <rect x="115" y="535" width="160" height="10" rx="0" fill="#f59e0b" opacity="0.07" />
+                            <text x="195" y="530" text-anchor="middle" fill="#ffffff" font-size="14"
+                                font-weight="700">Nivel 1</text>
+                            <!-- Observations -->
+                            <text x="195" y="570" text-anchor="middle" fill="#fbbf24" font-size="15"
+                                font-family="'Georgia', 'Times New Roman', serif">
+                                <tspan font-style="italic">n</tspan>
+                                <tspan font-size="10" baseline-shift="sub">1</tspan> obs.
+                            </text>
+                            <!-- Data points decoration -->
+                            <g opacity="0.3">
+                                <circle cx="150" cy="595" r="3" fill="#f59e0b" />
+                                <circle cx="165" cy="595" r="3" fill="#f59e0b" />
+                                <circle cx="180" cy="595" r="3" fill="#f59e0b" />
+                                <circle cx="195" cy="595" r="3" fill="#f59e0b" />
+                                <circle cx="210" cy="595" r="3" fill="#f59e0b" />
+                                <circle cx="225" cy="595" r="3" fill="#f59e0b" />
+                                <circle cx="240" cy="595" r="3" fill="#f59e0b" />
+                            </g>
+
+                            <!-- Nivel 2 -->
+                            <g filter="url(#gAmber)">
+                                <rect x="370" y="505" width="160" height="105" rx="10" fill="#1a1508" stroke="#f59e0b"
+                                    stroke-width="1.4" opacity="0.95" />
+                            </g>
+                            <rect x="370" y="505" width="160" height="40" rx="10" fill="#f59e0b" opacity="0.07" />
+                            <rect x="370" y="535" width="160" height="10" rx="0" fill="#f59e0b" opacity="0.07" />
+                            <text x="450" y="530" text-anchor="middle" fill="#ffffff" font-size="14"
+                                font-weight="700">Nivel 2</text>
+                            <text x="450" y="570" text-anchor="middle" fill="#fbbf24" font-size="15"
+                                font-family="'Georgia', 'Times New Roman', serif">
+                                <tspan font-style="italic">n</tspan>
+                                <tspan font-size="10" baseline-shift="sub">2</tspan> obs.
+                            </text>
+                            <g opacity="0.3">
+                                <circle cx="405" cy="595" r="3" fill="#f59e0b" />
+                                <circle cx="420" cy="595" r="3" fill="#f59e0b" />
+                                <circle cx="435" cy="595" r="3" fill="#f59e0b" />
+                                <circle cx="450" cy="595" r="3" fill="#f59e0b" />
+                                <circle cx="465" cy="595" r="3" fill="#f59e0b" />
+                                <circle cx="480" cy="595" r="3" fill="#f59e0b" />
+                                <circle cx="495" cy="595" r="3" fill="#f59e0b" />
+                            </g>
+
+                            <!-- Ellipsis -->
+                            <text x="590" y="562" text-anchor="middle" fill="#f59e0b" font-size="22" font-weight="300"
+                                letter-spacing="6" opacity="0.35">···</text>
+
+                            <!-- Nivel I -->
+                            <g filter="url(#gAmber)">
+                                <rect x="625" y="505" width="160" height="105" rx="10" fill="#1a1508" stroke="#f59e0b"
+                                    stroke-width="1.4" opacity="0.95" />
+                            </g>
+                            <rect x="625" y="505" width="160" height="40" rx="10" fill="#f59e0b" opacity="0.07" />
+                            <rect x="625" y="535" width="160" height="10" rx="0" fill="#f59e0b" opacity="0.07" />
+                            <text x="705" y="530" text-anchor="middle" fill="#ffffff" font-size="14"
+                                font-weight="700">Nivel I</text>
+                            <text x="705" y="570" text-anchor="middle" fill="#fbbf24" font-size="15"
+                                font-family="'Georgia', 'Times New Roman', serif">
+                                <tspan font-style="italic">n<tspan font-size="10" baseline-shift="sub">I</tspan>
+                                </tspan> obs.
+                            </text>
+                            <g opacity="0.3">
+                                <circle cx="660" cy="595" r="3" fill="#f59e0b" />
+                                <circle cx="675" cy="595" r="3" fill="#f59e0b" />
+                                <circle cx="690" cy="595" r="3" fill="#f59e0b" />
+                                <circle cx="705" cy="595" r="3" fill="#f59e0b" />
+                                <circle cx="720" cy="595" r="3" fill="#f59e0b" />
+                                <circle cx="735" cy="595" r="3" fill="#f59e0b" />
+                                <circle cx="750" cy="595" r="3" fill="#f59e0b" />
+                            </g>
+
+                            <!-- ═══ CONVERGING ARROWS 3→4 ═══ -->
+                            <!-- Left -->
+                            <path d="M195,610 L195,650 Q195,665 280,665 L420,665 Q450,665 450,680 L450,710" fill="none"
+                                stroke="url(#branchGrad2)" stroke-width="2.5" opacity="0.7" />
+                            <!-- Center -->
+                            <line x1="450" y1="610" x2="450" y2="710" stroke="url(#branchGrad2)" stroke-width="2.5"
+                                opacity="0.7" />
+                            <!-- Right -->
+                            <path d="M705,610 L705,650 Q705,665 620,665 L480,665 Q450,665 450,680 L450,710" fill="none"
+                                stroke="url(#branchGrad2)" stroke-width="2.5" opacity="0.7" />
+
+                            <!-- Arrow tip -->
+                            <polygon points="450,717 445,707 455,707" fill="#34d399" opacity="0.8" />
+
+                            <!-- Converge label -->
+                            <rect x="470" y="670" width="90" height="18" rx="9" fill="#10b981" opacity="0.12"
+                                stroke="#10b981" stroke-width="0.8" />
+                            <text x="515" y="683" text-anchor="middle" fill="#34d399" font-size="8" font-weight="600"
+                                opacity="0.8">MODELO ↓</text>
+
+                            <!-- ════════════════════════════════════════════════════════════ -->
+                            <!-- STAGE 4: MODELO LINEAL                                       -->
+                            <!-- ════════════════════════════════════════════════════════════ -->
+                            <g filter="url(#gGreen)">
+                                <rect x="110" y="725" width="680" height="130" rx="12" fill="#0d1a15" stroke="#10b981"
+                                    stroke-width="1.8" opacity="0.95" />
+                            </g>
+                            <rect x="110" y="725" width="6" height="130" rx="3" fill="url(#modelGrad)" />
+
+                            <!-- Tag -->
+                            <rect x="136" y="735" width="200" height="22" rx="11" fill="#10b981" opacity="0.12" />
+                            <text x="236" y="750" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700"
+                                letter-spacing="1">MODELO ESTRUCTURAL</text>
+
+                            <!-- Icon -->
+                            <text x="755" y="790" text-anchor="middle" font-size="26" opacity="0.45">📐</text>
+
+                            <!-- Main formula -->
+                            <rect x="136" y="768" width="520" height="42" rx="8" fill="#10b981" opacity="0.06"
+                                stroke="#10b981" stroke-width="0.7" />
+                            <!-- y_ij = μ + τ_i + u_ij  with proper math typography -->
+                            <text y="797" fill="#34d399" font-family="'Georgia', 'Times New Roman', serif"
+                                font-size="22" font-style="italic">
+                                <tspan x="180">y</tspan>
+                                <tspan font-size="13" baseline-shift="sub">ij</tspan>
+                                <tspan font-size="20" font-style="normal" dx="8"> = </tspan>
+                                <tspan font-style="italic" dx="8">μ</tspan>
+                                <tspan font-size="20" font-style="normal" dx="6"> + </tspan>
+                                <tspan font-style="italic" dx="6">τ</tspan>
+                                <tspan font-size="13" baseline-shift="sub">i</tspan>
+                                <tspan font-size="20" font-style="normal" dx="6"> + </tspan>
+                                <tspan font-style="italic" dx="6">u</tspan>
+                                <tspan font-size="13" baseline-shift="sub">ij</tspan>
+                            </text>
+
+                            <!-- Error distribution -->
+                            <rect x="136" y="820" width="340" height="28" rx="6" fill="#10b981" opacity="0.04"
+                                stroke="#10b981" stroke-width="0.5" />
+                            <text x="155" y="840" fill="#34d399" font-size="16"
+                                font-family="'Georgia', 'Times New Roman', serif">
+                                <tspan font-style="italic">u</tspan>
+                                <tspan font-size="10" baseline-shift="sub">ij</tspan>
+                                <tspan font-style="normal" dx="5"> ~ </tspan>
+                                <tspan font-style="normal">𝒩</tspan>
+                                <tspan>(0, </tspan>
+                                <tspan font-style="italic">σ</tspan>
+                                <tspan font-size="10" baseline-shift="super">2</tspan>
+                                <tspan>)</tspan>
+                            </text>
+                            <text x="380" y="840" fill="#ffffff" font-size="10.5" opacity="0.4">— error aleatorio</text>
+
+                            <!-- ═══ COMPONENT LEGEND ═══ -->
+                            <rect x="110" y="875" width="680" height="48" rx="10" fill="#ffffff" opacity="0.02" />
+
+                            <g font-size="11" opacity="0.55">
+                                <!-- μ -->
+                                <rect x="130" y="889" width="28" height="22" rx="6" fill="#6366f1" opacity="0.2" />
+                                <text x="144" y="905" text-anchor="middle" fill="#c7d2fe" font-size="15"
+                                    font-family="'Georgia', 'Times New Roman', serif" font-style="italic">μ</text>
+                                <text x="168" y="904" fill="#ffffff" font-family="'Segoe UI', sans-serif">Media
+                                    general</text>
+
+                                <!-- τᵢ -->
+                                <rect x="310" y="889" width="32" height="22" rx="6" fill="#0ea5e9" opacity="0.2" />
+                                <text x="326" y="905" text-anchor="middle" fill="#38bdf8" font-size="15"
+                                    font-family="'Georgia', 'Times New Roman', serif" font-style="italic">τ<tspan
+                                        font-size="9" baseline-shift="sub">i</tspan></text>
+                                <text x="352" y="904" fill="#ffffff" font-family="'Segoe UI', sans-serif">Efecto
+                                    aleatorio del nivel</text>
+
+                                <!-- uᵢⱼ -->
+                                <rect x="570" y="889" width="32" height="22" rx="6" fill="#10b981" opacity="0.2" />
+                                <text x="586" y="905" text-anchor="middle" fill="#34d399" font-size="15"
+                                    font-family="'Georgia', 'Times New Roman', serif" font-style="italic">u<tspan
+                                        font-size="9" baseline-shift="sub">ij</tspan></text>
+                                <text x="612" y="904" fill="#ffffff" font-family="'Segoe UI', sans-serif">Error
+                                    experimental</text>
+                            </g>
+
+                            <!-- ═══ FOOTER ═══ -->
+                            <text x="450" y="942" text-anchor="middle" fill="#ffffff" font-size="10" opacity="0.15"
+                                letter-spacing="1">ANOVA — Modelo de Efectos Aleatorios · Diseño de Un Factor</text>
+                        </svg>
+                    </p>
+                </div>
+                <h3>2.2 Descripción Textual del Proceso</h3>
+                <p>El diseño experimental de efectos aleatorios sigue una estructura jerárquica que puede describirse de
+                    la siguiente manera:</p>
+                <p><strong>Paso 1 - Identificación de la población:</strong> Se parte de una población de niveles del
+                    factor que potencialmente puede ser muy grande o incluso infinita. Por ejemplo, si se estudia el
+                    rendimiento de operarios en una fábrica, la población estaría constituida por todos los operarios
+                    que podrían trabajar en ese puesto.</p>
+                <p><strong>Paso 2 - Selección aleatoria de niveles:</strong> Del conjunto total de niveles disponibles,
+                    se seleccionan aleatoriamente $ I $ niveles para ser incluidos en el experimento. Esta selección
+                    aleatoria es fundamental porque garantiza que los resultados puedan generalizarse a toda la
+                    población de niveles.</p>
+                <p><strong>Paso 3 - Obtención de observaciones:</strong> Para cada nivel seleccionado, se obtienen $
+                    n_i $ observaciones de la variable respuesta. En el caso equilibrado, $ n_i = n $ para todo $ i
+                    $. En el caso no-equilibrado, los tamaños muestrales pueden variar entre niveles.</p>
+                <p><strong>Paso 4 - Modelación estadística:</strong> Cada observación $ y_{ij} $ se expresa como la
+                    suma de tres componentes: la media general $ \mu $, el efecto aleatorio del nivel $ \tau_i $, y
+                    el error aleatorio $ u_{ij} $.</p>
+                <h3>2.3 Comparación con el Modelo de Efectos Fijos</h3>
+                <table>
+                    <caption>Tabla 1. Diferencias entre modelos de efectos fijos y aleatorios</caption>
+                    <thead>
+                        <tr>
+                            <th>Característica</th>
+                            <th>Efectos Fijos</th>
+                            <th>Efectos Aleatorios</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Selección de niveles</td>
+                            <td>Deliberada por el investigador</td>
+                            <td>Aleatoria de una población</td>
+                        </tr>
+                        <tr>
+                            <td>Naturaleza de $ \tau_i $</td>
+                            <td>Constantes fijas</td>
+                            <td>Variables aleatorias</td>
+                        </tr>
+                        <tr>
+                            <td>Restricción</td>
+                            <td>$ \sum n_i\tau_i = 0 $</td>
+                            <td>Sin restricción (independencia)</td>
+                        </tr>
+                        <tr>
+                            <td>Hipótesis nula</td>
+                            <td>$ H_0: \tau_1 = \tau_2 = ... = \tau_I = 0 $</td>
+                            <td>$ H_0: \sigma^2_\tau = 0 $</td>
+                        </tr>
+                        <tr>
+                            <td>Alcance de conclusiones</td>
+                            <td>Solo niveles incluidos</td>
+                            <td>Toda la población de niveles</td>
+                        </tr>
+                    </tbody>
+                </table>
+        </div>
+    </template>
+
+    <template id="module-3">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 3</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Modelo No-Equilibrado</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Formular el modelo ANOVA con datos no balanceados, estimadores y prueba F.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>3.1 Fundamentos del Caso No-Equilibrado</h3>
+                <p>En el modelo no-equilibrado, el número de observaciones varía entre los diferentes niveles del
+                    factor. Esta situación es común en la práctica experimental cuando, por diversas razones (pérdida de
+                    datos, limitaciones logísticas, etc.), no es posible mantener un número constante de observaciones
+                    por nivel.</p>
+                <p>Al igual que en el modelo de efectos fijos, la variabilidad total de los datos se puede expresar como
+                    la suma de la variabilidad entre los tratamientos y la variabilidad dentro de los mismos. A partir
+                    de estas variabilidades se definen las correspondientes varianzas muestrales que sirven como base
+                    para el contraste de hipótesis.</p>
+                <h3>3.2 Expresiones de los Totales y Medias en Función de los Parámetros</h3>
+                <p>Para establecer el procedimiento del contraste de hipótesis para el modelo de efectos aleatorios, es
+                    necesario calcular primero los valores esperados de la varianza entre tratamientos y de la varianza
+                    residual. Como punto de partida, se consideran las expresiones de los totales y medias muestrales en
+                    función de los parámetros del modelo.</p>
+                <p>El total de observaciones del i-ésimo tratamiento, denotado por $ y_{i.} $, y su correspondiente
+                    media $ \bar{y}_{i.} $, se expresan como:</p>
+                <div class="formula-box">
+                    <div>$$ y_{i.} = n_i\mu + n_i\tau_i + u_{i.} $$</div>
+                    <div>$$ \bar{y}_{i.} = \mu + \tau_i + \bar{u}_{i.} $$</div>
+                </div>
+                <p>donde $ u_{i.} = \sum_{j=1}^{n_i} u_{ij} $ representa el total de los errores para el i-ésimo
+                    tratamiento, y $ \bar{u}_{i.} = u_{i.}/n_i $ es la media de dichos errores.</p>
+                <p>De manera análoga, el total de todas las observaciones, denotado por $ y_{..} $, y la media general
+                    $ \bar{y}_{..} $, se expresan como:</p>
+                <div class="formula-box">
+                    <div>$$ y_{..} = N\mu + \sum_{i=1}^{I} n_i\tau_i + u_{..} $$</div>
+                    <div>$$ \bar{y}_{..} = \mu + (1/N)\sum_{i=1}^{I} n_i\tau_i + \bar{u}_{..} $$</div>
+                </div>
+                <p>donde $ N = \sum_{i=1}^{I} n_i $ es el número total de observaciones, $ u_{..} = \sum_{i=1}^{I}
+                    \sum_{j=1}^{n_i} u_{ij} $ es el total de todos los errores, y $ \bar{u}_{..} = u_{..}/N $
+                    representa la media de todos los errores.</p>
+                <h3>3.3 Derivación de la Esperanza Matemática de la Varianza Entre Tratamientos</h3>
+                <h4>3.3.1 Expresión de la Varianza Entre Tratamientos</h4>
+                <p>La varianza entre tratamientos (también llamada varianza inter-grupos) se define como:</p>
+                <div class="formula-box">
+                    <div>$$ S^2_{Tr} = [1/(I-1)] \sum_{i=1}^{I} n_i(\bar{y}_{i.} - \bar{y}_{..})² $$</div>
+                </div>
+                <p>Sustituyendo las expresiones de las medias en función de los parámetros del modelo:</p>
+                <div class="formula-box">
+                    <div>$$ S^2_{Tr} = [1/(I-1)] \sum_{i=1}^{I} n_i(\mu + \tau_i + \bar{u}_{i.} - \mu -
+                        (1/N)\sum_{k=1}^{I} n_k\tau_k - \bar{u}_{..})² $$</div>
+                </div>
+                <p>Simplificando y reagrupando términos, se obtiene:</p>
+                <div class="formula-box">
+                    <div>$$ S^2_{Tr} = [1/(I-1)] \sum_{i=1}^{I} n_i(\tau_i - (1/N)\sum_{k=1}^{I} n_k\tau_k +
+                        \bar{u}_{i.} - \bar{u}_{..})² $$</div>
+                </div>
+                <h4>3.3.2 Desarrollo del Cuadrado</h4>
+                <p>Desarrollando el cuadrado de la expresión anterior, la varianza entre tratamientos se puede escribir
+                    como la suma de tres componentes:</p>
+                <div class="formula-box">
+                    <div>$$ S^2_{Tr} = [1/(I-1)] { \sum_{i=1}^{I} n_i(\tau_i - (1/N)\sum_{k=1}^{I} n_k\tau_k)² +
+                        \sum_{i=1}^{I} n_i(\bar{u}_{i.} - \bar{u}_{..})² + 2\sum_{i=1}^{I} n_i(\tau_i -
+                        (1/N)\sum_{k=1}^{I} n_k\tau_k)(\bar{u}_{i.} - \bar{u}_{..}) } $$</div>
+                </div>
+                <p>Por la linealidad del operador esperanza, el valor esperado de $ S^2_{Tr} $ será la suma de los
+                    valores esperados de cada componente:</p>
+                <div class="formula-box">
+                    <div>$$ \mathbb{E}[S^2_{Tr}] = [1/(I-1)] { \mathbb{E}[\sum_{i=1}^{I} n_i(\tau_i -
+                        (1/N)\sum_{k=1}^{I} n_k\tau_k)²] + \mathbb{E}[\sum_{i=1}^{I} n_i(\bar{u}_{i.} - \bar{u}_{..})²]
+                        + 2\mathbb{E}[\sum_{i=1}^{I} n_i(\tau_i - (1/N)\sum_{k=1}^{I} n_k\tau_k)(\bar{u}_{i.} -
+                        \bar{u}_{..})] } $$</div>
+                </div>
+                <h4>3.3.3 Cálculo del Primer Término: $ \mathbb{E}[\sum n_i(\tau_i - (1/N)\sum n_k\tau_k)^2] $</h4>
+                <p>Para calcular este término, se utilizan las propiedades de las variables aleatorias $ \tau_i $.
+                    Puesto que las $ \tau_i $ son variables aleatorias independientes con media cero, se cumple que:
+                </p>
+                <div class="formula-box">
+                    <div>$$ \mathbb{E}[n_in_k\tau_i\tau_k] = 0 para i ≠ k $$</div>
+                </div>
+                <p>Además, como $ \mathbb{E}[\tau^2_i] = \sigma^2_\tau $ (por definición de varianza), también se
+                    verifica que:</p>
+                <div class="formula-box">
+                    <div>$$ \mathbb{E}[\tau_i\sum_{k=1}^{I} n_k\tau_k] = n_i\sigma^2_\tau $$</div>
+                </div>
+                <p>Desarrollando el cuadrado y aplicando las propiedades anteriores:</p>
+                <div class="formula-box">
+                    <div>$$ \mathbb{E}[\sum_{i=1}^{I} n_i(\tau_i - (1/N)\sum_{k=1}^{I} n_k\tau_k)²] = \sum_{i=1}^{I}
+                        n_i\mathbb{E}[\tau^2_i] - (1/N)\sum_{i=1}^{I} \sum_{k=1}^{I} n_in_k\mathbb{E}[\tau_i\tau_k] +
+                        (1/N²)\sum_{i=1}^{I} n_i\mathbb{E}[(\sum_{k=1}^{I} n_k\tau_k)²] $$</div>
+                </div>
+                <p>Después de desarrollar los productos y simplificar, se obtiene:</p>
+                <div class="formula-box">
+                    <div>$$ \mathbb{E}[\sum_{i=1}^{I} n_i(\tau_i - (1/N)\sum_{k=1}^{I} n_k\tau_k)²] = N\sigma^2_\tau -
+                        (1/N)\sum_{i=1}^{I} n^2_i\sigma^2_\tau $$</div>
+                    <div>$$ = \sigma^2_\tau(N - (1/N)\sum_{i=1}^{I} n^2_i) $$</div>
+                    <div>$$ = \sigma^2_\tau[(N² - \sum_{i=1}^{I} n^2_i)/N] $$</div>
+                </div>
+                <h4>3.3.4 Cálculo del Segundo Término: $ \mathbb{E}[\sum n_i(\bar{u}_{i.} - \bar{u}_{..})^2] $</h4>
+                <p>Para el segundo término, se trabaja con los errores $ u_{ij} $. Desarrollando la expresión:</p>
+                <div class="formula-box">
+                    <div>$$ \mathbb{E}[\sum_{i=1}^{I} n_i(\bar{u}_{i.} - \bar{u}_{..})²] = \sum_{i=1}^{I}
+                        n_i\mathbb{E}[(\sum_{j=1}^{n_i} u_{ij}/n_i - \sum_{k=1}^{I} \sum_{h=1}^{n_k} u_{kh}/N)²] $$
+                    </div>
+                </div>
+                <p>Desarrollando el cuadrado y aplicando las propiedades de los errores ($ \mathbb{E}[u_{ij}u_{kh}] =
+                    \sigma^2 $ si $ (i,j) = (k,h) $, y 0 en caso contrario por independencia):</p>
+                <div class="formula-box">
+                    <div>$$ \mathbb{E}[\sum_{i=1}^{I} n_i(\bar{u}_{i.} - \bar{u}_{..})²] = \sum_{i=1}^{I}
+                        n_i[\sigma^2/n_i - \sigma^2/N] $$</div>
+                    <div>$$ = I\sigma^2 - \sigma^2 $$</div>
+                    <div>$$ = \sigma^2(I - 1) $$</div>
+                </div>
+                <h4>3.3.5 Cálculo del Tercer Término: $ \mathbb{E}[\sum n_i(\tau_i - (1/N)\sum n_k\tau_k)(\bar{u}_{i.}
+                    - \bar{u}_{..})] $</h4>
+                <p>Dado que las variables aleatorias $ \tau_i $ y $ u_{ij} $ son independientes entre sí, y ambas
+                    tienen esperanza cero:</p>
+                <div class="formula-box">
+                    <div>$$ \mathbb{E}[\tau_i] = \mathbb{E}[u_{ij}] = 0 $$</div>
+                </div>
+                <p>Por tanto, el tercer término se anula:</p>
+                <div class="formula-box">
+                    <div>$$ \mathbb{E}[\sum_{i=1}^{I} n_i(\tau_i - (1/N)\sum_{k=1}^{I} n_k\tau_k)(\bar{u}_{i.} -
+                        \bar{u}_{..})] = 0 $$</div>
+                </div>
+                <h4>3.3.6 Resultado Final para $ \mathbb{E}[S^2_{Tr}] $</h4>
+                <p>Sustituyendo los tres términos calculados en la expresión original:</p>
+                <div class="formula-box">
+                    <div>$$ \mathbb{E}[S^2_{Tr}] = [1/(I-1)] { \sigma^2_\tau[(N² - \sum_{i=1}^{I} n^2_i)/N] +
+                        \sigma^2(I-1) } $$</div>
+                    <div>$$ \mathbb{E}[S^2_{Tr}] = [(N² - \sum n^2_i)/N(I-1)] · \sigma^2_\tau + \sigma^2 $$</div>
+                </div>
+                <p>Esta expresión muestra que el valor esperado de la varianza entre tratamientos depende tanto de la
+                    varianza de los efectos ($ \sigma^2_\tau $) como de la varianza del error ($ \sigma^2 $). El
+                    coeficiente que multiplica a $ \sigma^2_\tau $ depende del diseño específico a través de los
+                    tamaños muestrales $ n_i $.</p>
+                <h3>3.4 Derivación de la Esperanza Matemática de la Varianza Residual</h3>
+                <p>La varianza residual (o varianza intra-grupos) se define como:</p>
+                <div class="formula-box">
+                    <div>$$ S^2_{R} = [1/(N-I)] \sum_{i=1}^{I} \sum_{j=1}^{n_i} (y_{ij} - \bar{y}_{i.})² $$</div>
+                </div>
+                <p>Sustituyendo $ y_{ij} = \mu + \tau_i + u_{ij} $ y $ \bar{y}_{i.} = \mu + \tau_i + \bar{u}_{i.} $:
+                </p>
+                <div class="formula-box">
+                    <div>$$ S^2_{R} = [1/(N-I)] \sum_{i=1}^{I} \sum_{j=1}^{n_i} (u_{ij} - \bar{u}_{i.})² $$</div>
+                </div>
+                <p>Desarrollando el cuadrado:</p>
+                <div class="formula-box">
+                    <div>$$ \mathbb{E}[S^2_{R}] = [1/(N-I)] \sum_{i=1}^{I} \sum_{j=1}^{n_i} \mathbb{E}[u^2_{ij} +
+                        \bar{u}^2_{i.} - 2u_{ij}\bar{u}_{i.}] $$</div>
+                </div>
+                <p>Aplicando las propiedades de los errores $ u_{ij} $ (independientes, con varianza $ \sigma^2 $):
+                </p>
+                <div class="formula-box">
+                    <div>$$ \mathbb{E}[u^2_{ij}] = \sigma^2 $$</div>
+                    <div>$$ \mathbb{E}[\bar{u}^2_{i.}] = \mathbb{E}[(Σu_{ij}/n_i)²] = \sigma^2/n_i $$</div>
+                    <div>$$ \mathbb{E}[u_{ij}\bar{u}_{i.}] = \mathbb{E}[u_{ij}(Σ_{k}u_{ik}/n_i)] = \sigma^2/n_i $$</div>
+                </div>
+                <p>Por tanto:</p>
+                <div class="formula-box">
+                    <div>$$ \mathbb{E}[S^2_{R}] = [1/(N-I)] \sum_{i=1}^{I} n_i(\sigma^2 + \sigma^2/n_i - 2\sigma^2/n_i)
+                        $$</div>
+                    <div>$$ = [1/(N-I)] \sum_{i=1}^{I} n_i\sigma^2(1 - 1/n_i) $$</div>
+                    <div>$$ = [1/(N-I)] \sum_{i=1}^{I} (n_i - 1)\sigma^2 $$</div>
+                    <div>$$ = [\sigma^2/(N-I)] (N - I) $$</div>
+                </div>
+                <div class="formula-box">
+                    <div>$$ \mathbb{E}[S^2_{R}] = \sigma^2 $$</div>
+                </div>
+                <p>Este resultado demuestra que $ S^2_R $ constituye un estimador insesgado del parámetro $ \sigma^2
+                    $. Además, si no existe variabilidad entre los tratamientos ($ \sigma^2_\tau = 0 $), entonces $
+                    S^2_{Tr} $ es también un estimador insesgado de $ \sigma^2 $, ya que $ \mathbb{E}[S^2_{Tr}] =
+                    \sigma^2 $ cuando $ \sigma^2_\tau = 0 $.</p>
+                <h3>3.5 Estadístico de Contraste y su Distribución</h3>
+                <p>Bajo la hipótesis nula $ H_0: \sigma^2_\tau = 0 $, puede demostrarse que las cantidades $
+                    SCTr/\sigma^2 $ y $ SCR/\sigma^2 $ siguen distribuciones chi-cuadrado independientes con $ I-1
+                    $ y $ N-I $ grados de libertad, respectivamente. Por tanto, el cociente:</p>
+                <div class="formula-box">
+                    <div>$$ F = [SCTr/\sigma^2]/(I-1) / [SCR/\sigma^2]/(N-I) = S^2_{Tr}/S^2_{R} $$</div>
+                </div>
+                <p>sigue una distribución $ F $ de Snedecor con $ I-1 $ y $ N-I $ grados de libertad. Este
+                    estadístico se utiliza para probar la hipótesis de interés en el modelo de efectos aleatorios.</p>
+                <p>Bajo la hipótesis alternativa ($ \sigma^2_\tau &gt; 0 $), el valor esperado del numerador del
+                    estadístico de contraste es mayor que $ \sigma^2 $, y por tanto se rechaza la hipótesis nula para
+                    valores significativamente grandes de $ F $.</p>
+                <h3>3.6 Regla de Decisión</h3>
+                <p>En el modelo de efectos aleatorios, para contrastar la hipótesis $ H_0: \sigma^2_\tau = 0 $ frente
+                    a $ H_1: \sigma^2_\tau &gt; 0 $, se aplica el siguiente criterio:</p>
+                <ul class="pasos">
+                    <li>Si $ F_{exp} &gt; F_{\alpha;I-1,N-I} $, se rechaza $ H_0 $</li>
+                    <li>Si $ F_{exp} \le F_{\alpha;I-1,N-I} $, se acepta $ H_0 $</li>
+                </ul>
+                <div class="nota">
+                    <p><strong>Nota:</strong> La tabla del análisis de la varianza para el modelo de efectos aleatorios
+                        es idéntica a la del modelo de efectos fijos. La diferencia fundamental radica en que las
+                        conclusiones obtenidas en el modelo de efectos aleatorios se generalizan a toda la población de
+                        niveles del factor, mientras que en el modelo de efectos fijos las conclusiones se limitan a los
+                        niveles específicamente incluidos en el experimento.</p>
+                </div>
+                <h3>3.7 Método de Componentes de Varianza</h3>
+                <p>Además de efectuar el contraste de hipótesis, en el modelo de efectos aleatorios interesa estimar los
+                    valores de las varianzas poblacionales. El procedimiento utilizado se denomina "método de
+                    componentes de varianza" y consiste en igualar las esperanzas de las varianzas muestrales con sus
+                    correspondientes valores observados:</p>
+                <div class="formula-box">
+                    <div>$$ S^2_{Tr} = [(N^2 - \sum n^2_i)/N(I-1)] \cdot \sigma^2_\tau + \sigma^2 $$</div>
+                    <div>$$ S^2_{R} = \sigma^2 $$</div>
+                </div>
+                <p>Resolviendo este sistema se obtienen los estimadores:</p>
+                <div class="formula-box">
+                    <div>$$ \hat{\sigma}^2 = S^2_{R} $$</div>
+                    <div>$$ \hat{\sigma}^2_\tau = [N(I-1)/(N^2 - \sum n^2_i)] \cdot (S^2_{Tr} - S^2_{R}) $$</div>
+                </div>
+                <p>Puede comprobarse que si la hipótesis alternativa es cierta, entonces $ \hat{\sigma}^2_\tau $ es un
+                    estimador insesgado de $ \sigma^2_\tau $.</p>
+                <div class="warning-box">
+                    <p><strong>Situación especial: Estimación negativa de $ \sigma^2_\tau $</strong></p>
+                    <p>En el caso de que la varianza residual sea mayor que la varianza entre tratamientos ($ S^2_R
+                        &gt; S^2_{Tr} $), el método de componentes de varianza conduce a una estimación negativa de $
+                        \sigma^2_\tau $. Evidentemente esto carece de sentido, al tratarse de un parámetro no negativo.
+                        Cuando esto ocurre pueden adoptarse las siguientes alternativas:</p>
+                    <ol>
+                        <li>Rechazar por inadecuado el modelo propuesto y replantear el problema.</li>
+                        <li>Reinterpretar la estimación de $ \sigma^2_\tau $ como evidencia de que su verdadero valor
+                            es cero; es decir, admitir que $ \sigma^2_\tau = 0 $. Esto puede ocasionar que las
+                            propiedades estadísticas de los restantes estimadores se vean perturbadas por esta decisión.
+                        </li>
+                        <li>Utilizar otro método de estimación que no conduzca a estimaciones negativas (por ejemplo,
+                            máxima verosimilitud restringida).</li>
+                    </ol>
+                    <p>La selección de una opción concreta dependerá del experimento analizado o del criterio del
+                        investigador.</p>
+                </div>
+                <h3>3.8 Ejemplo Completo: Variación de Temperatura en Hornos</h3>
+                <div class="example-box">
+                    <header>
+                        <h4>Ejemplo 3.1: Análisis de temperatura en hornos de una forja</h4>
+                    </header>
+                    <h4>Contexto del Problema</h4>
+                    <p>En una forja se utilizan varios hornos para calentar muestras de metal. Se supone que todos los
+                        hornos operan a la misma temperatura, aunque se sospecha que probablemente esto no sea cierto.
+                        Se seleccionan aleatoriamente tres hornos y se anotan sus temperaturas en sucesivos
+                        calentamientos. A partir de estos datos, se desea determinar si existe variación significativa
+                        en la temperatura de los hornos al nivel de significación del 5%.</p>
+                    <h4>Datos del Experimento</h4>
+                    <table>
+                        <caption>Tabla 2. Temperaturas observadas en los hornos (°C)</caption>
+                        <thead>
+                            <tr>
+                                <th>Horno</th>
+                                <th colspan="6">Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>91.50</td>
+                                <td>98.30</td>
+                                <td>98.10</td>
+                                <td>93.50</td>
+                                <td>93.60</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>88.50</td>
+                                <td>84.65</td>
+                                <td>79.90</td>
+                                <td>77.35</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>90.10</td>
+                                <td>84.80</td>
+                                <td>88.25</td>
+                                <td>73.00</td>
+                                <td>71.85</td>
+                                <td>78.65</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h4>Implementación en Python</h4>
+                    <pre><code data-language="Python"># =============================================================================
+# MODELO DE EFECTOS ALEATORIOS NO-EQUILIBRADO
+# Ejemplo: Análisis de temperatura en hornos de una forja
+# =============================================================================
+
+import numpy as np
+import scipy.stats as stats
+
+# -----------------------------------------------------------------------------
+# 1. DEFINICIÓN DE LOS DATOS
+# Cada lista representa las observaciones de un horno diferente
+# -----------------------------------------------------------------------------
+datos = {
+    'Horno_1': [91.50, 98.30, 98.10, 93.50, 93.60],
+    'Horno_2': [88.50, 84.65, 79.90, 77.35],
+    'Horno_3': [90.10, 84.80, 88.25, 73.00, 71.85, 78.65]
+}
+
+# Número de niveles del factor (hornos)
+I = len(datos)
+
+# Tamaños muestrales por nivel
+n_i = [len(datos[k]) for k in datos]
+
+# Tamaño muestral total
+N = sum(n_i)
+
+print(f"Número de hornos (I): {I}")
+print(f"Tamaños por nivel: {n_i}")
+print(f"Tamaño total (N): {N}")
+print()
+
+# -----------------------------------------------------------------------------
+# 2. CÁLCULO DE ESTADÍSTICOS DESCRIPTIVOS
+# -----------------------------------------------------------------------------
+medias_grupo = [np.mean(datos[k]) for k in datos]
+media_general = np.mean([x for grupo in datos.values() for x in grupo])
+
+print("Estadísticos descriptivos:")
+for i, (k, v) in enumerate(datos.items()):
+    print(f"  {k}: media = {medias_grupo[i]:.2f}°C, n = {len(v)}")
+print(f"  Media general: {media_general:.2f}°C")
+print()
+
+# -----------------------------------------------------------------------------
+# 3. CÁLCULO DE SUMAS DE CUADRADOS
+# -----------------------------------------------------------------------------
+
+# Suma de cuadrados total (SCT)
+todos_datos = [x for grupo in datos.values() for x in grupo]
+SCT = sum((x - media_general)**2 for x in todos_datos)
+
+# Suma de cuadrados entre grupos (SCTr)
+SCTr = sum(n_i[i] * (medias_grupo[i] - media_general)**2 
+        for i in range(I))
+
+# Suma de cuadrados residual (SCR)
+SCR = sum((x - medias_grupo[i])**2 
+       for i, grupo in enumerate(datos.values()) 
+       for x in grupo)
+
+print("Sumas de cuadrados:")
+print(f"  SCT (Total): {SCT:.2f}")
+print(f"  SCTr (Entre grupos): {SCTr:.2f}")
+print(f"  SCR (Residual): {SCR:.2f}")
+print()
+
+# -----------------------------------------------------------------------------
+# 4. CÁLCULO DE GRADOS DE LIBERTAD Y CUADRADOS MEDIOS
+# -----------------------------------------------------------------------------
+gl_Tr = I - 1          # Grados de libertad entre grupos
+gl_R = N - I            # Grados de libertad residual
+gl_T = N - 1            # Grados de libertad total
+
+# Cuadrados medios
+S2_Tr = SCTr / gl_Tr    # Varianza entre tratamientos
+S2_R = SCR / gl_R       # Varianza residual
+
+print("Grados de libertad:")
+print(f"  Entre grupos: {gl_Tr}")
+print(f"  Residual: {gl_R}")
+print(f"  Total: {gl_T}")
+print()
+print("Cuadrados medios:")
+print(f"  S²_Tr (Entre): {S2_Tr:.2f}")
+print(f"  S²_R (Residual): {S2_R:.2f}")
+print()
+
+# -----------------------------------------------------------------------------
+# 5. CÁLCULO DEL ESTADÍSTICO F
+# -----------------------------------------------------------------------------
+F_exp = S2_Tr / S2_R
+
+print(f"Estadístico F experimental: {F_exp:.2f}")
+
+# Valor crítico de F para α = 0.05
+alpha = 0.05
+F_critico = stats.f.ppf(1 - alpha, gl_Tr, gl_R)
+print(f"Valor crítico F(0.05; {gl_Tr},{gl_R}): {F_critico:.2f}")
+print()
+
+# -----------------------------------------------------------------------------
+# 6. DECISIÓN ESTADÍSTICA
+# -----------------------------------------------------------------------------
+if F_exp &gt; F_critico:
+    decision = "Se RECHAZA H₀"
+    conclusion = "Existe variabilidad significativa entre los hornos"
+else:
+    decision = "Se ACEPTA H₀"
+    conclusion = "No hay evidencia de variabilidad entre hornos"
+
+print(f"Decisión: {decision}")
+print(f"Conclusión: {conclusion}")
+print()
+
+# -----------------------------------------------------------------------------
+# 7. ESTIMACIÓN DE COMPONENTES DE VARIANZA
+# -----------------------------------------------------------------------------
+# Estimador de la varianza del error
+sigma2_est = S2_R
+
+# Coeficiente para el caso no-equilibrado
+suma_n2 = sum(n**2 for n in n_i)
+coef = N * (I - 1) / (N**2 - suma_n2)
+
+# Estimador de la varianza entre tratamientos
+sigma2_tau_est = coef * (S2_Tr - S2_R)
+
+# Varianza total estimada
+sigma2_T_est = sigma2_tau_est + sigma2_est
+
+print("Estimación de componentes de varianza:")
+print(f"  σ̂² (error): {sigma2_est:.2f}")
+print(f"  σ̂²_τ (entre hornos): {sigma2_tau_est:.2f}")
+print(f"  σ̂²_T (total): {sigma2_T_est:.2f}")
+
+# Porcentajes de variabilidad
+pct_entre = (sigma2_tau_est / sigma2_T_est) * 100
+pct_dentro = (sigma2_est / sigma2_T_est) * 100
+print(f"\nDistribución de la varianza:")
+print(f"  Variabilidad entre hornos: {pct_entre:.2f}%")
+print(f"  Variabilidad dentro de hornos: {pct_dentro:.2f}%")</code></pre>
+                    <h4>Salida del Programa</h4>
+                    <div class="code-output">
+                        <div class="code-output-header"><span class="code-output-title"><i class="fas fa-terminal"></i> Output</span></div>
+                        <pre class="code-output-body">Número de hornos (I): 3
+                        Tamaños por nivel: [5, 4, 6]
+                        Tamaño total (N): 15
+
+                        Estadísticos descriptivos:
+                        Horno_1: media = 95.00°C, n = 5
+                        Horno_2: media = 82.60°C, n = 4
+                        Horno_3: media = 81.11°C, n = 6
+                        Media general: 86.00°C
+
+                        Sumas de cuadrados:
+                        SCT (Total): 1008.34
+                        SCTr (Entre grupos): 594.53
+                        SCR (Residual): 413.81
+
+                        Grados de libertad:
+                        Entre grupos: 2
+                        Residual: 12
+                        Total: 14
+
+                        Cuadrados medios:
+                        S²_Tr (Entre): 297.26
+                        S²_R (Residual): 34.48
+
+                        Estadístico F experimental: 8.62
+                        Valor crítico F(0.05; 2,12): 3.89
+
+                        Decisión: Se RECHAZA H₀
+                        Conclusión: Existe variabilidad significativa entre los hornos
+
+                        Estimación de componentes de varianza:
+                        σ̂² (error): 34.48
+                        σ̂²_τ (entre hornos): 53.26
+                        σ̂²_T (total): 87.74
+
+                        Distribución de la varianza:
+                        Variabilidad entre hornos: 60.70%
+                        Variabilidad dentro de hornos: 39.30%</pre>
+                    </div>
+                    <h4>Tabla ANOVA</h4>
+                    <table class="tabla-anova">
+                        <caption>Tabla 3. Análisis de la varianza para el ejemplo de hornos</caption>
+                        <thead>
+                            <tr>
+                                <th>Fuente de variación</th>
+                                <th>Suma de cuadrados</th>
+                                <th>Grados de libertad</th>
+                                <th>Cuadrados medios</th>
+                                <th>F</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Entre grupos</td>
+                                <td>594.53</td>
+                                <td>2</td>
+                                <td>297.26</td>
+                                <td>8.62</td>
+                            </tr>
+                            <tr>
+                                <td>Dentro de grupos</td>
+                                <td>413.81</td>
+                                <td>12</td>
+                                <td>34.48</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>Total</td>
+                                <td>1008.34</td>
+                                <td>14</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h4>Interpretación de Resultados</h4>
+                    <p>El análisis estadístico revela que el valor del estadístico de contraste (F = 8.62) excede
+                        considerablemente el valor crítico ($ F_{0.05;2,12} = 3.89 $), lo cual conduce al rechazo de
+                        la hipótesis nula. Por tanto, se concluye que existe variabilidad significativa en la
+                        temperatura entre los hornos de la forja.</p>
+                    <p>La estimación de componentes de varianza indica que la varianza total de 87.74 se descompone en
+                        una parte atribuible a las diferencias entre hornos ($ \hat{\sigma}^2_\tau = 53.26 $) y otra
+                        procedente de la variabilidad dentro de ellos ($ \hat{\sigma}^2 = 34.48 $). El mayor peso
+                        relativo corresponde a la variación entre hornos (60.70%), lo cual sugiere que las diferencias
+                        sistemáticas entre hornos son la principal fuente de variabilidad en la temperatura observada.
+                        Desde una perspectiva práctica, este resultado tiene implicaciones importantes para el control
+                        de calidad del proceso de calentamiento.</p>
+                </div>
+        </div>
+    </template>
+
+    <template id="module-4">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 4</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Modelo Equilibrado</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Simplificar el análisis para el caso de datos balanceados con fórmulas directas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>4.1 Características del Caso Equilibrado</h3>
+                <p>En el modelo equilibrado o balanceado, el número de observaciones en cada nivel del factor es el
+                    mismo. Si se denota este valor común como $ n $, entonces el número total de observaciones es $ N
+                    = I \times n $. Esta simetría en el diseño simplifica considerablemente las expresiones matemáticas
+                    y los cálculos involucrados en el análisis.</p>
+                <div class="definition-box">
+                    <p><strong>Modelo Equilibrado:</strong> Diseño experimental en el que cada nivel del
+                        factor tiene exactamente $ n $ observaciones. El tamaño muestral total es $ N = I \times n
+                        $, donde $ I $ es el número de niveles del factor. Esta condición de balanceamiento facilita
+                        la estimación de componentes de varianza y mejora las propiedades estadísticas de los
+                        estimadores.</p>
+                </div>
+                <h3>4.2 Simplificación de las Expresiones</h3>
+                <p>En el caso equilibrado, la esperanza de la varianza entre tratamientos se simplifica
+                    significativamente:</p>
+                <div class="formula-box">
+                    <div>$$ E(S^2_{Tr}) = n \cdot \sigma^2_\tau + \sigma^2 $$</div>
+                </div>
+                <p>Esta simplificación se debe a que, con $ n_i = n $ para todo $ i $, el coeficiente que multiplica
+                    a $ \sigma^2_\tau $ se reduce a $ n $. Los estimadores de los componentes de varianza también se
+                    simplifican:</p>
+                <div class="formula-box">
+                    <div>$$ \hat{\sigma}^2 = S^2_{R} $$</div>
+                    <div>$$ \hat{\sigma}^2_\tau = (S^2_{Tr} - S^2_{R}) / n $$</div>
+                </div>
+                <h3>4.3 Ventajas del Diseño Equilibrado</h3>
+                <p>Desde el punto de vista práctico, el modelo equilibrado presenta varias ventajas importantes:</p>
+                <ul class="pasos">
+                    <li><strong>Simplicidad computacional:</strong> Las fórmulas para los estimadores son más simples y
+                        directas, lo cual reduce la posibilidad de errores de cálculo.</li>
+                    <li><strong>Mayor robustez:</strong> El diseño equilibrado proporciona estimadores con mejores
+                        propiedades estadísticas, incluyendo menor varianza y menor sensibilidad a violaciones de los
+                        supuestos.</li>
+                    <li><strong>Potencia óptima:</strong> Para un tamaño muestral total dado, el diseño equilibrado
+                        maximiza la potencia del contraste de hipótesis.</li>
+                    <li><strong>Interpretación directa:</strong> La contribución de cada fuente de variación es más
+                        fácil de interpretar y comparar.</li>
+                </ul>
+                <h3>4.4 Ejemplo Completo: Producción de Telares</h3>
+                <div class="example-box">
+                    <header>
+                        <h4>Ejemplo 4.1: Análisis de rendimiento de telares en fábrica textil</h4>
+                    </header>
+                    <h4>Contexto del Problema</h4>
+                    <p>Una fábrica de textiles dispone de un gran número de telares. En principio, se supone que cada
+                        uno de ellos debe producir la misma cantidad de tela por unidad de tiempo. Para investigar esta
+                        suposición se seleccionan al azar cinco telares, y se mide la cantidad de tela producida en
+                        cinco ocasiones diferentes. El objetivo es determinar si todos los telares tienen el mismo
+                        rendimiento.</p>
+                    <h4>Datos del Experimento</h4>
+                    <table>
+                        <caption>Tabla 4. Producción de tela por telar (unidades estandarizadas)</caption>
+                        <thead>
+                            <tr>
+                                <th>Telar</th>
+                                <th colspan="5">Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>14.0</td>
+                                <td>14.1</td>
+                                <td>14.2</td>
+                                <td>14.0</td>
+                                <td>14.1</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>13.9</td>
+                                <td>13.8</td>
+                                <td>13.9</td>
+                                <td>14.0</td>
+                                <td>14.0</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>14.1</td>
+                                <td>14.2</td>
+                                <td>14.1</td>
+                                <td>14.0</td>
+                                <td>13.9</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>13.6</td>
+                                <td>13.8</td>
+                                <td>14.0</td>
+                                <td>13.9</td>
+                                <td>13.7</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>13.8</td>
+                                <td>13.6</td>
+                                <td>13.9</td>
+                                <td>13.8</td>
+                                <td>14.0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h4>Implementación en Python</h4>
+                    <pre><code data-language="Python"># =============================================================================
+# MODELO DE EFECTOS ALEATORIOS EQUILIBRADO
+# Ejemplo: Análisis de rendimiento de telares en fábrica textil
+# =============================================================================
+
+import numpy as np
+import scipy.stats as stats
+
+# -----------------------------------------------------------------------------
+# 1. DEFINICIÓN DE LOS DATOS (Diseño equilibrado: 5 telares × 5 obs)
+# -----------------------------------------------------------------------------
+datos = np.array([
+    [14.0, 14.1, 14.2, 14.0, 14.1],  # Telar 1
+    [13.9, 13.8, 13.9, 14.0, 14.0],  # Telar 2
+    [14.1, 14.2, 14.1, 14.0, 13.9],  # Telar 3
+    [13.6, 13.8, 14.0, 13.9, 13.7],  # Telar 4
+    [13.8, 13.6, 13.9, 13.8, 14.0]   # Telar 5
+])
+
+# Dimensiones del diseño
+I, n = datos.shape  # I = número de telares, n = obs por telar
+N = I * n            # Tamaño muestral total
+
+print(f"Dimensiones del diseño:")
+print(f"  Número de telares (I): {I}")
+print(f"  Observaciones por telar (n): {n}")
+print(f"  Total de observaciones (N): {N}")
+print()
+
+# -----------------------------------------------------------------------------
+# 2. ESTADÍSTICOS DESCRIPTIVOS POR GRUPO
+# -----------------------------------------------------------------------------
+medias_grupo = np.mean(datos, axis=1)
+media_general = np.mean(datos)
+
+print("Estadísticos por telar:")
+for i in range(I):
+    print(f"  Telar {i+1}: media = {medias_grupo[i]:.2f}, "
+          f"desv. típ. = {np.std(datos[i], ddof=1):.4f}")
+print(f"  Media general: {media_general:.2f}")
+print()
+
+# -----------------------------------------------------------------------------
+# 3. CÁLCULO DE SUMAS DE CUADRADOS
+# -----------------------------------------------------------------------------
+# Suma de cuadrados total
+SCT = np.sum((datos - media_general)**2)
+
+# Suma de cuadrados entre grupos
+SCTr = n * np.sum((medias_grupo - media_general)**2)
+
+# Suma de cuadrados residual (dentro de grupos)
+SCR = 0
+for i in range(I):
+    SCR += np.sum((datos[i] - medias_grupo[i])**2)
+
+print("Análisis de varianza:")
+print(f"  SCT  (Total): {SCT:.4f}")
+print(f"  SCTr (Entre): {SCTr:.4f}")
+print(f"  SCR  (Residual): {SCR:.4f}")
+print()
+
+# -----------------------------------------------------------------------------
+# 4. CUADRADOS MEDIOS Y ESTADÍSTICO F
+# -----------------------------------------------------------------------------
+gl_Tr = I - 1   # Grados de libertad entre grupos
+gl_R = N - I     # Grados de libertad residual
+
+S2_Tr = SCTr / gl_Tr  # Cuadrado medio entre
+S2_R = SCR / gl_R     # Cuadrado medio residual
+
+F_exp = S2_Tr / S2_R
+
+print("Cuadrados medios:")
+print(f"  S²_Tr: {S2_Tr:.4f}")
+print(f"  S²_R:  {S2_R:.4f}")
+print(f"  F experimental: {F_exp:.2f}")
+print()
+
+# -----------------------------------------------------------------------------
+# 5. CONTRASTE DE HIPÓTESIS
+# -----------------------------------------------------------------------------
+alpha = 0.05
+F_critico = stats.f.ppf(1 - alpha, gl_Tr, gl_R)
+p_valor = 1 - stats.f.cdf(F_exp, gl_Tr, gl_R)
+
+print(f"Contraste al nivel α = {alpha}:")
+print(f"  F crítico: {F_critico:.2f}")
+print(f"  p-valor: {p_valor:.4f}")
+
+if F_exp &gt; F_critico:
+    print("  → Se RECHAZA H₀: Los telares no tienen el mismo rendimiento")
+else:
+    print("  → Se ACEPTA H₀: No hay evidencia de diferencias")
+print()
+
+# -----------------------------------------------------------------------------
+# 6. ESTIMACIÓN DE COMPONENTES DE VARIANZA (Caso equilibrado)
+# -----------------------------------------------------------------------------
+# Fórmulas simplificadas para diseño equilibrado
+sigma2_est = S2_R                    # Varianza del error
+sigma2_tau_est = (S2_Tr - S2_R) / n  # Varianza entre tratamientos
+sigma2_T_est = sigma2_tau_est + sigma2_est
+
+print("Componentes de varianza estimados:")
+print(f"  σ̂² (error): {sigma2_est:.4f}")
+print(f"  σ̂²_τ (entre telares): {sigma2_tau_est:.4f}")
+print(f"  σ̂²_T (total): {sigma2_T_est:.4f}")
+
+# Porcentajes de contribución
+pct_entre = (sigma2_tau_est / sigma2_T_est) * 100
+pct_dentro = (sigma2_est / sigma2_T_est) * 100
+print(f"\nDistribución porcentual:")
+print(f"  Variabilidad entre telares: {pct_entre:.2f}%")
+print(f"  Variabilidad dentro de telares: {pct_dentro:.2f}%")</code></pre>
+                    <h4>Salida del Programa</h4>
+                    <div class="code-output">
+                        <div class="code-output-header"><span class="code-output-title"><i class="fas fa-terminal"></i> Output</span></div>
+                        <pre class="code-output-body">Dimensiones del diseño:
+                        Número de telares (I): 5
+                        Observaciones por telar (n): 5
+                        Total de observaciones (N): 25
+
+                        Estadísticos por telar:
+                        Telar 1: media = 14.08, desv. típ. = 0.0837
+                        Telar 2: media = 13.92, desv. típ. = 0.0837
+                        Telar 3: media = 14.06, desv. típ. = 0.1225
+                        Telar 4: media = 13.80, desv. típ. = 0.1414
+                        Telar 5: media = 13.82, desv. típ. = 0.1483
+                        Media general: 13.94
+
+                        Análisis de varianza:
+                        SCT (Total): 0.6376
+                        SCTr (Entre): 0.3416
+                        SCR (Residual): 0.2960
+
+                        Cuadrados medios:
+                        S²_Tr: 0.0854
+                        S²_R: 0.0148
+                        F experimental: 5.77
+
+                        Contraste al nivel α = 0.05:
+                        F crítico: 2.87
+                        p-valor: 0.0030
+                        → Se RECHAZA H₀: Los telares no tienen el mismo rendimiento
+
+                        Componentes de varianza estimados:
+                        σ̂² (error): 0.0148
+                        σ̂²_τ (entre telares): 0.0141
+                        σ̂²_T (total): 0.0289
+
+                        Distribución porcentual:
+                        Variabilidad entre telares: 48.82%
+                        Variabilidad dentro de telares: 51.18%</pre>
+                    </div>
+                    <h4>Tabla ANOVA</h4>
+                    <table class="tabla-anova">
+                        <caption>Tabla 5. Análisis de la varianza para el ejemplo de telares</caption>
+                        <thead>
+                            <tr>
+                                <th>Fuente de variación</th>
+                                <th>Suma de cuadrados</th>
+                                <th>Grados de libertad</th>
+                                <th>Cuadrados medios</th>
+                                <th>F</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Entre grupos</td>
+                                <td>0.3416</td>
+                                <td>4</td>
+                                <td>0.0854</td>
+                                <td>5.77</td>
+                            </tr>
+                            <tr>
+                                <td>Dentro de grupos</td>
+                                <td>0.2960</td>
+                                <td>20</td>
+                                <td>0.0148</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>Total</td>
+                                <td>0.6376</td>
+                                <td>24</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h4>Interpretación de Resultados</h4>
+                    <p>El estadístico F experimental (5.77) supera ampliamente el valor crítico ($ F_{0.05;4,20} = 2.87
+                        $), lo que conduce al rechazo de la hipótesis nula de que todos los telares tienen el mismo
+                        rendimiento. El p-valor asociado (0.0030) confirma la significancia estadística del resultado.
+                    </p>
+                    <p>La estimación de componentes de varianza revela que la varianza total (0.0289) se distribuye de
+                        manera prácticamente equilibrada entre la variabilidad atribuible a diferencias entre telares
+                        (48.82%) y la variabilidad dentro de ellos (51.18%). Este resultado sugiere que, aunque existen
+                        diferencias sistemáticas entre los telares que deben ser atendidas desde el punto de vista del
+                        control de calidad, también hay una componente importante de variabilidad aleatoria que podría
+                        deberse a factores no controlados del proceso productivo.</p>
+                </div>
+        </div>
+    </template>
+
+    <template id="module-5">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 5</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Resumen Comparativo</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Comparar las propiedades de los casos equilibrado y no-equilibrado.</p>
+                    </div>
+                </div>
+            </div>
+
+            <table>
+                    <caption>Tabla 6. Comparación de expresiones clave entre casos equilibrado y no-equilibrado
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th>Expresión</th>
+                            <th>Caso No-Equilibrado</th>
+                            <th>Caso Equilibrado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tamaño muestral</td>
+                            <td>$ N = \sum n_i $</td>
+                            <td>$ N = I \times n $</td>
+                        </tr>
+                        <tr>
+                            <td>$ E(S^2_{Tr}) $</td>
+                            <td>$ [(N^2 - \sum n_i^2)/N(I-1)]\sigma^2_\tau + \sigma^2 $</td>
+                            <td>$ n\sigma^2_\tau + \sigma^2 $</td>
+                        </tr>
+                        <tr>
+                            <td>$ E(S^2_R) $</td>
+                            <td>$ \sigma^2 $</td>
+                            <td>$ \sigma^2 $</td>
+                        </tr>
+                        <tr>
+                            <td>Estimador de $ \sigma^2 $</td>
+                            <td>$ S^2_R $</td>
+                            <td>$ S^2_R $</td>
+                        </tr>
+                        <tr>
+                            <td>Estimador de $ \sigma^2_\tau $</td>
+                            <td>$ [N(I-1)/(N^2-\sum n_i^2)](S^2_{Tr}-S^2_R) $</td>
+                            <td>$ (S^2_{Tr} - S^2_R)/n $</td>
+                        </tr>
+                        <tr>
+                            <td>Grados de libertad (entre)</td>
+                            <td>$ I - 1 $</td>
+                            <td>$ I - 1 $</td>
+                        </tr>
+                        <tr>
+                            <td>Grados de libertad (residual)</td>
+                            <td>$ N - I $</td>
+                            <td>$ N - I = I(n-1) $</td>
+                        </tr>
+                    </tbody>
+                </table>
+        </div>
+    </template>
+
+    <template id="module-6">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 6</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Ejercicios de Autoevaluación</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Practicar con ejercicios de aplicación.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ejercicio">
+                    <header>
+                        <h4>Ejercicio 1: Análisis de rendimiento académico</h4>
+                    </header>
+                    <p><strong>Contexto:</strong> Una universidad desea evaluar si existe variabilidad significativa en
+                        el rendimiento académico de los estudiantes entre diferentes profesores que imparten la misma
+                        asignatura. Se seleccionan aleatoriamente 4 profesores de un departamento grande, y se registran
+                        las calificaciones finales de varios estudiantes de cada profesor.</p>
+                    <table>
+                        <caption>Tabla 7. Calificaciones por profesor</caption>
+                        <thead>
+                            <tr>
+                                <th>Profesor</th>
+                                <th colspan="5">Calificaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>78</td>
+                                <td>82</td>
+                                <td>85</td>
+                                <td>79</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td>88</td>
+                                <td>91</td>
+                                <td>87</td>
+                                <td>89</td>
+                                <td>90</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>72</td>
+                                <td>75</td>
+                                <td>78</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>D</td>
+                                <td>83</td>
+                                <td>85</td>
+                                <td>80</td>
+                                <td>82</td>
+                                <td>84</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p><strong>Se solicita:</strong></p>
+                    <ol>
+                        <li>Identificar el tipo de diseño experimental y justificar por qué corresponde a un modelo de
+                            efectos aleatorios.</li>
+                        <li>Calcular las sumas de cuadrados y construir la tabla ANOVA.</li>
+                        <li>Realizar el contraste de hipótesis al nivel de significación $ \alpha = 0.05 $.</li>
+                        <li>Estimar los componentes de varianza y determinar el porcentaje de variabilidad atribuible a
+                            diferencias entre profesores.</li>
+                    </ol>
+                    <div class="solucion-parcial">
+                        <div class="solucion-header">
+                            <i class="fas fa-chevron-right"></i> Solución Parcial
+                        </div>
+                        <div class="solucion-content">
+<p><strong>Paso 1:</strong> Se trata de un modelo de efectos aleatorios no-equilibrado, ya que
+                            los profesores fueron seleccionados aleatoriamente de una población mayor y el número de
+                            estudiantes por profesor varía.</p>
+                        <p><strong>Paso 2:</strong> Valores preliminares:</p>
+                        <ul>
+                            <li>$ I = 4 $</li>
+                            <li>$ n_A = 4, n_B = 5, n_C = 3, n_D = 5 $</li>
+                            <li>$ N = 17 $</li>
+                            <li>Media general = 82.76</li>
+                        </ul>
+                        <p><strong>Paso 3:</strong> El lector debe completar los cálculos de SCT, SCTr, SCR y determinar
+                            la decisión estadística.</p>
+                        </div>
+                    </div>
+                <div class="ejercicio">
+                    <header>
+                        <h4>Ejercicio 2: Control de calidad en líneas de producción</h4>
+                    </header>
+                    <p><strong>Contexto:</strong> Una empresa farmacéutica tiene múltiples líneas de producción para el
+                        mismo medicamento. Se desea determinar si existe variabilidad significativa en el contenido de
+                        principio activo entre las diferentes líneas. Se seleccionan aleatoriamente 6 líneas de
+                        producción y se toman 4 mediciones del contenido de principio activo (en mg) de cada línea.</p>
+                    <table>
+                        <caption>Tabla 8. Contenido de principio activo por línea (mg)</caption>
+                        <thead>
+                            <tr>
+                                <th>Línea</th>
+                                <th colspan="4">Mediciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>502</td>
+                                <td>498</td>
+                                <td>501</td>
+                                <td>499</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>495</td>
+                                <td>497</td>
+                                <td>496</td>
+                                <td>498</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>508</td>
+                                <td>510</td>
+                                <td>507</td>
+                                <td>509</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>500</td>
+                                <td>502</td>
+                                <td>499</td>
+                                <td>501</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>496</td>
+                                <td>498</td>
+                                <td>495</td>
+                                <td>497</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>504</td>
+                                <td>506</td>
+                                <td>503</td>
+                                <td>505</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p><strong>Se solicita:</strong></p>
+                    <ol>
+                        <li>Verificar que se trata de un diseño equilibrado de efectos aleatorios.</li>
+                        <li>Implementar el análisis en Python utilizando las fórmulas simplificadas del caso
+                            equilibrado.</li>
+                        <li>Obtener los estimadores de los componentes de varianza.</li>
+                        <li>Interpretar los resultados en el contexto del control de calidad farmacéutico.</li>
+                    </ol>
+                    <div class="solucion-parcial">
+                        <div class="solucion-header">
+                            <i class="fas fa-chevron-right"></i> Solución Parcial
+                        </div>
+                        <div class="solucion-content">
+<p><strong>Paso 1:</strong> Es un diseño equilibrado de efectos aleatorios porque: (i) las
+                            líneas fueron seleccionadas aleatoriamente, y (ii) cada línea tiene exactamente 4
+                            observaciones.</p>
+                        <p><strong>Paso 2:</strong> Estructura del código Python:</p>
+                        <pre><code data-language="Python"># Diseño equilibrado: I=6 líneas, n=4 obs/línea, N=24
+datos = np.array([
+    [502, 498, 501, 499],
+    [495, 497, 496, 498],
+    [508, 510, 507, 509],
+    [500, 502, 499, 501],
+    [496, 498, 495, 497],
+    [504, 506, 503, 505]
+])
+
+# Fórmulas simplificadas para caso equilibrado
+sigma2_tau_est = (S2_Tr - S2_R) / n</code></pre>
+                        <p><strong>Paso 3:</strong> El lector debe calcular SCT, SCTr, SCR, los cuadrados medios, el
+                            estadístico F y comparar con $ F_{0.05;5,18} $.</p>
+                        <p><strong>Paso 4:</strong> Interpretación pendiente: ¿Qué porcentaje de la variabilidad se debe
+                            a diferencias entre líneas? ¿Es aceptable desde el punto de vista del control de calidad?
+                        </p>
+                        </div>
+                    </div>
+        </div>
+    </template>
+
+    <template id="module-7">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 7</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Referencias Bibliográficas</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Consultar las fuentes bibliográficas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Referencias Bibliográficas</h2>
+            <ol style="list-style:none;counter-reset:ref-counter;">
+                <li>
+                    <span style="font-weight:600;">García Leal, J. &amp; Lara Porras, A.M.</span> (<span style="color:#64748B;">1998</span>).
+                    <span style="font-style:italic;">Diseño Estadístico de Experimentos. Análisis de la Varianza.</span>
+                    <span style="color:#64748B;">Grupo Editorial Universitario</span>.
+                </li>
+                <li>
+                    <span style="font-weight:600;">Lara Porras, A.M.</span> (<span style="color:#64748B;">2000</span>).
+                    <span style="font-style:italic;">Diseño Estadístico de Experimentos, Análisis de la Varianza y Temas Relacionados: Tratamiento Informático mediante SPSS.</span>
+                    <span style="color:#64748B;">ProyectoSur de Ediciones</span>.
+                </li>
+                <li>
+                    <span style="font-weight:600;">Montgomery, D.C.</span> (<span style="color:#64748B;">2017</span>).
+                    <span style="font-style:italic;">Design and Analysis of Experiments</span> (9th ed.).
+                    <span style="color:#64748B;">John Wiley &amp; Sons</span>.
+                </li>
+            </ol>
+        </div>
+    </template>
+
+
+    <script>
+
+        // --- COURSE DATA ---
+        const courseData = {
+            title: "Modelos de Efectos Aleatorios",
+            modules: [
+                { id: 1, title: "Fundamentos Teóricos", shortTitle: "Fundamentos", duration: "20 min" },
+                { id: 2, title: "Diagrama Conceptual", shortTitle: "Diagrama", duration: "10 min" },
+                { id: 3, title: "Modelo No-Equilibrado", shortTitle: "No-Equilibrado", duration: "30 min" },
+                { id: 4, title: "Modelo Equilibrado", shortTitle: "Equilibrado", duration: "25 min" },
+                { id: 5, title: "Resumen Comparativo", shortTitle: "Resumen", duration: "10 min" },
+                { id: 6, title: "Ejercicios de Autoevaluación", shortTitle: "Ejercicios", duration: "25 min" },
+                { id: 7, title: "Referencias Bibliográficas", shortTitle: "Referencias", duration: "5 min" }
+            ]
+        };
+
+        // --- STATE ---
+        let currentModuleIndex = 0;
+        let completedModules = new Set();
+        const moduleNav = document.getElementById('module-nav');
+        const contentArea = document.getElementById('content-area');
+
+        function init() {
+            renderNav();
+            loadModule(0);
+        }
+
+        function renderNav() {
+            moduleNav.innerHTML = '';
+            courseData.modules.forEach((mod, index) => {
+                const btn = document.createElement('button');
+                const isActive = index === currentModuleIndex;
+                const isDone = completedModules.has(index);
+                btn.className = `sidebar-nav-item${isActive ? ' active' : ''}`;
+                btn.innerHTML = `
+                    <span style="line-height:1.3;">${mod.title}</span>
+                    ${isDone ? '<span class="check-mark">✓</span>' : ''}
+                `;
+                btn.onclick = () => loadModule(index);
+                moduleNav.appendChild(btn);
+            });
+        }
+
+        function loadModule(index) {
+            currentModuleIndex = index;
+            renderNav();
+
+            const template = document.getElementById(`module-${index + 1}`);
+            if (template) {
+                contentArea.innerHTML = '';
+                const content = template.content.cloneNode(true);
+                contentArea.appendChild(content);
+
+                // Navigation buttons
+                const navButtons = document.createElement('div');
+                navButtons.className = 'mt-10 pt-6 border-t border-gray-200 flex justify-between items-center';
+                navButtons.innerHTML = `
+                    ${index > 0 ? `
+                    <button onclick="loadModule(${index - 1})" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-secondary transition-colors">
+                        <span>←</span> Anterior
+                    </button>` : '<div></div>'}
+                    <button onclick="markComplete(${index})" class="px-4 py-2 text-sm font-medium text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors ${completedModules.has(index) ? 'opacity-50' : ''}">
+                        ${completedModules.has(index) ? '✓ Completado' : 'Marcar como completado'}
+                    </button>
+                    ${index < courseData.modules.length - 1 ? `
+                    <button onclick="loadModule(${index + 1})" class="flex items-center gap-2 px-4 py-2 bg-secondary hover:bg-secondary/90 text-white rounded-lg text-sm font-medium transition-colors">
+                        Siguiente Módulo <span>→</span>
+                    </button>` : `
+                    <div class="text-center">
+                        <span class="text-emerald-600 font-bold">🎉 ¡Tema Completado!</span>
+                    </div>`}
+                `;
+                contentArea.appendChild(navButtons);
+
+                setupCodeBlocks();
+                setupSolucionesParciales();
+                wrapTables();
+
+                if (typeof renderMathInElement !== 'undefined') {
+                    renderMathInElement(contentArea, {
+                        delimiters: [
+                            { left: '$$', right: '$$', display: true },
+                            { left: '$', right: '$', display: false }
+                        ],
+                        throwOnError: false
+                    });
+                }
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function markComplete(index) {
+            if (!completedModules.has(index)) {
+                completedModules.add(index);
+                renderNav();
+                loadModule(index);
+            }
+        }
+
+        // ===== Collapsible Solutions =====
+        function setupSolucionesParciales() {
+            contentArea.querySelectorAll('.solucion-header').forEach(function(header) {
+                header.addEventListener('click', function() {
+                    var content = this.nextElementSibling;
+                    var icon = this.querySelector('i');
+                    if (content.classList.contains('open')) {
+                        content.classList.remove('open');
+                        if (icon) icon.classList.remove('rotated');
+                    } else {
+                        content.classList.add('open');
+                        if (icon) icon.classList.add('rotated');
+                    }
+                });
+            });
+        }
+
+        // ===== Responsive Tables =====
+        function wrapTables() {
+            contentArea.querySelectorAll('table').forEach(function(table) {
+                if (!table.closest('.table-responsive')) {
+                    var wrapper = document.createElement('div');
+                    wrapper.className = 'table-responsive';
+                    table.parentNode.insertBefore(wrapper, table);
+                    wrapper.appendChild(table);
+                }
+            });
+        }
+
+        // Scroll to Top
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { scrollToTopBtn.classList.add('visible'); }
+            else { scrollToTopBtn.classList.remove('visible'); }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ===== Sidebar Toggle =====
+        const sidebarPanel = document.getElementById('sidebar-panel');
+        const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+        const sidebarToggleIcon = document.getElementById('sidebarToggleIcon');
+        let sidebarOpen = true;
+        sidebarToggleBtn.addEventListener('click', () => {
+            sidebarOpen = !sidebarOpen;
+            if (sidebarOpen) {
+                sidebarPanel.classList.remove('collapsed');
+                sidebarPanel.style.opacity = '1';
+                sidebarToggleIcon.className = 'fas fa-times text-sm';
+            } else {
+                sidebarPanel.classList.add('collapsed');
+                sidebarPanel.style.opacity = '0';
+                sidebarToggleIcon.className = 'fas fa-bars text-sm';
+            }
+        });
+
+        // ===== VS Code Style Code Blocks =====
+        function setupCodeBlocks() {
+            var pres = contentArea.querySelectorAll('pre');
+            pres.forEach(function(pre) {
+                if (pre.closest('.sourceCode-wrapper')) return;
+                if (pre.closest('.code-output')) return;
+
+                var code = pre.querySelector('code');
+                if (!code) return;
+
+                var prevEl = pre.previousElementSibling;
+                if (prevEl && prevEl.classList.contains('code-title')) { prevEl.remove(); }
+
+                var lang = code.getAttribute('data-language') || 'Python';
+                var fileExt = lang === 'Python' ? '.py' : lang === 'R' ? '.R' : '.txt';
+                var fileName = 'efectos_aleatorios' + fileExt;
+                var langIcon = '';
+                if (lang === 'Python' || lang === 'python') {
+                    langIcon = '<svg class="tab-icon python" viewBox="0 0 24 24" fill="currentColor"><path d="M9.585 11.692h4.328s2.432.039 2.432-2.35V5.391S16.714 3 11.936 3C7.362 3 7.647 4.983 7.647 4.983l.006 2.055h4.363v.617H5.92s-2.927-.332-2.927 4.282 2.555 4.45 2.555 4.45h1.524v-2.141s-.083-2.554 2.513-2.554zm-.056-6.009a.784.784 0 1 1 0-1.569.784.784 0 0 1 0 1.569z"/><path d="M18.452 7.532h-1.524v2.141s.083 2.554-2.513 2.554h-4.328s-2.432-.04-2.432 2.35v3.951s-.369 2.391 4.409 2.391c4.573 0 4.288-1.983 4.288-1.983l-.006-2.054h-4.363v-.617h6.097s2.927.332 2.927-4.282-2.555-4.451-2.555-4.451zm-4.597 10.477a.784.784 0 1 1 0 1.569.784.784 0 0 1 0-1.569z"/></svg>';
+                } else {
+                    langIcon = '<i class="fas fa-code tab-icon" style="font-size:12px"></i>';
+                }
+
+                var wrapper = document.createElement('div');
+                wrapper.className = 'sourceCode-wrapper';
+
+                var titlebar = document.createElement('div');
+                titlebar.className = 'sourceCode-titlebar';
+                titlebar.innerHTML =
+                    '<div class="sourceCode-dots">' +
+                        '<span class="dot-close"></span>' +
+                        '<span class="dot-min"></span>' +
+                        '<span class="dot-max"></span>' +
+                    '</div>' +
+                    '<div class="sourceCode-tab">' +
+                        langIcon +
+                        '<span>' + fileName + '</span>' +
+                    '</div>' +
+                    '<div class="sourceCode-actions">' +
+                        '<button type="button" onclick="toggleCodeBlock(this)" title="Ocultar/Mostrar">' +
+                            '<i class="fas fa-eye"></i> Ocultar' +
+                        '</button>' +
+                        '<button type="button" onclick="copyCodeBlock(this)" title="Copiar código">' +
+                            '<i class="fas fa-copy"></i> Copiar' +
+                        '</button>' +
+                    '</div>';
+
+                var rawText = code.textContent;
+                code.innerHTML = '';
+                code.textContent = rawText;
+
+                var lines = rawText.split('\n');
+                if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+                var gutterHTML = '';
+                for (var i = 1; i <= lines.length; i++) {
+                    gutterHTML += '<div>' + i + '</div>';
+                }
+                var gutter = document.createElement('div');
+                gutter.className = 'sourceCode-gutter';
+                gutter.innerHTML = gutterHTML;
+
+                var minimap = document.createElement('div');
+                minimap.className = 'sourceCode-minimap';
+
+                var bodyWrapper = document.createElement('div');
+                bodyWrapper.className = 'sourceCode-body';
+
+                if (window.hljs) {
+                    code.classList.add('language-python');
+                    hljs.highlightElement(code);
+                }
+
+                pre.parentNode.insertBefore(wrapper, pre);
+                bodyWrapper.appendChild(gutter);
+                bodyWrapper.appendChild(pre);
+                bodyWrapper.appendChild(minimap);
+                wrapper.appendChild(titlebar);
+                wrapper.appendChild(bodyWrapper);
+            });
+        }
+
+        function toggleCodeBlock(btn) {
+            var wrapper = btn.closest('.sourceCode-wrapper');
+            var body = wrapper.querySelector('.sourceCode-body');
+            if (body.classList.contains('collapsed')) {
+                body.classList.remove('collapsed');
+                btn.innerHTML = '<i class="fas fa-eye"></i> Ocultar';
+            } else {
+                body.classList.add('collapsed');
+                btn.innerHTML = '<i class="fas fa-eye-slash"></i> Mostrar';
+            }
+        }
+
+        function copyCodeBlock(btn) {
+            var wrapper = btn.closest('.sourceCode-wrapper');
+            var code = wrapper.querySelector('code');
+            if (!code) return;
+            var text = code.textContent || code.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+                var originalHTML = btn.innerHTML;
+                btn.classList.add('copied');
+                btn.innerHTML = '<i class="fas fa-check"></i> Copiado';
+                setTimeout(function() {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = originalHTML;
+                }, 2000);
+            }).catch(function(err) { console.error('Error al copiar:', err); });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(init, 100);
+        });
+    </script>
+</body>
+
+</html>

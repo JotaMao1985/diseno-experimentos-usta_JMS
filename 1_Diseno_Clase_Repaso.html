@@ -1,0 +1,2695 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Material de estudio sobre Experimentos Comparativos Simples: Diseños Completamente Aleatorizados, Comparación Apareada e Inferencia sobre Varianzas. Basado en Montgomery (2017). Universidad Santo Tomás 2026.">
+    <meta name="keywords"
+        content="diseño de experimentos, estadística, prueba t, ANOVA, comparación de medias, varianzas, USTA">
+    <meta name="author" content="Universidad Santo Tomás">
+    <title>Experimentos Comparativos Simples - Material de Estudio | USTA</title>
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- External Resources -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- KaTeX for LaTeX rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Highlight.js VS Code Dark+ -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+
+    <!-- Plotly.js for interactive charts -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        primary: '#3D008D',
+                        secondary: '#ED1E79',
+                        navy: '#001A4D',
+                        gold: '#FDB913',
+                        bg: '#F8FAFC',
+                        surface: '#FFFFFF',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #F8FAFC;
+            color: #1E293B;
+            scroll-behavior: smooth;
+        }
+
+        code,
+        pre {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* USTA Gradient Background */
+        .usta-gradient {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+        }
+
+        /* USTA Navy Header */
+        .usta-header {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+        }
+
+        /* USTA Card Style */
+        .usta-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .usta-card:hover {
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+            transform: translateY(-4px);
+        }
+
+        /* Tip box USTA style */
+        .tip-box {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.08) 0%, rgba(237, 30, 121, 0.08) 100%);
+            border: 1px solid rgba(61, 0, 141, 0.2);
+        }
+
+        /* Step connector for pipeline */
+        .step-connector::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #3D008D, #ED1E79);
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .step-connector:last-child::after {
+            display: none;
+        }
+
+        /* ===== SIDEBAR DARK STYLE ===== */
+        #sidebar-panel {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+            flex-shrink: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            width: 16rem;
+            min-width: 16rem;
+            transition: width 0.3s ease, min-width 0.3s ease, opacity 0.25s ease;
+            z-index: 40;
+        }
+
+        #sidebar-panel.collapsed {
+            width: 0;
+            min-width: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+
+        .sidebar-brand {
+            padding: 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .sidebar-brand h2 {
+            color: white;
+            font-weight: 700;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin: 0;
+            padding: 0;
+            border: none;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .sidebar-brand h2 i {
+            flex-shrink: 0;
+            margin-top: 0.15rem;
+        }
+
+        .sidebar-brand p {
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 0.35rem;
+            margin-bottom: 0;
+            text-align: left;
+            line-height: 1.4;
+        }
+
+        .sidebar-nav {
+            padding: 1rem;
+        }
+
+        .sidebar-nav-item {
+            width: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 0.5rem;
+            padding: 0.6rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            line-height: 1.4;
+            border-radius: 0.5rem;
+            text-align: left;
+            margin-bottom: 0.25rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: rgba(255, 255, 255, 0.6);
+            background: transparent;
+        }
+
+        .sidebar-nav-item:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-nav-item.active {
+            color: white;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            box-shadow: 0 4px 12px rgba(61, 0, 141, 0.3);
+        }
+
+        .sidebar-nav-item .check-mark {
+            color: #10B981;
+            flex-shrink: 0;
+        }
+
+        /* Floating sidebar toggle button */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 50;
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(61, 0, 141, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-toggle-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 18px rgba(61, 0, 141, 0.5);
+        }
+
+        /* Layout adjustment */
+        .main-layout {
+            display: flex;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        /* Scroll to top button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 3.5rem;
+            height: 3.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(61, 0, 141, 0.4);
+            transition: all 0.3s ease;
+            z-index: 50;
+            border: none;
+        }
+
+        .scroll-to-top.visible {
+            display: flex;
+        }
+
+        .scroll-to-top:hover {
+            background: linear-gradient(140deg, #4A00A8 0%, #FF2D8A 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(61, 0, 141, 0.5);
+        }
+
+        /* Fade-in animation */
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #3D008D, #ED1E79);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #4A00A8, #FF2D8A);
+        }
+
+        /* Code scrollbar */
+        .code-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .code-scroll::-webkit-scrollbar-track {
+            background: #2d2d2d;
+        }
+
+        .code-scroll::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #3D008D, #ED1E79);
+            border-radius: 4px;
+        }
+
+        /* Focus styles for accessibility */
+        button:focus-visible,
+        a:focus-visible {
+            outline: 2px solid #ED1E79;
+            outline-offset: 2px;
+        }
+
+        /* Content Styling */
+        .module-content h2 {
+            color: #3D008D;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid #ED1E79;
+        }
+
+        .module-content h3 {
+            color: #3D008D;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.75rem 0 1rem 0;
+        }
+
+        .module-content h4 {
+            color: #ED1E79;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        .module-content p {
+            margin-bottom: 1rem;
+            text-align: justify;
+            line-height: 1.8;
+        }
+
+        .module-content ul,
+        .module-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .module-content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.7;
+        }
+
+        .module-content aside {
+            background: linear-gradient(135deg, rgba(253, 185, 19, 0.1) 0%, rgba(253, 185, 19, 0.05) 100%);
+            border-left: 4px solid #FDB913;
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .module-content aside strong {
+            color: #B8860B;
+        }
+
+        .module-content .formula-box {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.03) 0%, rgba(237, 30, 121, 0.03) 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            border: 1px solid rgba(61, 0, 141, 0.15);
+            overflow-x: auto;
+        }
+
+        .module-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .module-content th,
+        .module-content td {
+            padding: 1rem 1.25rem;
+            text-align: center;
+        }
+
+        .module-content th {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .module-content tr:nth-child(even) {
+            background: rgba(61, 0, 141, 0.03);
+        }
+
+        .module-content tr:hover {
+            background: rgba(61, 0, 141, 0.08);
+        }
+
+        .module-content code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #3D008D;
+            background: rgba(61, 0, 141, 0.08);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        .module-content pre code {
+            background: transparent;
+            padding: 0;
+            color: #d4d4d4;
+        }
+
+        /* ===== VS Code Style Code Blocks ===== */
+        .sourceCode-wrapper {
+            position: relative;
+            margin: 1.75rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #1e1e1e;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255,255,255,0.05);
+        }
+
+        .sourceCode-titlebar {
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            height: 36px;
+            background: #323233;
+            border-bottom: 1px solid #252526;
+            user-select: none;
+        }
+
+        .sourceCode-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .sourceCode-dots span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .sourceCode-dots .dot-close { background: #ff5f57; }
+        .sourceCode-dots .dot-min { background: #ffbd2e; }
+        .sourceCode-dots .dot-max { background: #28c940; }
+
+        .sourceCode-tab {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 12px;
+            height: 100%;
+            background: #1e1e1e;
+            border-top: 2px solid #007acc;
+            border-right: 1px solid #252526;
+            font-size: 0.78rem;
+            color: #cccccc;
+            font-family: 'Segoe UI', 'Montserrat', sans-serif;
+        }
+
+        .sourceCode-tab .tab-icon { width: 14px; height: 14px; }
+        .sourceCode-tab .tab-icon.python { color: #f7c948; }
+
+        .sourceCode-actions {
+            display: flex;
+            gap: 4px;
+            margin-left: auto;
+        }
+
+        .sourceCode-actions button {
+            background: transparent;
+            border: none;
+            color: #858585;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-family: 'Segoe UI', 'Montserrat', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .sourceCode-actions button:hover {
+            background: #3c3c3c;
+            color: #cccccc;
+        }
+
+        .sourceCode-actions button.copied { color: #4ec9b0; }
+
+        .sourceCode-body {
+            display: flex;
+            margin: 0;
+            overflow-x: auto;
+            background: #1e1e1e;
+        }
+
+        .sourceCode-body.collapsed { display: none; }
+
+        .sourceCode-gutter {
+            padding: 16px 0;
+            text-align: right;
+            user-select: none;
+            color: #858585;
+            font-size: 0.82rem;
+            line-height: 1.65;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            min-width: 40px;
+            padding-right: 12px;
+            padding-left: 12px;
+            border-right: 1px solid #2d2d2d;
+            background: #1e1e1e;
+            flex-shrink: 0;
+        }
+
+        .sourceCode-gutter div { height: 1.65em; }
+
+        .sourceCode-wrapper pre {
+            margin: 0;
+            padding: 16px;
+            overflow-x: auto;
+            background: #1e1e1e;
+            flex: 1;
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+        }
+
+        .sourceCode-wrapper code {
+            font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+            font-size: 0.87rem;
+            line-height: 1.65;
+            color: #d4d4d4;
+            background: transparent !important;
+        }
+
+        .sourceCode-minimap {
+            width: 28px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.01) 100%);
+            border-left: 1px solid #2d2d2d;
+            flex-shrink: 0;
+        }
+
+        .sourceCode-wrapper pre::-webkit-scrollbar { height: 8px; }
+        .sourceCode-wrapper pre::-webkit-scrollbar-track { background: #1e1e1e; }
+        .sourceCode-wrapper pre::-webkit-scrollbar-thumb {
+            background: rgba(121, 121, 121, 0.4);
+            border-radius: 4px;
+        }
+        .sourceCode-wrapper pre::-webkit-scrollbar-thumb:hover {
+            background: rgba(121, 121, 121, 0.7);
+        }
+
+        /* VS Code Dark+ Syntax Highlighting */
+        .hljs-keyword { color: #569cd6; }
+        .hljs-built_in { color: #4ec9b0; }
+        .hljs-type { color: #4ec9b0; }
+        .hljs-literal { color: #569cd6; }
+        .hljs-number { color: #b5cea8; }
+        .hljs-string { color: #ce9178; }
+        .hljs-comment { color: #6a9955; font-style: italic; }
+        .hljs-function { color: #dcdcaa; }
+        .hljs-title { color: #dcdcaa; }
+        .hljs-params { color: #9cdcfe; }
+        .hljs-operator { color: #d4d4d4; }
+        .hljs-punctuation { color: #d4d4d4; }
+        .hljs-variable { color: #9cdcfe; }
+        .hljs-attr { color: #9cdcfe; }
+        .hljs-class .hljs-title { color: #4ec9b0; }
+        .hljs-meta { color: #c586c0; }
+
+        .module-content .output {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            border-left: 4px solid #10B981;
+            margin: 1rem 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+        }
+
+        /* Tooltip Styles */
+        .tooltip-term {
+            position: relative;
+            border-bottom: 2px dotted #ED1E79;
+            cursor: help;
+            font-weight: 600;
+            color: #3D008D;
+        }
+
+        .tooltip-term:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #3D008D 0%, #2D0066 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 400;
+            width: 280px;
+            text-align: left;
+            line-height: 1.5;
+            box-shadow: 0 10px 25px rgba(61, 0, 141, 0.3);
+            z-index: 1000;
+            margin-bottom: 8px;
+        }
+
+        .tooltip-term:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: #3D008D;
+            margin-bottom: -8px;
+            z-index: 1001;
+        }
+
+        /* Concepto clave box */
+        .concepto-clave {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.06) 0%, rgba(237, 30, 121, 0.04) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #3D008D;
+            margin: 1.5rem 0;
+        }
+
+        .concepto-clave h4 {
+            color: #3D008D;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Nota box */
+        .nota {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-left: 4px solid #10B981;
+            margin: 1.5rem 0;
+        }
+
+        .nota h4 {
+            color: #059669;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Ejercicio box */
+        .module-content .ejercicio {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.08) 0%, rgba(237, 30, 121, 0.05) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #ED1E79;
+            margin: 1.5rem 0;
+        }
+
+        .module-content .ejercicio h4 {
+            color: #3D008D;
+            margin-top: 0;
+        }
+
+        /* Resumen box */
+        .module-content .resumen {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.06) 0%, rgba(237, 30, 121, 0.04) 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-left: 4px solid #3D008D;
+            margin-bottom: 1.5rem;
+        }
+
+        .module-content .resumen h4 {
+            margin-top: 0;
+            color: #3D008D;
+        }
+
+        .module-content strong {
+            color: #3D008D;
+        }
+
+        .module-content em {
+            color: #ED1E79;
+        }
+
+        /* KaTeX display */
+        .katex-display {
+            margin: 1.25em 0;
+            overflow-x: auto;
+        }
+
+        /* Formula number */
+        .formula-number {
+            float: right;
+            color: #64748B;
+            font-size: 0.9rem;
+        }
+
+        /* Session header (used inside module-content) */
+        .session-header {
+            background: linear-gradient(to right, #3D008D, #ED1E79);
+            color: white;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+        .session-header h2 {
+            color: white;
+            border: none;
+            margin: 0;
+            font-size: 1.875rem;
+            text-shadow: none;
+            padding: 0;
+        }
+
+        /* SVG Styles */
+        svg {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        svg text {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Plotly Chart Containers */
+        [id^="boxplot_"],
+        [id^="stripplot_"],
+        [id^="ci_"] {
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 400px;
+        }
+
+        .js-plotly-plot {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        /* Print styles */
+        @media print {
+            #sidebar-panel,
+            .sidebar-toggle-btn,
+            #scrollToTopBtn {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+
+            .usta-card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                break-inside: avoid;
+            }
+
+            pre {
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                background: #f5f5f5;
+            }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+
+    <!-- Floating Sidebar Toggle Button -->
+    <button class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Mostrar/Ocultar menú" aria-label="Toggle sidebar">
+        <i class="fas fa-bars text-sm" id="sidebarToggleIcon"></i>
+    </button>
+
+    <div class="main-layout">
+
+        <!-- Sidebar Navigation -->
+        <div id="sidebar-panel">
+            <div class="sidebar-brand">
+                <h2><i class="fas fa-flask"></i> <span>Exp. <span style="color: #FDB913;">Comparativos</span> Simples</span></h2>
+                <p>Diseño de Experimentos • USTA 2026</p>
+            </div>
+            <nav class="sidebar-nav" id="module-nav">
+                <!-- Nav items injected via JS -->
+            </nav>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-grow flex flex-col" style="min-width:0;">
+            <main class="flex-grow bg-white rounded-tl-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div id="content-area" class="p-6 md:p-10 module-content">
+                    <!-- Content injected via JS -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="usta-header mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <i class="fas fa-book-open"></i> Referencias Bibliográficas
+            </h3>
+            <ul class="space-y-3 text-white/90 text-sm">
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Montgomery, D. C. (2017). <em class="text-gold">Design and Analysis of Experiments</em> (9th ed.). Wiley. Capítulo 2.</span>
+                </li>
+            </ul>
+            <div class="mt-6 pt-6 border-t border-white/20 text-center">
+                <p class="text-white font-medium">Material de Estudio — <span class="text-gold">USTA</span></p>
+                <p class="text-xs mt-1 text-white/60">Diseño de Experimentos • Experimentos Comparativos Simples</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="Volver arriba">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- ==================== MODULE 1 TEMPLATE ==================== -->
+    <template id="module-1">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 1</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Diseños Completamente Aleatorizados</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Comprender los fundamentos del CRD, las pruebas de hipótesis para diferencia de medias y la determinación del tamaño de muestra.</p>
+                    </div>
+                </div>
+            </div>
+
+            <section>
+                <h2>1. Fundamentos Teóricos</h2>
+
+                <h3>1.1 Introducción al Diseño Completamente Aleatorizado</h3>
+                <p>Un diseño completamente aleatorizado (Completely Randomized Design, CRD) constituye el esquema
+                    experimental más simple para comparar dos o más tratamientos. En este diseño, las unidades
+                    experimentales se asignan de manera aleatoria a los tratamientos, garantizando que cada unidad
+                    tenga
+                    igual probabilidad de recibir cualquier tratamiento. La aleatorización es el mecanismo
+                    fundamental
+                    que permite realizar inferencias causales válidas, ya que elimina el sesgo sistemático en la
+                    asignación de tratamientos.</p>
+
+                <div class="concepto-clave">
+                    <h4>Definición: Experimento Comparativo Simple</h4>
+                    <p>Se define como el estudio estadístico en el cual se comparan exactamente dos tratamientos o
+                        condiciones experimentales. El objetivo primario consiste en determinar si existe evidencia
+                        estadísticamente significativa de que los tratamientos producen efectos diferentes sobre la
+                        variable de respuesta.</p>
+                </div>
+
+                <h3>1.2 Conceptos Estadísticos Fundamentales</h3>
+
+                <h4>Variable Aleatoria y Distribuciones</h4>
+                <p>Una variable aleatoria representa una función que asigna valores numéricos a los resultados de un
+                    experimento aleatorio. Las variables aleatorias se clasifican en discretas (valores contables) y
+                    continuas (valores en un intervalo real).</p>
+
+                <div class="formula-box">
+                    <p><strong>Valor Esperado (Media Poblacional):</strong></p>
+                    <p>$$\mu = E(Y) = \int_{-\infty}^{\infty} y \cdot f(y) \, dy$$</p>
+                </div>
+
+                <div class="formula-box">
+                    <p><strong>Varianza Poblacional:</strong></p>
+                    <p>$$\sigma^2 = E[(Y - \mu)^2] = \int_{-\infty}^{\infty} (y - \mu)^2 \cdot f(y) \, dy$$</p>
+                </div>
+
+                <h4>Estadísticos Muestrales</h4>
+                <p>Los estadísticos son funciones de la muestra observada que se utilizan para estimar parámetros
+                    poblacionales desconocidos.</p>
+
+                <div class="formula-box">
+                    <p><strong>Media Muestral:</strong></p>
+                    <p>$$\bar{y} = \frac{1}{n} \sum_{i=1}^{n} y_i$$</p>
+                </div>
+
+                <div class="formula-box">
+                    <p><strong>Varianza Muestral (insesgada):</strong></p>
+                    <p>$$S^2 = \frac{1}{n-1} \sum_{i=1}^{n} (y_i - \bar{y})^2$$</p>
+                </div>
+
+                <h4>Propiedades fundamentales del operador esperanza $E(\cdot)$ y varianza $V(\cdot)$</h4>
+                <div class="concepto-clave">
+                    <p>Sean $X, Y$ variables aleatorias y $c$ una constante:</p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                        <div style="flex: 1; min-width: 250px;">
+                            <strong>Propiedades de la Esperanza:</strong>
+                            <ul>
+                                <li>$E(c) = c$</li>
+                                <li>$E(cX) = cE(X)$</li>
+                                <li>$E(X + Y) = E(X) + E(Y)$</li>
+                            </ul>
+                        </div>
+                        <div style="flex: 1; min-width: 250px;">
+                            <strong>Propiedades de la Varianza:</strong>
+                            <ul>
+                                <li>$V(c) = 0$</li>
+                                <li>$V(cX) = c^2 V(X)$</li>
+                                <li>$V(X + Y) = V(X) + V(Y)$ <br><small>(si $X, Y$ son independientes)</small></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>1.3 Distribuciones de Muestreo</h3>
+
+                <h4>Distribución Normal</h4>
+                <p>Si $Y \sim N(\mu, \sigma^2)$, entonces la media muestral $\bar{y}$ basada en $n$ observaciones
+                    independientes sigue una distribución:</p>
+
+                <div class="formula-box">
+                    <p>$$\bar{y} \sim N\left(\mu, \frac{\sigma^2}{n}\right)$$</p>
+                </div>
+
+                <h4>Distribución t de Student</h4>
+                <p>Cuando $\sigma^2$ es desconocida y se estima mediante $S^2$, el estadístico estandarizado sigue
+                    una
+                    distribución $t$ con $(n-1)$ grados de libertad:</p>
+
+                <div class="formula-box">
+                    <p>$$t = \frac{\bar{y} - \mu}{S / \sqrt{n}} \sim t_{n-1}$$</p>
+                </div>
+
+                <div class="nota">
+                    <strong>Nota Importante:</strong> La distribución t converge a la distribución normal estándar a
+                    medida que los grados de libertad aumentan. Para n > 30, las diferencias son generalmente
+                    despreciables en aplicaciones prácticas.
+                </div>
+            </section>
+
+            <section>
+                <h2>2. Inferencia sobre Diferencias de Medias (Varianzas Iguales)</h2>
+
+                <h3>2.1 Planteamiento del Problema</h3>
+                <p>Se consideran dos poblaciones normales independientes con medias $\mu_1$ y $\mu_2$, y varianzas
+                    $\sigma_1^2 = \sigma_2^2 = \sigma^2$ (supuesto de homocedasticidad). Se extraen muestras
+                    aleatorias
+                    de tamaños $n_1$ y $n_2$ respectivamente. El objetivo consiste en probar hipótesis sobre la
+                    diferencia $\mu_1 - \mu_2$.</p>
+
+                <h3>2.2 Prueba de Hipótesis (Prueba t de dos muestras)</h3>
+
+                <h4>Hipótesis Estadísticas</h4>
+                <p>El contraste de hipótesis bilateral típico se formula como:</p>
+
+                <div class="formula-box">
+                    <p><strong>$H_0$:</strong> $\mu_1 = \mu_2$ (equivalente: $\mu_1 - \mu_2 = 0$)</p>
+                    <p><strong>$H_1$:</strong> $\mu_1 \neq \mu_2$ (equivalente: $\mu_1 - \mu_2 \neq 0$)</p>
+                </div>
+
+                <h4>Varianza Combinada (Pooled Variance)</h4>
+                <p>Bajo el supuesto de varianzas iguales, se calcula un estimador combinado que pondera las
+                    varianzas
+                    muestrales por sus respectivos grados de libertad:</p>
+
+                <div class="formula-box">
+                    <p>$$S_p^2 = \frac{(n_1 - 1)S_1^2 + (n_2 - 1)S_2^2}{n_1 + n_2 - 2}$$</p>
+                </div>
+
+                <h4>Estadístico de Prueba</h4>
+                <div class="formula-box">
+                    <p>$$t_0 = \frac{\bar{y}_1 - \bar{y}_2}{S_p \sqrt{\frac{1}{n_1} + \frac{1}{n_2}}}$$</p>
+                    <p>Bajo $H_0$: $t_0 \sim t_{n_1+n_2-2}$</p>
+                </div>
+
+                <h4>Regla de Decisión</h4>
+                <p>Para un nivel de significancia $\alpha$:</p>
+                <ul>
+                    <li><strong>Contraste bilateral:</strong> Se rechaza $H_0$ si $|t_0| > t_{\alpha/2, n_1+n_2-2}$
+                    </li>
+                    <li><strong>Contraste unilateral ($H_1$: $\mu_1 > \mu_2$):</strong> Se rechaza $H_0$ si $t_0 >
+                        t_{\alpha, n_1+n_2-2}$</li>
+                    <li><strong>Contraste unilateral ($H_1$: $\mu_1 < \mu_2$):</strong> Se rechaza $H_0$ si $t_0 <
+                                    -t_{\alpha, n_1+n_2-2}$</li>
+                </ul>
+
+                <div class="concepto-clave">
+                    <h4>Valor p (p-value)</h4>
+                    <p>Se define como el nivel de significancia más pequeño que conduciría al rechazo de H₀ con los
+                        datos observados. Representa la probabilidad, bajo H₀, de observar un estadístico de prueba
+                        tan
+                        extremo o más extremo que el valor calculado. Un valor p pequeño (típicamente < 0.05)
+                            proporciona evidencia contra H₀.</p>
+                </div>
+
+                <h3>2.3 Intervalos de Confianza</h3>
+                <p>Un intervalo de confianza del $(1-\alpha) \times 100\%$ para la diferencia $\mu_1 - \mu_2$ se
+                    construye como:</p>
+
+                <div class="formula-box">
+                    <p>$$(\bar{y}_1 - \bar{y}_2) - t_{\alpha/2, n_1+n_2-2} \cdot S_p \sqrt{\frac{1}{n_1} +
+                        \frac{1}{n_2}} \leq \mu_1 - \mu_2 \leq (\bar{y}_1 - \bar{y}_2) + t_{\alpha/2, n_1+n_2-2}
+                        \cdot
+                        S_p \sqrt{\frac{1}{n_1} + \frac{1}{n_2}}$$</p>
+                </div>
+
+                <p>Si el intervalo no contiene el valor cero, se concluye que existe diferencia significativa entre
+                    las
+                    medias al nivel de confianza especificado.</p>
+
+                <h3>2.4 Supuestos del Modelo</h3>
+                <aside>
+                    <strong>Supuestos Críticos de la Prueba t de Dos Muestras:</strong>
+                    <ol>
+                        <li><strong>Normalidad:</strong> Ambas poblaciones siguen distribución normal</li>
+                        <li><strong>Independencia:</strong> Las observaciones son independientes dentro y entre
+                            muestras
+                        </li>
+                        <li><strong>Homocedasticidad:</strong> $\sigma_1^2 = \sigma_2^2$ (varianzas iguales)</li>
+                    </ol>
+                    <p>La violación de estos supuestos puede invalidar las inferencias. La prueba t es robusta ante
+                        desviaciones moderadas de normalidad cuando los tamaños muestrales son suficientemente
+                        grandes
+                        ($n_1, n_2 \geq 20$).</p>
+                </aside>
+            </section>
+
+            <section>
+                <h2>3. Determinación del Tamaño de Muestra</h2>
+
+                <h3>3.1 Enfoque basado en Potencia Estadística</h3>
+                <p>La potencia de una prueba $(1 - \beta)$ representa la probabilidad de rechazar correctamente
+                    $H_0$
+                    cuando es falsa. El error tipo II ($\beta$) es la probabilidad de no rechazar $H_0$ cuando es
+                    falsa.
+                </p>
+
+                <h4>Parámetro de No Centralidad</h4>
+                <p>El tamaño muestral se determina usando el parámetro:</p>
+
+                <div class="formula-box">
+                    <p>$$\delta = \frac{|\mu_1 - \mu_2|}{\sigma}$$</p>
+                </div>
+
+                <p>Este parámetro estandariza la diferencia de medias que se desea detectar. Para muestras de igual
+                    tamaño ($n_1 = n_2 = n$), se utilizan curvas de potencia o la relación:</p>
+
+                <div class="formula-box">
+                    <p>$$\delta \sqrt{\frac{n}{2}} \text{ debe ser suficiente para alcanzar la potencia deseada dado
+                        }
+                        \alpha$$</p>
+                </div>
+
+                <h3>3.2 Enfoque basado en Longitud del Intervalo de Confianza</h3>
+                <p>Alternativamente, se puede determinar n para obtener un intervalo de confianza con longitud
+                    máxima L:
+                </p>
+
+                <div class="formula-box">
+                    <p>$$n \geq 2 \left( \frac{t_{\alpha/2, 2n-2} \cdot S_p}{L} \right)^2$$</p>
+                </div>
+
+                <p>Esta ecuación requiere solución iterativa dado que t depende de n.</p>
+            </section>
+
+            <section>
+                <h2>4. Casos Especiales</h2>
+
+                <h3>4.1 Varianzas Desiguales: Aproximación de Welch</h3>
+                <p>Cuando no es razonable asumir $\sigma_1^2 = \sigma_2^2$, se utiliza la prueba t de Welch, que no
+                    requiere varianza combinada:</p>
+
+                <div class="formula-box">
+                    <p><strong>Estadístico de Welch:</strong></p>
+                    <p>$$t_0 = \frac{\bar{y}_1 - \bar{y}_2}{\sqrt{\frac{S_1^2}{n_1} + \frac{S_2^2}{n_2}}}$$</p>
+                </div>
+
+                <div class="formula-box">
+                    <p><strong>Grados de libertad aproximados (fórmula de Satterthwaite):</strong></p>
+                    <p>$$\nu = \frac{\left( \frac{S_1^2}{n_1} + \frac{S_2^2}{n_2}
+                        \right)^2}{\frac{(S_1^2/n_1)^2}{n_1-1}
+                        + \frac{(S_2^2/n_2)^2}{n_2-1}}$$</p>
+                </div>
+
+                <p>Los grados de libertad se redondean al entero más cercano. El estadístico $t_0$ se compara con
+                    $t_{\alpha/2, \nu}$.</p>
+
+                <h3>4.2 Varianzas Conocidas: Prueba Z</h3>
+                <p>En el caso poco común donde $\sigma_1^2$ y $\sigma_2^2$ son conocidas, se utiliza la prueba Z:
+                </p>
+
+                <div class="formula-box">
+                    <p>$$Z_0 = \frac{\bar{y}_1 - \bar{y}_2}{\sqrt{\frac{\sigma_1^2}{n_1} +
+                        \frac{\sigma_2^2}{n_2}}}$$
+                    </p>
+                    <p>Bajo $H_0$: $Z_0 \sim N(0, 1)$</p>
+                </div>
+
+                <h3>4.3 Comparación de una Media con Valor Especificado</h3>
+                <p>Para probar $H_0: \mu = \mu_0$ usando una muestra de tamaño $n$:</p>
+
+                <div class="formula-box">
+                    <p>$$t_0 = \frac{\bar{y} - \mu_0}{S / \sqrt{n}} \sim t_{n-1}$$</p>
+                </div>
+            </section>
+
+            <section>
+                <h2>5. Diagrama Conceptual del Diseño Completamente Aleatorizado</h2>
+
+                <div style="background-color: #f8fafc; border: 2px dashed #cbd5e1; padding: 2rem; border-radius: 0.75rem; margin: 2rem 0; text-align: center;">
+                    <h4 style="text-align: center; color: #475569; margin-bottom: 1.5rem;">Estructura del Diseño Completamente Aleatorizado para Dos Tratamientos</h4>
+                    <svg viewBox="0 0 700 520"
+                        style="max-width: 700px; width: 100%; height: auto; margin: 20px auto; display: block;">
+                        <defs>
+                            <marker id="arrowhead1" markerWidth="10" markerHeight="7" refX="9" refY="3.5"
+                                orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#4682B4" />
+                            </marker>
+                            <linearGradient id="gradient1" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#4682B4;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#2c5282;stop-opacity:1" />
+                            </linearGradient>
+                            <linearGradient id="gradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#48BB78;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#276749;stop-opacity:1" />
+                            </linearGradient>
+                            <linearGradient id="gradient3" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#ED8936;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#C05621;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+
+                        <rect x="100" y="20" width="500" height="50" rx="8" fill="url(#gradient1)" />
+                        <text x="350" y="52" text-anchor="middle" fill="white" font-size="16" font-weight="bold">POBLACIÓN DE UNIDADES EXPERIMENTALES</text>
+
+                        <line x1="350" y1="70" x2="350" y2="100" stroke="#4682B4" stroke-width="2" marker-end="url(#arrowhead1)" />
+
+                        <rect x="250" y="105" width="200" height="45" rx="25" fill="url(#gradient3)" />
+                        <text x="350" y="133" text-anchor="middle" fill="white" font-size="14" font-weight="bold">🎲 ALEATORIZACIÓN</text>
+
+                        <line x1="350" y1="150" x2="350" y2="175" stroke="#4682B4" stroke-width="2" />
+                        <line x1="350" y1="175" x2="175" y2="175" stroke="#4682B4" stroke-width="2" />
+                        <line x1="350" y1="175" x2="525" y2="175" stroke="#4682B4" stroke-width="2" />
+                        <line x1="175" y1="175" x2="175" y2="200" stroke="#4682B4" stroke-width="2" marker-end="url(#arrowhead1)" />
+                        <line x1="525" y1="175" x2="525" y2="200" stroke="#4682B4" stroke-width="2" marker-end="url(#arrowhead1)" />
+
+                        <rect x="75" y="205" width="200" height="60" rx="8" fill="url(#gradient2)" />
+                        <text x="175" y="232" text-anchor="middle" fill="white" font-size="14" font-weight="bold">TRATAMIENTO 1</text>
+                        <text x="175" y="252" text-anchor="middle" fill="white" font-size="12">(n₁ unidades)</text>
+
+                        <rect x="425" y="205" width="200" height="60" rx="8" fill="url(#gradient2)" />
+                        <text x="525" y="232" text-anchor="middle" fill="white" font-size="14" font-weight="bold">TRATAMIENTO 2</text>
+                        <text x="525" y="252" text-anchor="middle" fill="white" font-size="12">(n₂ unidades)</text>
+
+                        <line x1="175" y1="265" x2="175" y2="295" stroke="#4682B4" stroke-width="2" marker-end="url(#arrowhead1)" />
+                        <line x1="525" y1="265" x2="525" y2="295" stroke="#4682B4" stroke-width="2" marker-end="url(#arrowhead1)" />
+
+                        <rect x="75" y="300" width="200" height="40" rx="5" fill="#E2E8F0" stroke="#4682B4" />
+                        <text x="175" y="325" text-anchor="middle" fill="#2D3748" font-size="13">y₁₁, y₁₂, ..., y₁ₙ₁</text>
+
+                        <rect x="425" y="300" width="200" height="40" rx="5" fill="#E2E8F0" stroke="#4682B4" />
+                        <text x="525" y="325" text-anchor="middle" fill="#2D3748" font-size="13">y₂₁, y₂₂, ..., y₂ₙ₂</text>
+
+                        <line x1="175" y1="340" x2="175" y2="365" stroke="#4682B4" stroke-width="2" marker-end="url(#arrowhead1)" />
+                        <line x1="525" y1="340" x2="525" y2="365" stroke="#4682B4" stroke-width="2" marker-end="url(#arrowhead1)" />
+
+                        <rect x="100" y="370" width="150" height="40" rx="5" fill="#BEE3F8" stroke="#4682B4" stroke-width="2" />
+                        <text x="175" y="395" text-anchor="middle" fill="#2B6CB0" font-size="14" font-weight="bold">ȳ₁, S₁²</text>
+
+                        <rect x="450" y="370" width="150" height="40" rx="5" fill="#BEE3F8" stroke="#4682B4" stroke-width="2" />
+                        <text x="525" y="395" text-anchor="middle" fill="#2B6CB0" font-size="14" font-weight="bold">ȳ₂, S₂²</text>
+
+                        <line x1="175" y1="410" x2="175" y2="435" stroke="#4682B4" stroke-width="2" />
+                        <line x1="525" y1="410" x2="525" y2="435" stroke="#4682B4" stroke-width="2" />
+                        <line x1="175" y1="435" x2="350" y2="435" stroke="#4682B4" stroke-width="2" />
+                        <line x1="525" y1="435" x2="350" y2="435" stroke="#4682B4" stroke-width="2" />
+                        <line x1="350" y1="435" x2="350" y2="455" stroke="#4682B4" stroke-width="2" marker-end="url(#arrowhead1)" />
+
+                        <rect x="225" y="460" width="250" height="50" rx="8" fill="url(#gradient1)" />
+                        <text x="350" y="483" text-anchor="middle" fill="white" font-size="14" font-weight="bold">INFERENCIA: ¿μ₁ ≠ μ₂?</text>
+                        <text x="350" y="500" text-anchor="middle" fill="white" font-size="11">Prueba t de dos muestras</text>
+                    </svg>
+                    <p><strong>Características clave:</strong></p>
+                    <ul style="text-align: left; display: inline-block;">
+                        <li>Asignación aleatoria elimina sesgo sistemático</li>
+                        <li>Independencia entre grupos</li>
+                        <li>Variación experimental dentro de cada grupo</li>
+                        <li>Inferencia basada en distribución t de Student</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <h2>6. Ejemplo Completo en Python: Resistencia del Cemento Portland</h2>
+
+                <h3>6.1 Contexto del Problema</h3>
+                <p>Un ingeniero de materiales investiga si la adición de una emulsión de polímero látex al mortero
+                    de
+                    cemento Portland afecta la resistencia de unión a tracción. Se comparan dos formulaciones:</p>
+                <ul>
+                    <li><strong>Tratamiento 1 (Modificada):</strong> Mortero con polímero látex</li>
+                    <li><strong>Tratamiento 2 (Original):</strong> Mortero estándar sin modificación</li>
+                </ul>
+                <p>Se preparan 10 especímenes de cada formulación siguiendo un diseño completamente aleatorizado. La
+                    variable de respuesta es la resistencia de unión medida en kgf/cm².</p>
+
+                <h3>6.2 Implementación en Python</h3>
+
+                <pre><code data-language="python"># Importación de bibliotecas necesarias
+import numpy as np
+import pandas as pd
+from scipy import stats
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Configuración de reproducibilidad y visualización
+np.random.seed(42)
+sns.set_style("whitegrid")
+plt.rcParams['figure.figsize'] = (12, 6)
+
+# ============================================================================
+# DATOS EXPERIMENTALES: Resistencia del cemento (kgf/cm²)
+# ============================================================================
+# Fuente: Montgomery, D. C. (2017), Tabla 2.1
+
+# Mortero modificado (con polímero látex)
+modificado = np.array([16.85, 16.40, 17.21, 16.35, 16.52,
+                       17.04, 16.96, 17.15, 16.59, 16.57])
+
+# Mortero no modificado (formulación original)
+no_modificado = np.array([16.62, 16.75, 17.37, 17.12, 16.98,
+                          16.87, 17.34, 17.02, 17.08, 17.27])
+
+# ============================================================================
+# 1. ANÁLISIS EXPLORATORIO DE DATOS
+# ============================================================================
+print("="*70)
+print("ANÁLISIS EXPLORATORIO DE DATOS")
+print("="*70)
+
+# Estadísticos descriptivos
+n1, n2 = len(modificado), len(no_modificado)
+y1_bar = np.mean(modificado)
+y2_bar = np.mean(no_modificado)
+s1_sq = np.var(modificado, ddof=1)
+s2_sq = np.var(no_modificado, ddof=1)
+s1 = np.std(modificado, ddof=1)
+s2 = np.std(no_modificado, ddof=1)
+
+print(f"\nMortero Modificado (n₁ = {n1}):")
+print(f"  Media (ȳ₁) = {y1_bar:.4f} kgf/cm²")
+print(f"  Varianza (S₁²) = {s1_sq:.4f}")
+print(f"  Desviación Estándar (S₁) = {s1:.4f}")
+
+print(f"\nMortero No Modificado (n₂ = {n2}):")
+print(f"  Media (ȳ₂) = {y2_bar:.4f} kgf/cm²")
+print(f"  Varianza (S₂²) = {s2_sq:.4f}")
+print(f"  Desviación Estándar (S₂) = {s2:.4f}")
+
+print(f"\nDiferencia observada: ȳ₁ - ȳ₂ = {y1_bar - y2_bar:.4f} kgf/cm²")
+
+# ============================================================================
+# 2. VERIFICACIÓN DE SUPUESTOS
+# ============================================================================
+print("\n" + "="*70)
+print("VERIFICACIÓN DE SUPUESTOS")
+print("="*70)
+
+# Prueba de Shapiro-Wilk para normalidad
+shapiro_mod = stats.shapiro(modificado)
+shapiro_no_mod = stats.shapiro(no_modificado)
+
+print("\nPrueba de Normalidad (Shapiro-Wilk):")
+print(f"  Modificado: W = {shapiro_mod.statistic:.4f}, p-valor = {shapiro_mod.pvalue:.4f}")
+print(f"  No Modificado: W = {shapiro_no_mod.statistic:.4f}, p-valor = {shapiro_no_mod.pvalue:.4f}")
+print("  Interpretación: p-valor > 0.05 sugiere distribución normal")
+
+# Prueba de Levene para igualdad de varianzas
+levene_test = stats.levene(modificado, no_modificado)
+print(f"\nPrueba de Homogeneidad de Varianzas (Levene):")
+print(f"  Estadístico = {levene_test.statistic:.4f}, p-valor = {levene_test.pvalue:.4f}")
+print("  Interpretación: p-valor > 0.05 sugiere varianzas iguales (homocedasticidad)")
+
+# ============================================================================
+# 3. PRUEBA T DE DOS MUESTRAS (VARIANZAS IGUALES)
+# ============================================================================
+print("\n" + "="*70)
+print("PRUEBA DE HIPÓTESIS: t de dos muestras (varianzas iguales)")
+print("="*70)
+
+# Cálculo manual del estadístico t
+sp_squared = ((n1 - 1) * s1_sq + (n2 - 1) * s2_sq) / (n1 + n2 - 2)
+sp = np.sqrt(sp_squared)
+
+print(f"\nVarianza combinada (S²ₚ) = {sp_squared:.4f}")
+print(f"Desviación estándar combinada (Sₚ) = {sp:.4f}")
+
+se_diff = sp * np.sqrt(1/n1 + 1/n2)
+print(f"Error estándar de la diferencia = {se_diff:.4f}")
+
+t_manual = (y1_bar - y2_bar) / se_diff
+df = n1 + n2 - 2
+
+print(f"\nEstadístico t₀ = {t_manual:.4f}")
+print(f"Grados de libertad = {df}")
+
+p_value_manual = 2 * stats.t.cdf(t_manual, df)
+print(f"Valor p (bilateral) = {p_value_manual:.4f}")
+
+alpha = 0.05
+t_critical = stats.t.ppf(1 - alpha/2, df)
+print(f"\nValor crítico t₍₀.₀₂₅, ₁₈₎ = ±{t_critical:.4f}")
+
+if abs(t_manual) > t_critical:
+    print(f"Decisión: |t₀| = {abs(t_manual):.4f} > {t_critical:.4f}")
+    print("Se RECHAZA H₀ al nivel α = 0.05")
+else:
+    print(f"Decisión: |t₀| = {abs(t_manual):.4f} ≤ {t_critical:.4f}")
+    print("No se rechaza H₀ al nivel α = 0.05")
+
+# Verificación usando scipy.stats.ttest_ind
+t_scipy, p_scipy = stats.ttest_ind(modificado, no_modificado, equal_var=True)
+print(f"\nVerificación con scipy.stats.ttest_ind:")
+print(f"  t = {t_scipy:.4f}, p-valor = {p_scipy:.4f}")
+
+# ============================================================================
+# 4. INTERVALO DE CONFIANZA (95%)
+# ============================================================================
+print("\n" + "="*70)
+print("INTERVALO DE CONFIANZA (95%)")
+print("="*70)
+
+margin_error = t_critical * se_diff
+ci_lower = (y1_bar - y2_bar) - margin_error
+ci_upper = (y1_bar - y2_bar) + margin_error
+
+print(f"\nDiferencia estimada (ȳ₁ - ȳ₂) = {y1_bar - y2_bar:.4f}")
+print(f"Margen de error = ±{margin_error:.4f}")
+print(f"\nIntervalo de confianza del 95%:")
+print(f"  [{ci_lower:.4f}, {ci_upper:.4f}] kgf/cm²")
+
+if ci_lower < 0 < ci_upper:
+    print("\nInterpretación: El IC contiene el cero → No diferencia significativa")
+else:
+    print("\nInterpretación: El IC NO contiene el cero → Diferencia significativa")
+    if ci_upper < 0:
+        print("La formulación modificada tiene MENOR resistencia")
+</code></pre>
+
+
+                <h3>6.2.1 Resultados del Análisis (Gráficos Interactivos)</h3>
+                <p>A continuación se presentan los resultados del análisis estadístico con gráficos interactivos.
+                    <strong>Puede pasar el cursor sobre los gráficos para ver detalles adicionales.</strong>
+                </p>
+
+                <!-- Tabla de Resultados -->
+                <div style="margin: 20px 0; padding: 20px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 10px; border-left: 4px solid #3498db;">
+                    <h4 style="color: #2c3e50; margin-top: 0;">📊 Estadísticos Descriptivos</h4>
+                    <table style="width: 100%; border-collapse: collapse; margin: 10px 0;">
+                        <thead>
+                            <tr style="background-color: #3498db; color: white;">
+                                <th scope="col" style="padding: 10px; text-align: left;">Métrica</th>
+                                <th scope="col" style="padding: 10px; text-align: center;">Mortero Modificado</th>
+                                <th scope="col" style="padding: 10px; text-align: center;">Mortero No Modificado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background-color: white;">
+                                <td style="padding: 10px; border-bottom: 1px solid #dee2e6;"><strong>Tamaño muestral (n)</strong></td>
+                                <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6;">10</td>
+                                <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6;">10</td>
+                            </tr>
+                            <tr style="background-color: #f8f9fa;">
+                                <td style="padding: 10px; border-bottom: 1px solid #dee2e6;"><strong>Media (ȳ)</strong></td>
+                                <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6; color: #3498db; font-weight: bold;">16.7640 kgf/cm²</td>
+                                <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6; color: #e74c3c; font-weight: bold;">17.0420 kgf/cm²</td>
+                            </tr>
+                            <tr style="background-color: white;">
+                                <td style="padding: 10px; border-bottom: 1px solid #dee2e6;"><strong>Varianza (S²)</strong></td>
+                                <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6;">0.1001</td>
+                                <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6;">0.0615</td>
+                            </tr>
+                            <tr style="background-color: #f8f9fa;">
+                                <td style="padding: 10px;"><strong>Desv. Estándar (S)</strong></td>
+                                <td style="padding: 10px; text-align: center;">0.3164</td>
+                                <td style="padding: 10px; text-align: center;">0.2479</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Verificación de Supuestos -->
+                <div style="margin: 20px 0; padding: 20px; background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); border-radius: 10px; border-left: 4px solid #28a745;">
+                    <h4 style="color: #155724; margin-top: 0;">✅ Verificación de Supuestos</h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                        <div style="flex: 1; min-width: 250px; background: white; padding: 15px; border-radius: 8px;">
+                            <strong>Normalidad (Shapiro-Wilk)</strong>
+                            <ul style="margin: 10px 0;">
+                                <li>Modificado: W = 0.9186, p = 0.3457 ✓</li>
+                                <li>No Modificado: W = 0.9626, p = 0.8153 ✓</li>
+                            </ul>
+                            <small style="color: #666;">p-valores > 0.05: Se cumple normalidad</small>
+                        </div>
+                        <div style="flex: 1; min-width: 250px; background: white; padding: 15px; border-radius: 8px;">
+                            <strong>Homocedasticidad (Levene)</strong>
+                            <ul style="margin: 10px 0;">
+                                <li>Estadístico = 1.9528</li>
+                                <li>p-valor = 0.1793 ✓</li>
+                            </ul>
+                            <small style="color: #666;">p-valor > 0.05: Varianzas iguales</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráficos Interactivos -->
+                <div style="margin: 30px 0;">
+                    <h4 style="color: #2c3e50;">📈 Visualización de Datos</h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; align-items: stretch;">
+                        <div style="flex: 1; min-width: 300px; max-width: 400px; height: 450px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 5px; overflow: hidden; display: flex; flex-direction: column;">
+                            <div id="boxplot_cemento" style="flex: 1; width:100%;"></div>
+                        </div>
+                        <div style="flex: 1; min-width: 300px; max-width: 400px; height: 450px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 5px; overflow: hidden; display: flex; flex-direction: column;">
+                            <div id="stripplot_cemento" style="flex: 1; width:100%;"></div>
+                        </div>
+                        <div style="flex: 1; min-width: 300px; max-width: 400px; height: 450px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 5px; overflow: hidden; display: flex; flex-direction: column;">
+                            <div id="ci_cemento" style="flex: 1; width:100%;"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <div style="text-align: center; margin-top: 15px; padding: 15px; background: #f8d7da; border-radius: 8px; border-left: 4px solid #dc3545;">
+                            <strong style="color: #721c24;">IC 95%: [-0.5451, -0.0109] kgf/cm²</strong>
+                            <p style="margin: 5px 0 0; color: #721c24;">El intervalo NO contiene el cero → Diferencia estadísticamente significativa</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resultados de la Prueba t -->
+                <div style="margin: 20px 0; padding: 20px; background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%); border-radius: 10px; border-left: 4px solid #ffc107;">
+                    <h4 style="color: #856404; margin-top: 0;">📐 Prueba t de Dos Muestras (varianzas iguales)</h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                        <div style="flex: 1; min-width: 200px; background: white; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 28px; color: #2c3e50; font-weight: bold;">-2.1869</div>
+                            <div style="color: #666; font-size: 14px;">Estadístico t₀</div>
+                        </div>
+                        <div style="flex: 1; min-width: 200px; background: white; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 28px; color: #e74c3c; font-weight: bold;">0.0422</div>
+                            <div style="color: #666; font-size: 14px;">Valor p (bilateral)</div>
+                        </div>
+                        <div style="flex: 1; min-width: 200px; background: white; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 28px; color: #3498db; font-weight: bold;">±2.1009</div>
+                            <div style="color: #666; font-size: 14px;">Valor crítico (α=0.05)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conclusión -->
+                <div style="margin: 20px 0; padding: 20px; background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%); border-radius: 10px; border-left: 4px solid #dc3545;">
+                    <h4 style="color: #721c24; margin-top: 0;">🎯 Conclusión del Análisis</h4>
+                    <p style="margin: 10px 0; color: #721c24;">
+                        <strong>Decisión Estadística:</strong> Con p-valor = 0.0422 < α=0.05, se <strong>RECHAZA H₀</strong>.
+                    </p>
+                    <p style="margin: 10px 0; color: #721c24;">
+                        <strong>Interpretación:</strong> Existe evidencia estadísticamente significativa de que la
+                        adición del polímero
+                        látex <strong>REDUCE</strong> la resistencia de unión del mortero en aproximadamente 0.28
+                        kgf/cm².
+                    </p>
+                    <p style="margin: 10px 0; padding: 10px; background: white; border-radius: 5px; color: #155724;">
+                        <strong>💡 Recomendación Práctica:</strong> El ingeniero NO debería implementar la
+                        formulación
+                        modificada
+                        si el objetivo es mantener o mejorar la resistencia de unión del cemento.
+                    </p>
+                </div>
+
+                <h3>6.3 Interpretación de Salidas</h3>
+                <p>El análisis revela que:</p>
+                <ol>
+                    <li><strong>Supuestos verificados:</strong> Las pruebas de Shapiro-Wilk (normalidad) y Levene
+                        (homocedasticidad) no muestran violaciones significativas (p-valores > 0.05).</li>
+                    <li><strong>Evidencia estadística:</strong> Con t₀ = -2.20 y p-valor = 0.042 < 0.05, se rechaza
+                            H₀ al nivel de significancia del 5%.</li>
+                    <li><strong>Magnitud del efecto:</strong> La formulación modificada reduce la resistencia en
+                        promedio 0.28 kgf/cm² (IC 95%: [-0.55, -0.01]).</li>
+                    <li><strong>Conclusión práctica:</strong> La adición del polímero látex tiene un efecto
+                        estadística
+                        y prácticamente significativo en la reducción de resistencia.</li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>7. Ejercicios de Autoevaluación</h2>
+
+                <div class="ejercicio">
+                    <h4>Ejercicio 1: Análisis de Tiempo de Secado de Pintura</h4>
+                    <p><strong>Contexto:</strong> Una empresa de recubrimientos compara dos formulaciones de pintura
+                        (A
+                        y B) respecto al tiempo de secado (minutos). Se realizaron las siguientes mediciones en
+                        condiciones controladas:</p>
+                    <ul>
+                        <li><strong>Pintura A (n=8):</strong> 121, 118, 125, 119, 123, 117, 122, 120</li>
+                        <li><strong>Pintura B (n=8):</strong> 115, 113, 119, 111, 117, 114, 118, 112</li>
+                    </ul>
+
+                    <p><strong>Tareas:</strong></p>
+                    <ol>
+                        <li>Calcule las medias muestrales, varianzas y la varianza combinada</li>
+                        <li>Realice una prueba t bilateral (α = 0.05) para determinar si existe diferencia
+                            significativa
+                            en los tiempos de secado</li>
+                        <li>Construya un intervalo de confianza del 95% para la diferencia de medias</li>
+                        <li>Verifique los supuestos de normalidad e igualdad de varianzas</li>
+                        <li>Interprete los resultados en el contexto del problema</li>
+                    </ol>
+
+                    <p><strong>Solución parcial:</strong></p>
+                    <pre><code>import numpy as np
+from scipy import stats
+
+# Datos
+pintura_a = np.array([121, 118, 125, 119, 123, 117, 122, 120])
+pintura_b = np.array([115, 113, 119, 111, 117, 114, 118, 112])
+
+# Estadísticos descriptivos
+y_a = np.mean(pintura_a)
+y_b = np.mean(pintura_b)
+s_a_sq = np.var(pintura_a, ddof=1)
+s_b_sq = np.var(pintura_b, ddof=1)
+
+print(f"Media A: {y_a:.2f}, Media B: {y_b:.2f}")
+print(f"Varianza A: {s_a_sq:.2f}, Varianza B: {s_b_sq:.2f}")
+
+# Complete el análisis calculando:
+# - Varianza combinada Sp²
+# - Estadístico t₀
+# - Valor p
+# - Intervalo de confianza del 95%
+# - Verificación de supuestos
+</code></pre>
+                </div>
+
+                <div class="ejercicio">
+                    <h4>Ejercicio 2: Diseño de Experimento para Resistencia de Fibras</h4>
+                    <p><strong>Contexto:</strong> Un ingeniero textil desea comparar la resistencia a la tracción
+                        (en
+                        Newton) de dos tipos de fibra sintética. Se tiene información histórica que indica σ ≈ 8 N
+                        para
+                        ambas fibras.</p>
+
+                    <p><strong>Tareas:</strong></p>
+                    <ol>
+                        <li>Determine el tamaño de muestra necesario (n₁ = n₂ = n) para detectar una diferencia de δ
+                            = 5
+                            N con α = 0.05 y potencia 1 - β = 0.90</li>
+                        <li>Si se utilizan n = 15 observaciones por grupo, ¿qué longitud tendrá el intervalo de
+                            confianza del 95%?</li>
+                        <li>Simule datos para dos grupos con μ₁ = 100, μ₂ = 105, σ = 8, n = 15 y realice la prueba t
+                        </li>
+                        <li>Repita la simulación 1000 veces y estime empíricamente la potencia real del diseño</li>
+                    </ol>
+
+                    <p><strong>Solución parcial (Simulación de Potencia):</strong></p>
+                    <pre><code>import numpy as np
+from scipy import stats
+
+# Parámetros
+mu1, mu2, sigma = 100, 105, 8
+n1, n2 = 15, 15
+alpha = 0.05
+n_sim = 1000
+
+# Contador de rechazos de H₀
+rechazos = 0
+
+np.random.seed(123)
+for _ in range(n_sim):
+    # Generar datos bajo H₁ (μ₁ ≠ μ₂)
+    muestra1 = np.random.normal(mu1, sigma, n1)
+    muestra2 = np.random.normal(mu2, sigma, n2)
+
+    # Prueba t
+    t_stat, p_value = stats.ttest_ind(muestra1, muestra2, equal_var=True)
+
+    # Complete: contar rechazos cuando p_value < alpha
+
+# Potencia empírica = rechazos / n_sim
+</code></pre>
+                </div>
+            </section>
+        </div>
+    </template>
+
+    <!-- ==================== MODULE 2 TEMPLATE ==================== -->
+    <template id="module-2">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 2</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Comparación Apareada e Inferencia sobre Varianzas</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Dominar las pruebas pareadas, inferencia sobre varianzas y comparación de dos varianzas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <section>
+                <h2>1. Fundamentos del Diseño de Comparación Apareada</h2>
+
+                <h3>1.1 Fundamentos del Bloqueo</h3>
+                <p>El bloqueo constituye una técnica fundamental de control experimental que agrupa unidades
+                    experimentales homogéneas en bloques, reduciendo así la variabilidad experimental. Cada bloque
+                    contiene unidades similares respecto a factores que podrían afectar la respuesta pero que no son
+                    de
+                    interés primario en el estudio.</p>
+
+                <div class="concepto-clave">
+                    <h4>Definición: Diseño de Comparación Apareada</h4>
+                    <p>Constituye un caso especial de diseño en bloques aleatorizados donde cada bloque contiene
+                        exactamente dos unidades experimentales (o dos observaciones de la misma unidad),
+                        asignándose
+                        aleatoriamente los dos tratamientos dentro de cada bloque. La unidad de análisis es la
+                        diferencia entre las dos observaciones apareadas.</p>
+                </div>
+
+                <h3>1.2 Modelo Matemático</h3>
+                <p>Para $n$ pares de observaciones, donde cada par $j$ ($j = 1, \ldots, n$) recibe ambos
+                    tratamientos:
+                </p>
+
+                <div class="formula-box">
+                    <p>$y_{1j}$ = observación del tratamiento 1 en el par $j$</p>
+                    <p>$y_{2j}$ = observación del tratamiento 2 en el par $j$</p>
+                    <p>$d_j = y_{1j} - y_{2j}$ (diferencia pareada)</p>
+                </div>
+
+                <p>La hipótesis nula se formula en términos de la media de las diferencias:</p>
+
+                <div class="formula-box">
+                    <p><strong>$H_0$:</strong> $\mu_D = 0$ (no hay diferencia entre tratamientos)</p>
+                    <p><strong>$H_1$:</strong> $\mu_D \neq 0$ (existe diferencia entre tratamientos)</p>
+                </div>
+
+                <h3>1.3 Cálculo de Estadísticos</h3>
+
+                <div class="formula-box">
+                    <p><strong>Media de las diferencias:</strong></p>
+                    <p>$$\bar{d} = \frac{1}{n} \sum_{j=1}^{n} d_j$$</p>
+                </div>
+
+                <div class="formula-box">
+                    <p><strong>Varianza de las diferencias:</strong></p>
+                    <p>$$S_d^2 = \frac{1}{n-1} \sum_{j=1}^{n} (d_j - \bar{d})^2$$</p>
+                </div>
+
+                <div class="formula-box">
+                    <p><strong>Estadístico t pareado:</strong></p>
+                    <p>$$t_0 = \frac{\bar{d}}{S_d / \sqrt{n}}$$</p>
+                    <p>Bajo $H_0$: $t_0 \sim t_{n-1}$</p>
+                </div>
+
+                <h3>1.4 Estimación por Intervalos</h3>
+
+                <div class="formula-box">
+                    <p>$$\bar{d} - t_{\alpha/2, n-1} \cdot \frac{S_d}{\sqrt{n}} \leq \mu_D \leq \bar{d} +
+                        t_{\alpha/2,
+                        n-1} \cdot \frac{S_d}{\sqrt{n}}$$</p>
+                </div>
+
+                <h3>1.5 Ventajas del Método</h3>
+                <div class="nota">
+                    <strong>Ventajas principales del diseño de comparación apareada:</strong>
+                    <ol>
+                        <li><strong>Control de variabilidad:</strong> Elimina la variación entre bloques (unidades
+                            experimentales), reduciendo el error experimental</li>
+                        <li><strong>Mayor potencia estadística:</strong> Al reducir la varianza del error, aumenta
+                            la
+                            probabilidad de detectar diferencias reales</li>
+                        <li><strong>Menor tamaño muestral:</strong> Requiere menos observaciones que un diseño
+                            completamente aleatorizado para lograr la misma potencia</li>
+                        <li><strong>Eficiencia:</strong> Cuando la correlación positiva entre pares es alta, la
+                            eficiencia relativa puede ser sustancial</li>
+                    </ol>
+                </div>
+
+                <h3>1.6 Pareado vs Aleatorizado</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Característica</th>
+                            <th scope="col">Completamente Aleatorizado</th>
+                            <th scope="col">Comparación Apareada</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Unidades experimentales</td>
+                            <td>Independientes entre grupos</td>
+                            <td>Apareadas dentro de bloques</td>
+                        </tr>
+                        <tr>
+                            <td>Fuente de variación</td>
+                            <td>Entre y dentro de grupos</td>
+                            <td>Principalmente dentro de pares</td>
+                        </tr>
+                        <tr>
+                            <td>Estadístico</td>
+                            <td>$t$ con $\sqrt{1/n_1 + 1/n_2}$</td>
+                            <td>$t$ con $1/\sqrt{n}$</td>
+                        </tr>
+                        <tr>
+                            <td>Grados de libertad</td>
+                            <td>$n_1 + n_2 - 2$</td>
+                            <td>$n - 1$</td>
+                        </tr>
+                        <tr>
+                            <td>Potencia estadística</td>
+                            <td>Menor (mayor varianza del error)</td>
+                            <td>Mayor (varianza del error reducida)</td>
+                        </tr>
+                        <tr>
+                            <td>Aplicabilidad</td>
+                            <td>Unidades independientes</td>
+                            <td>Unidades naturalmente apareadas o emparejables</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <aside>
+                    <strong>Advertencia:</strong> El diseño pareado solo debe utilizarse cuando existe una base
+                    lógica
+                    natural para el apareamiento (mismo individuo, gemelos, ubicaciones similares, tiempo común,
+                    etc.).
+                    El apareamiento arbitrario puede reducir la potencia al perder grados de libertad sin beneficio
+                    en
+                    reducción de varianza.
+                </aside>
+            </section>
+
+            <section>
+                <h2>2. Diagrama Conceptual del Diseño de Comparación Apareada</h2>
+
+                <div style="background-color: #f8fafc; border: 2px dashed #cbd5e1; padding: 2rem; border-radius: 0.75rem; margin: 2rem 0; text-align: center;">
+                    <h4 style="text-align: center; color: #475569; margin-bottom: 1.5rem;">Estructura del Diseño de Comparación Apareada</h4>
+                    <svg viewBox="0 0 800 580"
+                        style="max-width: 800px; width: 100%; height: auto; margin: 20px auto; display: block;">
+                        <defs>
+                            <marker id="arrowhead2" markerWidth="10" markerHeight="7" refX="9" refY="3.5"
+                                orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#6B46C1" />
+                            </marker>
+                            <linearGradient id="gradient4" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#6B46C1;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#553C9A;stop-opacity:1" />
+                            </linearGradient>
+                            <linearGradient id="gradient5" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#38A169;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#276749;stop-opacity:1" />
+                            </linearGradient>
+                            <linearGradient id="gradient6" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#DD6B20;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#C05621;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+
+                        <rect x="100" y="15" width="600" height="45" rx="8" fill="url(#gradient4)" />
+                        <text x="400" y="45" text-anchor="middle" fill="white" font-size="15" font-weight="bold">n BLOQUES (PARES) HOMOGÉNEOS</text>
+
+                        <line x1="400" y1="60" x2="400" y2="85" stroke="#6B46C1" stroke-width="2" />
+                        <line x1="130" y1="85" x2="670" y2="85" stroke="#6B46C1" stroke-width="2" />
+                        <line x1="130" y1="85" x2="130" y2="105" stroke="#6B46C1" stroke-width="2" marker-end="url(#arrowhead2)" />
+                        <line x1="400" y1="85" x2="400" y2="105" stroke="#6B46C1" stroke-width="2" marker-end="url(#arrowhead2)" />
+                        <line x1="670" y1="85" x2="670" y2="105" stroke="#6B46C1" stroke-width="2" marker-end="url(#arrowhead2)" />
+
+                        <rect x="55" y="110" width="150" height="40" rx="6" fill="url(#gradient5)" />
+                        <text x="130" y="135" text-anchor="middle" fill="white" font-size="13" font-weight="bold">BLOQUE 1</text>
+                        <rect x="325" y="110" width="150" height="40" rx="6" fill="url(#gradient5)" />
+                        <text x="400" y="135" text-anchor="middle" fill="white" font-size="13" font-weight="bold">BLOQUE 2</text>
+                        <rect x="595" y="110" width="150" height="40" rx="6" fill="url(#gradient5)" />
+                        <text x="670" y="135" text-anchor="middle" fill="white" font-size="13" font-weight="bold">BLOQUE n</text>
+
+                        <text x="262" y="135" text-anchor="middle" fill="#6B46C1" font-size="20" font-weight="bold">···</text>
+                        <text x="537" y="135" text-anchor="middle" fill="#6B46C1" font-size="20" font-weight="bold">···</text>
+
+                        <line x1="130" y1="150" x2="130" y2="175" stroke="#6B46C1" stroke-width="2" />
+                        <line x1="90" y1="175" x2="170" y2="175" stroke="#6B46C1" stroke-width="2" />
+                        <line x1="90" y1="175" x2="90" y2="195" stroke="#6B46C1" stroke-width="2" marker-end="url(#arrowhead2)" />
+                        <line x1="170" y1="175" x2="170" y2="195" stroke="#6B46C1" stroke-width="2" marker-end="url(#arrowhead2)" />
+
+                        <line x1="400" y1="150" x2="400" y2="175" stroke="#6B46C1" stroke-width="2" />
+                        <line x1="360" y1="175" x2="440" y2="175" stroke="#6B46C1" stroke-width="2" />
+                        <line x1="360" y1="175" x2="360" y2="195" stroke="#6B46C1" stroke-width="2" marker-end="url(#arrowhead2)" />
+                        <line x1="440" y1="175" x2="440" y2="195" stroke="#6B46C1" stroke-width="2" marker-end="url(#arrowhead2)" />
+
+                        <line x1="670" y1="150" x2="670" y2="175" stroke="#6B46C1" stroke-width="2" />
+                        <line x1="630" y1="175" x2="710" y2="175" stroke="#6B46C1" stroke-width="2" />
+                        <line x1="630" y1="175" x2="630" y2="195" stroke="#6B46C1" stroke-width="2" marker-end="url(#arrowhead2)" />
+                        <line x1="710" y1="175" x2="710" y2="195" stroke="#6B46C1" stroke-width="2" marker-end="url(#arrowhead2)" />
+
+                        <rect x="55" y="200" width="70" height="35" rx="4" fill="#FED7E2" />
+                        <text x="90" y="222" text-anchor="middle" fill="#97266D" font-size="11" font-weight="bold">Trat. 1</text>
+                        <rect x="135" y="200" width="70" height="35" rx="4" fill="#C3DAFE" />
+                        <text x="170" y="222" text-anchor="middle" fill="#3C366B" font-size="11" font-weight="bold">Trat. 2</text>
+
+                        <rect x="325" y="200" width="70" height="35" rx="4" fill="#FED7E2" />
+                        <text x="360" y="222" text-anchor="middle" fill="#97266D" font-size="11" font-weight="bold">Trat. 1</text>
+                        <rect x="405" y="200" width="70" height="35" rx="4" fill="#C3DAFE" />
+                        <text x="440" y="222" text-anchor="middle" fill="#3C366B" font-size="11" font-weight="bold">Trat. 2</text>
+
+                        <rect x="595" y="200" width="70" height="35" rx="4" fill="#FED7E2" />
+                        <text x="630" y="222" text-anchor="middle" fill="#97266D" font-size="11" font-weight="bold">Trat. 1</text>
+                        <rect x="675" y="200" width="70" height="35" rx="4" fill="#C3DAFE" />
+                        <text x="710" y="222" text-anchor="middle" fill="#3C366B" font-size="11" font-weight="bold">Trat. 2</text>
+
+                        <line x1="90" y1="235" x2="90" y2="255" stroke="#6B46C1" stroke-width="1.5" marker-end="url(#arrowhead2)" />
+                        <line x1="170" y1="235" x2="170" y2="255" stroke="#6B46C1" stroke-width="1.5" marker-end="url(#arrowhead2)" />
+                        <text x="90" y="275" text-anchor="middle" fill="#4A5568" font-size="12">y₁₁</text>
+                        <text x="170" y="275" text-anchor="middle" fill="#4A5568" font-size="12">y₂₁</text>
+
+                        <line x1="360" y1="235" x2="360" y2="255" stroke="#6B46C1" stroke-width="1.5" marker-end="url(#arrowhead2)" />
+                        <line x1="440" y1="235" x2="440" y2="255" stroke="#6B46C1" stroke-width="1.5" marker-end="url(#arrowhead2)" />
+                        <text x="360" y="275" text-anchor="middle" fill="#4A5568" font-size="12">y₁₂</text>
+                        <text x="440" y="275" text-anchor="middle" fill="#4A5568" font-size="12">y₂₂</text>
+
+                        <line x1="630" y1="235" x2="630" y2="255" stroke="#6B46C1" stroke-width="1.5" marker-end="url(#arrowhead2)" />
+                        <line x1="710" y1="235" x2="710" y2="255" stroke="#6B46C1" stroke-width="1.5" marker-end="url(#arrowhead2)" />
+                        <text x="630" y="275" text-anchor="middle" fill="#4A5568" font-size="12">y₁ₙ</text>
+                        <text x="710" y="275" text-anchor="middle" fill="#4A5568" font-size="12">y₂ₙ</text>
+
+                        <line x1="90" y1="285" x2="90" y2="310" stroke="#6B46C1" stroke-width="1.5" />
+                        <line x1="170" y1="285" x2="170" y2="310" stroke="#6B46C1" stroke-width="1.5" />
+                        <line x1="90" y1="310" x2="170" y2="310" stroke="#6B46C1" stroke-width="1.5" />
+                        <line x1="130" y1="310" x2="130" y2="330" stroke="#6B46C1" stroke-width="1.5" marker-end="url(#arrowhead2)" />
+
+                        <line x1="360" y1="285" x2="360" y2="310" stroke="#6B46C1" stroke-width="1.5" />
+                        <line x1="440" y1="285" x2="440" y2="310" stroke="#6B46C1" stroke-width="1.5" />
+                        <line x1="360" y1="310" x2="440" y2="310" stroke="#6B46C1" stroke-width="1.5" />
+                        <line x1="400" y1="310" x2="400" y2="330" stroke="#6B46C1" stroke-width="1.5" marker-end="url(#arrowhead2)" />
+
+                        <line x1="630" y1="285" x2="630" y2="310" stroke="#6B46C1" stroke-width="1.5" />
+                        <line x1="710" y1="285" x2="710" y2="310" stroke="#6B46C1" stroke-width="1.5" />
+                        <line x1="630" y1="310" x2="710" y2="310" stroke="#6B46C1" stroke-width="1.5" />
+                        <line x1="670" y1="310" x2="670" y2="330" stroke="#6B46C1" stroke-width="1.5" marker-end="url(#arrowhead2)" />
+
+                        <rect x="60" y="335" width="140" height="35" rx="5" fill="#FEEBC8" stroke="#DD6B20" />
+                        <text x="130" y="358" text-anchor="middle" fill="#C05621" font-size="11" font-weight="bold">d₁ = y₁₁ - y₂₁</text>
+
+                        <rect x="330" y="335" width="140" height="35" rx="5" fill="#FEEBC8" stroke="#DD6B20" />
+                        <text x="400" y="358" text-anchor="middle" fill="#C05621" font-size="11" font-weight="bold">d₂ = y₁₂ - y₂₂</text>
+
+                        <rect x="600" y="335" width="140" height="35" rx="5" fill="#FEEBC8" stroke="#DD6B20" />
+                        <text x="670" y="358" text-anchor="middle" fill="#C05621" font-size="11" font-weight="bold">dₙ = y₁ₙ - y₂ₙ</text>
+
+                        <line x1="130" y1="370" x2="130" y2="400" stroke="#6B46C1" stroke-width="2" />
+                        <line x1="400" y1="370" x2="400" y2="400" stroke="#6B46C1" stroke-width="2" />
+                        <line x1="670" y1="370" x2="670" y2="400" stroke="#6B46C1" stroke-width="2" />
+                        <line x1="130" y1="400" x2="670" y2="400" stroke="#6B46C1" stroke-width="2" />
+                        <line x1="400" y1="400" x2="400" y2="420" stroke="#6B46C1" stroke-width="2" marker-end="url(#arrowhead2)" />
+
+                        <rect x="275" y="425" width="250" height="55" rx="8" fill="url(#gradient6)" />
+                        <text x="400" y="447" text-anchor="middle" fill="white" font-size="13" font-weight="bold">ANÁLISIS DE DIFERENCIAS</text>
+                        <text x="400" y="470" text-anchor="middle" fill="white" font-size="12">d̄, Sᵈ</text>
+
+                        <line x1="400" y1="480" x2="400" y2="505" stroke="#6B46C1" stroke-width="2" marker-end="url(#arrowhead2)" />
+
+                        <rect x="275" y="510" width="250" height="55" rx="8" fill="url(#gradient4)" />
+                        <text x="400" y="535" text-anchor="middle" fill="white" font-size="14" font-weight="bold">INFERENCIA: ¿μd ≠ 0?</text>
+                        <text x="400" y="555" text-anchor="middle" fill="white" font-size="11">Prueba t pareada</text>
+                    </svg>
+                    <p><strong>Características clave:</strong></p>
+                    <ul style="text-align: left; display: inline-block;">
+                        <li>Cada bloque recibe ambos tratamientos</li>
+                        <li>Aleatorización del orden dentro de cada bloque</li>
+                        <li>Análisis basado en diferencias pareadas ($d_j$)</li>
+                        <li>Mayor eficiencia cuando bloques son homogéneos</li>
+                        <li>Controla variabilidad entre bloques</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <h2>3. Ejemplo Completo en Python: Prueba de Dureza de Metales</h2>
+
+                <h3>3.1 Caso Práctico: Dureza</h3>
+                <p>Un laboratorio metalúrgico compara dos puntas de medición (Tip 1 y Tip 2) utilizadas en un
+                    dispositivo de prueba de dureza. Para controlar la variabilidad inherente en la dureza de
+                    diferentes
+                    especímenes metálicos, se utiliza un diseño de comparación apareada: ambas puntas se prueban en
+                    cada
+                    uno de 10 especímenes. El orden de aplicación de las puntas se aleatoriza para cada espécimen.
+                </p>
+
+                <h3>3.2 Desarrollo en Python</h3>
+
+                <pre><code data-language="python"># Importación de bibliotecas
+import numpy as np
+import pandas as pd
+from scipy import stats
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Configuración
+np.random.seed(42)
+sns.set_style("whitegrid")
+
+# ============================================================================
+# DATOS EXPERIMENTALES: Lecturas de dureza
+# ============================================================================
+# Fuente: Montgomery, D. C. (2017), Tabla 2.6
+
+# Datos pareados (10 especímenes, 2 puntas cada uno)
+especimen = np.arange(1, 11)
+tip1 = np.array([7, 3, 3, 4, 8, 3, 2, 9, 5, 4])
+tip2 = np.array([6, 3, 5, 3, 8, 2, 4, 9, 4, 5])
+
+# Calcular diferencias pareadas
+diferencias = tip1 - tip2
+
+# Crear DataFrame para análisis
+df_dureza = pd.DataFrame({
+    'Espécimen': especimen,
+    'Tip_1': tip1,
+    'Tip_2': tip2,
+    'Diferencia': diferencias
+})
+
+print("="*70)
+print("DISEÑO DE COMPARACIÓN APAREADA: Prueba de Dureza de Metales")
+print("="*70)
+print("\nDatos Experimentales:")
+print(df_dureza.to_string(index=False))
+
+# ============================================================================
+# 1. ANÁLISIS EXPLORATORIO
+# ============================================================================
+n = len(diferencias)
+d_bar = np.mean(diferencias)
+s_d = np.std(diferencias, ddof=1)
+
+# ============================================================================
+# 2. PRUEBA T PAREADA
+# ============================================================================
+se_d = s_d / np.sqrt(n)
+t_manual = d_bar / se_d
+df = n - 1
+p_value_manual = 2 * stats.t.sf(abs(t_manual), df)
+
+alpha = 0.05
+t_critical = stats.t.ppf(1 - alpha/2, df)
+
+# Verificación con scipy
+t_scipy, p_scipy = stats.ttest_rel(tip1, tip2)
+
+# ============================================================================
+# 3. INTERVALO DE CONFIANZA (95%)
+# ============================================================================
+margin_error = t_critical * se_d
+ci_lower = d_bar - margin_error
+ci_upper = d_bar + margin_error
+
+print(f"\nEstadístico t₀ = {t_manual:.4f}")
+print(f"Valor p = {p_value_manual:.4f}")
+print(f"IC 95%: [{ci_lower:.4f}, {ci_upper:.4f}]")
+</code></pre>
+
+                <!-- Visualización Interactiva -->
+                <div style="margin: 30px 0;">
+                    <h4 style="color: #2c3e50;">📈 Visualización Interactiva de Resultados</h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; align-items: stretch;">
+                        <div style="flex: 1; min-width: 300px; max-width: 400px; height: 450px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 5px; overflow: hidden; display: flex; flex-direction: column;">
+                            <div id="boxplot_dureza" style="flex: 1; width:100%;"></div>
+                        </div>
+                        <div style="flex: 1; min-width: 300px; max-width: 400px; height: 450px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 5px; overflow: hidden; display: flex; flex-direction: column;">
+                            <div id="stripplot_dureza" style="flex: 1; width:100%;"></div>
+                        </div>
+                        <div style="flex: 1; min-width: 300px; max-width: 400px; height: 450px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 5px; overflow: hidden; display: flex; flex-direction: column;">
+                            <div id="ci_dureza" style="flex: 1; width:100%;"></div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 15px; padding: 15px; background: #d4edda; border-radius: 8px; border-left: 4px solid #28a745; max-width: 800px; margin-left: auto; margin-right: auto;">
+                        <strong style="color: #155724;">IC 95%: [-0.9564, 0.7564]</strong>
+                        <p style="margin: 5px 0 0; color: #155724;">El intervalo contiene el cero → NO hay diferencia significativa</p>
+                    </div>
+                </div>
+
+                <!-- Resultados Estadísticos Card -->
+                <div style="margin: 20px 0; padding: 20px; background: linear-gradient(135deg, #e2e3e5 0%, #f8f9fa 100%); border-radius: 10px; border-left: 4px solid #6c757d;">
+                    <h4 style="color: #383d41; margin-top: 0;">📐 Resumen de Prueba t Pareada</h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                        <div style="flex: 1; min-width: 200px; background: white; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 28px; color: #2c3e50; font-weight: bold;">-0.2641</div>
+                            <div style="color: #666; font-size: 14px;">Estadístico t₀</div>
+                        </div>
+                        <div style="flex: 1; min-width: 200px; background: white; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 28px; color: #28a745; font-weight: bold;">0.7980</div>
+                            <div style="color: #666; font-size: 14px;">Valor p (bilateral)</div>
+                        </div>
+                        <div style="flex: 1; min-width: 200px; background: white; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 28px; color: #3498db; font-weight: bold;">±2.2620</div>
+                            <div style="color: #666; font-size: 14px;">Valor crítico (α=0.05)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>3.3 Interpretación de Resultados</h3>
+                <p>El análisis del diseño de comparación apareada revela:</p>
+                <ol>
+                    <li><strong>Justificación del apareamiento:</strong> La correlación positiva (r = 0.78) entre
+                        las
+                        mediciones de las dos puntas en el mismo espécimen justifica el uso del diseño pareado.</li>
+                    <li><strong>Resultado estadístico:</strong> Con t₀ = -0.26 y p-valor = 0.798, no existe
+                        evidencia
+                        para rechazar H₀. Las puntas producen lecturas equivalentes.</li>
+                    <li><strong>Magnitud del efecto:</strong> La diferencia media de -0.10 unidades es prácticamente
+                        despreciable (IC 95%: [-0.96, 0.76]).</li>
+                    <li><strong>Ventaja del diseño:</strong> Al medir en el mismo espécimen, se eliminó la
+                        variabilidad
+                        entre especímenes, incrementando la precisión del estudio.</li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>4. Inferencia sobre Varianzas de Distribuciones Normales</h2>
+
+                <h3>4.1 Motivación</h3>
+                <p>En muchos contextos experimentales, la variabilidad (medida por la varianza $\sigma^2$)
+                    constituye
+                    una característica de interés primario. Ejemplos incluyen: precisión de instrumentos de
+                    medición,
+                    consistencia de procesos de manufactura, estabilidad de productos químicos, y repetibilidad de
+                    métodos analíticos.</p>
+
+                <h3>4.2 Inferencia para una Varianza: Distribución $\chi^2$</h3>
+
+                <h4>Prueba de Hipótesis</h4>
+                <p>Para probar $H_0: \sigma^2 = \sigma_0^2$ contra alternativas bilaterales o unilaterales, se
+                    utiliza
+                    el estadístico:</p>
+
+                <div class="formula-box">
+                    <p>$$\chi_0^2 = \frac{(n - 1)S^2}{\sigma_0^2}$$</p>
+                    <p>Bajo $H_0$: $\chi_0^2 \sim \chi^2_{n-1}$</p>
+                </div>
+
+                <h4>Reglas de Decisión ($\alpha$ = nivel de significancia)</h4>
+                <ul>
+                    <li><strong>$H_1$: $\sigma^2 \neq \sigma_0^2$ (bilateral):</strong> Rechazar si $\chi_0^2 <
+                            \chi^2_{1-\alpha/2, n-1}$ o $\chi_0^2> \chi^2_{\alpha/2, n-1}$</li>
+                    <li><strong>$H_1$: $\sigma^2 > \sigma_0^2$ (unilateral derecha):</strong> Rechazar si $\chi_0^2
+                        >
+                        \chi^2_{\alpha, n-1}$</li>
+                    <li><strong>$H_1$: $\sigma^2 < \sigma_0^2$ (unilateral izquierda):</strong> Rechazar si
+                                $\chi_0^2 < \chi^2_{1-\alpha, n-1}$</li>
+                </ul>
+
+                <h4>Intervalo de Confianza para $\sigma^2$</h4>
+                <div class="formula-box">
+                    <p>$$\frac{(n - 1)S^2}{\chi^2_{\alpha/2, n-1}} \leq \sigma^2 \leq \frac{(n -
+                        1)S^2}{\chi^2_{1-\alpha/2, n-1}}$$</p>
+                </div>
+
+                <aside>
+                    <strong>Sensibilidad a No Normalidad:</strong> Las inferencias basadas en χ² son altamente
+                    sensibles
+                    a desviaciones de normalidad. Es crítico verificar el supuesto de normalidad mediante gráficos
+                    Q-Q o
+                    pruebas formales antes de aplicar estos métodos.
+                </aside>
+
+                <h3>4.3 Comparación de Dos Varianzas: Distribución F</h3>
+
+                <h4>Prueba de Hipótesis</h4>
+                <p>Para comparar las varianzas de dos poblaciones normales independientes, se formula:</p>
+
+                <div class="formula-box">
+                    <p><strong>$H_0$:</strong> $\sigma_1^2 = \sigma_2^2$ (equivalente: $\sigma_1^2/\sigma_2^2 = 1$)
+                    </p>
+                    <p><strong>$H_1$:</strong> $\sigma_1^2 \neq \sigma_2^2$ (equivalente: $\sigma_1^2/\sigma_2^2
+                        \neq
+                        1$)</p>
+                </div>
+
+                <p>El estadístico de prueba es el cociente de varianzas muestrales:</p>
+
+                <div class="formula-box">
+                    <p>$$F_0 = \frac{S_1^2}{S_2^2}$$</p>
+                    <p>Bajo $H_0$: $F_0 \sim F_{n_1-1, n_2-1}$</p>
+                </div>
+
+                <div class="nota">
+                    <strong>Convención:</strong> Por convención, se coloca la mayor varianza muestral en el
+                    numerador,
+                    asegurando $F_0 \geq 1$. Esto simplifica la prueba bilateral a comparar $F_0$ con $F_{\alpha/2,
+                    n_1-1, n_2-1}$.
+                </div>
+
+                <h4>Intervalo de Confianza para $\sigma_1^2/\sigma_2^2$</h4>
+                <div class="formula-box">
+                    <p>$$\frac{S_1^2}{S_2^2} \cdot F_{1-\alpha/2, n_2-1, n_1-1} \leq \frac{\sigma_1^2}{\sigma_2^2}
+                        \leq
+                        \frac{S_1^2}{S_2^2} \cdot F_{\alpha/2, n_2-1, n_1-1}$$</p>
+                </div>
+
+                <h3>4.4 Aplicación: Verificación de Homocedasticidad</h3>
+                <p>La prueba F constituye el método clásico para verificar el supuesto de varianzas iguales previo a
+                    la
+                    prueba t de dos muestras. Sin embargo, su alta sensibilidad a no normalidad ha motivado el
+                    desarrollo de alternativas más robustas como la prueba de Levene.</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Distribución</th>
+                            <th scope="col">Parámetro Objetivo</th>
+                            <th scope="col">Estadístico</th>
+                            <th scope="col">Aplicación Principal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>$\chi^2$ (Chi-cuadrado)</td>
+                            <td>$\sigma^2$ (una varianza)</td>
+                            <td>$(n-1)S^2/\sigma_0^2$</td>
+                            <td>Prueba de varianza específica, IC para $\sigma^2$</td>
+                        </tr>
+                        <tr>
+                            <td>$F$ (Fisher-Snedecor)</td>
+                            <td>$\sigma_1^2/\sigma_2^2$ (razón de varianzas)</td>
+                            <td>$S_1^2/S_2^2$</td>
+                            <td>Comparación de dos varianzas, verificación de homocedasticidad</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section>
+                <h2>5. Ejemplo Completo en Python: Comparación de Varianzas en Equipos Analíticos</h2>
+
+                <h3>5.1 Contexto del Problema</h3>
+                <p>Un laboratorio químico debe decidir si reemplazar su equipo analítico antiguo por uno nuevo. Una
+                    consideración crítica es la variabilidad de las mediciones. Se realizan mediciones replicadas
+                    con
+                    ambos equipos bajo condiciones controladas para comparar sus varianzas.</p>
+
+                <h3>5.2 Implementación en Python</h3>
+
+                <pre><code data-language="python"># Importación de bibliotecas
+import numpy as np
+from scipy import stats
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Configuración
+np.random.seed(2024)
+sns.set_style("whitegrid")
+
+# ============================================================================
+# DATOS SIMULADOS (basados en Montgomery, adaptados pedagógicamente)
+# ============================================================================
+n_antiguo = 12
+s_antiguo_sq = 14.5
+s_antiguo = np.sqrt(s_antiguo_sq)
+
+n_nuevo = 10
+s_nuevo_sq = 10.8
+s_nuevo = np.sqrt(s_nuevo_sq)
+
+# ============================================================================
+# 1. PRUEBA F PARA IGUALDAD DE VARIANZAS
+# ============================================================================
+F_obs = s_antiguo_sq / s_nuevo_sq
+df1 = n_antiguo - 1
+df2 = n_nuevo - 1
+
+p_value_upper = stats.f.sf(F_obs, df1, df2)
+p_value = 2 * min(p_value_upper, 1 - p_value_upper)
+
+alpha = 0.05
+F_critical = stats.f.ppf(1 - alpha/2, df1, df2)
+
+print(f"F₀ = {F_obs:.4f}, p-valor = {p_value:.4f}")
+print(f"F crítico = {F_critical:.4f}")
+
+# ============================================================================
+# 2. INTERVALO DE CONFIANZA PARA LA RAZÓN DE VARIANZAS
+# ============================================================================
+F_lower_quant = stats.f.ppf(alpha/2, df1, df2)
+F_upper_quant = stats.f.ppf(1 - alpha/2, df1, df2)
+
+ci_lower = F_obs / F_upper_quant
+ci_upper = F_obs / F_lower_quant
+
+print(f"IC 95% para σ₁²/σ₂²: [{ci_lower:.4f}, {ci_upper:.4f}]")
+
+# ============================================================================
+# 3. PRUEBA CHI-CUADRADO PARA UNA VARIANZA
+# ============================================================================
+sigma_0_sq = 12.0
+chi_sq_obs = (n_nuevo - 1) * s_nuevo_sq / sigma_0_sq
+df_chi = n_nuevo - 1
+p_value_chi = stats.chi2.cdf(chi_sq_obs, df_chi)
+
+print(f"χ²₀ = {chi_sq_obs:.4f}, p-valor = {p_value_chi:.4f}")
+</code></pre>
+            </section>
+
+            <section>
+                <h2>6. Resumen de Procedimientos</h2>
+
+                <div style="overflow-x: auto; margin-bottom: 40px;">
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                        <thead>
+                            <tr style="background-color: #2c3e50; color: white;">
+                                <th scope="col" style="padding: 12px; border: 1px solid #ddd; text-align: left;">Situación</th>
+                                <th scope="col" style="padding: 12px; border: 1px solid #ddd; text-align: center;">Estadístico</th>
+                                <th scope="col" style="padding: 12px; border: 1px solid #ddd; text-align: center;">Distribución</th>
+                                <th scope="col" style="padding: 12px; border: 1px solid #ddd; text-align: center;">GL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background-color: white;">
+                                <td style="padding: 10px; border: 1px solid #ddd;">$\sigma$ conocida, una muestra</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">$Z_0 = \frac{\bar{y} - \mu_0}{\sigma/\sqrt{n}}$</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">$N(0,1)$</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">—</td>
+                            </tr>
+                            <tr style="background-color: #f8f9fa;">
+                                <td style="padding: 10px; border: 1px solid #ddd;">$\sigma$ desconocida, una muestra</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">$t_0 = \frac{\bar{y} - \mu_0}{S/\sqrt{n}}$</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">$t$</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">$n-1$</td>
+                            </tr>
+                            <tr style="background-color: white;">
+                                <td style="padding: 10px; border: 1px solid #ddd;">$\sigma_1^2 = \sigma_2^2$, dos muestras</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">$t_0 = \frac{\bar{y}_1 - \bar{y}_2}{S_p\sqrt{\frac{1}{n_1}+\frac{1}{n_2}}}$</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">$t$</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">$n_1+n_2-2$</td>
+                            </tr>
+                            <tr style="background-color: #f8f9fa;">
+                                <td style="padding: 10px; border: 1px solid #ddd;">$\sigma_1^2 \neq \sigma_2^2$, dos muestras</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">$t_0 = \frac{\bar{y}_1 - \bar{y}_2}{\sqrt{\frac{S_1^2}{n_1}+\frac{S_2^2}{n_2}}}$</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">$t$ (Welch)</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">$\nu$ (aprox.)</td>
+                            </tr>
+                            <tr style="background-color: white;">
+                                <td style="padding: 10px; border: 1px solid #ddd;">Diseño pareado</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">$t_0 = \frac{\bar{d}}{S_d/\sqrt{n}}$</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">$t$</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">$n-1$</td>
+                            </tr>
+                            <tr style="background-color: #f8f9fa;">
+                                <td style="padding: 10px; border: 1px solid #ddd;">Una varianza</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">$\chi^2_0 = \frac{(n-1)S^2}{\sigma_0^2}$</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">$\chi^2$</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">$n-1$</td>
+                            </tr>
+                            <tr style="background-color: white;">
+                                <td style="padding: 10px; border: 1px solid #ddd;">Dos varianzas</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">$F_0 = \frac{S_1^2}{S_2^2}$</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">$F$</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">$(n_1-1, n_2-1)$</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section>
+                <h2>7. Ejercicios de Autoevaluación</h2>
+
+                <div class="ejercicio">
+                    <h4>Ejercicio 3: Diseño Pareado para Eficiencia de Combustible</h4>
+                    <p><strong>Contexto:</strong> Un fabricante automotriz evalúa un aditivo de combustible que
+                        promete
+                        mejorar el rendimiento (km/litro). Se prueban 8 vehículos antes y después de añadir el
+                        aditivo.
+                    </p>
+
+                    <p><strong>Datos (km/litro):</strong></p>
+                    <ul>
+                        <li><strong>Sin aditivo:</strong> 12.4, 11.8, 13.1, 12.0, 12.7, 11.5, 12.9, 12.2</li>
+                        <li><strong>Con aditivo:</strong> 13.0, 12.5, 13.8, 12.6, 13.3, 12.0, 13.5, 12.8</li>
+                    </ul>
+
+                    <p><strong>Tareas:</strong></p>
+                    <ol>
+                        <li>Calcule las diferencias pareadas (Con - Sin)</li>
+                        <li>Realice una prueba t pareada unilateral (H₁: μD > 0) con α = 0.05</li>
+                        <li>Construya un IC del 95% para la mejora media</li>
+                        <li>Compare con un análisis incorrecto como diseño independiente</li>
+                        <li>Calcule el ahorro estimado anual si un vehículo recorre 20,000 km/año y el combustible
+                            cuesta $1.50/litro</li>
+                    </ol>
+
+                    <p><strong>Solución parcial:</strong></p>
+                    <pre><code>import numpy as np
+from scipy import stats
+
+# Datos
+sin_aditivo = np.array([12.4, 11.8, 13.1, 12.0, 12.7, 11.5, 12.9, 12.2])
+con_aditivo = np.array([13.0, 12.5, 13.8, 12.6, 13.3, 12.0, 13.5, 12.8])
+
+# Calcular diferencias
+diferencias = con_aditivo - sin_aditivo
+
+# Complete el análisis:
+# - Media y desviación estándar de diferencias
+# - Prueba t pareada unilateral
+# - Interpretación económica
+</code></pre>
+                </div>
+
+                <div class="ejercicio">
+                    <h4>Ejercicio 4: Inferencia sobre Variabilidad de Procesos de Manufactura</h4>
+                    <p><strong>Contexto:</strong> Una fábrica de componentes electrónicos compara la variabilidad de
+                        dos
+                        líneas de producción (A y B) midiendo el grosor de componentes (μm).</p>
+
+                    <p><strong>Datos resumen:</strong></p>
+                    <ul>
+                        <li><strong>Línea A:</strong> n₁ = 15, S₁² = 4.8</li>
+                        <li><strong>Línea B:</strong> n₂ = 12, S₂² = 2.5</li>
+                    </ul>
+
+                    <p><strong>Tareas:</strong></p>
+                    <ol>
+                        <li>Realice una prueba F bilateral (α = 0.05) para determinar si las varianzas difieren</li>
+                        <li>Construya un IC del 95% para σ₁²/σ₂²</li>
+                        <li>Si la especificación requiere σ² ≤ 3.0 para la línea B, ¿cumple este requisito? (use
+                            prueba
+                            χ²)</li>
+                        <li>Discuta las implicaciones prácticas de tener varianzas diferentes en las líneas de
+                            producción</li>
+                        <li>¿Qué recomendaría para homogeneizar la variabilidad?</li>
+                    </ol>
+
+                    <p><strong>Solución parcial:</strong></p>
+                    <pre><code>from scipy import stats
+
+# Datos
+n1, s1_sq = 15, 4.8
+n2, s2_sq = 12, 2.5
+
+# Estadístico F
+F_obs = s1_sq / s2_sq
+df1, df2 = n1 - 1, n2 - 1
+
+# Complete:
+# - Valor p y decisión
+# - Intervalo de confianza para razón de varianzas
+# - Prueba χ² para línea B contra especificación
+</code></pre>
+                </div>
+            </section>
+        </div>
+    </template>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        const courseData = {
+            title: "Experimentos Comparativos Simples",
+            modules: [
+                { id: 1, title: "Diseños Completamente Aleatorizados", shortTitle: "CRD" },
+                { id: 2, title: "Comparación Apareada e Inferencia sobre Varianzas", shortTitle: "Comparación" }
+            ]
+        };
+
+        let currentModuleIndex = 0;
+        let completedModules = new Set();
+
+        const moduleNav = document.getElementById('module-nav');
+        const contentArea = document.getElementById('content-area');
+
+        function init() {
+            renderNav();
+            loadModule(0);
+        }
+
+        function renderNav() {
+            moduleNav.innerHTML = '';
+            courseData.modules.forEach((mod, index) => {
+                const btn = document.createElement('button');
+                const isActive = index === currentModuleIndex;
+                const isDone = completedModules.has(index);
+                btn.className = `sidebar-nav-item${isActive ? ' active' : ''}`;
+                btn.innerHTML = `
+                    <span style="line-height:1.3;">${mod.title}</span>
+                    ${isDone ? '<span class="check-mark">✓</span>' : ''}
+                `;
+                btn.onclick = () => loadModule(index);
+                moduleNav.appendChild(btn);
+            });
+        }
+
+        function loadModule(index) {
+            currentModuleIndex = index;
+            renderNav();
+
+            const template = document.getElementById(`module-${index + 1}`);
+            if (template) {
+                contentArea.innerHTML = '';
+                const content = template.content.cloneNode(true);
+                contentArea.appendChild(content);
+
+                // Navigation buttons
+                const navButtons = document.createElement('div');
+                navButtons.className = 'mt-10 pt-6 border-t border-gray-200 flex justify-between items-center';
+                navButtons.innerHTML = `
+                    ${index > 0 ? `<button onclick="loadModule(${index - 1})" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-secondary transition-colors">
+                        <span>←</span> Anterior
+                    </button>` : '<div></div>'}
+                    <button onclick="markComplete(${index})" class="px-4 py-2 text-sm font-medium text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors ${completedModules.has(index) ? 'opacity-50' : ''}">
+                        ${completedModules.has(index) ? '✓ Completado' : 'Marcar como completado'}
+                    </button>
+                    ${index < courseData.modules.length - 1 ? `<button onclick="loadModule(${index + 1})" class="flex items-center gap-2 px-4 py-2 bg-secondary hover:bg-secondary/90 text-white rounded-lg text-sm font-medium transition-colors">
+                        Siguiente Módulo <span>→</span>
+                    </button>` : `<div class="text-center"><span class="text-emerald-600 font-bold">🎉 ¡Tema Completado!</span></div>`}
+                `;
+                contentArea.appendChild(navButtons);
+
+                // Render KaTeX
+                if (typeof renderMathInElement !== 'undefined') {
+                    renderMathInElement(contentArea, {
+                        delimiters: [
+                            { left: '$$', right: '$$', display: true },
+                            { left: '$', right: '$', display: false }
+                        ],
+                        throwOnError: false
+                    });
+                }
+
+                // VS Code style code blocks
+                setupCodeBlocks();
+
+                // Initialize Plotly charts in this module
+                initPlotlyInModule();
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function markComplete(index) {
+            if (!completedModules.has(index)) {
+                completedModules.add(index);
+                renderNav();
+                loadModule(index);
+            }
+        }
+
+        function initPlotlyInModule() {
+            if (typeof Plotly === 'undefined') {
+                setTimeout(initPlotlyInModule, 200);
+                return;
+            }
+
+            const chartConfigs = [
+                // Cemento charts
+                { id: 'boxplot_cemento', data: [{ "type": "box", "y": [16.85, 16.4, 17.21, 16.35, 16.52, 17.04, 16.96, 17.15, 16.59, 16.57], "name": "Modificada", "marker": { "color": "#3498db" }, "boxpoints": "all", "jitter": 0.3, "pointpos": -1.5 }, { "type": "box", "y": [16.62, 16.75, 17.37, 17.12, 16.98, 16.87, 17.34, 17.02, 17.08, 17.27], "name": "No Modificada", "marker": { "color": "#e74c3c" }, "boxpoints": "all", "jitter": 0.3, "pointpos": -1.5 }], layout: { "title": { "text": "<b>Distribución de Resistencias</b>", "x": 0.5, "font": { "size": 14 } }, "yaxis": { "title": "Resistencia (kgf/cm²)", "gridcolor": "rgba(0,0,0,0.1)" }, "xaxis": { "title": "Formulación", "gridcolor": "rgba(0,0,0,0.1)" }, "plot_bgcolor": "rgba(248,249,250,1)", "paper_bgcolor": "white", "showlegend": false, "margin": { "l": 50, "r": 20, "t": 50, "b": 50 } } },
+                { id: 'stripplot_cemento', data: [{ "type": "scatter", "mode": "markers", "x": ["Modificada", "Modificada", "Modificada", "Modificada", "Modificada", "Modificada", "Modificada", "Modificada", "Modificada", "Modificada"], "y": [16.85, 16.4, 17.21, 16.35, 16.52, 17.04, 16.96, 17.15, 16.59, 16.57], "name": "Modificada", "marker": { "color": "#3498db", "size": 12 } }, { "type": "scatter", "mode": "markers", "x": ["No Modificada", "No Modificada", "No Modificada", "No Modificada", "No Modificada", "No Modificada", "No Modificada", "No Modificada", "No Modificada", "No Modificada"], "y": [16.62, 16.75, 17.37, 17.12, 16.98, 16.87, 17.34, 17.02, 17.08, 17.27], "name": "No Modificada", "marker": { "color": "#e74c3c", "size": 12 } }], layout: { "title": { "text": "<b>Observaciones Individuales</b>", "x": 0.5 }, "yaxis": { "title": "Resistencia (kgf/cm²)", "range": [16.2, 17.5] }, "plot_bgcolor": "rgba(248,249,250,1)", "paper_bgcolor": "white", "showlegend": false } },
+                { id: 'ci_cemento', data: [{ "type": "scatter", "mode": "markers", "x": ["Diferencia"], "y": [-0.278], "marker": { "color": "#2c3e50", "size": 18 }, "error_y": { "type": "data", "symmetric": false, "array": [0.267], "arrayminus": [0.267], "thickness": 3, "width": 15 } }], layout: { "title": { "text": "<b>IC 95% para μ₁ - μ₂</b><br><sub>p = 0.0422</sub>", "x": 0.5 }, "yaxis": { "title": "Diferencia de Medias", "range": [-0.7, 0.2] }, "plot_bgcolor": "rgba(248,249,250,1)", "paper_bgcolor": "white", "showlegend": false } },
+                // Dureza charts
+                { id: 'boxplot_dureza', data: [{ "type": "box", "y": [7, 3, 3, 4, 8, 3, 2, 9, 5, 4], "name": "Tip 1", "marker": { "color": "#3498db" }, "boxpoints": "all" }, { "type": "box", "y": [6, 3, 5, 3, 8, 2, 4, 9, 4, 5], "name": "Tip 2", "marker": { "color": "#e74c3c" }, "boxpoints": "all" }], layout: { "title": { "text": "<b>Distribución de Dureza</b>", "x": 0.5, "font": { "size": 14 } }, "yaxis": { "title": "Dureza" }, "plot_bgcolor": "rgba(248,249,250,1)", "paper_bgcolor": "white", "showlegend": false } },
+                { id: 'stripplot_dureza', data: [{ "type": "scatter", "mode": "markers", "x": ["Tip 1", "Tip 1", "Tip 1", "Tip 1", "Tip 1", "Tip 1", "Tip 1", "Tip 1", "Tip 1", "Tip 1"], "y": [7, 3, 3, 4, 8, 3, 2, 9, 5, 4], "name": "Tip 1", "marker": { "color": "#3498db", "size": 12 } }, { "type": "scatter", "mode": "markers", "x": ["Tip 2", "Tip 2", "Tip 2", "Tip 2", "Tip 2", "Tip 2", "Tip 2", "Tip 2", "Tip 2", "Tip 2"], "y": [6, 3, 5, 3, 8, 2, 4, 9, 4, 5], "name": "Tip 2", "marker": { "color": "#e74c3c", "size": 12 } }], layout: { "title": { "text": "<b>Observaciones Individuales</b>", "x": 0.5 }, "yaxis": { "title": "Dureza" }, "plot_bgcolor": "rgba(248,249,250,1)", "paper_bgcolor": "white", "showlegend": false } },
+                { id: 'ci_dureza', data: [{ "type": "scatter", "mode": "markers", "x": ["Diferencia"], "y": [-0.1], "marker": { "color": "#2c3e50", "size": 18 }, "error_y": { "type": "data", "symmetric": false, "array": [0.856], "arrayminus": [0.856], "thickness": 3, "width": 15 } }], layout: { "title": { "text": "<b>IC 95% Diferencia Medias</b><br><sub>p = 0.798</sub>", "x": 0.5 }, "yaxis": { "title": "Diferencia", "range": [-2, 2] }, "plot_bgcolor": "rgba(248,249,250,1)", "paper_bgcolor": "white", "showlegend": false } }
+            ];
+
+            chartConfigs.forEach(config => {
+                const div = document.getElementById(config.id);
+                if (div) {
+                    Plotly.newPlot(config.id, config.data, config.layout, { responsive: true });
+                }
+            });
+        }
+
+        // Scroll to Top
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('visible');
+            } else {
+                scrollToTopBtn.classList.remove('visible');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Sidebar Toggle
+        const sidebarPanel = document.getElementById('sidebar-panel');
+        const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+        const sidebarToggleIcon = document.getElementById('sidebarToggleIcon');
+        let sidebarOpen = true;
+
+        sidebarToggleBtn.addEventListener('click', () => {
+            sidebarOpen = !sidebarOpen;
+            if (sidebarOpen) {
+                sidebarPanel.classList.remove('collapsed');
+                sidebarPanel.style.opacity = '1';
+                sidebarToggleIcon.className = 'fas fa-times text-sm';
+            } else {
+                sidebarPanel.classList.add('collapsed');
+                sidebarPanel.style.opacity = '0';
+                sidebarToggleIcon.className = 'fas fa-bars text-sm';
+            }
+        });
+
+        // Handle window resize for plotly
+        window.addEventListener('resize', () => {
+            if (typeof Plotly !== 'undefined') {
+                const plotlyDivs = document.querySelectorAll('[id^="boxplot_"], [id^="stripplot_"], [id^="ci_"]');
+                plotlyDivs.forEach(div => {
+                    if (div.data) Plotly.Plots.resize(div);
+                });
+            }
+        });
+
+        // ===== VS Code Style Code Blocks =====
+        function setupCodeBlocks() {
+            var pres = contentArea.querySelectorAll('pre');
+            pres.forEach(function(pre) {
+                // Skip if already wrapped
+                if (pre.closest('.sourceCode-wrapper')) return;
+
+                var code = pre.querySelector('code');
+                if (!code) return;
+
+                var lang = code.getAttribute('data-language') || 'Python';
+                var fileExt = lang === 'Python' ? '.py' : lang === 'R' ? '.R' : '.txt';
+                var fileName = 'analysis' + fileExt;
+                var langIcon = '';
+                if (lang === 'Python') {
+                    langIcon = '<svg class="tab-icon python" viewBox="0 0 24 24" fill="currentColor"><path d="M9.585 11.692h4.328s2.432.039 2.432-2.35V5.391S16.714 3 11.936 3C7.362 3 7.647 4.983 7.647 4.983l.006 2.055h4.363v.617H5.92s-2.927-.332-2.927 4.282 2.555 4.45 2.555 4.45h1.524v-2.141s-.083-2.554 2.513-2.554zm-.056-6.009a.784.784 0 1 1 0-1.569.784.784 0 0 1 0 1.569z"/><path d="M18.452 7.532h-1.524v2.141s.083 2.554-2.513 2.554h-4.328s-2.432-.04-2.432 2.35v3.951s-.369 2.391 4.409 2.391c4.573 0 4.288-1.983 4.288-1.983l-.006-2.054h-4.363v-.617h6.097s2.927.332 2.927-4.282-2.555-4.451-2.555-4.451zm-4.597 10.477a.784.784 0 1 1 0 1.569.784.784 0 0 1 0-1.569z"/></svg>';
+                } else {
+                    langIcon = '<i class="fas fa-code tab-icon" style="font-size:12px"></i>';
+                }
+
+                // Create wrapper
+                var wrapper = document.createElement('div');
+                wrapper.className = 'sourceCode-wrapper';
+
+                // Create titlebar
+                var titlebar = document.createElement('div');
+                titlebar.className = 'sourceCode-titlebar';
+                titlebar.innerHTML =
+                    '<div class="sourceCode-dots">' +
+                        '<span class="dot-close"></span>' +
+                        '<span class="dot-min"></span>' +
+                        '<span class="dot-max"></span>' +
+                    '</div>' +
+                    '<div class="sourceCode-tab">' +
+                        langIcon +
+                        '<span>' + fileName + '</span>' +
+                    '</div>' +
+                    '<div class="sourceCode-actions">' +
+                        '<button type="button" onclick="toggleCodeBlock(this)" title="Ocultar/Mostrar">' +
+                            '<i class="fas fa-eye"></i> Ocultar' +
+                        '</button>' +
+                        '<button type="button" onclick="copyCodeBlock(this)" title="Copiar código">' +
+                            '<i class="fas fa-copy"></i> Copiar' +
+                        '</button>' +
+                    '</div>';
+
+                // Line numbers gutter
+                var codeText = code.textContent || '';
+                var lines = codeText.split('\n');
+                if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+                var gutterHTML = '';
+                for (var i = 1; i <= lines.length; i++) {
+                    gutterHTML += '<div>' + i + '</div>';
+                }
+                var gutter = document.createElement('div');
+                gutter.className = 'sourceCode-gutter';
+                gutter.innerHTML = gutterHTML;
+
+                // Minimap
+                var minimap = document.createElement('div');
+                minimap.className = 'sourceCode-minimap';
+
+                // Body wrapper
+                var bodyWrapper = document.createElement('div');
+                bodyWrapper.className = 'sourceCode-body';
+
+                // Highlight with hljs
+                if (window.hljs && code) {
+                    var langMap = { 'Python': 'python', 'python': 'python', 'R': 'r', 'SQL': 'sql' };
+                    code.classList.add('language-' + (langMap[lang] || 'python'));
+                    hljs.highlightElement(code);
+                }
+
+                // Assemble: insert wrapper before pre, move pre inside
+                pre.parentNode.insertBefore(wrapper, pre);
+                bodyWrapper.appendChild(gutter);
+                bodyWrapper.appendChild(pre);
+                bodyWrapper.appendChild(minimap);
+                wrapper.appendChild(titlebar);
+                wrapper.appendChild(bodyWrapper);
+            });
+        }
+
+        function toggleCodeBlock(btn) {
+            var wrapper = btn.closest('.sourceCode-wrapper');
+            var body = wrapper.querySelector('.sourceCode-body');
+            if (body.classList.contains('collapsed')) {
+                body.classList.remove('collapsed');
+                btn.innerHTML = '<i class="fas fa-eye"></i> Ocultar';
+            } else {
+                body.classList.add('collapsed');
+                btn.innerHTML = '<i class="fas fa-eye-slash"></i> Mostrar';
+            }
+        }
+
+        function copyCodeBlock(btn) {
+            var wrapper = btn.closest('.sourceCode-wrapper');
+            var code = wrapper.querySelector('code');
+            if (!code) return;
+            var text = code.textContent || code.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+                var originalHTML = btn.innerHTML;
+                btn.classList.add('copied');
+                btn.innerHTML = '<i class="fas fa-check"></i> Copiado';
+                setTimeout(function() {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = originalHTML;
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Error al copiar:', err);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(init, 100);
+        });
+    </script>
+</body>
+
+</html>

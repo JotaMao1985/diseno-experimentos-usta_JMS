@@ -1,0 +1,2749 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Material de estudio autónomo sobre diagnosis y validación del modelo en diseño de experimentos">
+    <meta name="author" content="Z.ai">
+    <title>Diagnosis y Validación del Modelo en Diseño de Experimentos</title>
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- External Resources -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- KaTeX for LaTeX rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Highlight.js VS Code Dark+ -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3D008D',
+                        secondary: '#ED1E79',
+                        navy: '#001A4D',
+                        gold: '#FDB913',
+                        bg: '#F8FAFC',
+                        surface: '#FFFFFF',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #F8FAFC;
+            color: #1E293B;
+            scroll-behavior: smooth;
+        }
+
+        code,
+        pre {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* USTA Gradient Background */
+        .usta-gradient {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+        }
+
+        /* USTA Navy Header */
+        .usta-header {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+        }
+
+        /* USTA Card Style */
+        .usta-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .usta-card:hover {
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+            transform: translateY(-4px);
+        }
+
+        /* Tip box USTA style */
+        .tip-box {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.08) 0%, rgba(237, 30, 121, 0.08) 100%);
+            border: 1px solid rgba(61, 0, 141, 0.2);
+        }
+
+        /* Step connector for pipeline */
+        .step-connector::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #3D008D, #ED1E79);
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .step-connector:last-child::after {
+            display: none;
+        }
+
+        /* ===== SIDEBAR DARK STYLE ===== */
+        #sidebar-panel {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+            flex-shrink: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            width: 16rem;
+            min-width: 16rem;
+            transition: width 0.3s ease, min-width 0.3s ease, opacity 0.25s ease;
+            z-index: 40;
+        }
+
+        #sidebar-panel.collapsed {
+            width: 0;
+            min-width: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            padding-top: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-brand h2 {
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        .sidebar-brand p {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 0.25rem;
+            margin-bottom: 0;
+            text-align: left;
+        }
+
+        .sidebar-nav {
+            padding: 1rem;
+        }
+
+        .sidebar-nav-item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 0.65rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            text-align: left;
+            margin-bottom: 0.25rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: rgba(255, 255, 255, 0.6);
+            background: transparent;
+        }
+
+        .sidebar-nav-item:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-nav-item.active {
+            color: white;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            box-shadow: 0 4px 12px rgba(61, 0, 141, 0.3);
+        }
+
+        .sidebar-nav-item .check-mark {
+            color: #10B981;
+            flex-shrink: 0;
+        }
+
+        /* Floating sidebar toggle button */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 50;
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(61, 0, 141, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-toggle-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 18px rgba(61, 0, 141, 0.5);
+        }
+
+        /* Layout adjustment */
+        .main-layout {
+            display: flex;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        /* Scroll to top button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 3.5rem;
+            height: 3.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(61, 0, 141, 0.4);
+            transition: all 0.3s ease;
+            z-index: 50;
+            border: none;
+        }
+
+        .scroll-to-top.visible {
+            display: flex;
+        }
+
+        .scroll-to-top:hover {
+            background: linear-gradient(140deg, #4A00A8 0%, #FF2D8A 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(61, 0, 141, 0.5);
+        }
+
+        /* Fade-in animation */
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #3D008D, #ED1E79);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #4A00A8, #FF2D8A);
+        }
+
+        /* Code scrollbar */
+        .code-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .code-scroll::-webkit-scrollbar-track {
+            background: #2d2d2d;
+        }
+
+        .code-scroll::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #3D008D, #ED1E79);
+            border-radius: 4px;
+        }
+
+        /* Focus styles for accessibility */
+        button:focus-visible,
+        a:focus-visible {
+            outline: 2px solid #ED1E79;
+            outline-offset: 2px;
+        }
+
+        /* Legacy syntax highlighting (mapped to VS Code Dark+ colors) */
+        .syntax-kwd { color: #569cd6; font-weight: bold; }
+        .syntax-cls { color: #4ec9b0; }
+        .syntax-str { color: #ce9178; }
+        .syntax-com { color: #6a9955; font-style: italic; }
+        .syntax-func { color: #dcdcaa; }
+        .syntax-self { color: #9cdcfe; font-style: italic; }
+        .syntax-num { color: #b5cea8; }
+
+        /* Content Styling */
+        .module-content h2 {
+            color: #3D008D;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid #ED1E79;
+        }
+
+        .module-content h3 {
+            color: #3D008D;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.75rem 0 1rem 0;
+        }
+
+        .module-content h4 {
+            color: #ED1E79;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        .module-content p {
+            margin-bottom: 1rem;
+            text-align: justify;
+            line-height: 1.8;
+        }
+
+        .module-content ul,
+        .module-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .module-content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.7;
+        }
+
+        .module-content aside {
+            background: linear-gradient(135deg, rgba(253, 185, 19, 0.1) 0%, rgba(253, 185, 19, 0.05) 100%);
+            border-left: 4px solid #FDB913;
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .module-content aside strong {
+            color: #B8860B;
+        }
+
+        .module-content .formula-box {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.03) 0%, rgba(237, 30, 121, 0.03) 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            border: 1px solid rgba(61, 0, 141, 0.15);
+            overflow-x: auto;
+        }
+
+        .module-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .module-content th,
+        .module-content td {
+            padding: 1rem 1.25rem;
+            text-align: center;
+        }
+
+        .module-content th {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .module-content tr:nth-child(even) {
+            background: rgba(61, 0, 141, 0.03);
+        }
+
+        .module-content tr:hover {
+            background: rgba(61, 0, 141, 0.08);
+        }
+
+        .module-content code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #3D008D;
+            background: rgba(61, 0, 141, 0.08);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        .module-content pre code {
+            background: transparent;
+            padding: 0;
+            color: #d4d4d4;
+        }
+
+        .module-content .output {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            border-left: 4px solid #10B981;
+            margin: 1rem 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+        }
+
+        /* Tooltip Styles */
+        .tooltip-term {
+            position: relative;
+            border-bottom: 2px dotted #ED1E79;
+            cursor: help;
+            font-weight: 600;
+            color: #3D008D;
+        }
+
+        .tooltip-term:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #3D008D 0%, #2D0066 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 400;
+            width: 280px;
+            text-align: left;
+            line-height: 1.5;
+            box-shadow: 0 10px 25px rgba(61, 0, 141, 0.3);
+            z-index: 1000;
+            margin-bottom: 8px;
+        }
+
+        .tooltip-term:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: #3D008D;
+            margin-bottom: -8px;
+            z-index: 1001;
+        }
+
+        .module-content .ejercicio {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.08) 0%, rgba(237, 30, 121, 0.05) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #ED1E79;
+            margin: 1.5rem 0;
+        }
+
+        .module-content .ejercicio h4 {
+            color: #3D008D;
+            margin-top: 0;
+        }
+
+        .module-content .resumen {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.06) 0%, rgba(237, 30, 121, 0.04) 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-left: 4px solid #3D008D;
+            margin-bottom: 1.5rem;
+        }
+
+        .module-content .resumen h4 {
+            margin-top: 0;
+            color: #3D008D;
+        }
+
+        .module-content strong {
+            color: #3D008D;
+        }
+
+        .module-content em {
+            color: #ED1E79;
+        }
+
+        /* KaTeX display */
+        .katex-display {
+            margin: 1.25em 0;
+            overflow-x: auto;
+        }
+
+        /* Concepto clave box */
+        .concepto-clave {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.06) 0%, rgba(237, 30, 121, 0.04) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #3D008D;
+            margin: 1.5rem 0;
+        }
+
+        .concepto-clave h4 {
+            color: #3D008D;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Nota box */
+        .nota {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-left: 4px solid #10B981;
+            margin: 1.5rem 0;
+        }
+
+        .nota h4 {
+            color: #059669;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ===== VS Code Style Code Blocks ===== */
+        .sourceCode-wrapper {
+            position: relative;
+            margin: 1.75rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #1e1e1e;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255,255,255,0.05);
+        }
+
+        .sourceCode-titlebar {
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            height: 36px;
+            background: #323233;
+            border-bottom: 1px solid #252526;
+            user-select: none;
+        }
+
+        .sourceCode-dots { display: flex; gap: 8px; }
+        .sourceCode-dots span { width: 12px; height: 12px; border-radius: 50%; display: block; }
+        .sourceCode-dots .dot-close { background: #ff5f57; }
+        .sourceCode-dots .dot-min { background: #ffbd2e; }
+        .sourceCode-dots .dot-max { background: #28c940; }
+
+        .sourceCode-tab {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 12px;
+            height: 100%;
+            background: #1e1e1e;
+            border-top: 2px solid #007acc;
+            border-right: 1px solid #252526;
+            font-size: 0.78rem;
+            color: #cccccc;
+            font-family: 'Segoe UI', 'Montserrat', sans-serif;
+        }
+
+        .sourceCode-tab .tab-icon { width: 14px; height: 14px; }
+        .sourceCode-tab .tab-icon.python { color: #f7c948; }
+
+        .sourceCode-actions {
+            display: flex;
+            gap: 4px;
+            margin-left: auto;
+        }
+
+        .sourceCode-actions button {
+            background: transparent;
+            border: none;
+            color: #858585;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-family: 'Segoe UI', 'Montserrat', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .sourceCode-actions button:hover { background: #3c3c3c; color: #cccccc; }
+        .sourceCode-actions button.copied { color: #4ec9b0; }
+
+        .sourceCode-body {
+            display: flex;
+            margin: 0;
+            overflow-x: auto;
+            background: #1e1e1e;
+        }
+
+        .sourceCode-body.collapsed { display: none; }
+
+        .sourceCode-gutter {
+            padding: 16px 0;
+            text-align: right;
+            user-select: none;
+            color: #858585;
+            font-size: 0.82rem;
+            line-height: 1.65;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            min-width: 40px;
+            padding-right: 12px;
+            padding-left: 12px;
+            border-right: 1px solid #2d2d2d;
+            background: #1e1e1e;
+            flex-shrink: 0;
+        }
+
+        .sourceCode-gutter div { height: 1.65em; }
+
+        .sourceCode-wrapper pre {
+            margin: 0;
+            padding: 16px;
+            overflow-x: auto;
+            background: #1e1e1e;
+            flex: 1;
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+        }
+
+        .sourceCode-wrapper code {
+            font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+            font-size: 0.87rem;
+            line-height: 1.65;
+            color: #d4d4d4;
+            background: transparent !important;
+        }
+
+        .sourceCode-minimap {
+            width: 28px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.01) 100%);
+            border-left: 1px solid #2d2d2d;
+            flex-shrink: 0;
+        }
+
+        .sourceCode-wrapper pre::-webkit-scrollbar { height: 8px; }
+        .sourceCode-wrapper pre::-webkit-scrollbar-track { background: #1e1e1e; }
+        .sourceCode-wrapper pre::-webkit-scrollbar-thumb { background: rgba(121,121,121,0.4); border-radius: 4px; }
+        .sourceCode-wrapper pre::-webkit-scrollbar-thumb:hover { background: rgba(121,121,121,0.7); }
+
+        /* VS Code Dark+ Syntax Highlighting */
+        .hljs-keyword { color: #569cd6; }
+        .hljs-built_in { color: #4ec9b0; }
+        .hljs-type { color: #4ec9b0; }
+        .hljs-literal { color: #569cd6; }
+        .hljs-number { color: #b5cea8; }
+        .hljs-string { color: #ce9178; }
+        .hljs-comment { color: #6a9955; font-style: italic; }
+        .hljs-function { color: #dcdcaa; }
+        .hljs-title { color: #dcdcaa; }
+        .hljs-params { color: #9cdcfe; }
+        .hljs-operator { color: #d4d4d4; }
+        .hljs-punctuation { color: #d4d4d4; }
+        .hljs-variable { color: #9cdcfe; }
+        .hljs-attr { color: #9cdcfe; }
+        .hljs-class .hljs-title { color: #4ec9b0; }
+        .hljs-meta { color: #c586c0; }
+
+        /* Keep old span classes as fallback for existing markup */
+        .kwd { color: #569cd6; font-weight: bold; }
+        .cls { color: #4ec9b0; }
+        .str { color: #ce9178; }
+        .com { color: #6a9955; font-style: italic; }
+        .func { color: #dcdcaa; }
+        .num { color: #b5cea8; }
+        .op { color: #d4d4d4; }
+        .var { color: #9cdcfe; }
+
+        /* Hide old code-title (replaced by VS Code titlebar) */
+        .code-title { display: none; }
+
+        /* Formula number */
+        .formula-number {
+            float: right;
+            color: #64748B;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+
+    <!-- Floating Sidebar Toggle Button -->
+    <button class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Mostrar/Ocultar menú" aria-label="Toggle sidebar">
+        <i class="fas fa-bars text-sm" id="sidebarToggleIcon"></i>
+    </button>
+
+    <div class="main-layout">
+
+        <!-- Sidebar Navigation -->
+        <div id="sidebar-panel">
+            <div class="sidebar-brand">
+                <h2><i class="fas fa-microscope text-secondary"></i> Diagnosis <span
+                        style="color: #FDB913;">ANOVA</span></h2>
+                <p>Diseño de Experimentos • Idoneidad del Modelo • USTA</p>
+            </div>
+            <nav class="sidebar-nav" id="module-nav">
+                <!-- Nav items injected via JS -->
+            </nav>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-grow flex flex-col" style="min-width:0;">
+            <main class="flex-grow bg-white rounded-tl-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div id="content-area" class="p-6 md:p-10 module-content">
+                    <!-- Content injected via JS -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="usta-header mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <i class="fas fa-book-open"></i> Referencias Bibliográficas
+            </h3>
+            <ul class="space-y-3 text-white/90 text-sm">
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Montgomery, D. C. (2017). <em class="text-gold">Design and Analysis of Experiments</em> (9th
+                        ed.). Wiley.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Box, G.E.P. & Cox, D.R. (1964). An analysis of transformations. <em class="text-gold">Journal
+                            of the Royal Statistical Society, Series B</em>, 26(2), 211-252.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Scheffé, H. (1959). <em class="text-gold">The Analysis of Variance</em>. Wiley.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Bartlett, M.S. (1937). Properties of sufficiency and statistical tests. <em
+                            class="text-gold">Proceedings of the Royal Society of London, Series A</em>, 160,
+                        268-282.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Hartley, H.O. (1950). The maximum F-ratio as a short-cut test for heterogeneity of variance.
+                        <em class="text-gold">Biometrika</em>, 37, 308-312.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Cochran, W.G. (1941). The distribution of the largest of a set of estimated variances as a
+                        fraction of their total. <em class="text-gold">Annals of Eugenics</em>, 11, 47-52.</span>
+                </li>
+            </ul>
+            <div class="mt-6 pt-6 border-t border-white/20 text-center">
+                <p class="text-white font-medium">Material de Estudio — <span class="text-gold">USTA</span></p>
+                <p class="text-xs mt-1 text-white/60">Diseño de Experimentos • Diagnosis y Validación del Modelo</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="Volver arriba">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Module Content Templates -->
+    <template id="module-1">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 1</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Fundamentos de la
+                    Diagnosis del Modelo</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Comprender la motivación, hipótesis básicas y
+                            proceso secuencial de validación del modelo ANOVA.</p>
+                    </div>
+                </div>
+            </div>
+
+            <section>
+                <h3>1.1 Introducción y Motivación</h3>
+                <p>
+                    En el estudio del análisis de la varianza (ANOVA), la construcción del modelo completamente
+                    aleatorizado y el contraste de hipótesis de igualdad de medias mediante el test $F$ se fundamentan
+                    en supuestos estadísticos específicos. La validación de estas hipótesis resulta imprescindible para
+                    garantizar la fiabilidad de las inferencias realizadas. La diagnosis del modelo consiste en estudiar
+                    si las hipótesis básicas del mismo están o no en contradicción con los datos observados, empleando
+                    para ello métodos gráficos sencillos y procedimientos estadísticos formales.
+                </p>
+                <p>
+                    Cuando se selecciona un modelo para un conjunto de datos, frecuentemente no se puede estar seguro
+                    <em>a priori</em> de que ese modelo sea adecuado. En el caso del ANOVA, puede suceder que alguna o
+                    varias características del modelo tales como la normalidad de los términos de error o la
+                    independencia en los datos investigados no se verifiquen. Por lo tanto, es importante examinar la
+                    adecuación del modelo a los datos antes de realizar un análisis de los mismos basado en dicho
+                    modelo.
+                </p>
+
+                <aside>
+                    Los modelos ANOVA son razonablemente robustos frente a ciertos tipos de desviaciones del modelo,
+                    tales como que los términos de error no estén exactamente normalmente distribuidos. El principal
+                    objetivo del examen de la adecuación del modelo es detectar graves desviaciones de las condiciones
+                    supuestas.
+                </aside>
+            </section>
+
+            <section>
+                <h3>1.2 Hipótesis Básicas del Modelo ANOVA</h3>
+                <p>
+                    El análisis de la varianza de una vía se fundamenta en las siguientes suposiciones fundamentales que
+                    deben verificarse para garantizar la validez de las inferencias:
+                </p>
+
+                <div class="concepto-clave">
+                    <p style="color:#3D008D;font-weight:600;margin-bottom:0.5rem;">Modelo Estadístico Unifactorial</h4>
+                    <p>Las observaciones vienen descritas por el modelo:</p>
+                    <div class="formula-box">
+                        $$y_{ij} = \mu + \tau_i + u_{ij}, \quad i = 1, 2, \ldots, I; \quad j = 1, 2, \ldots, n_i$$
+                        <span class="formula-number">(2.1)</span>
+                    </div>
+                </div>
+
+                <div class="ejercicio">
+                    <h4 style="color:#3D008D;margin-top:0;">Hipótesis sobre los Términos de Error</h4>
+                    <p>Los errores $u_{ij}$ son variables aleatorias independientes y normalmente distribuidas con media
+                        cero y varianza constante $\sigma^2$:</p>
+                    <div class="formula-box">
+                        $$u_{ij} \sim \mathcal{N}(0, \sigma^2)$$
+                    </div>
+                </div>
+
+                <p>Si el modelo es de efectos aleatorios, se añaden las siguientes suposiciones:</p>
+                <ul style="margin-left: 2rem; margin-top: 1rem; margin-bottom: 1rem;">
+                    <li>Los efectos $\tau_i$ son variables aleatorias independientes con distribución Normal de media
+                        cero y varianza $\sigma^2_\tau$</li>
+                    <li>Los efectos $\tau_i$ y los errores $u_{ij}$ son independientes entre sí</li>
+                </ul>
+
+                <h4>Notación Estándar</h4>
+                <dl style="background:#F8FAFC;padding:1.5rem;border-radius:12px;margin:1rem 0;">
+                    <dt>$y_{ij}$ Observación $j$-ésima del tratamiento $i$-ésimo</dt>
+                    <dt>$\mu$ Media global de la población</dt>
+                    <dt>$\tau_i$ Efecto del tratamiento $i$-ésimo</dt>
+                    <dt>$u_{ij}$ Perturbación aleatoria o término de error</dt>
+                    <dt>$I$ Número de tratamientos o niveles del factor</dt>
+                    <dt>$n_i$ Número de observaciones en el tratamiento $i$-ésimo</dt>
+                    <dt>$N = \sum_{i=1}^{I} n_i$ Número total de observaciones</dt>
+                </dl>
+            </section>
+
+            <section>
+                <h3>1.3 Proceso Secuencial de Análisis Experimental</h3>
+                <p>
+                    En el estudio de un experimento se debe seguir un proceso secuencial que garantice la validez del
+                    análisis estadístico. Este proceso comprende las siguientes etapas fundamentales:
+                </p>
+
+                <div class="concepto-clave">
+                    <h4>Flujo del Proceso de Validación del Modelo</h4>
+
+                    <div style="display:flex;align-items:center;margin-bottom:1rem;">
+                        <span
+                            style="background:#3D008D;color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;margin-right:1rem;flex-shrink:0;">1</span>
+                        <div style="flex:1;">
+                            <strong>Planteamiento del modelo</strong>: Definir un modelo que explique los datos
+                            observados, especificando la estructura de efectos y la distribución de errores.
+                        </div>
+                    </div>
+
+                    <div style="text-align:center;color:#3D008D;font-size:1.5rem;margin:0.5rem 0;">↓</div>
+
+                    <div style="display:flex;align-items:center;margin-bottom:1rem;">
+                        <span
+                            style="background:#3D008D;color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;margin-right:1rem;flex-shrink:0;">2</span>
+                        <div style="flex:1;">
+                            <strong>Examen de adecuación</strong>: Verificar si el modelo planteado es adecuado. Si no
+                            lo es, tomar medidas correctoras (transformaciones de datos o modificación del modelo).
+                        </div>
+                    </div>
+
+                    <div style="text-align:center;color:#3D008D;font-size:1.5rem;margin:0.5rem 0;">↓</div>
+
+                    <div style="display:flex;align-items:center;margin-bottom:1rem;">
+                        <span
+                            style="background:#3D008D;color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;margin-right:1rem;flex-shrink:0;">3</span>
+                        <div style="flex:1;">
+                            <strong>Análisis estadístico</strong>: Si el modelo es adecuado, realizar el análisis
+                            estadístico de los datos, evaluar su efectividad y estudiar la sensibilidad ante diversas
+                            situaciones.
+                        </div>
+                    </div>
+                    </aside>
+            </section>
+
+            <section>
+                <h3>1.4 Los Residuos como Herramienta de Diagnosis</h3>
+                <p>
+                    Los residuos constituyen la principal herramienta para el diagnóstico del modelo, puesto que son los
+                    estimadores de las perturbaciones aleatorias. La definición formal de residuo se establece como
+                    sigue:
+                </p>
+
+                <div class="concepto-clave">
+                    <p style="color:#3D008D;font-weight:600;margin-bottom:0.5rem;">Residuo</h4>
+                    <p>Se define el residuo $e_{ij}$ como la diferencia entre el valor observado y su estimación:</p>
+                    <div class="formula-box">
+                        $$e_{ij} = y_{ij} - \hat{y}_{ij} = y_{ij} - \bar{y}_{i\cdot}$$
+                        <span class="formula-number">(2.2)</span>
+                    </div>
+                    <p>donde $\bar{y}_{i\cdot}$ representa la media muestral del tratamiento $i$-ésimo.</p>
+                </div>
+
+                <p>
+                    Si el modelo es apropiado para los datos, los residuos observados $e_{ij}$ reflejarán las
+                    propiedades exigidas a las perturbaciones $u_{ij}$. Esta es la idea básica en el análisis de los
+                    residuos: si las hipótesis relativas al modelo son ciertas, los residuos variarán aleatoriamente;
+                    si, por el contrario, se descubren tendencias sistemáticas inexplicadas, se debe sospechar de la
+                    validez del modelo.
+                </p>
+
+                <div class="concepto-clave">
+                    <p style="color:#3D008D;font-weight:600;margin-bottom:0.5rem;">Residuo Estandarizado</h4>
+                    <p>Se denominan residuos estandarizados $d_{ij}$ al cociente entre los residuos $e_{ij}$ y la raíz
+                        cuadrada de la varianza residual:</p>
+                    <div class="formula-box">
+                        $$d_{ij} = \frac{e_{ij}}{S_R}$$
+                        <span class="formula-number">(2.3)</span>
+                    </div>
+                    <p>donde $S_R^2$ representa la varianza residual del modelo.</p>
+                </div>
+
+                <p>
+                    El análisis de los residuos tiene por objeto contrastar <em>a posteriori</em> las hipótesis del
+                    modelo. Este análisis va encaminado a comprobar los siguientes aspectos:
+                </p>
+
+                <ol style="margin-left: 2rem; margin-top: 1rem; margin-bottom: 1rem;">
+                    <li><strong>Incorrelación</strong>: Si existe suficiente evidencia para no aceptar la incorrelación
+                        de los errores.</li>
+                    <li><strong>Normalidad</strong>: Si la distribución de los errores es aproximadamente normal.</li>
+                    <li><strong>Valores anómalos</strong>: Si existe alguna observación anómala que altere gravemente la
+                        estimación del modelo.</li>
+                    <li><strong>Homocedasticidad</strong>: Si la varianza de los errores es constante.</li>
+                </ol>
+            </section>
+        </div>
+    </template>
+    <template id="module-2">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 2</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Análisis de Residuos
+                </h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Dominar las técnicas de análisis de residuos:
+                            independencia, normalidad, detección de outliers y diagnóstico gráfico.</p>
+                    </div>
+                </div>
+            </div>
+
+            <section>
+                <h3>2.1 Independencia entre los Residuos</h3>
+                <p>
+                    Uno de los problemas que puede surgir en el estudio de un modelo de análisis de la varianza es la
+                    existencia de autocorrelación entre los residuos. Los residuos $e_{ij}$ no son variables aleatorias
+                    independientes, ya que la suma de los residuos dentro de cada tratamiento es siempre igual a cero.
+                    Por tanto, únicamente $N - I$ de los $N$ residuos son independientes. Sin embargo, si el tamaño
+                    muestral es grande en comparación con el número de tratamientos, el efecto de dependencia entre los
+                    residuos es relativamente poco importante y se puede ignorar.
+                </p>
+
+                <h4>Gráfico de Residuos en Función del Tiempo</h4>
+                <p>
+                    Un procedimiento gráfico para analizar la existencia de autocorrelación entre datos secuenciales
+                    consiste en la representación de los residuos frente al orden en que se recopilaron los datos. Se
+                    busca en dicho gráfico rachas de residuos de igual signo, así como cualquier tendencia creciente o
+                    decreciente en los mismos, lo cual sería un claro indicio de correlación entre los términos de error
+                    y el tiempo.
+                </p>
+
+                <div class="concepto-clave">
+                    <h4>Interpretación del Gráfico de Residuos vs. Tiempo</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Patrón Observado</th>
+                                <th>Interpretación</th>
+                                <th>Acción Recomendada</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Fluctuación aleatoria</td>
+                                <td>Independencia satisfecha</td>
+                                <td>Continuar con el análisis</td>
+                            </tr>
+                            <tr>
+                                <td>Rachas de signo constante</td>
+                                <td>Posible autocorrelación</td>
+                                <td>Aplicar test de Durbin-Watson</td>
+                            </tr>
+                            <tr>
+                                <td>Tendencia creciente/decreciente</td>
+                                <td>Correlación con el tiempo</td>
+                                <td>Revisar aleatorización</td>
+                            </tr>
+                            <tr>
+                                <td>Mayor dispersión en un extremo</td>
+                                <td>Varianza no constante</td>
+                                <td>Considerar transformaciones</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <aside
+                    style="border-left-color:#ED1E79;background:linear-gradient(135deg, rgba(237,30,121,0.1) 0%, rgba(237,30,121,0.05) 100%);">
+                    El efecto de la dependencia puede ser un problema muy grave y difícil de corregir, por ello es
+                    importante prevenirlo cuando los datos se están recopilando. El método más eficaz para prevenir la
+                    dependencia es realizar un procedimiento apropiado de aleatorización.
+                </aside>
+            </section>
+
+            <section>
+                <h3>2.2 Normalidad de los Residuos</h3>
+                <p>
+                    El análisis de la distribución de los residuos se inicia con una inspección general mediante
+                    diagramas de puntos. Cuando el número de residuos es grande ($\geq 20$), se suelen agrupar los datos
+                    y construir un histograma. Si las hipótesis básicas del modelo son ciertas, estas gráficas tendrán
+                    en general la apariencia de una distribución normal centrada en cero.
+                </p>
+
+                <h4>Gráfico Probabilístico Normal (Q-Q Plot)</h4>
+                <p>
+                    El gráfico probabilístico normal, también denominado gráfico gaussiano o representación en papel
+                    probabilístico normal, es un procedimiento gráfico muy utilizado para detectar el posible
+                    incumplimiento de la hipótesis de normalidad. La idea en que se basa consiste en representar la
+                    función de distribución de una variable aleatoria $\mathcal{N}(\mu, \sigma^2)$ en una escala
+                    transformada apropiada de forma que la gráfica quede linealizada.
+                </p>
+
+                <div class="ejercicio">
+                    <h4 style="color:#3D008D;margin-top:0;">Construcción del Gráfico Probabilístico Normal</h4>
+                    <p><strong>Paso 1:</strong> Ordenar las observaciones muestrales en orden creciente:</p>
+                    <div class="formula-box">
+                        $$x_{[1]} \leq x_{[2]} \leq \cdots \leq x_{[n]}$$
+                    </div>
+                    <p><strong>Paso 2:</strong> Obtener las proporciones acumuladas corregidas $\xi_i$. La expresión más
+                        utilizada (Blom, 1958) es:</p>
+                    <div class="formula-box">
+                        $$\xi_i = \frac{i - \frac{3}{8}}{n + \frac{1}{4}}$$
+                        <span class="formula-number">(2.4)</span>
+                    </div>
+                    <p><strong>Paso 3:</strong> Determinar los cuantiles teóricos $q_i$ de la distribución normal:</p>
+                    <div class="formula-box">
+                        $$q_i = \Phi^{-1}(\xi_i)$$
+                    </div>
+                    <p><strong>Paso 4:</strong> Representar $q_i$ frente a $x_{[i]}$</p>
+                </div>
+
+                <p>
+                    El gráfico de $q_i$ frente a los valores $x_{[i]}$ será una recta de ecuación $x_{[i]} = \mu +
+                    \sigma q_i$, cuya ordenada en el origen estimará el valor de $\mu$ y la pendiente estimará el valor
+                    de $\sigma$. Cuanto mejor se ajuste la nube de puntos representada a una recta, menos evidencia se
+                    tendrá para suponer la violación de la hipótesis de normalidad de los residuos.
+                </p>
+            </section>
+
+            <section>
+                <h3>2.3 Detección de Datos Anómalos (Outliers)</h3>
+                <p>
+                    Los residuos extremos pueden identificarse en las gráficas de residuos (preferiblemente basadas en
+                    residuos estandarizados) y en la gráfica en papel probabilístico normal. La presencia de uno o más
+                    residuos anómalos puede afectar gravemente el análisis de la varianza, por lo que en tales
+                    circunstancias es recomendable realizar una investigación minuciosa.
+                </p>
+
+                <div class="concepto-clave">
+                    <p style="color:#3D008D;font-weight:600;margin-bottom:0.5rem;">Criterio de Identificación de
+                        Outliers</h4>
+                    <p>Dado que los residuos estandarizados deben ser aproximadamente normales con media cero y varianza
+                        unidad, se cumple que:</p>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                        <li>Aproximadamente el 68% de los residuos estandarizados se encuentran entre $\pm 1$</li>
+                        <li>Alrededor del 95% entre $\pm 2$</li>
+                        <li>Más del 99% entre $\pm 3$</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;"><strong>Criterio:</strong> Se considera residuo potencialmente
+                        anómalo aquel cuya distancia del origen sea superior, en valor absoluto, a 3 o 4 desviaciones
+                        estándar.</p>
+                </div>
+
+                <h4>Protocolo de Actuación ante Datos Anómalos</h4>
+                <ol style="margin-left: 2rem; margin-top: 1rem; margin-bottom: 1rem;">
+                    <li>Revisar detenidamente los datos originales para detectar errores de codificación o cálculo.</li>
+                    <li>Si se detecta un error, corregir el dato y continuar con el experimento.</li>
+                    <li>Si no se puede corregir, eliminar la observación del análisis.</li>
+                    <li>Si el residuo anómalo corresponde a un valor particular deseable, evaluar si contiene
+                        información importante antes de descartarlo.</li>
+                </ol>
+
+                <aside>
+                    Una norma segura, frecuentemente sugerida, es descartar un residuo atípico sólo si hay suficiente
+                    evidencia de que representa un error de cálculo, de mal funcionamiento del equipo o una
+                    circunstancia de tipo similar.
+                </aside>
+            </section>
+
+            <section>
+                <h3>2.4 Ejemplo Completo: Análisis de Residuos</h3>
+
+                <div class="concepto-clave" style="border-left-color:#FDB913;">
+                    <h4>Ejemplo 2.1: Diagnosis del Modelo para Experimento de Fertilizantes</h4>
+
+                    <div class="nota">
+                        <p><strong>Contexto:</strong> Se dispone de datos de un experimento que evalúa el rendimiento de
+                            cinco tipos de fertilizantes. El modelo ANOVA ha sido ajustado y se requiere verificar la
+                            idoneidad del modelo mediante el análisis de residuos.</p>
+                        <p><strong>Datos:</strong> Se cuenta con observaciones para 5 tratamientos con tamaños
+                            muestrales $n_1=6$, $n_2=5$, $n_3=5$, $n_4=4$, $n_5=6$, totalizando $N=26$ observaciones.
+                        </p>
+                    </div>
+
+                    <h4>Datos y Residuos Observados</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="10">Grupos (Fertilizantes)</th>
+                            </tr>
+                            <tr>
+                                <th colspan="2">1</th>
+                                <th colspan="2">2</th>
+                                <th colspan="2">3</th>
+                                <th colspan="2">4</th>
+                                <th colspan="2">5</th>
+                            </tr>
+                            <tr>
+                                <th>$y_{1j}$</th>
+                                <th>$e_{1j}$</th>
+                                <th>$y_{2j}$</th>
+                                <th>$e_{2j}$</th>
+                                <th>$y_{3j}$</th>
+                                <th>$e_{3j}$</th>
+                                <th>$y_{4j}$</th>
+                                <th>$e_{4j}$</th>
+                                <th>$y_{5j}$</th>
+                                <th>$e_{5j}$</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>51</td>
+                                <td>+1</td>
+                                <td>56</td>
+                                <td>−1</td>
+                                <td>48</td>
+                                <td>0</td>
+                                <td>47</td>
+                                <td>0</td>
+                                <td>43</td>
+                                <td>−2</td>
+                            </tr>
+                            <tr>
+                                <td>49</td>
+                                <td>−1</td>
+                                <td>60</td>
+                                <td>+3</td>
+                                <td>50</td>
+                                <td>+2</td>
+                                <td>48</td>
+                                <td>+1</td>
+                                <td>43</td>
+                                <td>−2</td>
+                            </tr>
+                            <tr>
+                                <td>50</td>
+                                <td>0</td>
+                                <td>56</td>
+                                <td>−1</td>
+                                <td>53</td>
+                                <td>+5</td>
+                                <td>49</td>
+                                <td>+2</td>
+                                <td>46</td>
+                                <td>+1</td>
+                            </tr>
+                            <tr>
+                                <td>49</td>
+                                <td>−1</td>
+                                <td>56</td>
+                                <td>−1</td>
+                                <td>44</td>
+                                <td>−4</td>
+                                <td>44</td>
+                                <td>−3</td>
+                                <td>47</td>
+                                <td>+2</td>
+                            </tr>
+                            <tr>
+                                <td>51</td>
+                                <td>+1</td>
+                                <td>57</td>
+                                <td>0</td>
+                                <td>45</td>
+                                <td>−3</td>
+                                <td>45</td>
+                                <td>0</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>50</td>
+                                <td>0</td>
+                                <td>—</td>
+                                <td>—</td>
+                                <td>—</td>
+                                <td>—</td>
+                                <td>—</td>
+                                <td>—</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr style="background: rgba(61, 0, 141, 0.1); font-weight: 600;">
+                                <td>$\bar{y}_{1\cdot}=50$</td>
+                                <td>—</td>
+                                <td>$\bar{y}_{2\cdot}=57$</td>
+                                <td>—</td>
+                                <td>$\bar{y}_{3\cdot}=48$</td>
+                                <td>—</td>
+                                <td>$\bar{y}_{4\cdot}=47$</td>
+                                <td>—</td>
+                                <td>$\bar{y}_{5\cdot}=45$</td>
+                                <td>—</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="text-align:center;font-style:italic;color:#64748B;font-size:0.9rem;margin-top:0.5rem;">
+                        Tabla 1: Datos observados y residuos calculados para cada tratamiento</p>
+
+                    <h4>Implementación en Python</h4>
+                    <div class="code-title">Código: Análisis de Residuos para Diagnosis del Modelo</div>
+                    <pre><code data-language="python"><span class="kwd">import</span> numpy <span class="kwd">as</span> np
+<span class="kwd">import</span> scipy.stats <span class="kwd">as</span> stats
+<span class="kwd">import</span> matplotlib.pyplot <span class="kwd">as</span> plt
+
+<span class="com"># =====================================================
+<span class="com"># PASO 1: Definición de los datos del experimento
+<span class="com"># =====================================================</span>
+<span class="com"># Datos de rendimiento para 5 fertilizantes</span>
+grupos = {
+    <span class="num">1</span>: [<span class="num">51</span>, <span class="num">49</span>, <span class="num">50</span>, <span class="num">49</span>, <span class="num">51</span>, <span class="num">50</span>],      <span class="com"># Fertilizante 1</span>
+    <span class="num">2</span>: [<span class="num">56</span>, <span class="num">60</span>, <span class="num">56</span>, <span class="num">56</span>, <span class="num">57</span>],               <span class="com"># Fertilizante 2</span>
+    <span class="num">3</span>: [<span class="num">48</span>, <span class="num">50</span>, <span class="num">53</span>, <span class="num">44</span>, <span class="num">45</span>],               <span class="com"># Fertilizante 3</span>
+    <span class="num">4</span>: [<span class="num">47</span>, <span class="num">48</span>, <span class="num">49</span>, <span class="num">44</span>, <span class="num">45</span>],               <span class="com"># Fertilizante 4</span>
+    <span class="num">5</span>: [<span class="num">43</span>, <span class="num">43</span>, <span class="num">46</span>, <span class="num">47</span>, <span class="num">47</span>, <span class="num">46</span>]         <span class="com"># Fertilizante 5</span>
+}
+
+<span class="com"># Calcular medias de cada grupo</span>
+medias = {k: np.mean(v) <span class="kwd">for</span> k, v <span class="kwd">in</span> grupos.items()}
+<span class="kwd">print</span>(<span class="str">"Medias por tratamiento:"</span>)
+<span class="kwd">for</span> k, m <span class="kwd">in</span> medias.items():
+    <span class="kwd">print</span>(<span class="str">f"  Tratamiento {k}: y_bar = {m:.2f}"</span>)
+
+<span class="com"># =====================================================
+<span class="com"># PASO 2: Cálculo de residuos
+<span class="com"># =====================================================</span>
+residuos = []
+valores_ajustados = []
+grupo_indicador = []
+
+<span class="kwd">for</span> grupo, datos <span class="kwd">in</span> grupos.items():
+    <span class="kwd">for</span> valor <span class="kwd">in</span> datos:
+        residuo = valor - medias[grupo]
+        residuos.append(residuo)
+        valores_ajustados.append(medias[grupo])
+        grupo_indicador.append(grupo)
+
+residuos = np.array(residuos)
+valores_ajustados = np.array(valores_ajustados)
+
+<span class="com"># =====================================================
+<span class="com"># PASO 3: Cálculo de residuos estandarizados
+<span class="com"># =====================================================</span>
+<span class="com"># Varianza residual (Cuadrado Medio del Error)</span>
+N = len(residuos)           <span class="com"># Total de observaciones</span>
+I = len(grupos)             <span class="com"># Número de tratamientos</span>
+gl_error = N - I            <span class="com"># Grados de libertad del error</span>
+
+<span class="com"># Calcular suma de cuadrados del error</span>
+SCE = sum(residuos**<span class="num">2</span>)
+S2_R = SCE / gl_error       <span class="com"># Varianza residual</span>
+S_R = np.sqrt(S2_R)         <span class="com"># Desviación estándar residual</span>
+
+<span class="kwd">print</span>(<span class="str">f"\nVarianza residual S²_R = {S2_R:.4f}"</span>)
+<span class="kwd">print</span>(<span class="str">f"Desviación estándar S_R = {S_R:.4f}"</span>)
+
+<span class="com"># Residuos estandarizados</span>
+residuos_estand = residuos / S_R
+
+<span class="com"># =====================================================
+<span class="com"># PASO 4: Identificación de posibles outliers
+<span class="com"># =====================================================</span>
+<span class="kwd">print</span>(<span class="str">"\n--- Análisis de Residuos Estandarizados ---"</span>)
+<span class="kwd">print</span>(<span class="str">f"Residuo estandarizado máximo: {np.max(np.abs(residuos_estand)):.3f}"</span>)
+<span class="kwd">print</span>(<span class="str">f"Residuos con |d| > 2: {np.sum(np.abs(residuos_estand) > 2)}"</span>)
+<span class="kwd">print</span>(<span class="str">f"Residuos con |d| > 3: {np.sum(np.abs(residuos_estand) > 3)}"</span>)
+
+<span class="com"># =====================================================
+<span class="com"># PASO 5: Test de normalidad de Shapiro-Wilk
+<span class="com"># =====================================================</span>
+stat_sw, p_sw = stats.shapiro(residuos)
+<span class="kwd">print</span>(<span class="str">f"\n--- Test de Shapiro-Wilk ---"</span>)
+<span class="kwd">print</span>(<span class="str">f"Estadístico W = {stat_sw:.4f}"</span>)
+<span class="kwd">print</span>(<span class="str">f"P-valor = {p_sw:.4f}"</span>)
+
+<span class="kwd">if</span> p_sw > <span class="num">0.05</span>:
+    <span class="kwd">print</span>(<span class="str">"Conclusión: No se rechaza la normalidad de los residuos"</span>)
+<span class="kwd">else</span>:
+    <span class="kwd">print</span>(<span class="str">"Conclusión: Se rechaza la normalidad de los residuos"</span>)
+
+<span class="com"># =====================================================
+<span class="com"># PASO 6: Gráficos diagnósticos
+<span class="com"># =====================================================</span>
+fig, axes = plt.subplots(<span class="num">2</span>, <span class="num">2</span>, figsize=(<span class="num">12</span>, <span class="num">10</span>))
+
+<span class="com"># Gráfico 1: Residuos vs Valores Ajustados</span>
+axes[<span class="num">0</span>,<span class="num">0</span>].scatter(valores_ajustados, residuos, c=grupo_indicador, 
+                     cmap=<span class="str">'viridis'</span>, alpha=<span class="num">0.7</span>, edgecolors=<span class="str">'black'</span>)
+axes[<span class="num">0</span>,<span class="num">0</span>].axhline(y=<span class="num">0</span>, color=<span class="str">'red'</span>, linestyle=<span class="str">'--'</span>, linewidth=<span class="num">1</span>)
+axes[<span class="num">0</span>,<span class="num">0</span>].set_xlabel(<span class="str">'Valores Ajustados'</span>)
+axes[<span class="num">0</span>,<span class="num">0</span>].set_ylabel(<span class="str">'Residuos'</span>)
+axes[<span class="num">0</span>,<span class="num">0</span>].set_title(<span class="str">'Residuos vs Valores Ajustados'</span>)
+
+<span class="com"># Gráfico 2: Histograma de residuos</span>
+axes[<span class="num">0</span>,<span class="num">1</span>].hist(residuos, bins=<span class="num">8</span>, edgecolor=<span class="str">'black'</span>, alpha=<span class="num">0.7</span>, color=<span class="str">'steelblue'</span>)
+axes[<span class="num">0</span>,<span class="num">1</span>].axvline(x=<span class="num">0</span>, color=<span class="str">'red'</span>, linestyle=<span class="str">'--'</span>, linewidth=<span class="num">1</span>)
+axes[<span class="num">0</span>,<span class="num">1</span>].set_xlabel(<span class="str">'Residuos'</span>)
+axes[<span class="num">0</span>,<span class="num">1</span>].set_ylabel(<span class="str">'Frecuencia'</span>)
+axes[<span class="num">0</span>,<span class="num">1</span>].set_title(<span class="str">'Histograma de Residuos'</span>)
+
+<span class="com"># Gráfico 3: Q-Q Plot</span>
+stats.probplot(residuos, dist=<span class="str">"norm"</span>, plot=axes[<span class="num">1</span>,<span class="num">0</span>])
+axes[<span class="num">1</span>,<span class="num">0</span>].set_title(<span class="str">'Gráfico Q-Q Normal'</span>)
+
+<span class="com"># Gráfico 4: Residuos por tratamiento</span>
+<span class="kwd">for</span> g <span class="kwd">in</span> <span class="kwd">sorted</span>(grupos.keys()):
+    mask = [gi == g <span class="kwd">for</span> gi <span class="kwd">in</span> grupo_indicador]
+    res_g = [r <span class="kwd">for</span> r, m <span class="kwd">in</span> zip(residuos, mask) <span class="kwd">if</span> m]
+    axes[<span class="num">1</span>,<span class="num">1</span>].scatter([g]*len(res_g), res_g, label=<span class="str">f'Trat. {g}'</span>, 
+                          s=<span class="num">80</span>, alpha=<span class="num">0.7</span>, edgecolors=<span class="str">'black'</span>)
+axes[<span class="num">1</span>,<span class="num">1</span>].axhline(y=<span class="num">0</span>, color=<span class="str">'red'</span>, linestyle=<span class="str">'--'</span>, linewidth=<span class="num">1</span>)
+axes[<span class="num">1</span>,<span class="num">1</span>].set_xlabel(<span class="str">'Tratamiento'</span>)
+axes[<span class="num">1</span>,<span class="num">1</span>].set_ylabel(<span class="str">'Residuos'</span>)
+axes[<span class="num">1</span>,<span class="num">1</span>].set_title(<span class="str">'Residuos por Tratamiento'</span>)
+
+plt.tight_layout()
+plt.savefig(<span class="str">'diagnostico_residuos.png'</span>, dpi=<span class="num">150</span>)
+plt.show()</code></pre>
+
+                    <div class="nota">
+                        <h5>Interpretación de Resultados</h5>
+                        <p><strong>1. Residuos estandarizados:</strong> El valor máximo observado es $|d| = 2.316$
+                            (correspondiente al residuo $e = 5$ del tratamiento 3), que no supera el umbral crítico de
+                            3. Por tanto, no se identifican outliers potenciales.</p>
+                        <p><strong>2. Test de Shapiro-Wilk:</strong> Si el $p$-valor resulta mayor que $0.05$, se
+                            concluye que no existe evidencia suficiente para rechazar la hipótesis de normalidad de los
+                            residuos.</p>
+                        <p><strong>3. Gráfico de residuos vs valores ajustados:</strong> Los puntos fluctúan de forma
+                            aproximadamente aleatoria alrededor de la línea base, sin mostrar patrones sistemáticos.
+                            Esto indica que la varianza del error es constante.</p>
+                        <p><strong>4. Gráfico Q-Q:</strong> Los puntos se ajustan razonablemente bien a la línea
+                            teórica, lo cual respalda el supuesto de normalidad.</p>
+                    </div>
+                    </aside>
+            </section>
+        </div>
+    </template>
+    <template id="module-3">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 3</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Diagnosis de
+                    Heterocedasticidad</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Aprender a detectar y evaluar la
+                            heterocedasticidad mediante tests de Bartlett, Cochran y Hartley.</p>
+                    </div>
+                </div>
+            </div>
+
+            <section>
+                <h3>3.1 Análisis Gráfico de Residuos para Detección de Heterocedasticidad</h3>
+                <p>
+                    La detección de la heterocedasticidad, es decir, la violación de la hipótesis de igualdad de
+                    varianzas en el modelo, es bastante complicada y más aún su tratamiento. Los procedimientos gráficos
+                    más empleados incluyen las representaciones de los residuos frente a los valores ajustados y frente
+                    a ciertas variables de interés.
+                </p>
+
+                <h4>Gráfico de Residuos frente a Valores Ajustados</h4>
+                <p>
+                    En esta gráfica se representan los residuos $e_{ij} = y_{ij} - \bar{y}_{i\cdot}$ frente a los
+                    valores previstos por el modelo para cada tratamiento, $\bar{y}_{i\cdot}$. Dicha gráfica puede poner
+                    de manifiesto la violación de la hipótesis de homocedasticidad si se observa que la variabilidad de
+                    los residuos depende de la respuesta media en cada nivel del factor.
+                </p>
+
+                <div class="concepto-clave">
+                    <h4>Patrones Típicos en Gráficos de Residuos vs Valores Ajustados</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Forma del Gráfico</th>
+                                <th>Diagnóstico</th>
+                                <th>Implicación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Nube aleatoria rectangular</td>
+                                <td>Homocedasticidad</td>
+                                <td>Varianza constante ✓</td>
+                            </tr>
+                            <tr>
+                                <td>Forma de embudo (abre hacia arriba)</td>
+                                <td>Heterocedasticidad</td>
+                                <td>Varianza creciente con la media</td>
+                            </tr>
+                            <tr>
+                                <td>Forma de embudo (abre hacia abajo)</td>
+                                <td>Heterocedasticidad</td>
+                                <td>Varianza decreciente con la media</td>
+                            </tr>
+                            <tr>
+                                <td>Mayor dispersión en un nivel específico</td>
+                                <td>Varianza diferencial</td>
+                                <td>Revisar ese tratamiento particular</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </aside>
+            </section>
+
+            <section>
+                <h3>3.2 Test de Bartlett</h3>
+                <p>
+                    El test de Bartlett puede usarse para tamaños de muestra iguales o desiguales. Su idea básica
+                    consiste en utilizar las medias aritmética y geométrica de las varianzas muestrales para construir
+                    un estadístico cuya distribución sea aproximadamente una $\chi^2$.
+                </p>
+
+                <div class="ejercicio">
+                    <h4 style="color:#3D008D;margin-top:0;">Hipótesis del Test de Bartlett</p>
+                        <div class="formula-box">
+                            $$H_0: \sigma^2_1 = \sigma^2_2 = \cdots = \sigma^2_I$$
+                        </div>
+                        <div class="formula-box">
+                            $$H_1: \sigma^2_i \neq \sigma^2_j \text{ para algún par } (i, j)$$
+                        </div>
+                </div>
+
+                <p>Sean $s^2_1, s^2_2, \ldots, s^2_I$ las varianzas muestrales de $I$ poblaciones normales y
+                    $\text{gl}_i$ los grados de libertad asociados a $s^2_i$. Las medias aritmética y geométrica
+                    ponderadas se definen como:</p>
+
+                <div class="formula-box">
+                    $$MA = \frac{1}{\text{gl}_T} \sum_{i=1}^{I} \text{gl}_i \cdot s^2_i$$
+                    <span class="formula-number">(2.8)</span>
+                </div>
+
+                <div class="formula-box">
+                    $$MG = \left( s^{2_1^{\text{gl}_1}} \cdot s^{2_2^{\text{gl}_2}} \cdots s^{2_I^{\text{gl}_I}}
+                    \right)^{1/\text{gl}_T}$$
+                    <span class="formula-number">(2.9)</span>
+                </div>
+
+                <p>donde $\text{gl}_T = \sum_{i=1}^{I} \text{gl}_i$.</p>
+
+                <div class="concepto-clave">
+                    <p style="color:#3D008D;font-weight:600;margin-bottom:0.5rem;">Estadístico de Bartlett</p>
+                    <div class="formula-box">
+                        $$B = \frac{\text{gl}_T}{C} \left[ \ln(MA) - \ln(MG) \right]$$
+                        <span class="formula-number">(2.10)</span>
+                    </div>
+                    <p>donde $C$ es el factor de corrección:</p>
+                    <div class="formula-box">
+                        $$C = 1 + \frac{1}{3(I-1)} \left( \sum_{i=1}^{I} \frac{1}{\text{gl}_i} - \frac{1}{\text{gl}_T}
+                        \right)$$
+                        <span class="formula-number">(2.11)</span>
+                    </div>
+                </div>
+
+                <p>Bajo la hipótesis nula y para tamaños de muestra grandes, el estadístico $B$ se distribuye
+                    aproximadamente como una $\chi^2$ con $I-1$ grados de libertad.</p>
+
+                <div class="concepto-clave">
+                    <p style="color:#3D008D;font-weight:600;margin-bottom:0.5rem;">Regla de Decisión del Test de
+                        Bartlett</h4>
+                    <p>Para un nivel de significación $\alpha$:</p>
+                    <ul style="margin-left: 1.5rem;">
+                        <li>Si $B_{\text{exp}} \leq \chi^2_{\alpha, I-1}$, se acepta $H_0$ (igualdad de varianzas)</li>
+                        <li>Si $B_{\text{exp}} > \chi^2_{\alpha, I-1}$, se rechaza $H_0$</li>
+                    </ul>
+                </div>
+
+                <aside
+                    style="border-left-color:#ED1E79;background:linear-gradient(135deg, rgba(237,30,121,0.1) 0%, rgba(237,30,121,0.05) 100%);">
+                    El test de Bartlett es bastante sensible a las desviaciones de la normalidad. Si la población se
+                    aparta considerablemente de esta hipótesis, no es recomendable aplicar dicho test para contrastar la
+                    igualdad de varianzas.
+        </div>
+
+        <h4>Transformación de Box</h4>
+        <p>Cuando los grados de libertad de algunas varianzas son menores que 4, se utiliza la transformación de Box
+            para el estadístico de Bartlett:</p>
+
+        <div class="formula-box">
+            $$B' = \frac{f_2 \cdot B \cdot C}{f_1 \cdot (A - B \cdot C)}$$
+            <span class="formula-number">(2.16)</span>
+        </div>
+
+        <p>donde $f_1 = I - 1$, $f_2 = \dfrac{I + 1}{(C - 1)^2}$, y $A = \dfrac{f_2}{2(C - 1) + f_2}$. Este estadístico
+            sigue una distribución $F$ de Snedecor con $f_1$ y $f_2$ grados de libertad.</p>
+        </section>
+
+        <section>
+            <h3>3.3 Test de Cochran</h3>
+            <p>
+                Cuando los tamaños muestrales son iguales, Cochran determinó la distribución, bajo la hipótesis nula, de
+                un estadístico basado en la varianza muestral máxima relativa.
+            </p>
+
+            <div class="concepto-clave">
+                <p style="color:#3D008D;font-weight:600;margin-bottom:0.5rem;">Estadístico de Cochran</p>
+                <div class="formula-box">
+                    $$C = \frac{\max(s^2_i)}{\sum_{i=1}^{I} s^2_i}$$
+                    <span class="formula-number">(2.18)</span>
+                </div>
+            </div>
+
+            <div class="concepto-clave">
+                <p style="color:#3D008D;font-weight:600;margin-bottom:0.5rem;">Regla de Decisión del Test de Cochran
+                    </h4>
+                <p>Para un nivel de significación $\alpha$:</p>
+                <ul style="margin-left: 1.5rem;">
+                    <li>Si $C_{\text{exp}} \leq C_{1-\alpha; I, \text{gl}}$, se acepta $H_0$</li>
+                    <li>Si $C_{\text{exp}} > C_{1-\alpha; I, \text{gl}}$, se rechaza $H_0$</li>
+                </ul>
+                <p>donde $\text{gl} = n - 1$ en el modelo unifactorial equilibrado.</p>
+                </aside>
+        </section>
+
+        <section>
+            <h3>3.4 Test de Hartley</h3>
+            <p>
+                Si cada una de las $I$ varianzas muestrales tiene el mismo número de grados de libertad, el test de
+                Hartley proporciona un procedimiento sencillo basado en el cociente entre la varianza máxima y la
+                mínima.
+            </p>
+
+            <div class="concepto-clave">
+                <p style="color:#3D008D;font-weight:600;margin-bottom:0.5rem;">Estadístico de Hartley</p>
+                <div class="formula-box">
+                    $$H = \frac{\max(s^2_i)}{\min(s^2_i)}$$
+                    <span class="formula-number">(2.20)</span>
+                </div>
+            </div>
+
+            <p>Claramente, valores de $H$ próximos a 1 apoyan la hipótesis nula, mientras que valores grandes de $H$
+                están a favor de la hipótesis alternativa.</p>
+
+            <div class="concepto-clave">
+                <p style="color:#3D008D;font-weight:600;margin-bottom:0.5rem;">Regla de Decisión del Test de Hartley
+                    </h4>
+                <p>Para un nivel de significación $\alpha$:</p>
+                <ul style="margin-left: 1.5rem;">
+                    <li>Si $H_{\text{exp}} \leq H_{1-\alpha; I, \text{gl}}$, se acepta $H_0$</li>
+                    <li>Si $H_{\text{exp}} > H_{1-\alpha; I, \text{gl}}$, se rechaza $H_0$</li>
+                </ul>
+            </div>
+
+            <aside>
+                Los tests de Cochran y Hartley exigen que los tamaños de las muestras sean iguales. Si los tamaños no
+                son iguales pero no difieren mucho, ambos tests pueden utilizarse como contrastes aproximados, tomando
+                como valor de los grados de libertad la media de los tamaños muestrales.
+            </aside>
+        </section>
+
+        <section>
+            <h3>3.5 Ejemplo Completo: Tests de Homocedasticidad</h3>
+
+            <div class="concepto-clave" style="border-left-color:#FDB913;">
+                <h4>Ejemplo 3.1: Aplicación de Tests de Igualdad de Varianzas</h4>
+
+                <div class="nota">
+                    <p><strong>Contexto:</strong> Se desea verificar si las varianzas de los rendimientos de cinco
+                        fertilizantes son iguales. Las varianzas muestrales calculadas son: $s^2_1 = 0.8$, $s^2_2 =
+                        3.0$, $s^2_3 = 13.5$, $s^2_4 = 4.67$, $s^2_5 = 2.8$.</p>
+                    <p><strong>Nota:</strong> El tratamiento 4 tiene solo 3 grados de libertad, por lo que se aplicará
+                        la transformación de Box para el test de Bartlett.</p>
+                </div>
+
+                <div class="code-title">Código: Tests de Homocedasticidad</div>
+                <pre><code data-language="python"><span class="kwd">import</span> numpy <span class="kwd">as</span> np
+<span class="kwd">from</span> scipy.stats <span class="kwd">import</span> chi2, f
+
+<span class="com"># =====================================================
+<span class="com"># DATOS DEL EJEMPLO
+<span class="com"># =====================================================</span>
+<span class="com"># Varianzas muestrales por tratamiento</span>
+varianzas = np.array([<span class="num">0.8</span>, <span class="num">3.0</span>, <span class="num">13.5</span>, <span class="num">4.67</span>, <span class="num">2.8</span>])
+n = np.array([<span class="num">6</span>, <span class="num">5</span>, <span class="num">5</span>, <span class="num">5</span>, <span class="num">6</span>])  <span class="com"># Tamaños muestrales</span>
+I = len(varianzas)            <span class="com"># Número de tratamientos</span>
+gl = n - <span class="num">1</span>                   <span class="com"># Grados de libertad por grupo</span>
+N = np.sum(n)                 <span class="com"># Total de observaciones</span>
+
+<span class="kwd">print</span>(<span class="str">"="</span>*<span class="num">60</span>)
+<span class="kwd">print</span>(<span class="str">"TEST DE BARTLETT"</span>)
+<span class="kwd">print</span>(<span class="str">"="</span>*<span class="num">60</span>)
+
+<span class="com"># =====================================================
+<span class="com"># TEST DE BARTLETT
+<span class="com"># =====================================================</span>
+<span class="com"># Paso 1: Calcular la media aritmética ponderada de varianzas</span>
+numerador_MA = np.sum(gl * varianzas)
+gl_T = np.sum(gl)
+MA = numerador_MA / (N - I)
+
+<span class="kwd">print</span>(<span class="str">f"\nMedia aritmética ponderada MA = {MA:.4f}"</span>)
+
+<span class="com"># Paso 2: Calcular la suma ponderada de logaritmos</span>
+suma_gl_ln_s2 = np.sum(gl * np.log(varianzas))
+<span class="kwd">print</span>(<span class="str">f"Suma(gl_i * ln(s²_i)) = {suma_gl_ln_s2:.4f}"</span>)
+
+<span class="com"># Paso 3: Calcular el numerador de B</span>
+B1 = (N - I) * np.log(MA) - suma_gl_ln_s2
+<span class="kwd">print</span>(<span class="str">f"\nNumerador B₁ = {B1:.4f}"</span>)
+
+<span class="com"># Valor crítico de chi² para alpha=0.05 y gl=4</span>
+chi2_crit = chi2.ppf(<span class="num">0.95</span>, I-<span class="num">1</span>)
+<span class="kwd">print</span>(<span class="str">f"Valor crítico chi²_0.05,4 = {chi2_crit:.4f}"</span>)
+
+<span class="com"># Paso 4: Calcular C y B si B1 > valor crítico</span>
+termino_C = np.sum(<span class="num">1</span>/gl) - <span class="num">1</span>/gl_T
+C = <span class="num">1</span> + (<span class="num">1</span>/(<span class="num">3</span>*(I-<span class="num">1</span>))) * termino_C
+B = B1 / C
+
+<span class="kwd">print</span>(<span class="str">f"\nConstante C = {C:.4f}"</span>)
+<span class="kwd">print</span>(<span class="str">f"Estadístico B = {B:.4f}"</span>)
+
+<span class="com"># P-valor
+<span class="com"># Nota: Usando B1 como aproximación</span>
+p_valor = <span class="num">1</span> - chi2.cdf(B1, I-<span class="num">1</span>)
+<span class="kwd">print</span>(<span class="str">f"P-valor = {p_valor:.4f}"</span>)
+
+<span class="com"># =====================================================
+<span class="com"># TRANSFORMACIÓN DE BOX
+<span class="com"># =====================================================</span>
+<span class="kwd">print</span>(<span class="str">"\n"</span> + <span class="str">"="</span>*<span class="num">60</span>)
+<span class="kwd">print</span>(<span class="str">"TRANSFORMACIÓN DE BOX"</span>)
+<span class="kwd">print</span>(<span class="str">"="</span>*<span class="num">60</span>)
+
+<span class="com"># Parámetros de la distribución F</span>
+f1 = I - <span class="num">1</span>
+f2 = (I + <span class="num">1</span>) / (C - <span class="num">1</span>)**<span class="num">2</span>
+A = f2 / (<span class="num">2</span>*(C - <span class="num">1</span>) + f2)
+
+<span class="com"># Estadístico B prima</span>
+B_prima = (f2 * B * C) / (f1 * (A - B * C))
+
+<span class="kwd">print</span>(<span class="str">f"\nf₁ = {f1}"</span>)
+<span class="kwd">print</span>(<span class="str">f"f₂ = {f2:.2f}"</span>)
+<span class="kwd">print</span>(<span class="str">f"A = {A:.2f}"</span>)
+<span class="kwd">print</span>(<span class="str">f"B' = {B_prima:.4f}"</span>)
+
+<span class="com"># Valor crítico F</span>
+F_crit = f.ppf(<span class="num">0.95</span>, f1, f2)
+<span class="kwd">print</span>(<span class="str">f"F_0.05;{f1},{f2:.0f} = {F_crit:.4f}"</span>)
+
+<span class="kwd">if</span> B_prima <= F_crit:
+    <span class="kwd">print</span>(<span class="str">"\nConclusión: No se rechaza H₀. Las varianzas son iguales."</span>)
+<span class="kwd">else</span>:
+    <span class="kwd">print</span>(<span class="str">"\nConclusión: Se rechaza H₀. Las varianzas son diferentes."</span>)
+
+<span class="com"># =====================================================
+<span class="com"># TEST DE HARTLEY (para comparación)
+<span class="com"># =====================================================</span>
+<span class="kwd">print</span>(<span class="str">"\n"</span> + <span class="str">"="</span>*<span class="num">60</span>)
+<span class="kwd">print</span>(<span class="str">"TEST DE HARTLEY"</span>)
+<span class="kwd">print</span>(<span class="str">"="</span>*<span class="num">60</span>)
+
+H_exp = np.max(varianzas) / np.min(varianzas)
+<span class="kwd">print</span>(<span class="str">f"\nH = max(s²)/min(s²) = {np.max(varianzas):.2f}/{np.min(varianzas):.2f} = {H_exp:.4f}"</span>)
+
+<span class="com"># Para I=5 y gl≈4, el valor crítico aproximado es H_0.95;5,4 ≈ 25.2</span>
+<span class="com"># (Consultar tablas específicas)</span>
+H_crit_aprox = <span class="num">25.2</span>  <span class="com"># Valor aproximado de tabla</span>
+<span class="kwd">print</span>(<span class="str">f"H_0.95;5,4 ≈ {H_crit_aprox}"</span>)
+
+<span class="kwd">if</span> H_exp < H_crit_aprox:
+    <span class="kwd">print</span>(<span class="str">"Conclusión: No se rechaza H₀ (varianzas iguales)."</span>)</code></pre>
+
+                <div class="nota">
+                    <h5>Interpretación de Resultados</h5>
+                    <p><strong>Test de Bartlett:</strong> El estadístico $B_1 = 8.914$ es menor que el valor crítico
+                        $\chi^2_{0.05,4} = 9.49$, por lo que no se rechaza la hipótesis de igualdad de varianzas. El
+                        $p$-valor es aproximadamente $0.088$.</p>
+                    <p><strong>Transformación de Box:</strong> El estadístico $B' = 2.036$ es menor que
+                        $F_{0.05;4,576.70} = 2.371$, confirmando la conclusión anterior.</p>
+                    <p><strong>Conclusión general:</strong> No existe evidencia suficiente para rechazar la hipótesis de
+                        homocedasticidad. El modelo ANOVA es apropiado para estos datos.</p>
+                </div>
+                </aside>
+        </section>
+
+        <section>
+            <h3>3.6 Resumen Comparativo de Tests</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Característica</th>
+                        <th>Bartlett</th>
+                        <th>Cochran</th>
+                        <th>Hartley</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Tamaños muestrales</td>
+                        <td>Iguales o desiguales</td>
+                        <td>Solo iguales</td>
+                        <td>Solo iguales</td>
+                    </tr>
+                    <tr>
+                        <td>Distribución del estadístico</td>
+                        <td>$\chi^2$ (aprox.)</td>
+                        <td>Tabulada</td>
+                        <td>Tabulada</td>
+                    </tr>
+                    <tr>
+                        <td>Sensibilidad a normalidad</td>
+                        <td>Alta</td>
+                        <td>Alta</td>
+                        <td>Alta</td>
+                    </tr>
+                    <tr>
+                        <td>Complejidad cálculo</td>
+                        <td>Media</td>
+                        <td>Baja</td>
+                        <td>Muy baja</td>
+                    </tr>
+                    <tr>
+                        <td>Versión con gl pequeños</td>
+                        <td>Box (transformación $F$)</td>
+                        <td>No aplica</td>
+                        <td>No aplica</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="text-align:center;font-style:italic;color:#64748B;font-size:0.9rem;margin-top:0.5rem;">Tabla 2:
+                Comparación de los tests de homocedasticidad más utilizados</p>
+        </section>
+        </div>
+    </template>
+    <template id="module-4">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 4</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Transformaciones de
+                    Datos</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Conocer las transformaciones para estabilizar
+                            varianza y normalizar datos, incluyendo Box-Cox.</p>
+                    </div>
+                </div>
+            </div>
+
+            <section>
+                <h3>4.1 Introducción a las Transformaciones</h3>
+                <p>
+                    En el caso de que las gráficas de los residuos u otros diagnósticos indiquen que el modelo ANOVA no
+                    es apropiado para los datos, se requieren posibles medidas correctoras. Una de tales medidas es
+                    modificar el modelo, opción que puede tener el inconveniente de análisis más complejos. Otra medida
+                    es utilizar transformaciones en los datos. Una tercera medida, cuando la dificultad básica es la
+                    falta de normalidad, es emplear algún test no paramétrico.
+                </p>
+                <p>
+                    Se ha investigado bastante en la selección de la transformación apropiada de los datos en el caso de
+                    que las varianzas de los términos de error de cada nivel no sean iguales. Cuando el experimentador
+                    conoce la relación entre la varianza de las observaciones y la media de las mismas, puede usar esta
+                    información como guía para seleccionar la transformación adecuada.
+                </p>
+            </section>
+
+            <section>
+                <h3>4.2 Transformaciones para Estabilizar la Varianza</h3>
+                <p>
+                    Sea $y$ una variable aleatoria con media $\mu$ y varianza $\sigma^2_y$. Supongamos que la varianza
+                    está relacionada con la media mediante la función $\sigma^2_y = g(\mu)$. Sea $y^* = h(y)$ una
+                    transformación cualquiera. Utilizando el desarrollo de Taylor, se puede demostrar que la varianza de
+                    $y^*$ verifica:
+                </p>
+
+                <div class="formula-box">
+                    $$\sigma^2_{y^*} \propto \left[h'(\mu)\right]^2 g(\mu)$$
+                    <span class="formula-number">(2.22)</span>
+                </div>
+
+                <p>Por tanto, si se quiere hacer constante $\sigma^2_{y^*}$, se puede elegir $h(y)$ tal que la expresión
+                    anterior sea constante. La solución general es:</p>
+
+                <div class="formula-box">
+                    $$h(\mu) = \int \frac{1}{\sqrt{g(\mu)}} \, d\mu$$
+                    <span class="formula-number">(2.24)</span>
+                </div>
+
+                <h4>Casos Particulares Importantes</h4>
+
+                <div class="ejercicio">
+                    <h4 style="color:#3D008D;margin-top:0;">Caso a) Varianza proporcional a la media</h4>
+                    <p>Si $\sigma^2_y = k\mu$, entonces $g(\mu) = k\mu$ y la transformación es:</p>
+                    <div class="formula-box">
+                        $$y^* = \sqrt{y}$$
+                        <span class="formula-number">(2.25)</span>
+                    </div>
+                    <p><em>Aplicación:</em> Datos de Poisson (conteos).</p>
+                </div>
+
+                <div class="ejercicio">
+                    <h4 style="color:#3D008D;margin-top:0;">Caso b) Desviación estándar proporcional a la media</h4>
+                    <p>Si $\sigma_y = k\mu$, entonces $g(\mu) = k^2\mu^2$ y la transformación es:</p>
+                    <div class="formula-box">
+                        $$y^* = \ln(y)$$
+                        <span class="formula-number">(2.26)</span>
+                    </div>
+                    <p><em>Aplicación:</em> Datos log-normales.</p>
+                </div>
+
+                <div class="ejercicio">
+                    <h4 style="color:#3D008D;margin-top:0;">Caso c) Desviación estándar proporcional al cuadrado de la
+                        media</h4>
+                    <p>Si $\sigma_y = k\mu^2$, entonces $g(\mu) = k^2\mu^4$ y la transformación es:</p>
+                    <div class="formula-box">
+                        $$y^* = \frac{1}{y}$$
+                        <span class="formula-number">(2.27)</span>
+                    </div>
+                    <p><em>Aplicación:</em> Datos con varianza creciente rápidamente.</p>
+                </div>
+
+                <h4>Caso General</h4>
+                <p>En general, si $\sigma_y = k\mu^\alpha$, entonces $g(\mu) = k^2\mu^{2\alpha}$. Por lo tanto:</p>
+
+                <div class="formula-box">
+                    $$h(\mu) = \frac{\mu^{1-\alpha}}{k(1-\alpha)}$$
+                    <span class="formula-number">(2.28)</span>
+                </div>
+
+                <p>Por lo tanto, si la relación observada es del tipo $\sigma_y \propto \mu^\alpha$, transformando los
+                    datos $y^* = h(y) = y^{1-\alpha}$ se obtienen nuevas variables con varianza constante.</p>
+
+                <h4>Resumen de Transformaciones</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Relación $\sigma_y$ vs $\mu$</th>
+                            <th>$\alpha$</th>
+                            <th>$\lambda = 1-\alpha$</th>
+                            <th>Transformación</th>
+                            <th>Comentario</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>$\sigma_y = k\mu^2$</td>
+                            <td>2</td>
+                            <td>$-1$</td>
+                            <td>Recíproca ($1/y$)</td>
+                            <td>Varianza muy heterogénea</td>
+                        </tr>
+                        <tr>
+                            <td>$\sigma_y = k\mu^{3/2}$</td>
+                            <td>$3/2$</td>
+                            <td>$-1/2$</td>
+                            <td>Inversa raíz ($1/\sqrt{y}$)</td>
+                            <td>Caso intermedio</td>
+                        </tr>
+                        <tr>
+                            <td>$\sigma_y = k\mu$</td>
+                            <td>1</td>
+                            <td>0</td>
+                            <td>Logarítmica $\ln(y)$</td>
+                            <td>Datos log-normal</td>
+                        </tr>
+                        <tr>
+                            <td>$\sigma_y = k\sqrt{\mu}$</td>
+                            <td>$1/2$</td>
+                            <td>$1/2$</td>
+                            <td>Raíz cuadrada $\sqrt{y}$</td>
+                            <td>Datos de Poisson</td>
+                        </tr>
+                        <tr>
+                            <td>$\sigma_y = k$</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>No transformar</td>
+                            <td>Homocedasticidad</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="text-align:center;font-style:italic;color:#64748B;font-size:0.9rem;margin-top:0.5rem;">Tabla
+                    3: Transformaciones para estabilizar varianzas según la relación $\sigma_y = k\mu^\alpha$</p>
+            </section>
+
+            <section>
+                <h3>4.3 Transformaciones de Box-Cox</h3>
+                <p>
+                    Box y Cox (1964) desarrollaron un procedimiento para elegir una transformación de la familia de
+                    transformaciones potenciales. Esta familia incluye como casos particulares las transformaciones
+                    estudiadas anteriormente.
+                </p>
+
+                <div class="concepto-clave">
+                    <p style="color:#3D008D;font-weight:600;margin-bottom:0.5rem;">Familia de Transformaciones de
+                        Box-Cox</p>
+                    <div class="formula-box">
+                        $$y^{(\lambda)} = \begin{cases} \dfrac{y^\lambda - 1}{\lambda}, & \text{si } \lambda \neq 0
+                        \\[1em] \ln(y), & \text{si } \lambda = 0 \end{cases}$$
+                        <span class="formula-number">(2.29)</span>
+                    </div>
+                    <p>donde $\lambda$ es el parámetro de transformación que se estima a partir de los datos.</p>
+                </div>
+
+                <p>El valor de $\lambda$ que maximiza la log-verosimilitud será el estimador de máxima verosimilitud.
+                    Dicho valor también se puede obtener por procedimientos gráficos.</p>
+
+                <h4>Correspondencia entre $\lambda$ y Transformaciones</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Valor de $\lambda$</th>
+                            <th>Transformación</th>
+                            <th>Aplicación típica</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>$\lambda = 2$</td>
+                            <td>$y^2$</td>
+                            <td>Cuadrado</td>
+                        </tr>
+                        <tr>
+                            <td>$\lambda = 1$</td>
+                            <td>$y$ (sin transformar)</td>
+                            <td>Datos ya adecuados</td>
+                        </tr>
+                        <tr>
+                            <td>$\lambda = 0.5$</td>
+                            <td>$\sqrt{y}$</td>
+                            <td>Datos de Poisson</td>
+                        </tr>
+                        <tr>
+                            <td>$\lambda = 0$</td>
+                            <td>$\ln(y)$</td>
+                            <td>Datos log-normales</td>
+                        </tr>
+                        <tr>
+                            <td>$\lambda = -0.5$</td>
+                            <td>$1/\sqrt{y}$</td>
+                            <td>Varianza decreciente</td>
+                        </tr>
+                        <tr>
+                            <td>$\lambda = -1$</td>
+                            <td>$1/y$</td>
+                            <td>Varianza muy heterogénea</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="text-align:center;font-style:italic;color:#64748B;font-size:0.9rem;margin-top:0.5rem;">Tabla
+                    4: Valores de $\lambda$ y sus transformaciones correspondientes</p>
+            </section>
+
+            <section>
+                <h3>4.4 Transformaciones Normalizadoras</h3>
+                <p>
+                    Ante la violación de la hipótesis de normalidad, una alternativa es transformar los datos para
+                    conseguir la normalidad. En situaciones donde se conoce la distribución de la variable respuesta, se
+                    pueden utilizar las siguientes transformaciones normalizadoras:
+                </p>
+
+                <div class="concepto-clave">
+                    <p style="color:#3D008D;font-weight:600;margin-bottom:0.5rem;">Transformación para Datos Binomiales
+                        </h4>
+                    <p>Si $y_{ij} \sim B(n_i, p_i)$, la transformación arcoseno es apropiada:</p>
+                    <div class="formula-box">
+                        $$y^*_{ij} = \arcsen\left(\sqrt{\frac{y_{ij} + \frac{3}{8}}{n_i + \frac{3}{4}}}\right)$$
+                    </div>
+                </div>
+
+                <div class="concepto-clave">
+                    <p style="color:#3D008D;font-weight:600;margin-bottom:0.5rem;">Transformación para Datos de Poisson
+                        </h4>
+                    <p>Para datos que siguen una distribución de Poisson, la transformación óptima es la raíz cuadrada:
+                    </p>
+                    <div class="formula-box">
+                        $$y^*_{ij} = \sqrt{y_{ij}} \quad \text{o} \quad y^*_{ij} = \sqrt{y_{ij} + 1}$$
+                    </div>
+                </div>
+
+                <div class="concepto-clave">
+                    <p style="color:#3D008D;font-weight:600;margin-bottom:0.5rem;">Transformación para Datos
+                        Log-Normales</h4>
+                    <p>Para datos con distribución log-normal, la transformación apropiada es la logarítmica:</p>
+                    <div class="formula-box">
+                        $$y^*_{ij} = \log(y_{ij})$$
+                    </div>
+                    </aside>
+            </section>
+
+            <section>
+                <h3>4.5 Ejemplo Completo: Aplicación de Transformaciones</h3>
+
+                <div class="concepto-clave" style="border-left-color:#FDB913;">
+                    <h4>Ejemplo 4.1: Selección de Transformación con Box-Cox</h4>
+
+                    <div class="nota">
+                        <p><strong>Contexto:</strong> Se han detectado indicios de heterocedasticidad en un conjunto de
+                            datos experimentales. Se desea aplicar la transformación de Box-Cox para estabilizar las
+                            varianzas y mejorar la normalidad de los residuos.</p>
+                    </div>
+
+                    <div class="code-title">Código: Transformación de Box-Cox para Datos Experimentales</div>
+                    <pre><code data-language="python"><span class="kwd">import</span> numpy <span class="kwd">as</span> np
+<span class="kwd">import</span> scipy.stats <span class="kwd">as</span> stats
+<span class="kwd">from</span> scipy.optimize <span class="kwd">import</span> minimize_scalar
+<span class="kwd">import</span> matplotlib.pyplot <span class="kwd">as</span> plt
+
+<span class="com"># =====================================================
+<span class="com"># DATOS SIMULADOS CON HETEROCEDASTICIDAD
+<span class="com"># =====================================================</span>
+np.random.seed(<span class="num">42</span>)
+
+<span class="com"># Simular datos donde la varianza aumenta con la media</span>
+grupos = {}
+grupos[<span class="num">1</span>] = np.random.normal(<span class="num">10</span>, <span class="num">1</span>, <span class="num">8</span>)    <span class="com"># Media 10, sigma=1</span>
+grupos[<span class="num">2</span>] = np.random.normal(<span class="num">20</span>, <span class="num">2</span>, <span class="num">8</span>)    <span class="com"># Media 20, sigma=2</span>
+grupos[<span class="num">3</span>] = np.random.normal(<span class="num">40</span>, <span class="num">4</span>, <span class="num">8</span>)    <span class="com"># Media 40, sigma=4</span>
+grupos[<span class="num">4</span>] = np.random.normal(<span class="num">80</span>, <span class="num">8</span>, <span class="num">8</span>)    <span class="com"># Media 80, sigma=8</span>
+
+<span class="com"># Asegurar valores positivos (necesario para Box-Cox)</span>
+todos_datos = []
+<span class="kwd">for</span> g <span class="kwd">in</span> grupos:
+    grupos[g] = np.abs(grupos[g]) + <span class="num">0.1</span>  <span class="com"># Desplazar si es necesario</span>
+    todos_datos.extend(grupos[g])
+
+datos = np.array(todos_datos)
+n = len(datos)
+
+<span class="com"># =====================================================
+<span class="com"># FUNCIÓN PARA CALCULAR LOG-VEROSIMILITUD
+<span class="com"># =====================================================</span>
+<span class="kwd">def</span> <span class="func">log_likelihood_boxcox</span>(lam, y):
+    <span class="str">"""
+    Calcula la log-verosimilitud para la transformación Box-Cox.
+    """</span>
+    <span class="kwd">if</span> lam == <span class="num">0</span>:
+        y_trans = np.log(y)
+    <span class="kwd">else</span>:
+        y_trans = (y**lam - <span class="num">1</span>) / lam
+    
+    <span class="com"># Media geométrica</span>
+    y_geom = np.exp(np.mean(np.log(y)))
+    
+    <span class="com"># Variable normalizada</span>
+    z = y_trans * y_geom**(lam - <span class="num">1</span>)
+    
+    <span class="com"># Log-verosimilitud (simplificada)</span>
+    n = len(y)
+    var_z = np.var(z, ddof=<span class="num">1</span>)
+    ll = -n/<span class="num">2</span> * np.log(var_z)
+    
+    <span class="kwd">return</span> -ll  <span class="com"># Negativo para minimizar</span>
+
+<span class="com"># =====================================================
+<span class="com"># ESTIMACIÓN DE lambda
+<span class="com"># =====================================================</span>
+<span class="kwd">print</span>(<span class="str">"="</span>*<span class="num">60</span>)
+<span class="kwd">print</span>(<span class="str">"TRANSFORMACIÓN DE BOX-COX"</span>)
+<span class="kwd">print</span>(<span class="str">"="</span>*<span class="num">60</span>)
+
+<span class="com"># Buscar lambda que minimiza -log-verosimilitud</span>
+resultado = minimize_scalar(
+    log_likelihood_boxcox, 
+    args=(datos,),
+    bounds=(<span class="num">-2</span>, <span class="num">2</span>),
+    method=<span class="str">'bounded'</span>
+)
+
+lambda_opt = resultado.x
+<span class="kwd">print</span>(<span class="str">f"\nλ óptimo estimado: {lambda_opt:.4f}"</span>)
+
+<span class="com"># Redondear a valor interpretable cercano</span>
+lambda_cercano = <span class="kwd">round</span>(lambda_opt * <span class="num">2</span>) / <span class="num">2</span>  <span class="com"># Redondeo a 0.5</span>
+<span class="kwd">print</span>(<span class="str">f"λ sugerido (redondeado): {lambda_cercano}"</span>)
+
+<span class="com"># =====================================================
+<span class="com"># APLICAR TRANSFORMACIÓN
+<span class="com"># =====================================================</span>
+<span class="kwd">def</span> <span class="func">aplicar_boxcox</span>(y, lam):
+    <span class="str">"""Aplica la transformación Box-Cox."""</span>
+    <span class="kwd">if</span> lam == <span class="num">0</span>:
+        <span class="kwd">return</span> np.log(y)
+    <span class="kwd">else</span>:
+        <span class="kwd">return</span> (y**lam - <span class="num">1</span>) / lam
+
+<span class="com"># Transformar datos</span>
+datos_trans = aplicar_boxcox(datos, lambda_opt)
+
+<span class="com"># =====================================================
+<span class="com"># COMPARAR ANTES Y DESPUÉS
+<span class="com"># =====================================================</span>
+<span class="kwd">print</span>(<span class="str">"\n--- Comparación de Varianzas ---"</span>)
+<span class="kwd">for</span> g <span class="kwd">in</span> grupos:
+    var_original = np.var(grupos[g], ddof=<span class="num">1</span>)
+    datos_g_trans = aplicar_boxcox(grupos[g], lambda_opt)
+    var_trans = np.var(datos_g_trans, ddof=<span class="num">1</span>)
+    <span class="kwd">print</span>(<span class="str">f"Grupo {g}: Var_original={var_original:.2f}, Var_trans={var_trans:.4f}"</span>)
+
+<span class="com"># Test de Bartlett antes y después</span>
+varianzas_orig = [np.var(grupos[g], ddof=<span class="num">1</span>) <span class="kwd">for</span> g <span class="kwd">in</span> grupos]
+varianzas_trans = [np.var(aplicar_boxcox(grupos[g], lambda_opt), ddof=<span class="num">1</span>) <span class="kwd">for</span> g <span class="kwd">in</span> grupos]
+
+<span class="kwd">print</span>(<span class="str">f"\nRango varianzas originales: {max(varianzas_orig)/min(varianzas_orig):.2f}"</span>)
+<span class="kwd">print</span>(<span class="str">f"Rango varianzas transformadas: {max(varianzas_trans)/min(varianzas_trans):.2f}"</span>)
+
+<span class="com"># =====================================================
+<span class="com"># GRÁFICO DE LOG-VEROSIMILITUD VS lambda
+<span class="com"># =====================================================</span>
+lambdas = np.linspace(<span class="num">-2</span>, <span class="num">2</span>, <span class="num">100</span>)
+ll_values = [-log_likelihood_boxcox(l, datos) <span class="kwd">for</span> l <span class="kwd">in</span> lambdas]
+
+plt.figure(figsize=(<span class="num">10</span>, <span class="num">6</span>))
+plt.plot(lambdas, ll_values, <span class="str">'b-'</span>, linewidth=<span class="num">2</span>)
+plt.axvline(x=lambda_opt, color=<span class="str">'red'</span>, linestyle=<span class="str">'--'</span>, 
+            label=<span class="str">f'λ óptimo = {lambda_opt:.3f}'</span>)
+plt.axvline(x=<span class="num">0</span>, color=<span class="str">'green'</span>, linestyle=<span class="str">':'</span>, alpha=<span class="num">0.7</span>, label=<span class="str">'λ = 0 (log)'</span>)
+plt.axvline(x=<span class="num">0.5</span>, color=<span class="str">'orange'</span>, linestyle=<span class="str">':'</span>, alpha=<span class="num">0.7</span>, label=<span class="str">'λ = 0.5 (sqrt)'</span>)
+plt.xlabel(<span class="str">'λ (parámetro de transformación)'</span>)
+plt.ylabel(<span class="str">'Log-verosimilitud'</span>)
+plt.title(<span class="str">'Selección de λ para Transformación Box-Cox'</span>)
+plt.legend()
+plt.grid(<span class="kwd">True</span>, alpha=<span class="num">0.3</span>)
+plt.savefig(<span class="str">'boxcox_seleccion.png'</span>, dpi=<span class="num">150</span>)
+plt.show()
+
+<span class="kwd">print</span>(<span class="str">"\nGráfico de selección de λ generado."</span>)</code></pre>
+
+                    <div class="nota">
+                        <h5>Interpretación de Resultados</h5>
+                        <p><strong>1. Valor de $\lambda$:</strong> Si $\lambda \approx 0$, se recomienda la
+                            transformación logarítmica. Si $\lambda \approx 0.5$, la raíz cuadrada es apropiada. Valores
+                            cercanos a 1 indican que no se necesita transformación.</p>
+                        <p><strong>2. Comparación de varianzas:</strong> Después de la transformación, las varianzas de
+                            los grupos deberían ser más similares, reduciendo el cociente entre la varianza máxima y
+                            mínima.</p>
+                        <p><strong>3. Recomendación:</strong> Se sugiere redondear $\lambda$ al valor interpretable más
+                            cercano (0, 0.5, 1, -0.5, -1) para facilitar la interpretación de los resultados.</p>
+                    </div>
+                    </aside>
+            </section>
+
+            <section>
+                <h3>4.6 Efectos de la Violación de las Hipótesis del Modelo</h3>
+
+                <p>
+                    Una revisión minuciosa de los estudios realizados sobre el efecto de la violación de las hipótesis
+                    del modelo se debe a Scheffé (1959). A continuación se exponen las conclusiones más importantes:
+                </p>
+
+                <div class="ejercicio">
+                    <h4 style="color:#3D008D;margin-top:0;">Dependencia entre los Términos de Error</h4>
+                    <p>
+                        La falta de independencia entre los términos de error puede producir graves efectos en la
+                        inferencia, tanto en el modelo de efectos fijos como en el de efectos aleatorios. Puesto que
+                        este incumplimiento es a menudo difícil de corregir, es importante evitarlo cuando sea factible.
+                        Una forma de conseguirlo es mediante el uso de la aleatorización y otra forma es modificando el
+                        modelo.
+                    </p>
+                </div>
+
+                <div class="ejercicio">
+                    <h4 style="color:#3D008D;margin-top:0;">Desviación de los Errores de la Normalidad</h4>
+                    <p>
+                        Se establece una distinción entre dos tipos de inferencias:
+                    </p>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                        <li><strong>Inferencias sobre las medias:</strong> presente en los modelos de efectos fijos. El
+                            efecto de la desviación de la normalidad es poco importante si la desviación no es muy
+                            grave.</li>
+                        <li><strong>Inferencias sobre las varianzas:</strong> presente en ambos modelos. El efecto de la
+                            desviación de la normalidad es más grave.</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem;">
+                        En ambos casos, las estimaciones puntuales continúan siendo insesgadas y en los contrastes de
+                        hipótesis se alteran el error de tipo I y su potencia. Generalmente, dicho error es ligeramente
+                        mayor que el nominal y la potencia menor que la teórica.
+                    </p>
+                </div>
+
+                <div class="ejercicio">
+                    <h4 style="color:#3D008D;margin-top:0;">Heterocedasticidad del Término Error</h4>
+                    <p>
+                        Cuando las varianzas de los términos de error de cada nivel son desiguales, el test $F$ para la
+                        igualdad de medias en el modelo de efectos fijos unifactorial está poco afectado si todos los
+                        tamaños muestrales de los niveles del factor son iguales o difieren muy poco. Sin embargo,
+                        cuando hay grandes diferencias entre dichos tamaños muestrales o cuando una varianza es mucho
+                        mayor que las otras, los efectos pueden ser importantes.
+                    </p>
+                    </aside>
+            </section>
+        </div>
+    </template>
+    <template id="module-5">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 5</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Ejercicios de
+                    Autoevaluación</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Aplicar los conceptos aprendidos en problemas
+                            prácticos de diagnosis del modelo.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ejercicio">
+                <span
+                    style="background:#ED1E79;color:white;padding:2px 10px;border-radius:4px;font-weight:600;font-size:0.85rem;">Problema
+                    1</span>
+                <h4>Análisis de Residuos y Detección de Outliers</h4>
+                <p>
+                    Un investigador ha realizado un experimento para comparar cuatro métodos de enseñanza. Los datos
+                    obtenidos y los residuos calculados se muestran en la siguiente tabla:
+                </p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Método 1</th>
+                            <th>Método 2</th>
+                            <th>Método 3</th>
+                            <th>Método 4</th>
+                        </tr>
+                        <tr>
+                            <th>$y$ / $e$</th>
+                            <th>$y$ / $e$</th>
+                            <th>$y$ / $e$</th>
+                            <th>$y$ / $e$</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>85 / +2</td>
+                            <td>78 / −3</td>
+                            <td>92 / +5</td>
+                            <td>80 / +1</td>
+                        </tr>
+                        <tr>
+                            <td>82 / −1</td>
+                            <td>82 / +1</td>
+                            <td>84 / −3</td>
+                            <td>78 / −1</td>
+                        </tr>
+                        <tr>
+                            <td>84 / +1</td>
+                            <td>80 / −1</td>
+                            <td>88 / +1</td>
+                            <td>79 / 0</td>
+                        </tr>
+                        <tr>
+                            <td>82 / −1</td>
+                            <td>83 / +2</td>
+                            <td>87 / 0</td>
+                            <td>81 / +2</td>
+                        </tr>
+                        <tr>
+                            <td>83 / 0</td>
+                            <td>81 / 0</td>
+                            <td>85 / −2</td>
+                            <td>—</td>
+                        </tr>
+                        <tr style="background: rgba(61, 0, 141, 0.1); font-weight: 600;">
+                            <td>$\bar{y}=83$</td>
+                            <td>$\bar{y}=81$</td>
+                            <td>$\bar{y}=87$</td>
+                            <td>$\bar{y}=79.5$</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><strong>Se pide:</strong></p>
+                <ol style="margin-left: 1.5rem;">
+                    <li>Calcular la varianza residual $S^2_R$ y los residuos estandarizados.</li>
+                    <li>Identificar si existe algún residuo potencialmente anómalo según el criterio de $|d| > 3$.</li>
+                    <li>Proponer un análisis gráfico para verificar la normalidad de los residuos.</li>
+                </ol>
+                <div class="nota">
+                    <p>Cálculo de la varianza residual: $SCE = \sum e^2_{ij} = 4+1+1+1+0 + 9+1+1+4+0 + 25+9+1+0+4 +
+                        1+1+0+4 = 66$. Con $N = 19$ y $I = 4$, se tiene $\text{gl} = 15$. Por tanto, $S^2_R = 66/15 =
+                        4.4$ y $S_R = 2.098$. El residuo estandarizado máximo corresponde a $e = 5$ (Método 3), dando $d
+                        = 5/2.098 \approx 2.38$, que no supera el umbral de 3.</p>
+                </div>
+            </div>
+
+            <div class="ejercicio">
+                <span
+                    style="background:#ED1E79;color:white;padding:2px 10px;border-radius:4px;font-weight:600;font-size:0.85rem;">Problema
+                    2</span>
+                <h4>Test de Homocedasticidad</h4>
+                <p>
+                    En un estudio sobre el rendimiento de tres variedades de trigo, se obtuvieron las siguientes
+                    varianzas muestrales (con $n = 6$ observaciones por variedad): $s^2_1 = 4.2$, $s^2_2 = 8.5$, $s^2_3
+                    = 3.1$.
+                </p>
+                <p><strong>Se pide:</strong></p>
+                <ol style="margin-left: 1.5rem;">
+                    <li>Aplicar el test de Hartley para contrastar la igualdad de varianzas con $\alpha = 0.05$.</li>
+                    <li>Aplicar el test de Cochran y comparar los resultados.</li>
+                    <li>Discutir qué acción tomar si se rechaza la hipótesis de homocedasticidad.</li>
+                </ol>
+                <div class="nota">
+                    <p><strong>Test de Hartley:</strong> $H = \max(s^2)/\min(s^2) = 8.5/3.1 = 2.74$. Para $I = 3$ y
+                        $\text{gl} = 5$, el valor crítico $H_{0.95;3,5} \approx 10.8$. Como $2.74 < 10.8$, no se rechaza
+                            $H_0$. <strong>Test de Cochran:</strong> $C = 8.5/(4.2+8.5+3.1) = 8.5/15.8 = 0.538$. El
+                            valor crítico $C_{0.95;3,5} \approx 0.707$. Como $0.538 < 0.707$, no se rechaza $H_0$. Ambos
+                                tests coinciden en aceptar la igualdad de varianzas.</p>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="module-6">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 6</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Resumen y Referencias
+                </h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Revisar los conceptos clave del proceso de
+                            diagnosis y las fuentes bibliográficas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concepto-clave"
+                style="background:linear-gradient(135deg,#001A4D 0%,#3D008D 100%);color:white;border:none;">
+                <h3>Resumen: Proceso de Diagnosis del Modelo ANOVA</h3>
+                <ul>
+                    <li><strong>Independencia:</strong> Verificar mediante gráficos de residuos vs tiempo; prevenir con
+                        aleatorización adecuada.</li>
+                    <li><strong>Normalidad:</strong> Utilizar histogramas, gráficos Q-Q y tests como Shapiro-Wilk; los
+                        modelos ANOVA son robustos a desviaciones moderadas.</li>
+                    <li><strong>Homocedasticidad:</strong> Aplicar tests de Bartlett (general), Cochran (muestras
+                        iguales) o Hartley (cociente simple); considerar la sensibilidad a la normalidad.</li>
+                    <li><strong>Outliers:</strong> Identificar con residuos estandarizados $|d| > 3$; investigar causas
+                        antes de eliminar.</li>
+                    <li><strong>Transformaciones:</strong> Usar Box-Cox para seleccionar $\lambda$ óptimo; aplicar
+                        transformaciones específicas según la distribución conocida de los datos.</li>
+                </ul>
+            </div>
+
+            <h3>Referencias Bibliográficas</h3>
+            <h2>Referencias Bibliográficas</h2>
+            <ol style="list-style:none;counter-reset:ref-counter;">
+                <li>
+                    <span style="font-weight:600;">Montgomery, D.C.</span> (<span style="color:#64748B;">2017</span>).
+                    <span style="font-style:italic;">Design and Analysis of Experiments</span> (9th ed.).
+                    <span style="color:#64748B;">John Wiley & Sons</span>.
+                </li>
+                <li>
+                    <span style="font-weight:600;">Box, G.E.P. & Cox, D.R.</span> (<span
+                        style="color:#64748B;">1964</span>).
+                    An analysis of transformations.
+                    <span style="font-style:italic;">Journal of the Royal Statistical Society, Series B</span>, 26(2),
+                    211-252.
+                </li>
+                <li>
+                    <span style="font-weight:600;">Scheffé, H.</span> (<span style="color:#64748B;">1959</span>).
+                    <span style="font-style:italic;">The Analysis of Variance</span>.
+                    <span style="color:#64748B;">John Wiley & Sons</span>.
+                </li>
+                <li>
+                    <span style="font-weight:600;">Bartlett, M.S.</span> (<span style="color:#64748B;">1937</span>).
+                    Properties of sufficiency and statistical tests.
+                    <span style="font-style:italic;">Proceedings of the Royal Society of London, Series A</span>, 160,
+                    268-282.
+                </li>
+                <li>
+                    <span style="font-weight:600;">Hartley, H.O.</span> (<span style="color:#64748B;">1950</span>).
+                    The maximum F-ratio as a short-cut test for heterogeneity of variance.
+                    <span style="font-style:italic;">Biometrika</span>, 37, 308-312.
+                </li>
+                <li>
+                    <span style="font-weight:600;">Cochran, W.G.</span> (<span style="color:#64748B;">1941</span>).
+                    The distribution of the largest of a set of estimated variances as a fraction of their total.
+                    <span style="font-style:italic;">Annals of Eugenics</span>, 11, 47-52.
+                </li>
+            </ol>
+        </div>
+    </template>
+
+    <script>
+
+        // --- COURSE DATA ---
+        const courseData = {
+            title: "Diagnosis y Validación del Modelo",
+            modules: [
+                { id: 1, title: "Fundamentos de la Diagnosis", shortTitle: "Fundamentos", duration: "20 min" },
+                { id: 2, title: "Análisis de Residuos", shortTitle: "Residuos", duration: "25 min" },
+                { id: 3, title: "Diagnosis de Heterocedasticidad", shortTitle: "Heterocedasticidad", duration: "25 min" },
+                { id: 4, title: "Transformaciones de Datos", shortTitle: "Transformaciones", duration: "25 min" },
+                { id: 5, title: "Ejercicios de Autoevaluación", shortTitle: "Ejercicios", duration: "15 min" },
+                { id: 6, title: "Resumen y Referencias", shortTitle: "Resumen", duration: "10 min" }
+            ]
+        };
+
+        // --- STATE MANAGEMENT ---
+        let currentModuleIndex = 0;
+        let completedModules = new Set();
+
+        // --- DOM ELEMENTS ---
+        const moduleNav = document.getElementById('module-nav');
+        const contentArea = document.getElementById('content-area');
+
+        // --- INIT ---
+        function init() {
+            renderNav();
+            loadModule(0);
+        }
+
+        function renderNav() {
+            moduleNav.innerHTML = '';
+            courseData.modules.forEach((mod, index) => {
+                const btn = document.createElement('button');
+                const isActive = index === currentModuleIndex;
+                const isDone = completedModules.has(index);
+                btn.className = `sidebar-nav-item${isActive ? ' active' : ''}`;
+
+                btn.innerHTML = `
+                    <span style="line-height:1.3;">${mod.title}</span>
+                    ${isDone ? '<span class="check-mark">✓</span>' : ''}
+                `;
+                btn.onclick = () => loadModule(index);
+                moduleNav.appendChild(btn);
+            });
+        }
+
+        function loadModule(index) {
+            currentModuleIndex = index;
+            renderNav();
+
+            // Get template content
+            const template = document.getElementById(`module-${index + 1}`);
+            if (template) {
+                contentArea.innerHTML = '';
+                const content = template.content.cloneNode(true);
+                contentArea.appendChild(content);
+
+                // Add navigation buttons
+                const navButtons = document.createElement('div');
+                navButtons.className = 'mt-10 pt-6 border-t border-gray-200 flex justify-between items-center';
+                navButtons.innerHTML = `
+                    ${index > 0 ? `
+                    <button onclick="loadModule(${index - 1})" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-secondary transition-colors">
+                        <span>←</span> Anterior
+                    </button>` : '<div></div>'}
+                    <button onclick="markComplete(${index})" class="px-4 py-2 text-sm font-medium text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors ${completedModules.has(index) ? 'opacity-50' : ''}">
+                        ${completedModules.has(index) ? '✓ Completado' : 'Marcar como completado'}
+                    </button>
+                    ${index < courseData.modules.length - 1 ? `
+                    <button onclick="loadModule(${index + 1})" class="flex items-center gap-2 px-4 py-2 bg-secondary hover:bg-secondary/90 text-white rounded-lg text-sm font-medium transition-colors">
+                        Siguiente Módulo <span>→</span>
+                    </button>` : `
+                    <div class="text-center">
+                        <span class="text-emerald-600 font-bold">🎉 ¡Tema Completado!</span>
+                    </div>`}
+                `;
+                contentArea.appendChild(navButtons);
+
+                // VS Code style code blocks
+                setupCodeBlocks();
+
+                // Render LaTeX
+                if (typeof renderMathInElement !== 'undefined') {
+                    renderMathInElement(contentArea, {
+                        delimiters: [
+                            { left: '$$', right: '$$', display: true },
+                            { left: '$', right: '$', display: false }
+                        ],
+                        throwOnError: false
+                    });
+                }
+            }
+
+            // Scroll to top of content
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function markComplete(index) {
+            if (!completedModules.has(index)) {
+                completedModules.add(index);
+                renderNav();
+                loadModule(index);
+            }
+        }
+
+        // Scroll to Top Button functionality
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('visible');
+            } else {
+                scrollToTopBtn.classList.remove('visible');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // ===== Sidebar Toggle =====
+        const sidebarPanel = document.getElementById('sidebar-panel');
+        const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+        const sidebarToggleIcon = document.getElementById('sidebarToggleIcon');
+        let sidebarOpen = true;
+
+        sidebarToggleBtn.addEventListener('click', () => {
+            sidebarOpen = !sidebarOpen;
+            if (sidebarOpen) {
+                sidebarPanel.classList.remove('collapsed');
+                sidebarPanel.style.opacity = '1';
+                sidebarToggleIcon.className = 'fas fa-times text-sm';
+            } else {
+                sidebarPanel.classList.add('collapsed');
+                sidebarPanel.style.opacity = '0';
+                sidebarToggleIcon.className = 'fas fa-bars text-sm';
+            }
+        });
+
+        // ===== VS Code Style Code Blocks =====
+        function setupCodeBlocks() {
+            var pres = contentArea.querySelectorAll('pre');
+            pres.forEach(function(pre) {
+                if (pre.closest('.sourceCode-wrapper')) return;
+
+                var code = pre.querySelector('code');
+                if (!code) return;
+
+                // Remove old .code-title if present
+                var prevEl = pre.previousElementSibling;
+                if (prevEl && prevEl.classList.contains('code-title')) {
+                    prevEl.remove();
+                }
+
+                var lang = code.getAttribute('data-language') || 'Python';
+                var fileExt = lang === 'Python' ? '.py' : lang === 'R' ? '.R' : '.txt';
+                var fileName = 'diagnosis' + fileExt;
+                var langIcon = '';
+                if (lang === 'Python' || lang === 'python') {
+                    langIcon = '<svg class="tab-icon python" viewBox="0 0 24 24" fill="currentColor"><path d="M9.585 11.692h4.328s2.432.039 2.432-2.35V5.391S16.714 3 11.936 3C7.362 3 7.647 4.983 7.647 4.983l.006 2.055h4.363v.617H5.92s-2.927-.332-2.927 4.282 2.555 4.45 2.555 4.45h1.524v-2.141s-.083-2.554 2.513-2.554zm-.056-6.009a.784.784 0 1 1 0-1.569.784.784 0 0 1 0 1.569z"/><path d="M18.452 7.532h-1.524v2.141s.083 2.554-2.513 2.554h-4.328s-2.432-.04-2.432 2.35v3.951s-.369 2.391 4.409 2.391c4.573 0 4.288-1.983 4.288-1.983l-.006-2.054h-4.363v-.617h6.097s2.927.332 2.927-4.282-2.555-4.451-2.555-4.451zm-4.597 10.477a.784.784 0 1 1 0 1.569.784.784 0 0 1 0-1.569z"/></svg>';
+                } else {
+                    langIcon = '<i class="fas fa-code tab-icon" style="font-size:12px"></i>';
+                }
+
+                var wrapper = document.createElement('div');
+                wrapper.className = 'sourceCode-wrapper';
+
+                var titlebar = document.createElement('div');
+                titlebar.className = 'sourceCode-titlebar';
+                titlebar.innerHTML =
+                    '<div class="sourceCode-dots">' +
+                        '<span class="dot-close"></span>' +
+                        '<span class="dot-min"></span>' +
+                        '<span class="dot-max"></span>' +
+                    '</div>' +
+                    '<div class="sourceCode-tab">' +
+                        langIcon +
+                        '<span>' + fileName + '</span>' +
+                    '</div>' +
+                    '<div class="sourceCode-actions">' +
+                        '<button type="button" onclick="toggleCodeBlock(this)" title="Ocultar/Mostrar">' +
+                            '<i class="fas fa-eye"></i> Ocultar' +
+                        '</button>' +
+                        '<button type="button" onclick="copyCodeBlock(this)" title="Copiar código">' +
+                            '<i class="fas fa-copy"></i> Copiar' +
+                        '</button>' +
+                    '</div>';
+
+                // Strip manual syntax spans and re-highlight with hljs
+                var rawText = code.textContent;
+                code.innerHTML = '';
+                code.textContent = rawText;
+
+                // Line numbers
+                var lines = rawText.split('\n');
+                if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+                var gutterHTML = '';
+                for (var i = 1; i <= lines.length; i++) {
+                    gutterHTML += '<div>' + i + '</div>';
+                }
+                var gutter = document.createElement('div');
+                gutter.className = 'sourceCode-gutter';
+                gutter.innerHTML = gutterHTML;
+
+                var minimap = document.createElement('div');
+                minimap.className = 'sourceCode-minimap';
+
+                var bodyWrapper = document.createElement('div');
+                bodyWrapper.className = 'sourceCode-body';
+
+                // Highlight with hljs
+                if (window.hljs) {
+                    code.classList.add('language-python');
+                    hljs.highlightElement(code);
+                }
+
+                pre.parentNode.insertBefore(wrapper, pre);
+                bodyWrapper.appendChild(gutter);
+                bodyWrapper.appendChild(pre);
+                bodyWrapper.appendChild(minimap);
+                wrapper.appendChild(titlebar);
+                wrapper.appendChild(bodyWrapper);
+            });
+        }
+
+        function toggleCodeBlock(btn) {
+            var wrapper = btn.closest('.sourceCode-wrapper');
+            var body = wrapper.querySelector('.sourceCode-body');
+            if (body.classList.contains('collapsed')) {
+                body.classList.remove('collapsed');
+                btn.innerHTML = '<i class="fas fa-eye"></i> Ocultar';
+            } else {
+                body.classList.add('collapsed');
+                btn.innerHTML = '<i class="fas fa-eye-slash"></i> Mostrar';
+            }
+        }
+
+        function copyCodeBlock(btn) {
+            var wrapper = btn.closest('.sourceCode-wrapper');
+            var code = wrapper.querySelector('code');
+            if (!code) return;
+            var text = code.textContent || code.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+                var originalHTML = btn.innerHTML;
+                btn.classList.add('copied');
+                btn.innerHTML = '<i class="fas fa-check"></i> Copiado';
+                setTimeout(function() {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = originalHTML;
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Error al copiar:', err);
+            });
+        }
+
+        // Wait for KaTeX to load, then init
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(init, 100);
+        });
+    </script>
+</body>
+
+</html>

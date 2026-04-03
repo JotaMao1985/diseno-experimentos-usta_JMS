@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Página principal de navegación para el material de estudio interactivo de Diseño de Experimentos - Universidad Santo Tomás">
+    <meta name="author" content="Universidad Santo Tomás - Facultad de Estadística">
+    <title>Diseño de Experimentos - Menú Principal USTA</title>
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- External Resources -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3D008D',
+                        secondary: '#ED1E79',
+                        navy: '#001A4D',
+                        gold: '#FDB913',
+                        bg: '#F8FAFC',
+                        surface: '#FFFFFF',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #F8FAFC;
+            color: #1E293B;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* USTA Gradient Background */
+        .usta-gradient {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+        }
+
+        /* USTA Navy Header */
+        .usta-header {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+        }
+
+        /* USTA Card Style */
+        .usta-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .usta-card:hover {
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+            transform: translateY(-5px);
+            border-bottom-color: #ED1E79;
+        }
+        
+        .usta-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #3D008D, #ED1E79);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .usta-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-number {
+            position: absolute;
+            right: 15px;
+            top: -10px;
+            font-size: 5rem;
+            font-weight: 800;
+            color: rgba(61, 0, 141, 0.05); /* USTA Primary con baja opacidad */
+            z-index: 0;
+            line-height: 1;
+        }
+
+        .card-content {
+            z-index: 1;
+            padding: 2rem 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            color: #3D008D;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-desc {
+            color: #64748B;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            flex-grow: 1;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-btn {
+            display: inline-flex;
+            align-items: center;
+            color: #ED1E79;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .card-btn i {
+            margin-left: 0.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        .usta-card:hover .card-btn {
+            color: #3D008D;
+        }
+
+        .usta-card:hover .card-btn i {
+            transform: translateX(4px);
+        }
+
+        header {
+            padding: 4rem 1.5rem;
+            text-align: center;
+            color: white;
+            position: relative;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .badge-usta {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.4rem 1.2rem;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(4px);
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        p.subtitle {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 400;
+        }
+        
+        main {
+            flex-grow: 1;
+        }
+
+        footer {
+            background-color: #001A4D; /* USTA Navy Header color */
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            header { padding: 3rem 1rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="usta-header">
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="badge-usta">Universidad Santo Tomás</div>
+            <h1>Diseño de Experimentos</h1>
+            <p class="subtitle">Repositorio central interactivo diseñado para el aprendizaje y dominio del control estadístico y modelos de diseño de experimentos en Python y R.</p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <!-- Módulo 1 -->
+            <a href="1_Diseno_Clase_Repaso.html" class="block group">
+                <div class="usta-card">
+                    <div class="card-number">1</div>
+                    <div class="card-content">
+                        <div class="flex items-center gap-3 mb-3 relative z-10">
+                            <div class="w-10 h-10 rounded-lg bg-red-50 text-secondary flex items-center justify-center">
+                                <i class="fas fa-book-open"></i>
+                            </div>
+                            <h2 class="card-title mb-0">Clase de Repaso</h2>
+                        </div>
+                        <p class="card-desc">Conceptos fundamentales de estadística e introducción a la terminología básica de diseños experimentales.</p>
+                        <div>
+                            <span class="card-btn">Explorar Módulo <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 2 -->
+            <a href="2_Diseno_Exp_Semana_I.html" class="block group">
+                <div class="usta-card">
+                    <div class="card-number">2</div>
+                    <div class="card-content">
+                        <div class="flex items-center gap-3 mb-3 relative z-10">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-50 text-primary flex items-center justify-center">
+                                <i class="fas fa-microscope"></i>
+                            </div>
+                            <h2 class="card-title mb-0">Semana I: Introducción</h2>
+                        </div>
+                        <p class="card-desc">Principios básicos del diseño de experimentos para la Semana I y estructuración de modelos.</p>
+                        <div>
+                            <span class="card-btn">Explorar Módulo <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 3 -->
+            <a href="3_Dis_Exp_idoneidad_modelo.html" class="block group">
+                <div class="usta-card">
+                    <div class="card-number">3</div>
+                    <div class="card-content">
+                        <div class="flex items-center gap-3 mb-3 relative z-10">
+                            <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h2 class="card-title mb-0">Idoneidad del Modelo</h2>
+                        </div>
+                        <p class="card-desc">Evaluación general de supuestos paramétricos, análisis de residuales e idoneidad estadística de los modelos.</p>
+                        <div>
+                            <span class="card-btn">Explorar Módulo <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 4 -->
+            <a href="4_material_estudio_dbca.html" class="block group">
+                <div class="usta-card">
+                    <div class="card-number">4</div>
+                    <div class="card-content">
+                        <div class="flex items-center gap-3 mb-3 relative z-10">
+                            <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
+                                <i class="fas fa-th-large"></i>
+                            </div>
+                            <h2 class="card-title mb-0">Diseño DBCA</h2>
+                        </div>
+                        <p class="card-desc">Diseño en Bloques Completos al Azar: Modelado estadístico y reducción del sesgo en entornos controlados.</p>
+                        <div>
+                            <span class="card-btn">Explorar Módulo <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 5 -->
+            <a href="5_material_estudio_dbia.html" class="block group">
+                <div class="usta-card">
+                    <div class="card-number">5</div>
+                    <div class="card-content">
+                        <div class="flex items-center gap-3 mb-3 relative z-10">
+                            <div class="w-10 h-10 rounded-lg bg-pink-50 text-pink-600 flex items-center justify-center">
+                                <i class="fas fa-th"></i>
+                            </div>
+                            <h2 class="card-title mb-0">Diseño DBIA</h2>
+                        </div>
+                        <p class="card-desc">Diseño en Bloques Incompletos al Azar: Estrategias eficientes para manejar restricciones experimentales de tamaño.</p>
+                        <div>
+                            <span class="card-btn">Explorar Módulo <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 6 -->
+            <a href="6_material_estudio_dcl.html" class="block group">
+                <div class="usta-card">
+                    <div class="card-number">6</div>
+                    <div class="card-content">
+                        <div class="flex items-center gap-3 mb-3 relative z-10">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                                <i class="fas fa-border-all"></i>
+                            </div>
+                            <h2 class="card-title mb-0">Diseño DCL</h2>
+                        </div>
+                        <p class="card-desc">Diseño en Cuadrados Latinos: Control estricto de la variabilidad utilizando dos gradientes o factores de bloque.</p>
+                        <div>
+                            <span class="card-btn">Explorar Módulo <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 7 -->
+            <a href="7_material_estudio_dcy.html" class="block group">
+                <div class="usta-card">
+                    <div class="card-number">7</div>
+                    <div class="card-content">
+                        <div class="flex items-center gap-3 mb-3 relative z-10">
+                            <div class="w-10 h-10 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center">
+                                <i class="fas fa-layer-group"></i>
+                            </div>
+                            <h2 class="card-title mb-0">Cuadrados de Youden</h2>
+                        </div>
+                        <p class="card-desc">Diseño en Cuadrados de Youden (DCY): Diseños balanceados latino-incompletos para escenarios muy restringidos.</p>
+                        <div>
+                            <span class="card-btn">Explorar Módulo <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 8 -->
+            <a href="8_material_estudio_dcgl.html" class="block group">
+                <div class="usta-card">
+                    <div class="card-number">8</div>
+                    <div class="card-content">
+                        <div class="flex items-center gap-3 mb-3 relative z-10">
+                            <div class="w-10 h-10 rounded-lg bg-cyan-50 text-cyan-600 flex items-center justify-center">
+                                <i class="fas fa-border-none"></i>
+                            </div>
+                            <h2 class="card-title mb-0">Greco-Latinos (DCGL)</h2>
+                        </div>
+                        <p class="card-desc">Diseño en Cuadrados Greco-Latinos: Sistema y control del bloqueo avanzado considerando múltiples variables simultáneas.</p>
+                        <div>
+                            <span class="card-btn">Explorar Módulo <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 9 -->
+            <a href="9_modulo_efectos_aleatorios.html" class="block group">
+                <div class="usta-card pt-1 border-t-4 border-gold">
+                    <div class="card-number">9</div>
+                    <div class="card-content">
+                        <div class="flex items-center gap-3 mb-3 relative z-10">
+                            <div class="w-10 h-10 rounded-lg bg-amber-50 text-gold flex items-center justify-center">
+                                <i class="fas fa-random"></i>
+                            </div>
+                            <h2 class="card-title mb-0">Efectos Aleatorios</h2>
+                        </div>
+                        <p class="card-desc">Diseños de Efectos Aleatorios: Componentes de Varianza y modelos para estimar la variabilidad completa de una población.</p>
+                        <div>
+                            <span class="card-btn">Explorar Módulo <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Proyecto Investigativo -->
+            <a href="Proyecto_Investigativo_Muestreo_DOE.html" class="block group">
+                <div class="usta-card pt-1 border-t-4" style="border-top-color: #ED1E79;">
+                    <div class="card-number">10</div>
+                    <div class="card-content">
+                        <div class="flex items-center gap-3 mb-3 relative z-10">
+                            <div class="w-10 h-10 rounded-lg text-white flex items-center justify-center usta-gradient shadow-md">
+                                <i class="fas fa-flask"></i>
+                            </div>
+                            <h2 class="card-title mb-0">Proyecto Investigativo</h2>
+                        </div>
+                        <p class="card-desc">Muestreo y Diseño de Experimentos Integrados. Ejercicio aplicativo interactivo con rúbrica evaluativa (Grader Tool).</p>
+                        <div>
+                            <span class="card-btn">Explorar Módulo <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </main>
+    
+    <footer>
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="mb-2"><strong>Universidad Santo Tomás</strong> - Facultad de Estadística</p>
+            <p class="text-xs text-blue-200">Menú iterativo de Material de Estudio Interactivo para Despliegue en GitHub Pages.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
