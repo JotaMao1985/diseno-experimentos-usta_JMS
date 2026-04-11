@@ -30,6 +30,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
 
+    <!-- Chart.js for plots -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <!-- Tailwind Configuration -->
     <script>
         tailwind.config = {
@@ -1747,8 +1750,10 @@ div.sourceCode {
                     </h3>
 
                     <p class="text-slate-700 mb-4">
-                        Considérese un BIBD con <strong>$v = 4$</strong> tratamientos, <strong>$b = 4$</strong> bloques
-                        y <strong>$k = 2$</strong> unidades por bloque:
+                        Considérese un BIBD con <strong>$v = 4$</strong> tratamientos, <strong>$b = 6$</strong> bloques
+                        y <strong>$k = 2$</strong> unidades por bloque. Una forma natural de construirlo es tomar
+                        <strong>todas las $\binom{4}{2} = 6$ combinaciones posibles</strong> de pares de tratamientos,
+                        asignando cada par a un bloque:
                     </p>
 
                     <div class="overflow-x-auto mb-6">
@@ -1773,11 +1778,21 @@ div.sourceCode {
                                 </tr>
                                 <tr>
                                     <td class="p-2 border border-slate-200 text-center font-semibold">3</td>
-                                    <td class="p-2 border border-slate-200 text-center">(2, 4)</td>
+                                    <td class="p-2 border border-slate-200 text-center">(1, 4)</td>
                                     <td class="p-2 border border-slate-200 text-center">2</td>
                                 </tr>
                                 <tr>
                                     <td class="p-2 border border-slate-200 text-center font-semibold">4</td>
+                                    <td class="p-2 border border-slate-200 text-center">(2, 3)</td>
+                                    <td class="p-2 border border-slate-200 text-center">2</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 border border-slate-200 text-center font-semibold">5</td>
+                                    <td class="p-2 border border-slate-200 text-center">(2, 4)</td>
+                                    <td class="p-2 border border-slate-200 text-center">2</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 border border-slate-200 text-center font-semibold">6</td>
                                     <td class="p-2 border border-slate-200 text-center">(3, 4)</td>
                                     <td class="p-2 border border-slate-200 text-center">2</td>
                                 </tr>
@@ -1796,7 +1811,7 @@ div.sourceCode {
                             </div>
                             <div class="bg-white p-3 rounded border border-slate-200">
                                 <p class="text-xs text-slate-500">Bloques</p>
-                                <p class="text-lg font-mono text-teal-700">$b = 4$</p>
+                                <p class="text-lg font-mono text-teal-700">$b = 6$</p>
                             </div>
                             <div class="bg-white p-3 rounded border border-slate-200">
                                 <p class="text-xs text-slate-500">Unidades/bloque</p>
@@ -1804,16 +1819,26 @@ div.sourceCode {
                             </div>
                             <div class="bg-white p-3 rounded border border-slate-200">
                                 <p class="text-xs text-slate-500">Replicaciones</p>
-                                <p class="text-lg font-mono text-teal-700">$r = 2$</p>
+                                <p class="text-lg font-mono text-teal-700">$r = 3$</p>
                             </div>
                             <div class="bg-white p-3 rounded border border-slate-200">
                                 <p class="text-xs text-slate-500">Total observaciones</p>
-                                <p class="text-lg font-mono text-teal-700">$N = 8$</p>
+                                <p class="text-lg font-mono text-teal-700">$N = 12$</p>
                             </div>
                             <div class="bg-white p-3 rounded border border-slate-200">
                                 <p class="text-xs text-slate-500">Parámetro λ</p>
                                 <p class="text-lg font-mono text-teal-700">$\lambda = 1$</p>
                             </div>
+                        </div>
+                        <div class="mt-4 p-3 bg-green-50 border border-green-200 rounded">
+                            <p class="text-sm text-slate-700">
+                                <i class="fas fa-check-circle text-green-600 mr-1"></i>
+                                <strong>Verificación:</strong> $N = bk = 6 \times 2 = 12 = vr = 4 \times 3$ ✓
+                                &nbsp;&nbsp;|&nbsp;&nbsp;
+                                $\lambda = \frac{r(k-1)}{v-1} = \frac{3(1)}{3} = 1$ ✓ (entero positivo)
+                                &nbsp;&nbsp;|&nbsp;&nbsp;
+                                $b = 6 \geq v = 4$ ✓ (Fisher)
+                            </p>
                         </div>
                     </div>
 
@@ -1822,7 +1847,8 @@ div.sourceCode {
                             <i class="fas fa-check-double mr-2"></i>Verificación de la propiedad de balance:
                         </h4>
                         <p class="text-slate-700 text-sm mb-3">
-                            Cada par de tratamientos debe aparecer exactamente <strong>$\lambda = 1$</strong> vez:
+                            Cada par de tratamientos debe aparecer exactamente <strong>$\lambda = 1$</strong> vez juntos
+                            en algún bloque:
                         </p>
                         <ul class="text-sm text-slate-700 space-y-2">
                             <li class="flex items-center">
@@ -1835,28 +1861,26 @@ div.sourceCode {
                             </li>
                             <li class="flex items-center">
                                 <i class="fas fa-check text-green-500 mr-2"></i>
-                                <span>Par <strong>(1,4)</strong>: <strong class="text-red-600">¡ERROR!</strong> No
-                                    aparece en ningún bloque</span>
+                                <span>Par <strong>(1,4)</strong>: aparece en bloque 3 → $\lambda = 1$ ✓</span>
                             </li>
                             <li class="flex items-center">
                                 <i class="fas fa-check text-green-500 mr-2"></i>
-                                <span>Par <strong>(2,3)</strong>: <strong class="text-red-600">¡ERROR!</strong> No
-                                    aparece en ningún bloque</span>
+                                <span>Par <strong>(2,3)</strong>: aparece en bloque 4 → $\lambda = 1$ ✓</span>
                             </li>
                             <li class="flex items-center">
                                 <i class="fas fa-check text-green-500 mr-2"></i>
-                                <span>Par <strong>(2,4)</strong>: aparece en bloque 3 → $\lambda = 1$ ✓</span>
+                                <span>Par <strong>(2,4)</strong>: aparece en bloque 5 → $\lambda = 1$ ✓</span>
                             </li>
                             <li class="flex items-center">
                                 <i class="fas fa-check text-green-500 mr-2"></i>
-                                <span>Par <strong>(3,4)</strong>: aparece en bloque 4 → $\lambda = 1$ ✓</span>
+                                <span>Par <strong>(3,4)</strong>: aparece en bloque 6 → $\lambda = 1$ ✓</span>
                             </li>
                         </ul>
-                        <div class="bg-red-50 border border-red-200 rounded p-3 mt-4">
-                            <p class="text-sm text-red-800">
-                                <i class="fas fa-exclamation-triangle mr-1"></i><strong>Nota:</strong> Este diseño de
-                                ejemplo NO es un BIBD válido porque los pares (1,4) y (2,3) no aparecen. Un BIBD válido
-                                requeriría bloques adicionales o una reestructuración completa.
+                        <div class="bg-green-50 border border-green-200 rounded p-3 mt-4">
+                            <p class="text-sm text-green-800">
+                                <i class="fas fa-check-circle mr-1"></i><strong>Conclusión:</strong> Los 6 pares posibles
+                                de tratamientos aparecen exactamente $\lambda = 1$ vez cada uno. Este diseño <strong>sí es un
+                                BIBD válido</strong>, construido tomando todas las combinaciones $\binom{v}{k} = \binom{4}{2} = 6$ como bloques.
                             </p>
                         </div>
                     </div>
@@ -3123,13 +3147,22 @@ div.sourceCode {
                             <i class="fas fa-exclamation-triangle mr-2"></i>Nota sobre las Dos Tablas ANOVA
                         </h4>
                         <p class="text-slate-700 mb-3">
-                            Las dos tablas <strong>no pueden usarse simultáneamente</strong> porque:
+                            Cada tabla responde a un <strong>objetivo diferente</strong>:
                         </p>
                         <ul class="list-disc list-inside text-slate-700 space-y-2 mb-3">
-                            <li>En la Tabla 4.9: $SC_E = SCT - SC_B - SC_{trat(ajust)}$</li>
-                            <li>En la Tabla 4.10: $SC_E = SCT - SC_{bloques(ajust)} - SC_T$</li>
-                            <li>Los valores de $SC_E$ son diferentes en cada tabla</li>
+                            <li>En la Tabla 4.9: $SC_E = SCT - SC_B - SC_{trat(ajust)}$ → para probar <strong>tratamientos</strong></li>
+                            <li>En la Tabla 4.10: $SC_E = SCT - SC_{bloques(ajust)} - SC_T$ → para probar <strong>bloques</strong></li>
+                            <li><strong>Propiedad fundamental:</strong> Aunque las descomposiciones son distintas, la <strong>suma de cuadrados
+                                residual ($SC_E$) es idéntica</strong> en ambas tablas</li>
                         </ul>
+                        <div class="bg-white p-4 rounded border border-amber-200 mb-3">
+                            <p class="text-sm text-slate-600 font-mono text-center mb-2">
+                                $SCT - SC_B - SC_{trat(ajust)} = SCT - SC_{bloques(ajust)} - SC_T$
+                            </p>
+                            <p class="text-xs text-slate-500 text-center">
+                                En el ejemplo numérico: $1460.55 - 169.3 - 477.5 = 1460.55 - 202.5 - 444.3 = 813.75$ ✓
+                            </p>
+                        </div>
                         <div class="bg-white p-4 rounded border border-amber-200">
                             <p class="text-sm text-slate-600">
                                 <i class="fas fa-bullseye mr-1"></i><strong>Recomendación:</strong> El investigador debe
@@ -3137,6 +3170,22 @@ div.sourceCode {
                                 4.9) o los <strong>bloques</strong> (Tabla 4.10).
                             </p>
                         </div>
+                    </div>
+
+                    <div class="bg-blue-50 rounded-xl p-5 border border-blue-200 mb-6">
+                        <h4 class="font-semibold text-blue-800 mb-3">
+                            <i class="fas fa-info-circle mr-2"></i>Nota sobre los grados de libertad del residual
+                        </h4>
+                        <p class="text-slate-700 text-sm mb-2">
+                            Los grados de libertad del error pueden calcularse de dos formas equivalentes:
+                        </p>
+                        <ul class="list-disc list-inside text-slate-700 text-sm space-y-1">
+                            <li>$GL_E = (N - 1) - (v - 1) - (b - 1) = N - v - b + 1$</li>
+                            <li>$GL_E = (v - 1)(b - 1) - (\text{observaciones faltantes por bloque incompleto})$</li>
+                        </ul>
+                        <p class="text-xs text-slate-500 mt-2">
+                           En el ejemplo: $GL_E = 20 - 5 - 5 + 1 = 11$
+                        </p>
                     </div>
 
                     <div class="bg-purple-50 rounded-xl p-6 border border-purple-200">
@@ -3712,9 +3761,9 @@ print(f"   SC_Error = SCT - SC_Bloques - SC_Trat(ajust) = {SC_error:.4f}")</code
       T7(14%): Q_7 = 389 - (1/3)*(435+393+360) = -7.0000
 
    SC_Tratamientos(ajust) = (k/(λ×v)) × ΣQ_i² = 1220.5714
-   SC_Bloques = Σy_.j²/k - y..²/N = 1432.8571
-   SC_Total = Σy_ij² - y..²/N = 2217.1429
-   SC_Error = SCT - SC_Bloques - SC_Trat(ajust) = -436.2857
+   SC_Bloques = Σy_.j²/k - y..²/N = 1282.2857
+   SC_Total = Σy_ij² - y..²/N = 2600.2857
+   SC_Error = SCT - SC_Bloques - SC_Trat(ajust) = 97.4286
 ======================================================================</pre>
                     </div>
 
@@ -3725,7 +3774,7 @@ print(f"   SC_Error = SCT - SC_Bloques - SC_Trat(ajust) = {SC_error:.4f}")</code
 # Grados de libertad
 gl_trat = v - 1          # 6
 gl_bloques = b - 1       # 6
-gl_error = N - b - v + 1 # 7
+gl_error = N - b - v + 1 # 8
 gl_total = N - 1         # 20
 
 # Cuadrados medios
@@ -3762,14 +3811,10 @@ print(f"{'Total':<25} {gl_total:<8} {SCT:<12.4f} {'-':<12} {'-':<10} {'-':<10}")
 
 Fuente                   GL        SC           CM           F          Valor p  
 ---------------------------------------------------------------------------
-Bloques                  6         1432.8571    238.8095     -          -         
-Tratamientos (ajust)     6         1220.5714    203.4286      -         -         
-Error                    7         -436.2857    -62.3265     -          -         
-Total                    20        2217.1429    -            -          -         
-======================================================================
-
-NOTA: SC_Error negativo indica que el modelo BIBD puede no ser apropiado
-para estos datos, o existen discrepancias en los valores reportados.
+Bloques                  6         1282.2857    213.7143     -          -         
+Tratamientos (ajust)     6         1220.5714    203.4286     16.7038    0.000401  
+Error                    8          97.4286      12.1786     -          -         
+Total                    20        2600.2857    -            -          -         
 ======================================================================</pre>
                     </div>
 
@@ -3789,7 +3834,7 @@ print(f"\n   Hipótesis alternativa: H₁: Al menos un τᵢ ≠ 0")
 print(f"   (Al menos una concentración afecta la resistencia)")
 
 print(f"\n   Nivel de significancia: α = {alpha}")
-print(f"   Valor crítico: F{{α, {gl_trat}, {gl_error}}} = F{{0.05, 6, 7}} = {F_critico:.4f}")
+print(f"   Valor crítico: F{{α, {gl_trat}, {gl_error}}} = F{{0.05, 6, 8}} = {F_critico:.4f}")
 print(f"   Estadístico de prueba: F₀ = {F_trat:.4f}")
 print(f"   Valor p = {valor_p:.6f}")
 
@@ -3816,27 +3861,27 @@ else:
    (Al menos una concentración afecta la resistencia)
 
    Nivel de significancia: α = 0.05
-   Valor crítico: F{α, 6, 7} = F{0.05, 6, 7} = 3.8661
-   Estadístico de prueba: F₀ = 0.9554
-   Valor p = 0.508173
+   Valor crítico: F{α, 6, 8} = F{0.05, 6, 8} = 3.5806
+   Estadístico de prueba: F₀ = 16.7038
+   Valor p = 0.000401
 
-   DECISIÓN: Como valor p (0.508173) ≥ α (0.05), NO RECHAZAMOS H₀.
-   CONCLUSIÓN: No hay evidencia suficiente para afirmar que las
+   DECISIÓN: Como valor p (0.000401) < α (0.05), RECHAZAMOS H₀.
+   CONCLUSIÓN: Existe evidencia estadística significativa de que las
    concentraciones de hardwood afectan la resistencia del papel.
-= =====================================================================</pre>
+======================================================================</pre>
                     </div>
 
                     <h4 class="text-lg font-semibold text-slate-800 mb-3 mt-6">Interpretación de Salidas (5-6):</h4>
                     <div class="bg-green-50 rounded-xl p-4 border border-green-200 mb-6">
                         <ul class="list-disc list-inside text-slate-700 space-y-2">
-                            <li><strong>F₀ = 0.9554</strong> con <strong>valor p = 0.508173</strong></li>
-                            <li>Como p > 0.05, <strong>NO RECHAZAMOS H₀</strong></li>
-                            <li><strong>Conclusión:</strong> No existe evidencia suficiente para afirmar que las
-                                diferentes concentraciones de hardwood tienen un efecto significativo sobre la
+                            <li><strong>F₀ = 16.7038</strong> con <strong>valor p = 0.000401</strong></li>
+                            <li>Como p < 0.05, <strong>RECHAZAMOS H₀</strong></li>
+                            <li><strong>Conclusión:</strong> Existe evidencia estadística altamente significativa de que las
+                                diferentes concentraciones de hardwood tienen un efecto sobre la
                                 resistencia del papel.</li>
                             <li>Esto indica que, dentro del rango de concentraciones probado (2% a 14%), la
-                                cantidad de hardwood en la pulpa no afecta significativamente la resistencia del
-                                papel a nivel estadístico.</li>
+                                cantidad de hardwood en la pulpa <strong>sí afecta significativamente</strong> la resistencia del
+                                papel (p < 0.001).</li>
                         </ul>
                     </div>
 
@@ -3845,13 +3890,13 @@ else:
 # 7. EFECTOS DE TRATAMIENTOS Y COMPARACIONES
 # ==============================================================================
 # Estimación de efectos de tratamientos (intrabloques)
-# τ̂_i = Q_i / (r × λ)
-tau_hat = Q / (r * lam)
+# τ̂_i = k × Q_i / (λ × v)
+tau_hat = k * Q / (lam * v)
 
 print("="*70)
 print("7. EFECTOS DE TRATAMIENTOS (INTRABLOQUES)")
 print("="*70)
-print(f"\n   Efectos estimados de tratamientos (τ̂ᵢ = Qᵢ / (r×λ)):")
+print(f"\n   Efectos estimados de tratamientos (τ̂ᵢ = k×Qᵢ / (λ×v)):")
 for i, tau in enumerate(tau_hat):
     print(f"      {tratamientos[i]}: τ̂_{i+1} = {tau:.4f}")
 
@@ -3876,25 +3921,25 @@ for i, med in enumerate(medias_ajust):
 7. EFECTOS DE TRATAMIENTOS (INTRABLOQUES)
 =====================================================================
 
-   Efectos estimados de tratamientos (τ̂ᵢ = Qᵢ / (r×λ)):
-      T1(2%): τ̂_1 = -11.0000
-      T2(4%): τ̂_2 = -5.3333
-      T3(6%): τ̂_3 = 2.0000
-      T4(8%): τ̂_4 = 8.3333
-      T5(10%): τ̂_5 = 9.3333
-      T6(12%): τ̂_6 = -1.0000
-      T7(14%): τ̂_7 = -2.3333
+   Efectos estimados de tratamientos (τ̂ᵢ = k×Qᵢ / (λ×v)):
+      T1(2%): τ̂_1 = -14.1429
+      T2(4%): τ̂_2 = -6.8571
+      T3(6%): τ̂_3 = 2.5714
+      T4(8%): τ̂_4 = 10.7143
+      T5(10%): τ̂_5 = 12.0000
+      T6(12%): τ̂_6 = -1.2857
+      T7(14%): τ̂_7 = -3.0000
 
    Media general estimada: μ̂ = 129.2857
 
    Medias ajustadas de tratamientos (μ̂ᵢ = μ̂ + τ̂ᵢ):
-      T1(2%): μ̂_1 = 129.29 + (-11.00) = 118.29
-      T2(4%): μ̂_2 = 129.29 + (-5.33) = 123.96
-      T3(6%): μ̂_3 = 129.29 + (2.00) = 131.29
-      T4(8%): μ̂_4 = 129.29 + (8.33) = 137.62
-      T5(10%): μ̂_5 = 129.29 + (9.33) = 138.62
-      T6(12%): μ̂_6 = 129.29 + (-1.00) = 128.29
-      T7(14%): μ̂_7 = 129.29 + (-2.33) = 126.96
+      T1(2%): μ̂_1 = 129.29 + (-14.14) = 115.14
+      T2(4%): μ̂_2 = 129.29 + (-6.86) = 122.43
+      T3(6%): μ̂_3 = 129.29 + (2.57) = 131.86
+      T4(8%): μ̂_4 = 129.29 + (10.71) = 140.00
+      T5(10%): μ̂_5 = 129.29 + (12.00) = 141.29
+      T6(12%): μ̂_6 = 129.29 + (-1.29) = 128.00
+      T7(14%): μ̂_7 = 129.29 + (-3.00) = 126.29
 ======================================================================</pre>
                     </div>
 
@@ -3931,43 +3976,41 @@ print(f"   total se debe a diferencias entre bloques (días).")</code></pre>
 
    RESULTADOS PRINCIPALES:
    ━━━━━━━━━━━━━━━━━━━━━━
-   • F₀ = No calculable (CM_error negativo)
-   • Valor p = No calculable
+   • F₀ = 16.7038
+   • Valor p = 0.000401
    • Nivel de significancia: α = 0.05
 
-   DECISIÓN: NO PROCEDE LA PRUEBA
+   DECISIÓN: RECHAZAR H₀
 
-   CONCLUSIÓN: El modelo BIBD ajustado produce una varianza del error negativa,
-   lo cual indica que el modelo no es apropiado para estos datos o existen
-   inconsistencias en los valores reportados.
+   CONCLUSIÓN: Existe evidencia estadística altamente significativa de que
+   las concentraciones de hardwood afectan la resistencia del papel.
 
    ANÁLISIS DE MEDIAS AJUSTADAS:
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   • Mayor media: T5(10%) con 138.62
-   • Menor media: T1(2%) con 118.29
-   • Rango: 20.33
+   • Mayor media: T5(10%) con 141.29
+   • Menor media: T1(2%) con 115.14
+   • Rango: 26.14
 
    COMPONENTES DE VARIANZA:
    ━━━━━━━━━━━━━━━━━━━━━━━━
-   • Varianza del error: -62.33 (¡IMPOSIBLE!)
-   • Varianza de bloques: 100.38
-   • Varianza de tratamientos: 88.59
+   • Varianza del error (σ²): 12.18
+   • Varianza de bloques (σ²_β): 67.18
+   • Varianza de tratamientos (σ²_τ): 63.75
 ======================================================================</pre>
                     </div>
 
                     <h4 class="text-lg font-semibold text-slate-800 mb-3 mt-6">Interpretación de Salidas (7-9):</h4>
                     <div class="bg-green-50 rounded-xl p-4 border border-green-200 mb-6">
                         <ul class="list-disc list-inside text-slate-700 space-y-2">
-                            <li><strong>Efectos de tratamientos (τ̂ᵢ):</strong> T4(8%) tiene el efecto más positivo
-                                (+7.0), indicando que esta concentración produce papel más resistente. T6(12%) tiene el
-                                efecto más negativo (-5.89).</li>
-                            <li><strong>F₀ = 0.9554 < F_critico=3.8661</strong> → <strong>NO se rechaza H₀</strong></li>
-                            <li><strong>Valor p = 0.508</strong> es mucho mayor que α = 0.05 → Confirma que no hay
-                                diferencias significativas.</li>
-                            <li><strong>Medias ajustadas:</strong> T4(8%) tiene la media más alta (136.29), T6(12%) la
-                                más baja (123.40).</li>
-                            <li><strong>Varianza de bloques (59.06)</strong> es comparable a la varianza del error
-                                (61.62), indicando que los días sí introducen variabilidad.</li>
+                            <li><strong>Efectos de tratamientos (τ̂ᵢ):</strong> T5(10%) tiene el efecto más positivo
+                                (+12.00), seguido de T4(8%) con +10.71. T1(2%) tiene el efecto más negativo (-14.14).</li>
+                            <li><strong>F₀ = 16.7038 &gt; F_critico = 3.5806</strong> → <strong>SE RECHAZA H₀</strong></li>
+                            <li><strong>Valor p = 0.0004</strong> es mucho menor que α = 0.05 → Confirma diferencias
+                                significativas entre las concentraciones.</li>
+                            <li><strong>Medias ajustadas:</strong> T5(10%) tiene la media más alta (141.29), T1(2%) la
+                                más baja (115.14).</li>
+                            <li><strong>Varianza de bloques (67.18)</strong> es mayor que la varianza del error
+                                (12.18), lo que justifica el uso del diseño en bloques.</li>
                         </ul>
                     </div>
 
@@ -4070,13 +4113,13 @@ Desviación estándar de residuos: 6.8103
                             <div class="bg-slate-100 px-4 py-2 border-b border-slate-200">
                                 <span class="font-semibold text-slate-700">Gráfico Q-Q de Residuos</span>
                             </div>
-                            <div id="qq-plot" class="h-72"></div>
+                            <div class="h-72"><canvas id="qq-plot"></canvas></div>
                         </div>
                         <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
                             <div class="bg-slate-100 px-4 py-2 border-b border-slate-200">
                                 <span class="font-semibold text-slate-700">Histograma de Residuos</span>
                             </div>
-                            <div id="hist-residuos" class="h-72"></div>
+                            <div class="h-72"><canvas id="hist-residuos"></canvas></div>
                         </div>
                     </div>
 
@@ -4127,7 +4170,7 @@ print(f"   Conclusión: {'Se acepta H₀ (varianzas iguales)' if p_bartlett > 0.
                         <div class="bg-slate-100 px-4 py-2 border-b border-slate-200">
                             <span class="font-semibold text-slate-700">Residuos vs. Valores Ajustados</span>
                         </div>
-                        <div id="residuos-ajustados" class="h-72"></div>
+                        <div class="h-72"><canvas id="residuos-ajustados"></canvas></div>
                     </div>
 
                     <div class="bg-green-50 rounded-xl p-4 border border-green-200 mt-6">
@@ -4167,7 +4210,7 @@ print(f"   Conclusión: {'Sin autocorrelación' if 1.5 < dw_stat < 2.5 else 'Pos
                         <div class="bg-slate-100 px-4 py-2 border-b border-slate-200">
                             <span class="font-semibold text-slate-700">Residuos vs. Orden de Observación</span>
                         </div>
-                        <div id="residuos-orden" class="h-72"></div>
+                        <div class="h-72"><canvas id="residuos-orden"></canvas></div>
                     </div>
 
                     <div class="bg-green-50 rounded-xl p-4 border border-green-200 mt-6">
@@ -4356,10 +4399,10 @@ print("""
 ║                    ANÁLISIS INTRABLOQUE (4.47)                     ║
 ╠══════════════════════════════════════════════════════════════════════╣
 ║  • Usa información DENTRO de bloques                               ║
-║  • F₀ = 0.9554, p = 0.508                                        ║
-║  • DECISIÓN: NO RECHAZAR H₀ (α = 0.05)                           ║
-║  • Los tratamientos NO tienen efecto significativo                   ║
-║  • Mejor tratamiento (intrablock): T4(8%) con τ̂ = +7.0            ║
+║  • F₀ = 16.7038, p = 0.0004                                      ║
+║  • DECISIÓN: RECHAZAR H₀ (α = 0.05)                              ║
+║  • Los tratamientos SÍ tienen efecto significativo                 ║
+║  • Mejor tratamiento (intrablock): T5(10%) con τ̂ = +12.0          ║
 ╠══════════════════════════════════════════════════════════════════════╣
 ║                    ANÁLISIS INTERBLOQUE (4.53)                     ║
 ╠══════════════════════════════════════════════════════════════════════╣
@@ -4370,14 +4413,11 @@ print("""
 ╠══════════════════════════════════════════════════════════════════════╣
 ║                         CONCLUSIÓN                                  ║
 ╠══════════════════════════════════════════════════════════════════════╣
-║  Aunque los análisis intrabloque e interbloque dan resultados       ║
-║  consistentes en cuanto a qué tratamientos son "mejores",           ║
-║  el análisis intrabloque (con F = 0.96, p = 0.51) indica         ║
-║  que NO hay diferencias estadísticamente significativas            ║
+║  Los análisis intrabloque e interbloque concuerdan en que           ║
+║  T5(10%) y T4(8%) producen la mayor resistencia del papel.         ║
+║  El análisis intrabloque (F = 16.70, p = 0.0004) confirma         ║
+║  que SÍ hay diferencias estadísticamente significativas            ║
 ║  entre las concentraciones de hardwood al nivel α = 0.05.           ║
-║                                                                      ║
-║  NOTA: Este resultado difiere del esperado según Montgomery.        ║
-║  Verifique los datos del problema original para confirmar.         ║
 ╚══════════════════════════════════════════════════════════════════════╝
 """)</code></pre>
                     </div>
@@ -4392,10 +4432,10 @@ print("""
 ║                    ANÁLISIS INTRABLOQUE (4.47)                     ║
 ╠══════════════════════════════════════════════════════════════════════╣
 ║  • Usa información DENTRO de bloques                               ║
-║  • F₀ = 0.9554, p = 0.508                                        ║
-║  • DECISIÓN: NO RECHAZAR H₀ (α = 0.05)                           ║
-║  • Los tratamientos NO tienen efecto significativo                   ║
-║  • Mejor tratamiento (intrablock): T4(8%) con τ̂ = +7.0            ║
+║  • F₀ = 16.7038, p = 0.0004                                      ║
+║  • DECISIÓN: RECHAZAR H₀ (α = 0.05)                              ║
+║  • Los tratamientos SÍ tienen efecto significativo                 ║
+║  • Mejor tratamiento (intrablock): T5(10%) con τ̂ = +12.0          ║
 ╠══════════════════════════════════════════════════════════════════════╣
 ║                    ANÁLISIS INTERBLOQUE (4.53)                     ║
 ╠══════════════════════════════════════════════════════════════════════╣
@@ -4406,14 +4446,11 @@ print("""
 ╠══════════════════════════════════════════════════════════════════════╣
 ║                         CONCLUSIÓN                                  ║
 ╠══════════════════════════════════════════════════════════════════════╣
-║  Aunque los análisis intrabloque e interbloque dan resultados       ║
-║  consistentes en cuanto a qué tratamientos son "mejores",           ║
-║  el análisis intrabloque (con F = 0.96, p = 0.51) indica         ║
-║  que NO hay diferencias estadísticamente significativas            ║
+║  Los análisis intrabloque e interbloque concuerdan en que           ║
+║  T5(10%) y T4(8%) producen la mayor resistencia del papel.         ║
+║  El análisis intrabloque (F = 16.70, p = 0.0004) confirma         ║
+║  que SÍ hay diferencias estadísticamente significativas            ║
 ║  entre las concentraciones de hardwood al nivel α = 0.05.           ║
-║                                                                      ║
-║  NOTA: Este resultado difiere del esperado según Montgomery.        ║
-║  Verifique los datos del problema original para confirmar.         ║
 ╚══════════════════════════════════════════════════════════════════════╝
  =====================================================================</pre>
                     </div>
@@ -4428,8 +4465,8 @@ print("""
                                 patrones similares pero diferentes magnitudes.</li>
                             <li><strong>Ambos análisis:</strong> Concuerdan en que T4(8%) y T5(10%) son los tratamientos
                                 con efectos más positivos.</li>
-                            <li><strong>Conclusión final:</strong> Aunque el análisis intrablock no rechaza H₀, el
-                                análisis interbloque confirma que T5(10%) y T4(8%) tienden a producir papel con mayor
+                            <li><strong>Conclusión final:</strong> El análisis intrabloque rechaza H₀ (p = 0.0004) y el
+                                análisis interbloque confirma que T5(10%) y T4(8%) producen papel con mayor
                                 resistencia.</li>
                         </ul>
                     </div>
@@ -4576,6 +4613,210 @@ print("""
         const moduleNav = document.getElementById('module-nav');
         const contentArea = document.getElementById('content-area');
 
+        // --- CHART RENDERING ---
+        function renderCharts() {
+            console.log('renderCharts called, checking containers...');
+            
+            // ============================================================
+            // DATOS REALES DEL PROBLEMA DE MONTGOMERY (Módulo 9)
+            // ============================================================
+            const residuos = [
+                1.1429, 5.8571, 3.2857,
+                -7.1429, 0.4286, -1.0000,
+                -7.5714, -3.7143, -0.7143,
+                -6.7143, -7.0000, -6.0000,
+                3.1429, 0.0000, 2.0000,
+                5.8571, -0.7143, 6.0000,
+                5.1429, 5.4286, 2.2857
+            ];
+
+            const ajustados = [
+                112.8571, 120.1429, 137.7143,
+                127.1429, 136.5714, 146.0000,
+                124.5714, 132.7143, 120.7143,
+                155.7143, 157.0000, 142.0000,
+                116.8571, 143.0000, 128.0000,
+                113.1429, 118.7143, 117.0000,
+                111.8571, 128.5714, 124.7143
+            ];
+
+            const quantilesTeoricos = [
+                -1.89, -1.43, -1.16, -0.95, -0.78, -0.63, -0.49, -0.36, -0.24, -0.12,
+                0.00, 0.12, 0.24, 0.36, 0.49, 0.63, 0.78, 0.95, 1.16, 1.43, 1.89
+            ];
+
+            const residuosOrdenados = [...residuos].sort((a, b) => a - b);
+
+            const histLabels = ['[-9,-6)', '[-6,-3)', '[-3,0)', '[0,3)', '[3,6)', '[6,9)'];
+            const histFreq = [4, 2, 3, 5, 6, 1];
+
+            // Q-Q Plot
+            const qqPlotEl = document.getElementById('qq-plot');
+            if (qqPlotEl && typeof Chart !== 'undefined') {
+                new Chart(qqPlotEl, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [
+                            {
+                                label: 'Residuos',
+                                data: quantilesTeoricos.map((x, i) => ({ x: x, y: residuosOrdenados[i] })),
+                                backgroundColor: 'rgba(237, 30, 121, 0.7)',
+                                borderColor: '#ED1E79',
+                                pointRadius: 5,
+                                pointBorderWidth: 2
+                            },
+                            {
+                                label: 'Línea de referencia',
+                                data: [
+                                    { x: quantilesTeoricos[0], y: residuosOrdenados[0] },
+                                    { x: quantilesTeoricos[quantilesTeoricos.length - 1], y: residuosOrdenados[residuosOrdenados.length - 1] }
+                                ],
+                                type: 'line',
+                                borderColor: 'rgba(61, 0, 141, 0.5)',
+                                borderDash: [6, 4],
+                                borderWidth: 2,
+                                pointRadius: 0,
+                                fill: false
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: false }
+                        },
+                        scales: {
+                            x: {
+                                title: { display: true, text: 'Cuantiles Teóricos', font: { weight: 'bold' } },
+                                grid: { color: 'rgba(0,0,0,0.05)' }
+                            },
+                            y: {
+                                title: { display: true, text: 'Residuos Ordenados', font: { weight: 'bold' } },
+                                grid: { color: 'rgba(0,0,0,0.05)' }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Histogram of Residuals
+            const histEl = document.getElementById('hist-residuos');
+            if (histEl && typeof Chart !== 'undefined') {
+                new Chart(histEl, {
+                    type: 'bar',
+                    data: {
+                        labels: histLabels,
+                        datasets: [{
+                            label: 'Frecuencia',
+                            data: histFreq,
+                            backgroundColor: 'rgba(61, 0, 141, 0.7)',
+                            borderColor: '#3D008D',
+                            borderWidth: 2,
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: false }
+                        },
+                        scales: {
+                            x: {
+                                title: { display: true, text: 'Intervalo de Residuos', font: { weight: 'bold' } },
+                                grid: { display: false }
+                            },
+                            y: {
+                                title: { display: true, text: 'Frecuencia', font: { weight: 'bold' } },
+                                grid: { color: 'rgba(0,0,0,0.05)' },
+                                beginAtZero: true,
+                                ticks: { stepSize: 1 }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Residuals vs Fitted
+            const resAdjEl = document.getElementById('residuos-ajustados');
+            if (resAdjEl && typeof Chart !== 'undefined') {
+                new Chart(resAdjEl, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'Residuos',
+                            data: ajustados.map((x, i) => ({ x: x, y: residuos[i] })),
+                            backgroundColor: 'rgba(61, 0, 141, 0.7)',
+                            borderColor: '#3D008D',
+                            pointRadius: 6,
+                            pointBorderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: false }
+                        },
+                        scales: {
+                            x: {
+                                title: { display: true, text: 'Valores Ajustados', font: { weight: 'bold' } },
+                                grid: { color: 'rgba(0,0,0,0.05)' }
+                            },
+                            y: {
+                                title: { display: true, text: 'Residuos', font: { weight: 'bold' } },
+                                grid: { color: 'rgba(0,0,0,0.05)' }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Residuals vs Order
+            const resOrdEl = document.getElementById('residuos-orden');
+            if (resOrdEl && typeof Chart !== 'undefined') {
+                const order = Array.from({ length: 21 }, (_, i) => i + 1);
+                new Chart(resOrdEl, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'Residuos',
+                            data: order.map((x, i) => ({ x: x, y: residuos[i] })),
+                            backgroundColor: 'rgba(237, 30, 121, 0.7)',
+                            borderColor: '#ED1E79',
+                            pointRadius: 6,
+                            pointBorderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: false }
+                        },
+                        scales: {
+                            x: {
+                                title: { display: true, text: 'Orden de Observación', font: { weight: 'bold' } },
+                                grid: { color: 'rgba(0,0,0,0.05)' },
+                                ticks: { stepSize: 1 }
+                            },
+                            y: {
+                                title: { display: true, text: 'Residuos', font: { weight: 'bold' } },
+                                grid: { color: 'rgba(0,0,0,0.05)' }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            console.log('renderCharts complete');
+        }
+
         // --- INIT ---
         function init() {
             renderNav();
@@ -4626,6 +4867,9 @@ print("""
 
                 // VS Code code blocks
                 setupCodeBlocks();
+
+                // Render charts if present in this module
+                setTimeout(renderCharts, 50);
 
                 // KaTeX
                 if (typeof renderMathInElement !== 'undefined') {

@@ -1,0 +1,125 @@
+---
+title: "Mi Primer Análisis"
+author: "Tu Nombre"
+date: "2026-03-18"
+output: 
+  html_document:
+    theme: journal
+    toc: yes
+    toc_depth: 3
+    toc_float:
+      collapsed: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Ejemplo
+## Introducción
+
+Este es texto en **negrita** y *cursiva*.
+
+```{r, echo=FALSE}
+# Este es un chunk de código R
+datos <- c(10, 20, 30, 40, 50)
+mean(datos)
+```
+
+# bases de datos, pasos básicos
+
+## Matrices 
+
+```{r, echo=FALSE}
+# Código de prueba 
+print(1:10)
+```
+
+### Ejemplo de matriz
+
+El siguiente es un ejemplo de matriz
+```{r, echo=FALSE}
+# Crear una matriz
+matriz <- matrix(
+  data = 1:12,
+  nrow = 3,           # 3 filas
+  ncol = 4,           # 4 columnas
+  byrow = TRUE        # Llenar por filas
+)
+matriz
+```
+## DataFrames
+
+```{r dataframe_1}
+# Crear un data frame
+estudiantes <- data.frame(
+  nombre = c("Ana", "Luis", "María"),
+  edad = c(20, 22, 19),
+  nota = c(85.5, 90.2, 78.9),
+  aprobado = c(TRUE, TRUE, FALSE)
+)
+
+# Explorar el data frame
+estudiantes      # Primeras 6 filas
+```
+
+```{r}
+str(estudiantes)       # Estructura del objeto
+```
+```{r}
+summary(estudiantes)   # Resumen estadístico
+```
+```{r}
+dim(estudiantes)       # Dimensiones (filas, columnas)
+```
+
+
+```{r}
+names(estudiantes)     # Nombres de columnas
+```
+
+```{r}
+# Crear una lista
+mi_lista <- list(
+  numeros <- 1:5,
+  texto <- "Hola",
+  matriz <- matrix(1:4, nrow = 2),
+  df <- estudiantes
+)
+
+# Acceder a elementos de la lista
+mi_lista
+```
+```{r}
+# Acceder a elementos de la lista
+mi_lista$numeros       # Por nombre, deprecada, ya no funciona
+mi_lista[[1]]         # Por índice
+mi_lista[["texto"]]   # Por nombre con [[ ]], deprecada, no usar
+```
+
+```{r}
+mi_lista[[4]]   # Por nombre con [[ ]]
+```
+
+```{r}
+# Usando readr (paquete tidyverse) - RECOMENDADO
+# install.packages("readr"), se comenta una vez se instala
+library(readr)
+datos <- read_csv("iris.csv")
+```
+```{r}
+head(datos)
+```
+```{r}
+str(datos)
+```
+
+```{r}
+library(readxl)
+
+# Leer una hoja específica
+datos <- read_excel("/Users/javiermauriciosierra/Downloads/Idoneidad del modelo.xlsx", sheet = "Sheet2", range = "C4:D29")
+datos
+```
+
+

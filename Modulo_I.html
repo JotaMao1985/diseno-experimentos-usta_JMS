@@ -1,0 +1,3209 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Material de estudio sobre Fundamentos de R y Manipulación de Datos. Módulo 1 - Universidad Santo Tomás 2026.">
+    <meta name="keywords" content="R, RStudio, dplyr, programación, estadística, USTA">
+    <meta name="author" content="Universidad Santo Tomás">
+    <title>Fundamentos de R - Material de Estudio | USTA</title>
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- External Resources -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- KaTeX for LaTeX rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Highlight.js VS Code Dark+ -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/r.min.js"></script>
+
+    <!-- Plotly.js for interactive charts -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        primary: '#3D008D',
+                        secondary: '#ED1E79',
+                        navy: '#001A4D',
+                        gold: '#FDB913',
+                        bg: '#F8FAFC',
+                        surface: '#FFFFFF',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #F8FAFC;
+            color: #1E293B;
+            scroll-behavior: smooth;
+        }
+
+        code,
+        pre {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* USTA Gradient Background */
+        .usta-gradient {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+        }
+
+        /* USTA Navy Header */
+        .usta-header {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+        }
+
+        /* USTA Card Style */
+        .usta-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .usta-card:hover {
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+            transform: translateY(-4px);
+        }
+
+        /* Tip box USTA style */
+        .tip-box {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.08) 0%, rgba(237, 30, 121, 0.08) 100%);
+            border: 1px solid rgba(61, 0, 141, 0.2);
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .tip-box h4 {
+            color: #3D008D;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Info box */
+        .info-box {
+            background: linear-gradient(135deg, rgba(253, 185, 19, 0.1) 0%, rgba(253, 185, 19, 0.05) 100%);
+            border-left: 4px solid #FDB913;
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .info-box h4 {
+            color: #B8860B;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Warning box */
+        .warning-box {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(239, 68, 68, 0.04) 100%);
+            border-left: 4px solid #EF4444;
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .warning-box h4 {
+            color: #991B1B;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Exercise box */
+        .exercise {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.08) 0%, rgba(237, 30, 121, 0.05) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #ED1E79;
+            margin: 1.5rem 0;
+        }
+
+        .exercise-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .exercise-number {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .exercise h4 {
+            margin: 0;
+            color: #3D008D;
+        }
+
+        /* Highlight */
+        .highlight {
+            background: linear-gradient(120deg, rgba(253, 185, 19, 0.3) 0%, rgba(253, 185, 19, 0.3) 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Keyboard shortcut */
+        kbd {
+            background: #F1F5F9;
+            border: 1px solid #CBD5E1;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85em;
+        }
+
+        /* Section divider */
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #E2E8F0, transparent);
+            margin: 48px 0;
+        }
+
+        /* Main content adjustments */
+        .module-content h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #3D008D;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        /* Section visibility control */
+        .section-slide {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+            min-height: calc(100vh - 200px);
+        }
+
+        .section-slide.active {
+            display: block;
+            opacity: 1;
+            animation: fadeInSlide 0.5s ease-out;
+        }
+
+        @keyframes fadeInSlide {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Navigation arrows */
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 60;
+            width: 3.5rem;
+            height: 3.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(61, 0, 141, 0.4);
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .nav-arrow:hover {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 8px 25px rgba(61, 0, 141, 0.5);
+        }
+
+        .nav-arrow.prev {
+            left: 18rem;
+        }
+
+        .nav-arrow.next {
+            right: 2rem;
+        }
+
+        .nav-arrow:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .nav-arrow:disabled:hover {
+            transform: translateY(-50%);
+            box-shadow: 0 6px 20px rgba(61, 0, 141, 0.4);
+        }
+
+        /* Section counter */
+        .section-counter {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(61, 0, 141, 0.4);
+            z-index: 60;
+        }
+
+        /* Progress dots */
+        .progress-dots {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 60;
+        }
+
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(61, 0, 141, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            box-shadow: 0 0 10px rgba(61, 0, 141, 0.5);
+        }
+
+        .progress-dot:hover {
+            background: rgba(61, 0, 141, 0.5);
+        }
+
+        /* Keyboard hint */
+        .keyboard-hint {
+            position: fixed;
+            bottom: 5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: #94A3B8;
+            z-index: 60;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Prevent scroll when navigating with keys */
+        body.prevent-scroll {
+            overflow: hidden;
+        }
+
+        /* Hide nav arrows when sidebar collapsed */
+        #sidebar-panel.collapsed~.main-layout .nav-arrow.prev {
+            left: 2rem;
+        }
+
+        /* Section slide container */
+        .module-content {
+            position: relative;
+        }
+
+        .section-slide {
+            padding-bottom: 100px;
+        }
+
+        /* Print styles for slides */
+        @media print {
+            .section-slide {
+                display: block !important;
+                opacity: 1 !important;
+                page-break-after: always;
+            }
+
+            .nav-arrow,
+            .section-counter,
+            .progress-dots,
+            .keyboard-hint {
+                display: none !important;
+            }
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Anchor offset */
+        section {
+            scroll-margin-top: 80px;
+        }
+
+        /* ===== SIDEBAR DARK STYLE ===== */
+        #sidebar-panel {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+            flex-shrink: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            width: 16rem;
+            min-width: 16rem;
+            transition: width 0.3s ease, min-width 0.3s ease, opacity 0.25s ease;
+            z-index: 40;
+        }
+
+        #sidebar-panel.collapsed {
+            width: 0;
+            min-width: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+
+        .sidebar-brand {
+            padding: 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .sidebar-brand h2 {
+            color: white;
+            font-weight: 700;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin: 0;
+            padding: 0;
+            border: none;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .sidebar-brand h2 i {
+            flex-shrink: 0;
+            margin-top: 0.15rem;
+        }
+
+        .sidebar-brand p {
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 0.35rem;
+            margin-bottom: 0;
+            text-align: left;
+            line-height: 1.4;
+        }
+
+        .sidebar-nav {
+            padding: 1rem;
+        }
+
+        .sidebar-nav-item {
+            width: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 0.5rem;
+            padding: 0.6rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            line-height: 1.4;
+            border-radius: 0.5rem;
+            text-align: left;
+            margin-bottom: 0.25rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: rgba(255, 255, 255, 0.6);
+            background: transparent;
+        }
+
+        .sidebar-nav-item:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-nav-item.active {
+            color: white;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            box-shadow: 0 4px 12px rgba(61, 0, 141, 0.3);
+        }
+
+        .sidebar-nav-item .check-mark {
+            color: #10B981;
+            flex-shrink: 0;
+        }
+
+        /* Floating sidebar toggle button */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 50;
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(61, 0, 141, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-toggle-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 18px rgba(61, 0, 141, 0.5);
+        }
+
+        /* Layout adjustment */
+        .main-layout {
+            display: flex;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        /* Scroll to top button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 3.5rem;
+            height: 3.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(61, 0, 141, 0.4);
+            transition: all 0.3s ease;
+            z-index: 50;
+            border: none;
+        }
+
+        .scroll-to-top.visible {
+            display: flex;
+        }
+
+        .scroll-to-top:hover {
+            background: linear-gradient(140deg, #4A00A8 0%, #FF2D8A 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(61, 0, 141, 0.5);
+        }
+
+        /* Content Styling */
+        .module-content h2 {
+            color: #3D008D;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid #ED1E79;
+        }
+
+        .module-content h3 {
+            color: #3D008D;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.75rem 0 1rem 0;
+        }
+
+        .module-content h4 {
+            color: #ED1E79;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        .module-content p {
+            margin-bottom: 1rem;
+            text-align: justify;
+            line-height: 1.8;
+        }
+
+        .module-content ul,
+        .module-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .module-content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.7;
+        }
+
+        .module-content aside {
+            background: linear-gradient(135deg, rgba(253, 185, 19, 0.1) 0%, rgba(253, 185, 19, 0.05) 100%);
+            border-left: 4px solid #FDB913;
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .module-content aside strong {
+            color: #B8860B;
+        }
+
+        .module-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .module-content th,
+        .module-content td {
+            padding: 1rem 1.25rem;
+            text-align: center;
+        }
+
+        .module-content th {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .module-content tr:nth-child(even) {
+            background: rgba(61, 0, 141, 0.03);
+        }
+
+        .module-content tr:hover {
+            background: rgba(61, 0, 141, 0.08);
+        }
+
+        .module-content code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #3D008D;
+            background: rgba(61, 0, 141, 0.08);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        .module-content pre code {
+            background: transparent;
+            padding: 0;
+            color: #d4d4d4;
+        }
+
+        /* ===== VS Code Style Code Blocks ===== */
+        .sourceCode {
+            position: relative;
+            margin: 1.75rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #1e1e1e;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+
+        .sourceCode-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            height: 40px;
+            background: #323233;
+            border-bottom: 1px solid #252526;
+            user-select: none;
+        }
+
+        .sourceCode-title {
+            font-size: 0.82rem;
+            color: #cccccc;
+            font-family: 'Segoe UI', 'Montserrat', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sourceCode-title::before {
+            content: '';
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background: #f7c948;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3E%3C/svg%3E") no-repeat center;
+            mask-size: contain;
+        }
+
+        .sourceCode-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .sourceCode-buttons button {
+            background: transparent;
+            border: 1px solid #505050;
+            color: #858585;
+            cursor: pointer;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-family: 'Segoe UI', 'Montserrat', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s ease;
+        }
+
+        .sourceCode-buttons button:hover {
+            background: #3c3c3c;
+            color: #cccccc;
+            border-color: #666;
+        }
+
+        .sourceCode-buttons button.copied {
+            color: #4ec9b0;
+            border-color: #4ec9b0;
+        }
+
+        .sourceCode pre {
+            margin: 0;
+            padding: 16px;
+            overflow-x: auto;
+            background: #1e1e1e;
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+        }
+
+        .sourceCode code {
+            font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+            font-size: 0.87rem;
+            line-height: 1.65;
+            color: #d4d4d4;
+            background: transparent !important;
+        }
+
+        .sourceCode.collapsed pre {
+            display: none;
+        }
+
+        /* Code output block */
+        .code-output {
+            margin: 1rem 0 1.75rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #0d1117;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.03);
+        }
+
+        .code-output-header {
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            height: 36px;
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
+            user-select: none;
+        }
+
+        .code-output-title {
+            font-size: 0.78rem;
+            color: #8b949e;
+            font-family: 'Segoe UI', 'Montserrat', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .code-output-title::before {
+            content: '▶';
+            color: #10B981;
+            font-size: 0.7rem;
+        }
+
+        .code-output-body {
+            padding: 16px;
+            overflow-x: auto;
+            background: #0d1117;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #c9d1d9;
+            white-space: pre;
+        }
+
+        .sourceCode pre::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .sourceCode pre::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+
+        .sourceCode pre::-webkit-scrollbar-thumb {
+            background: rgba(121, 121, 121, 0.4);
+            border-radius: 4px;
+        }
+
+        .sourceCode pre::-webkit-scrollbar-thumb:hover {
+            background: rgba(121, 121, 121, 0.7);
+        }
+
+        .code-output-body::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .code-output-body::-webkit-scrollbar-track {
+            background: #0d1117;
+        }
+
+        .code-output-body::-webkit-scrollbar-thumb {
+            background: rgba(121, 121, 121, 0.3);
+            border-radius: 4px;
+        }
+
+        /* VS Code Dark+ Syntax Highlighting */
+        .hljs-keyword {
+            color: #569cd6;
+        }
+
+        .hljs-built_in {
+            color: #4ec9b0;
+        }
+
+        .hljs-type {
+            color: #4ec9b0;
+        }
+
+        .hljs-literal {
+            color: #569cd6;
+        }
+
+        .hljs-number {
+            color: #b5cea8;
+        }
+
+        .hljs-string {
+            color: #ce9178;
+        }
+
+        .hljs-comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .hljs-function {
+            color: #dcdcaa;
+        }
+
+        .hljs-title {
+            color: #dcdcaa;
+        }
+
+        .hljs-params {
+            color: #9cdcfe;
+        }
+
+        .hljs-operator {
+            color: #d4d4d4;
+        }
+
+        .hljs-punctuation {
+            color: #d4d4d4;
+        }
+
+        .hljs-variable {
+            color: #9cdcfe;
+        }
+
+        .hljs-attr {
+            color: #9cdcfe;
+        }
+
+        .hljs-class .hljs-title {
+            color: #4ec9b0;
+        }
+
+        .hljs-meta {
+            color: #c586c0;
+        }
+
+        .module-content .output {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            border-left: 4px solid #10B981;
+            margin: 1rem 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+        }
+
+        /* Concepto clave box */
+        .concepto-clave {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.06) 0%, rgba(237, 30, 121, 0.04) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #3D008D;
+            margin: 1.5rem 0;
+        }
+
+        .concepto-clave h4 {
+            color: #3D008D;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Nota box */
+        .nota {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-left: 4px solid #10B981;
+            margin: 1.5rem 0;
+        }
+
+        .nota h4 {
+            color: #059669;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Ejercicio box */
+        .module-content .ejercicio {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.08) 0%, rgba(237, 30, 121, 0.05) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #ED1E79;
+            margin: 1.5rem 0;
+        }
+
+        .module-content .ejercicio h4 {
+            color: #3D008D;
+            margin-top: 0;
+        }
+
+        .module-content strong {
+            color: #3D008D;
+        }
+
+        .module-content em {
+            color: #ED1E79;
+        }
+
+        /* KaTeX display */
+        .katex-display {
+            margin: 1.25em 0;
+            overflow-x: auto;
+        }
+
+        /* Print styles */
+        @media print {
+
+            #sidebar-panel,
+            .sidebar-toggle-btn,
+            #scrollToTopBtn {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+
+            .usta-card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                break-inside: avoid;
+            }
+
+            pre {
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                background: #f5f5f5;
+            }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* Fade-in animation */
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #3D008D, #ED1E79);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #4A00A8, #FF2D8A);
+        }
+
+        /* Code scrollbar */
+        .code-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .code-scroll::-webkit-scrollbar-track {
+            background: #2d2d2d;
+        }
+
+        .code-scroll::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #3D008D, #ED1E79);
+            border-radius: 4px;
+        }
+
+        /* Focus styles for accessibility */
+        button:focus-visible,
+        a:focus-visible {
+            outline: 2px solid #ED1E79;
+            outline-offset: 2px;
+        }
+
+        /* Tooltip Styles */
+        .tooltip-term {
+            position: relative;
+            border-bottom: 2px dotted #ED1E79;
+            cursor: help;
+            font-weight: 600;
+            color: #3D008D;
+        }
+
+        .tooltip-term:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #3D008D 0%, #2D0066 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 400;
+            width: 280px;
+            text-align: left;
+            line-height: 1.5;
+            box-shadow: 0 10px 25px rgba(61, 0, 141, 0.3);
+            z-index: 1000;
+            margin-bottom: 8px;
+        }
+
+        .tooltip-term:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: #3D008D;
+            margin-bottom: -8px;
+            z-index: 1001;
+        }
+
+        /* Formula box */
+        .module-content .formula-box {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.03) 0%, rgba(237, 30, 121, 0.03) 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            border: 1px solid rgba(61, 0, 141, 0.15);
+            overflow-x: auto;
+        }
+
+        /* Formula number */
+        .formula-number {
+            float: right;
+            color: #64748B;
+            font-size: 0.9rem;
+        }
+
+        /* Module banner image */
+        .module-banner {
+            width: 100%;
+            max-height: 240px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 1.75rem;
+            box-shadow: 0 8px 24px rgba(61, 0, 141, 0.12);
+            display: block;
+        }
+
+        /* Comentario */
+        .comentario {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        /* Code output */
+        .code-output {
+            background: #1a1a2e;
+            border: 1px solid #2d2d4a;
+            border-radius: 0 0 8px 8px;
+            margin-top: -8px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .code-output-header {
+            background: rgba(76, 175, 80, 0.15);
+            padding: 0.4rem 1rem;
+            border-bottom: 1px solid #2d2d4a;
+        }
+
+        .code-output-title {
+            color: #4CAF50;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+        }
+
+        .code-output-body {
+            padding: 1rem;
+            color: #e0e0e0;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Output */
+        .module-content .output {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            border-left: 4px solid #10B981;
+            margin: 1rem 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+        }
+
+        /* Ejercicio box */
+        .module-content .ejercicio {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.08) 0%, rgba(237, 30, 121, 0.05) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #ED1E79;
+            margin: 1.5rem 0;
+        }
+
+        .module-content .ejercicio h4 {
+            color: #3D008D;
+            margin-top: 0;
+        }
+
+        /* Resumen box */
+        .module-content .resumen {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.06) 0%, rgba(237, 30, 121, 0.04) 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-left: 4px solid #3D008D;
+            margin-bottom: 1.5rem;
+        }
+
+        .module-content .resumen h4 {
+            margin-top: 0;
+            color: #3D008D;
+        }
+
+        /* Definition box */
+        .definition-box {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.06) 0%, rgba(237, 30, 121, 0.04) 100%);
+            border-left: 4px solid #3D008D;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .definition-box h4 {
+            color: #3D008D;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            background: transparent;
+        }
+
+        /* Warning box - USTA style */
+        .warning-box {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .warning-box h4 {
+            color: #b45309;
+            border-left: 4px solid #f59e0b;
+            background: transparent;
+            margin: 0 0 1rem 0;
+            padding: 0.5rem 1rem;
+            border-top: none;
+            border-right: none;
+            border-bottom: none;
+            border-radius: 0;
+        }
+
+        /* Example box */
+        .example-box {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.06) 0%, rgba(237, 30, 121, 0.04) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #3D008D;
+            margin: 1.5rem 0;
+        }
+
+        .example-box h4 {
+            color: #3D008D;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Interpretation box */
+        .interpretation-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-left: 4px solid #10B981;
+            margin: 1.5rem 0;
+        }
+
+        .interpretation-box strong {
+            color: #059669;
+        }
+
+        /* Reference list */
+        .reference-list {
+            margin: 1.5rem 0;
+        }
+
+        /* Step connector for pipeline */
+        .step-connector::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #3D008D, #ED1E79);
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .step-connector:last-child::after {
+            display: none;
+        }
+
+        /* Latin Square & Flow Visualizations */
+        :root {
+            --usta-primary: #3D008D;
+        }
+
+        .latin-square-grid {
+            display: grid;
+            gap: 0.5rem;
+            margin: 2rem auto;
+            justify-content: center;
+        }
+
+        .latin-square-grid.grid-3 {
+            grid-template-columns: repeat(3, 3rem);
+        }
+
+        .latin-square-grid.grid-4 {
+            grid-template-columns: repeat(4, 3rem);
+        }
+
+        .latin-square-grid.grid-5 {
+            grid-template-columns: repeat(5, 3rem);
+        }
+
+        .latin-square-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.25rem;
+            font-weight: 700;
+            border-radius: 0.375rem;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .latin-square-cell:hover {
+            transform: scale(1.05);
+        }
+
+        .cell-A {
+            background: linear-gradient(135deg, #10B981, #059669);
+        }
+
+        .cell-B {
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+        }
+
+        .cell-C {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+        }
+
+        .cell-D {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+        }
+
+        .cell-E {
+            background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+        }
+
+        /* Concept Diagram */
+        .concept-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .diagram-box {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-weight: 600;
+            min-width: 120px;
+            border: 1px solid #E2E8F0;
+        }
+
+        .diagram-row {
+            border-top: 4px solid #10B981;
+        }
+
+        .diagram-col {
+            border-top: 4px solid #3B82F6;
+        }
+
+        .diagram-treat {
+            border-top: 4px solid #F59E0B;
+        }
+
+        .diagram-arrow {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #64748B;
+        }
+
+        /* Legacy syntax highlighting */
+        .syntax-kwd {
+            color: #569cd6;
+            font-weight: bold;
+        }
+
+        .syntax-cls {
+            color: #4ec9b0;
+        }
+
+        .syntax-str {
+            color: #ce9178;
+        }
+
+        .syntax-com {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .syntax-func {
+            color: #dcdcaa;
+        }
+
+        .syntax-self {
+            color: #9cdcfe;
+            font-style: italic;
+        }
+
+        .syntax-num {
+            color: #b5cea8;
+        }
+
+        /* Inline code */
+        .module-content code.inline,
+        code.inline {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #3D008D;
+            background: rgba(61, 0, 141, 0.08);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        /* KaTeX display */
+        .katex-display {
+            margin: 1.25em 0;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+
+    <!-- Floating Sidebar Toggle Button -->
+    <button class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Mostrar/Ocultar menú" aria-label="Toggle sidebar">
+        <i class="fas fa-bars text-sm" id="sidebarToggleIcon"></i>
+    </button>
+
+    <div class="main-layout">
+
+        <!-- Sidebar Navigation -->
+        <div id="sidebar-panel">
+            <div class="sidebar-brand">
+                <h2><i class="fas fa-code"></i> <span>Fundamentos de <span style="color: #FDB913;">R</span></span></h2>
+                <p>Módulo 1 • USTA 2026</p>
+            </div>
+            <nav class="sidebar-nav" id="module-nav">
+                <button class="sidebar-nav-item active" data-target="introduccion">
+                    <span>Introducción</span>
+                </button>
+                <button class="sidebar-nav-item" data-target="sec1">
+                    <span>Sección 1: Entorno de Trabajo</span>
+                </button>
+                <button class="sidebar-nav-item" data-target="s1-rstudio">
+                    <span>&nbsp;&nbsp;R y RStudio</span>
+                </button>
+                <button class="sidebar-nav-item" data-target="s1-rmarkdown">
+                    <span>&nbsp;&nbsp;RMarkdown</span>
+                </button>
+                <button class="sidebar-nav-item" data-target="sec2">
+                    <span>Sección 2: Fundamentos de R</span>
+                </button>
+                <button class="sidebar-nav-item" data-target="s1-basico">
+                    <span>&nbsp;&nbsp;Conceptos Básicos</span>
+                </button>
+                <button class="sidebar-nav-item" data-target="s2-estructuras">
+                    <span>&nbsp;&nbsp;Estructuras de Datos</span>
+                </button>
+                <button class="sidebar-nav-item" data-target="sec3">
+                    <span>Sección 3: Manipulación de Datos</span>
+                </button>
+                <button class="sidebar-nav-item" data-target="s2-importacion">
+                    <span>&nbsp;&nbsp;Importación de Datos</span>
+                </button>
+                <button class="sidebar-nav-item" data-target="s2-filtrado">
+                    <span>&nbsp;&nbsp;Filtrado y Selección</span>
+                </button>
+                <button class="sidebar-nav-item" data-target="s4-pipe">
+                    <span>&nbsp;&nbsp;El Operador Pipe</span>
+                </button>
+                <button class="sidebar-nav-item" data-target="s4-verbos">
+                    <span>&nbsp;&nbsp;Verbos de dplyr</span>
+                </button>
+                <button class="sidebar-nav-item" data-target="s4-agregacion">
+                    <span>&nbsp;&nbsp;Agrupación y Joins</span>
+                </button>
+                <button class="sidebar-nav-item" data-target="sec4">
+                    <span>Sección 4: Programación en R</span>
+                </button>
+                <button class="sidebar-nav-item" data-target="s3-funciones">
+                    <span>&nbsp;&nbsp;Creación de Funciones</span>
+                </button>
+                <button class="sidebar-nav-item" data-target="s3-control">
+                    <span>&nbsp;&nbsp;Estructuras de Control</span>
+                </button>
+                <button class="sidebar-nav-item" data-target="s3-loops">
+                    <span>&nbsp;&nbsp;Loops y Apply</span>
+                </button>
+                <button class="sidebar-nav-item" data-target="sec5">
+                    <span>Sección 5: Visualización</span>
+                </button>
+                <button class="sidebar-nav-item" data-target="s5-ggplot">
+                    <span>&nbsp;&nbsp;Fundamentos de ggplot2</span>
+                </button>
+                <button class="sidebar-nav-item" data-target="s5-tipos">
+                    <span>&nbsp;&nbsp;Tipos de Gráficos</span>
+                </button>
+                <button class="sidebar-nav-item" data-target="ejercicios">
+                    <span>Ejercicios Prácticos</span>
+                </button>
+                <button class="sidebar-nav-item" data-target="recursos">
+                    <span>Recursos Adicionales</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-grow flex flex-col" style="min-width:0;">
+            <main class="flex-grow module-content p-8">
+
+                <section id="introduccion" class="section-slide">
+                    <h1>Módulo 1: Fundamentos de R y Manipulación de Datos</h1>
+
+                    <div class="info-box">
+                        <h4>📚 Información del Curso</h4>
+                        <p><strong>Duración:</strong> 7 semanas (18 de marzo - 7 de mayo de 2026)</p>
+                        <p><strong>Horas totales:</strong> 56 horas de trabajo autónomo y dirigido</p>
+                        <p><strong>Modalidad:</strong> Virtual con sesiones sincrónicas</p>
+                    </div>
+
+                    <h3>Objetivos de Aprendizaje</h3>
+                    <p>Al finalizar este módulo, serás capaz de:</p>
+                    <ol>
+                        <li>Instalar y configurar el entorno de trabajo con R, RStudio y RMarkdown</li>
+                        <li>Comprender las estructuras de datos en R y su manipulación básica</li>
+                        <li>Importar y exportar datos desde diferentes fuentes y formatos</li>
+                        <li>Aplicar técnicas de filtrado, selección y transformación de datos</li>
+                        <li>Desarrollar funciones personalizadas y utilizar estructuras de control</li>
+                        <li>Utilizar dplyr y el operador pipe para crear pipelines de datos eficientes</li>
+                        <li>Crear visualizaciones efectivas con ggplot2 para el análisis exploratorio</li>
+                    </ol>
+
+                    <h3>Estructura del Módulo</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sección</th>
+                                <th>Tema</th>
+                                <th>Contenido</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Entorno de Trabajo</td>
+                                <td>R, RStudio, RMarkdown</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Fundamentos de R</td>
+                                <td>Tipos de datos, vectores, estructuras</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Manipulación de Datos</td>
+                                <td>Importación, filtrado, dplyr, pipe</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Programación en R</td>
+                                <td>Funciones, control de flujo, loops</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>Visualización</td>
+                                <td>ggplot2, tipos de gráficos</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- SECCIÓN 1: ENTORNO DE TRABAJO -->
+                <section id="sec1" class="section-slide">
+                    <h2>Sección 1: Entorno de Trabajo y RMarkdown</h2>
+
+                    <p>En esta sección estableceremos las bases para trabajar con R. Aprenderás a instalar y configurar
+                        el entorno, comprenderás los conceptos fundamentales del lenguaje y crearás tus primeros
+                        documentos reproducibles con RMarkdown.</p>
+
+                    <section id="s1-rstudio">
+                        <h3>1.1 Instalación y Configuración de R y RStudio</h3>
+
+                        <h4>¿Qué es R?</h4>
+                        <p>R es un <span class="highlight">lenguaje de programación</span> y un entorno de software
+                            libre
+                            especializado en análisis estadístico y visualización de datos. Fue creado por Ross Ihaka y
+                            Robert Gentleman en 1993 y desde entonces se ha convertido en el estándar de facto para la
+                            estadística y la ciencia de datos.</p>
+
+                        <h4>¿Qué es RStudio?</h4>
+                        <p>RStudio es un <span class="highlight">Entorno de Desarrollo Integrado (IDE)</span> para R que
+                            facilita la escritura de código, la visualización de gráficos, la gestión de paquetes y la
+                            creación de documentos. Existen dos versiones principales:</p>
+                        <ul>
+                            <li><strong>RStudio Desktop:</strong> Versión local instalada en tu computador</li>
+                            <li><strong>RStudio Server:</strong> Versión web que se ejecuta en un servidor remoto</li>
+                        </ul>
+
+                        <div class="tip-box">
+                            <h4>💡 Instalación</h4>
+                            <p><strong>Paso 1:</strong> Descarga e instala R desde <a href="https://cran.r-project.org/"
+                                    target="_blank">cran.r-project.org</a></p>
+                            <p><strong>Paso 2:</strong> Descarga e instala RStudio desde <a
+                                    href="https://posit.co/download/rstudio-desktop/"
+                                    target="_blank">posit.co/download</a>
+                            </p>
+                            <p><strong>Importante:</strong> Instala R primero, luego RStudio.</p>
+                        </div>
+
+                        <h4>Interfaz de RStudio</h4>
+                        <p>La interfaz de RStudio se divide en cuatro paneles principales:</p>
+                        <ol>
+                            <li><strong>Editor de código (arriba-izquierda):</strong> Donde escribes y guardas tus
+                                scripts
+                            </li>
+                            <li><strong>Consola (abajo-izquierda):</strong> Donde se ejecuta el código y muestra
+                                resultados
+                            </li>
+                            <li><strong>Entorno/Historial (arriba-derecha):</strong> Muestra objetos, variables y
+                                historial
+                            </li>
+                            <li><strong>Archivos/Gráficos/Paquetes/Ayuda (abajo-derecha):</strong> Visualización de
+                                archivos, gráficos y documentación</li>
+                        </ol>
+
+                        <div class="info-box">
+                            <h4>⌨️ Atajos de Teclado Útiles</h4>
+                            <ul>
+                                <li><kbd>Ctrl</kbd> + <kbd>Enter</kbd> - Ejecutar línea actual</li>
+                                <li><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Enter</kbd> - Ejecutar script completo
+                                </li>
+                                <li><kbd>Ctrl</kbd> + <kbd>1</kbd> - Mover cursor al editor</li>
+                                <li><kbd>Ctrl</kbd> + <kbd>2</kbd> - Mover cursor a la consola</li>
+                                <li><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd> - Comentar/Descomentar líneas</li>
+                                <li><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>M</kbd> - Insertar operador pipe (%>%)
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- SECCIÓN 2: FUNDAMENTOS DE R -->
+                <section id="sec2" class="section-slide">
+                    <h2>Sección 2: Fundamentos de R</h2>
+
+                    <p>En esta sección aprenderás los conceptos fundamentales del lenguaje R: tipos de datos, vectores,
+                        estructuras avanzadas y cómo trabajar con datos reales.</p>
+
+                    <section id="s1-basico">
+                        <h3>2.1 Conceptos Básicos de R</h3>
+
+                        <h4>Operaciones Aritméticas</h4>
+                        <p>R funciona como una calculadora avanzada. Puedes realizar operaciones matemáticas
+                            directamente en
+                            la consola:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Operaciones básicas</span>
+<span class="code-number">5</span> <span class="code-operator">+</span> <span class="code-number">3</span>        <span class="code-comment"># Suma: resultado 8</span>
+<span class="code-number">10</span> <span class="code-operator">-</span> <span class="code-number">4</span>       <span class="code-comment"># Resta: resultado 6</span>
+<span class="code-number">6</span> <span class="code-operator">*</span> <span class="code-number">7</span>        <span class="code-comment"># Multiplicación: resultado 42</span>
+<span class="code-number">20</span> <span class="code-operator">/</span> <span class="code-number">4</span>       <span class="code-comment"># División: resultado 5</span>
+<span class="code-number">2</span>^<span class="code-number">3</span>          <span class="code-comment"># Potencia: resultado 8</span>
+<span class="code-number">17</span> <span class="code-operator">%%</span> <span class="code-number">5</span>      <span class="code-comment"># Módulo (resto): resultado 2</span>
+<span class="code-number">17</span> <span class="code-operator">%/%</span> <span class="code-number">5</span>     <span class="code-comment"># División entera: resultado 3</span></code></pre>
+</div>
+
+                        <h4>Variables y Asignación</h4>
+                        <p>En R, usamos el operador <code class="inline"><-</code> (flecha) para asignar valores a
+                            variables. También puedes usar <code class="inline">=</code>, aunque <code
+                                class="inline"><-</code> es el estilo preferido en R:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Asignación de variables</span>
+nombre <span class="code-operator"><-</span> <span class="code-string">"María"</span>
+edad <span class="code-operator"><-</span> <span class="code-number">25</span>
+altura <span class="code-operator"><-</span> <span class="code-number">1.65</span>
+es_estudiante <span class="code-operator"><-</span> <span class="code-keyword">TRUE</span>
+
+<span class="code-comment"># Imprimir valores</span>
+<span class="code-function">print</span>(nombre)
+edad          <span class="code-comment"># También se muestra al escribir solo el nombre</span></code></pre>
+</div>
+
+                        <h4>Tipos de Datos en R</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tipo</th>
+                                    <th>Descripción</th>
+                                    <th>Ejemplo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code class="inline">numeric</code></td>
+                                    <td>Números decimales</td>
+                                    <td><code class="inline">3.14159</code>, <code class="inline">-42.5</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code class="inline">integer</code></td>
+                                    <td>Números enteros</td>
+                                    <td><code class="inline">42L</code>, <code class="inline">-7L</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code class="inline">character</code></td>
+                                    <td>Texto (cadenas)</td>
+                                    <td><code class="inline">"Hola"</code>, <code class="inline">'R'</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code class="inline">logical</code></td>
+                                    <td>Valores booleanos</td>
+                                    <td><code class="inline">TRUE</code>, <code class="inline">FALSE</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code class="inline">factor</code></td>
+                                    <td>Variables categóricas</td>
+                                    <td><code class="inline">factor(c("A", "B", "A"))</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p>Para verificar el tipo de dato de una variable, usa la función <code
+                                class="inline">class()</code>:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code>x <span class="code-operator"><-</span> <span class="code-number">42</span>
+<span class="code-function">class</span>(x)      <span class="code-comment"># "numeric"</span>
+
+y <span class="code-operator"><-</span> <span class="code-string">"Hola"</span>
+<span class="code-function">class</span>(y)      <span class="code-comment"># "character"</span></code></pre>
+</div>
+
+                        <h4>Vectores</h4>
+                        <p>El vector es la estructura de datos más básica en R. Es una colección de elementos del mismo
+                            tipo. Usamos la función <code class="inline">c()</code> (concatenar) para crear vectores:
+                        </p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Crear vectores</span>
+numeros <span class="code-operator"><-</span> <span class="code-function">c</span>(<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">4</span>, <span class="code-number">5</span>)
+nombres <span class="code-operator"><-</span> <span class="code-function">c</span>(<span class="code-string">"Ana"</span>, <span class="code-string">"Luis"</span>, <span class="code-string">"Pedro"</span>)
+logicos <span class="code-operator"><-</span> <span class="code-function">c</span>(<span class="code-keyword">TRUE</span>, <span class="code-keyword">FALSE</span>, <span class="code-keyword">TRUE</span>)
+
+<span class="code-comment"># Operaciones con vectores</span>
+numeros <span class="code-operator">*</span> <span class="code-number">2</span>           <span class="code-comment"># Multiplica cada elemento por 2</span>
+<span class="code-function">length</span>(numeros)       <span class="code-comment"># Número de elementos: 5</span>
+numeros[<span class="code-number">3</span>]            <span class="code-comment"># Acceder al tercer elemento: 3</span>
+numeros[<span class="code-function">c</span>(<span class="code-number">1</span>, <span class="code-number">3</span>, <span class="code-number">5</span>)]   <span class="code-comment"># Elementos 1, 3 y 5</span></code></pre>
+</div>
+
+                        <div class="tip-box">
+                            <h4>💡 Secuencias Útiles</h4>
+                            <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-number">1</span>:<span class="code-number">10</span>                    <span class="code-comment"># 1, 2, 3, ..., 10</span>
+<span class="code-function">seq</span>(<span class="code-number">1</span>, <span class="code-number">10</span>, by = <span class="code-number">2</span>)       <span class="code-comment"># 1, 3, 5, 7, 9</span>
+<span class="code-function">rep</span>(<span class="code-number">5</span>, times = <span class="code-number">3</span>)       <span class="code-comment"># 5, 5, 5</span>
+<span class="code-function">rep</span>(<span class="code-function">c</span>(<span class="code-number">1</span>, <span class="code-number">2</span>), each = <span class="code-number">2</span>)  <span class="code-comment"># 1, 1, 2, 2</span></code></pre>
+</div>
+                    </section>
+
+                    <section id="s1-rmarkdown">
+                        <h3>1.3 Introducción a RMarkdown</h3>
+
+                        <h4>¿Qué es RMarkdown?</h4>
+                        <p><span class="highlight">RMarkdown</span> es un formato de archivo que permite crear
+                            documentos
+                            dinámicos que combinan:</p>
+                        <ul>
+                            <li>Texto con formato (usando sintaxis Markdown)</li>
+                            <li>Código de R ejecutable</li>
+                            <li>Resultados de código (tablas, gráficos, valores)</li>
+                        </ul>
+
+                        <h4>Estructura de un Documento RMarkdown</h4>
+                        <p>Un archivo .Rmd tiene tres componentes principales:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment">---</span>
+<span class="code-comment">title: "Mi Primer Análisis"</span>
+<span class="code-comment">author: "Tu Nombre"</span>
+<span class="code-comment">date: "2026-03-18"</span>
+<span class="code-comment">output: html_document</span>
+<span class="code-comment">---</span>
+
+<span class="code-comment">```{r setup, include=FALSE}</span>
+<span class="code-comment">knitr::opts_chunk$set(echo = TRUE)</span>
+<span class="code-comment">```</span>
+
+<span class="code-comment">## Introducción</span>
+
+Este es texto en **negrita** y *cursiva*.
+
+<span class="code-comment">```{r}</span>
+<span class="code-comment"># Este es un chunk de código R</span>
+<span class="code-comment">datos <- c(10, 20, 30, 40, 50)</span>
+<span class="code-comment">mean(datos)</span>
+<span class="code-comment">```</span></code></pre>
+</div>
+
+                        <h4>Sintaxis Markdown Básica</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Elemento</th>
+                                    <th>Sintaxis</th>
+                                    <th>Resultado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Título 1</td>
+                                    <td><code class="inline"># Título</code></td>
+                                    <td>Título grande</td>
+                                </tr>
+                                <tr>
+                                    <td>Título 2</td>
+                                    <td><code class="inline">## Título</code></td>
+                                    <td>Título mediano</td>
+                                </tr>
+                                <tr>
+                                    <td>Negrita</td>
+                                    <td><code class="inline">**texto**</code></td>
+                                    <td><strong>texto</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Cursiva</td>
+                                    <td><code class="inline">*texto*</code></td>
+                                    <td><em>texto</em></td>
+                                </tr>
+                                <tr>
+                                    <td>Código inline</td>
+                                    <td><code class="inline">`código`</code></td>
+                                    <td><code>código</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Lista</td>
+                                    <td><code class="inline">- item</code></td>
+                                    <td>• item</td>
+                                </tr>
+                                <tr>
+                                    <td>Enlace</td>
+                                    <td><code class="inline">[texto](url)</code></td>
+                                    <td>Enlace clickeable</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4>Opciones de Chunks</h4>
+                        <p>Los chunks de código pueden configurarse con opciones:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment">```{r, echo=FALSE}</span>
+<span class="code-comment"># Código que se ejecuta pero no se muestra</span>
+<span class="code-comment">```</span>
+
+<span class="code-comment">```{r, eval=FALSE}</span>
+<span class="code-comment"># Código que se muestra pero no se ejecuta</span>
+<span class="code-comment">```</span>
+
+<span class="code-comment">```{r, fig.width=8, fig.height=6}</span>
+<span class="code-comment"># Chunk con gráfico de dimensiones específicas</span>
+<span class="code-comment">```</span></code></pre>
+</div>
+
+                        <div class="tip-box">
+                            <h4>💡 Renderizar Documentos</h4>
+                            <p>Para convertir tu RMarkdown a HTML, PDF o Word:</p>
+                            <ol>
+                                <li>Haz clic en el botón <strong>Knit</strong> en RStudio</li>
+                                <li>O usa: <code class="inline">rmarkdown::render("archivo.Rmd")</code></li>
+                            </ol>
+                        </div>
+                    </section>
+
+                    <section id="s2-estructuras">
+                        <h3>2.2 Estructuras de Datos Avanzadas</h3>
+
+                        <h4>Matrices</h4>
+                        <p>Las matrices son arreglos bidimensionales donde todos los elementos deben ser del mismo tipo:
+                        </p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Crear una matriz</span>
+matriz <span class="code-operator"><-</span> <span class="code-function">matrix</span>(
+  data = <span class="code-number">1</span>:<span class="code-number">12</span>,
+  nrow = <span class="code-number">3</span>,           <span class="code-comment"># 3 filas</span>
+  ncol = <span class="code-number">4</span>,           <span class="code-comment"># 4 columnas</span>
+  byrow = <span class="code-keyword">TRUE</span>        <span class="code-comment"># Llenar por filas</span>
+)
+
+<span class="code-comment"># Acceder a elementos</span>
+matriz[<span class="code-number">2</span>, <span class="code-number">3</span>]         <span class="code-comment"># Fila 2, columna 3</span>
+matriz[<span class="code-number">2</span>, ]          <span class="code-comment"># Toda la fila 2</span>
+matriz[, <span class="code-number">3</span>]          <span class="code-comment"># Toda la columna 3</span></code></pre>
+</div>
+
+                        <h4>Data Frames</h4>
+                        <p>Los <span class="highlight">data frames</span> son la estructura más importante para el
+                            análisis
+                            de datos. Son tablas donde cada columna puede tener un tipo de dato diferente:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Crear un data frame</span>
+estudiantes <span class="code-operator"><-</span> <span class="code-function">data.frame</span>(
+  nombre = <span class="code-function">c</span>(<span class="code-string">"Ana"</span>, <span class="code-string">"Luis"</span>, <span class="code-string">"María"</span>),
+  edad = <span class="code-function">c</span>(<span class="code-number">20</span>, <span class="code-number">22</span>, <span class="code-number">19</span>),
+  nota = <span class="code-function">c</span>(<span class="code-number">85.5</span>, <span class="code-number">90.2</span>, <span class="code-number">78.9</span>),
+  aprobado = <span class="code-function">c</span>(<span class="code-keyword">TRUE</span>, <span class="code-keyword">TRUE</span>, <span class="code-keyword">FALSE</span>)
+)
+
+<span class="code-comment"># Explorar el data frame</span>
+<span class="code-function">head</span>(estudiantes)      <span class="code-comment"># Primeras 6 filas</span>
+<span class="code-function">str</span>(estudiantes)       <span class="code-comment"># Estructura del objeto</span>
+<span class="code-function">summary</span>(estudiantes)   <span class="code-comment"># Resumen estadístico</span>
+<span class="code-function">dim</span>(estudiantes)       <span class="code-comment"># Dimensiones (filas, columnas)</span>
+<span class="code-function">names</span>(estudiantes)     <span class="code-comment"># Nombres de columnas</span></code></pre>
+</div>
+
+                        <h4>Listas</h4>
+                        <p>Las listas son colecciones que pueden contener elementos de diferentes tipos, incluyendo
+                            otros
+                            objetos:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Crear una lista</span>
+mi_lista <span class="code-operator"><-</span> <span class="code-function">list</span>(
+  numeros = <span class="code-number">1</span>:<span class="code-number">5</span>,
+  texto = <span class="code-string">"Hola"</span>,
+  matriz = <span class="code-function">matrix</span>(<span class="code-number">1</span>:<span class="code-number">4</span>, nrow = <span class="code-number">2</span>),
+  df = estudiantes
+)
+
+<span class="code-comment"># Acceder a elementos de la lista</span>
+mi_lista<span class="code-operator">$</span>numeros       <span class="code-comment"># Por nombre</span>
+mi_lista[[<span class="code-number">1</span>]]         <span class="code-comment"># Por índice</span>
+mi_lista[[<span class="code-string">"texto"</span>]]   <span class="code-comment"># Por nombre con [[ ]]</span></code></pre>
+</div>
+
+                        <div class="warning-box">
+                            <h4>⚠️ Diferencia entre [ ] y [[ ]]</h4>
+                            <p>En listas: <code class="inline">[ ]</code> devuelve una sublista, mientras que <code
+                                    class="inline">[[ ]]</code> devuelve el elemento directamente.</p>
+                            <div class="sourceCode" data-lang="R">
+<pre><code>mi_lista[<span class="code-number">1</span>]           <span class="code-comment"># Devuelve una lista con un elemento</span>
+mi_lista[[<span class="code-number">1</span>]]          <span class="code-comment"># Devuelve el vector directamente</span></code></pre>
+</div>
+                    </section>
+
+                    <section id="s2-importacion">
+                        <h3>3.1 Importación de Datos</h3>
+
+                        <h4>Desde CSV</h4>
+                        <p>El formato CSV (Comma Separated Values) es uno de los más comunes:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Método base de R</span>
+datos <span class="code-operator"><-</span> <span class="code-function">read.csv</span>(<span class="code-string">"datos.csv"</span>)
+
+<span class="code-comment"># Usando readr (paquete tidyverse) - RECOMENDADO</span>
+<span class="code-function">library</span>(readr)
+datos <span class="code-operator"><-</span> <span class="code-function">read_csv</span>(<span class="code-string">"datos.csv"</span>)
+
+<span class="code-comment"># Especificar opciones</span>
+datos <span class="code-operator"><-</span> <span class="code-function">read_csv</span>(<span class="code-string">"datos.csv"</span>, 
+  col_types = <span class="code-string">"ccdi"</span>,    <span class="code-comment"># Especificar tipos de columnas</span>
+  na = <span class="code-function">c</span>(<span class="code-string">""</span>, <span class="code-string">"NA"</span>, <span class="code-string">"N/A"</span>)  <span class="code-comment"># Valores faltantes</span>
+)</code></pre>
+</div>
+
+                        <h4>Desde Excel</h4>
+                        <p>Para archivos Excel, usamos el paquete <code class="inline">readxl</code>:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-function">library</span>(readxl)
+
+<span class="code-comment"># Leer una hoja específica</span>
+datos <span class="code-operator"><-</span> <span class="code-function">read_excel</span>(<span class="code-string">"datos.xlsx"</span>, sheet = <span class="code-string">"Hoja1"</span>)
+
+<span class="code-comment"># Leer por número de hoja</span>
+datos <span class="code-operator"><-</span> <span class="code-function">read_excel</span>(<span class="code-string">"datos.xlsx"</span>, sheet = <span class="code-number">2</span>)
+
+<span class="code-comment"># Especificar rango de celdas</span>
+datos <span class="code-operator"><-</span> <span class="code-function">read_excel</span>(<span class="code-string">"datos.xlsx"</span>, range = <span class="code-string">"A1:D100"</span>)</code></pre>
+</div>
+
+                        <h4>Otros Formatos</h4>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Desde SPSS (.sav)</span>
+<span class="code-function">library</span>(haven)
+datos <span class="code-operator"><-</span> <span class="code-function">read_sav</span>(<span class="code-string">"datos.sav"</span>)
+
+<span class="code-comment"># Desde Stata (.dta)</span>
+datos <span class="code-operator"><-</span> <span class="code-function">read_dta</span>(<span class="code-string">"datos.dta"</span>)
+
+<span class="code-comment"># Desde texto delimitado por tabulaciones</span>
+datos <span class="code-operator"><-</span> <span class="code-function">read_tsv</span>(<span class="code-string">"datos.txt"</span>)
+
+<span class="code-comment"># Desde JSON</span>
+<span class="code-function">library</span>(jsonlite)
+datos <span class="code-operator"><-</span> <span class="code-function">fromJSON</span>(<span class="code-string">"datos.json"</span>)</code></pre>
+</div>
+
+                        <div class="tip-box">
+                            <h4>💡 Buena Práctica</h4>
+                            <p>Siempre verifica tus datos después de importar:</p>
+                            <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-function">head</span>(datos)        <span class="code-comment"># Ver primeras filas</span>
+<span class="code-function">str</span>(datos)         <span class="code-comment"># Verificar tipos de datos</span>
+<span class="code-function">sum</span>(<span class="code-function">is.na</span>(datos))  <span class="code-comment"># Contar valores faltantes</span></code></pre>
+</div>
+                    </section>
+
+                    <section id="s2-filtrado">
+                        <h3>3.2 Filtrado y Selección</h3>
+
+                        <h4>Indexación en Data Frames</h4>
+                        <p>La indexación usa la sintaxis <code class="inline">[filas, columnas]</code>:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Seleccionar columnas</span>
+estudiantes<span class="code-operator">$</span>nombre           <span class="code-comment"># Una columna como vector</span>
+estudiantes[, <span class="code-string">"edad"</span>]        <span class="code-comment"># Una columna</span>
+estudiantes[, <span class="code-function">c</span>(<span class="code-string">"nombre"</span>, <span class="code-string">"nota"</span>)]  <span class="code-comment"># Múltiples columnas</span>
+
+<span class="code-comment"># Seleccionar filas</span>
+estudiantes[<span class="code-number">1</span>:<span class="code-number">2</span>, ]            <span class="code-comment"># Primeras 2 filas</span>
+estudiantes[estudiantes<span class="code-operator">$</span>edad <span class="code-operator">></span> <span class="code-number">19</span>, ]  <span class="code-comment"># Filtrar por condición</span>
+
+<span class="code-comment"># Combinar filas y columnas</span>
+estudiantes[estudiantes<span class="code-operator">$</span>nota <span class="code-operator">>=</span> <span class="code-number">80</span>, <span class="code-function">c</span>(<span class="code-string">"nombre"</span>, <span class="code-string">"nota"</span>)]</code></pre>
+</div>
+
+                        <h4>Funciones de Subconjunto</h4>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Usando subset()</span>
+<span class="code-function">subset</span>(estudiantes, edad <span class="code-operator">></span> <span class="code-number">19</span>)
+<span class="code-function">subset</span>(estudiantes, nota <span class="code-operator">>=</span> <span class="code-number">80</span>, select = <span class="code-function">c</span>(nombre, nota))
+
+<span class="code-comment"># Usando which()</span>
+estudiantes[<span class="code-function">which</span>(estudiantes<span class="code-operator">$</span>nota <span class="code-operator">==</span> <span class="code-function">max</span>(estudiantes<span class="code-operator">$</span>nota)), ]</code></pre>
+</div>
+
+                        <h4>Manejo de Datos Faltantes (NA)</h4>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Detectar valores faltantes</span>
+<span class="code-function">is.na</span>(datos)           <span class="code-comment"># Matriz de TRUE/FALSE</span>
+<span class="code-function">anyNA</span>(datos)          <span class="code-comment"># ¿Hay algún NA?</span>
+<span class="code-function">sum</span>(<span class="code-function">is.na</span>(datos))     <span class="code-comment"># Contar NAs</span>
+
+<span class="code-comment"># Eliminar filas con NA</span>
+datos_completos <span class="code-operator"><-</span> <span class="code-function">na.omit</span>(datos)
+
+<span class="code-comment"># Reemplazar NA</span>
+datos<span class="code-operator">$</span>edad[<span class="code-function">is.na</span>(datos<span class="code-operator">$</span>edad)] <span class="code-operator"><-</span> <span class="code-function">mean</span>(datos<span class="code-operator">$</span>edad, na.rm = <span class="code-keyword">TRUE</span>)
+
+<span class="code-comment"># na.rm en funciones</span>
+<span class="code-function">mean</span>(datos<span class="code-operator">$</span>valor, na.rm = <span class="code-keyword">TRUE</span>)</code></pre>
+</div>
+                    </section>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- SECCIÓN 4: PROGRAMACIÓN EN R -->
+                <section id="sec3" class="section-slide">
+                    <h2>Sección 4: Programación en R</h2>
+
+                    <p>Esta sección te enseñará a escribir código más eficiente y reutilizable mediante la creación de
+                        funciones personalizadas y el uso de estructuras de control de flujo.</p>
+
+                    <section id="s3-funciones">
+                        <h3>4.1 Creación de Funciones</h3>
+
+                        <h4>Sintaxis Básica</h4>
+                        <p>En R, las funciones se definen con <code class="inline">function()</code>:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Estructura básica</span>
+nombre_funcion <span class="code-operator"><-</span> <span class="code-keyword">function</span>(argumentos) {
+  <span class="code-comment"># Cuerpo de la función</span>
+  <span class="code-keyword">return</span>(resultado)
+}
+
+<span class="code-comment"># Ejemplo: Calcular el área de un círculo</span>
+area_circulo <span class="code-operator"><-</span> <span class="code-keyword">function</span>(radio) {
+  area <span class="code-operator"><-</span> pi <span class="code-operator">*</span> radio^<span class="code-number">2</span>
+  <span class="code-keyword">return</span>(area)
+}
+
+<span class="code-comment"># Usar la función</span>
+<span class="code-function">area_circulo</span>(<span class="code-number">5</span>)    <span class="code-comment"># Resultado: 78.53982</span></code></pre>
+</div>
+
+                        <h4>Argumentos y Valores por Defecto</h4>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Función con múltiples argumentos</span>
+saludar <span class="code-operator"><-</span> <span class="code-keyword">function</span>(nombre, saludo = <span class="code-string">"Hola"</span>) {
+  <span class="code-function">paste</span>(saludo, nombre, <span class="code-string">"!"</span>)
+}
+
+<span class="code-function">saludar</span>(<span class="code-string">"María"</span>)              <span class="code-comment"># "Hola María !"</span>
+<span class="code-function">saludar</span>(<span class="code-string">"Juan"</span>, <span class="code-string">"Buenos días"</span>)  <span class="code-comment"># "Buenos días Juan !"</span>
+
+<span class="code-comment"># Argumentos con nombres</span>
+<span class="code-function">saludar</span>(saludo = <span class="code-string">"Hi"</span>, nombre = <span class="code-string">"Ana"</span>)</code></pre>
+</div>
+
+                        <h4>Funciones con Condicionales</h4>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Función con validación</span>
+descuento <span class="code-operator"><-</span> <span class="code-keyword">function</span>(precio, porcentaje) {
+  <span class="code-keyword">if</span> (porcentaje <span class="code-operator"><</span> <span class="code-number">0</span> <span class="code-operator">|</span> porcentaje <span class="code-operator">></span> <span class="code-number">100</span>) {
+    <span class="code-function">stop</span>(<span class="code-string">"El porcentaje debe estar entre 0 y 100"</span>)
+  }
+  precio <span class="code-operator">*</span> (<span class="code-number">1</span> <span class="code-operator">-</span> porcentaje/<span class="code-number">100</span>)
+}</code></pre>
+</div>
+
+                        <div class="tip-box">
+                            <h4>💡 Buenas Prácticas</h4>
+                            <ul>
+                                <li>Usa nombres descriptivos para funciones (verbos)</li>
+                                <li>Documenta tu función con comentarios</li>
+                                <li>Valida los argumentos de entrada</li>
+                                <li>Retorna resultados explícitamente con <code class="inline">return()</code></li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <section id="s3-control">
+                        <h3>4.2 Estructuras de Control</h3>
+
+                        <h4>Condicionales: if, else, else if</h4>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Estructura if simple</span>
+edad <span class="code-operator"><-</span> <span class="code-number">20</span>
+<span class="code-keyword">if</span> (edad <span class="code-operator">>=</span> <span class="code-number">18</span>) {
+  <span class="code-function">print</span>(<span class="code-string">"Mayor de edad"</span>)
+}
+
+<span class="code-comment"># if-else</span>
+<span class="code-keyword">if</span> (edad <span class="code-operator">>=</span> <span class="code-number">18</span>) {
+  <span class="code-function">print</span>(<span class="code-string">"Mayor de edad"</span>)
+} <span class="code-keyword">else</span> {
+  <span class="code-function">print</span>(<span class="code-string">"Menor de edad"</span>)
+}
+
+<span class="code-comment"># if-else if-else</span>
+calificacion <span class="code-operator"><-</span> <span class="code-number">85</span>
+<span class="code-keyword">if</span> (calificacion <span class="code-operator">>=</span> <span class="code-number">90</span>) {
+  nota <span class="code-operator"><-</span> <span class="code-string">"A"</span>
+} <span class="code-keyword">else if</span> (calificacion <span class="code-operator">>=</span> <span class="code-number">80</span>) {
+  nota <span class="code-operator"><-</span> <span class="code-string">"B"</span>
+} <span class="code-keyword">else if</span> (calificacion <span class="code-operator">>=</span> <span class="code-number">70</span>) {
+  nota <span class="code-operator"><-</span> <span class="code-string">"C"</span>
+} <span class="code-keyword">else</span> {
+  nota <span class="code-operator"><-</span> <span class="code-string">"D"</span>
+}</code></pre>
+</div>
+
+                        <h4>ifelse() Vectorizado</h4>
+                        <p>Para operaciones vectorizadas, usa <code class="inline">ifelse()</code> en lugar de <code
+                                class="inline">if-else</code>:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code>edades <span class="code-operator"><-</span> <span class="code-function">c</span>(<span class="code-number">15</span>, <span class="code-number">22</span>, <span class="code-number">17</span>, <span class="code-number">30</span>, <span class="code-number">16</span>)
+estado <span class="code-operator"><-</span> <span class="code-function">ifelse</span>(edades <span class="code-operator">>=</span> <span class="code-number">18</span>, <span class="code-string">"Mayor"</span>, <span class="code-string">"Menor"</span>)
+<span class="code-comment"># Resultado: "Menor" "Mayor" "Menor" "Mayor" "Menor"</span>
+
+<span class="code-comment"># ifelse anidado</span>
+categoria <span class="code-operator"><-</span> <span class="code-function">ifelse</span>(edades <span class="code-operator"><</span> <span class="code-number">13</span>, <span class="code-string">"Niño"</span>,
+                <span class="code-function">ifelse</span>(edades <span class="code-operator"><</span> <span class="code-number">20</span>, <span class="code-string">"Adolescente"</span>, <span class="code-string">"Adulto"</span>))</code></pre>
+</div>
+
+                        <h4>switch()</h4>
+                        <p>Útil cuando tienes múltiples condiciones basadas en un valor:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code>dia_numero <span class="code-operator"><-</span> <span class="code-number">3</span>
+dia_nombre <span class="code-operator"><-</span> <span class="code-function">switch</span>(<span class="code-function">as.character</span>(dia_numero),
+  <span class="code-string">"1"</span> = <span class="code-string">"Lunes"</span>,
+  <span class="code-string">"2"</span> = <span class="code-string">"Martes"</span>,
+  <span class="code-string">"3"</span> = <span class="code-string">"Miércoles"</span>,
+  <span class="code-string">"4"</span> = <span class="code-string">"Jueves"</span>,
+  <span class="code-string">"5"</span> = <span class="code-string">"Viernes"</span>,
+  <span class="code-string">"Fin de semana"</span>
+)</code></pre>
+</div>
+                    </section>
+
+                    <section id="s3-loops">
+                        <h3>4.3 Loops y Apply</h3>
+
+                        <h4>Bucle for</h4>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Iterar sobre una secuencia</span>
+<span class="code-keyword">for</span> (i <span class="code-keyword">in</span> <span class="code-number">1</span>:<span class="code-number">5</span>) {
+  <span class="code-function">print</span>(i)
+}
+
+<span class="code-comment"># Iterar sobre un vector</span>
+nombres <span class="code-operator"><-</span> <span class="code-function">c</span>(<span class="code-string">"Ana"</span>, <span class="code-string">"Luis"</span>, <span class="code-string">"María"</span>)
+<span class="code-keyword">for</span> (nombre <span class="code-keyword">in</span> nombres) {
+  <span class="code-function">print</span>(<span class="code-function">paste</span>(<span class="code-string">"Hola,"</span>, nombre))
+}
+
+<span class="code-comment"># Iterar sobre filas de un data frame</span>
+<span class="code-keyword">for</span> (i <span class="code-keyword">in</span> <span class="code-number">1</span>:<span class="code-function">nrow</span>(estudiantes)) {
+  <span class="code-function">print</span>(estudiantes<span class="code-operator">$</span>nombre[i])
+}</code></pre>
+</div>
+
+                        <h4>Bucle while</h4>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code>contador <span class="code-operator"><-</span> <span class="code-number">1</span>
+<span class="code-keyword">while</span> (contador <span class="code-operator"><=</span> <span class="code-number">5</span>) {
+  <span class="code-function">print</span>(contador)
+  contador <span class="code-operator"><-</span> contador <span class="code-operator">+</span> <span class="code-number">1</span>
+}</code></pre>
+</div>
+
+                        <h4>Familia apply (Preferida en R)</h4>
+                        <p>En R, se prefiere usar funciones vectorizadas en lugar de loops explícitos:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># apply() - para matrices</span>
+matriz <span class="code-operator"><-</span> <span class="code-function">matrix</span>(<span class="code-number">1</span>:<span class="code-number">12</span>, nrow = <span class="code-number">3</span>)
+<span class="code-function">apply</span>(matriz, <span class="code-number">1</span>, sum)    <span class="code-comment"># Suma por filas (MARGIN = 1)</span>
+<span class="code-function">apply</span>(matriz, <span class="code-number">2</span>, mean)  <span class="code-comment"># Media por columnas (MARGIN = 2)</span>
+
+<span class="code-comment"># lapply() - devuelve lista</span>
+mi_lista <span class="code-operator"><-</span> <span class="code-function">list</span>(a = <span class="code-number">1</span>:<span class="code-number">5</span>, b = <span class="code-number">6</span>:<span class="code-number">10</span>)
+<span class="code-function">lapply</span>(mi_lista, sum)
+
+<span class="code-comment"># sapply() - simplifica el resultado</span>
+<span class="code-function">sapply</span>(mi_lista, sum)    <span class="code-comment"># Devuelve vector</span>
+
+<span class="code-comment"># tapply() - aplicar por grupos</span>
+<span class="code-function">tapply</span>(estudiantes<span class="code-operator">$</span>nota, estudiantes<span class="code-operator">$</span>aprobado, mean)</code></pre>
+</div>
+
+                        <div class="tip-box">
+                            <h4>💡 Recomendación</h4>
+                            <p>En R moderno, se recomienda usar funciones del paquete <code class="inline">purrr</code>
+                                (tidyverse) en lugar de la familia apply:</p>
+                            <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-function">library</span>(purrr)
+<span class="code-function">map</span>(mi_lista, sum)       <span class="code-comment"># Equivalente a lapply</span>
+<span class="code-function">map_dbl</span>(mi_lista, sum)   <span class="code-comment"># Devuelve vector numérico</span></code></pre>
+</div>
+                    </section>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- SECCIÓN 3: MANIPULACIÓN DE DATOS CON DPLYR -->
+                <section id="sec4" class="section-slide">
+                    <h2>Sección 3: Manipulación de Datos con dplyr</h2>
+
+                    <p><span class="highlight">dplyr</span> es el paquete más popular de R para la manipulación de
+                        datos. Proporciona una "gramática" coherente y eficiente para realizar las operaciones más
+                        comunes de data wrangling.</p>
+
+                    <section id="s4-pipe">
+                        <h3>4.1 El Operador Pipe (%>%)</h3>
+
+                        <h4>¿Qué es el Pipe?</h4>
+                        <p>El operador pipe <code class="inline">%>%</code> (del paquete <code
+                                class="inline">magrittr</code>) permite encadenar operaciones de izquierda a derecha,
+                            haciendo el código más legible:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Sin pipe</span>
+<span class="code-function">sum</span>(<span class="code-function">sqrt</span>(<span class="code-function">abs</span>(-<span class="code-number">10</span>:<span class="code-number">10</span>)))
+
+<span class="code-comment"># Con pipe</span>
+-<span class="code-number">10</span>:<span class="code-number">10</span> <span class="code-operator">%>%</span>
+  <span class="code-function">abs</span>() <span class="code-operator">%>%</span>
+  <span class="code-function">sqrt</span>() <span class="code-operator">%>%</span>
+  <span class="code-function">sum</span>()</code></pre>
+</div>
+
+                        <h4>Uso con Data Frames</h4>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-function">library</span>(dplyr)
+
+<span class="code-comment"># Sin pipe</span>
+<span class="code-function">arrange</span>(
+  <span class="code-function">filter</span>(
+    <span class="code-function">select</span>(estudiantes, nombre, nota),
+    nota <span class="code-operator">>=</span> <span class="code-number">80</span>
+  ),
+  <span class="code-function">desc</span>(nota)
+)
+
+<span class="code-comment"># Con pipe (mucho más legible)</span>
+estudiantes <span class="code-operator">%>%</span>
+  <span class="code-function">select</span>(nombre, nota) <span class="code-operator">%>%</span>
+  <span class="code-function">filter</span>(nota <span class="code-operator">>=</span> <span class="code-number">80</span>) <span class="code-operator">%>%</span>
+  <span class="code-function">arrange</span>(<span class="code-function">desc</span>(nota))</code></pre>
+</div>
+
+                        <div class="info-box">
+                            <h4>⌨️ Atajo en RStudio</h4>
+                            <p>Presiona <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>M</kbd> para insertar el operador pipe
+                                automáticamente.</p>
+                        </div>
+                    </section>
+
+                    <section id="s4-verbos">
+                        <h3>3.4 Verbos de dplyr</h3>
+
+                        <h4>select() - Seleccionar Columnas</h4>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Seleccionar columnas específicas</span>
+estudiantes <span class="code-operator">%>%</span>
+  <span class="code-function">select</span>(nombre, edad)
+
+<span class="code-comment"># Excluir columnas</span>
+estudiantes <span class="code-operator">%>%</span>
+  <span class="code-function">select</span>(<span class="code-operator">-</span>aprobado)
+
+<span class="code-comment"># Selección con patrones</span>
+estudiantes <span class="code-operator">%>%</span>
+  <span class="code-function">select</span>(<span class="code-function">starts_with</span>(<span class="code-string">"n"</span>))   <span class="code-comment"># Columnas que empiezan con "n"</span>
+
+<span class="code-comment"># Reordenar columnas</span>
+estudiantes <span class="code-operator">%>%</span>
+  <span class="code-function">select</span>(nota, nombre, <span class="code-function">everything</span>())</code></pre>
+</div>
+
+                        <h4>filter() - Filtrar Filas</h4>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Filtrar con una condición</span>
+estudiantes <span class="code-operator">%>%</span>
+  <span class="code-function">filter</span>(nota <span class="code-operator">>=</span> <span class="code-number">80</span>)
+
+<span class="code-comment"># Múltiples condiciones (AND)</span>
+estudiantes <span class="code-operator">%>%</span>
+  <span class="code-function">filter</span>(edad <span class="code-operator">></span> <span class="code-number">19</span>, nota <span class="code-operator">>=</span> <span class="code-number">80</span>)
+
+<span class="code-comment"># Condiciones OR</span>
+estudiantes <span class="code-operator">%>%</span>
+  <span class="code-function">filter</span>(edad <span class="code-operator"><</span> <span class="code-number">20</span> <span class="code-operator">|</span> nota <span class="code-operator">>=</span> <span class="code-number">90</span>)
+
+<span class="code-comment"># Filtrar valores en un vector</span>
+estudiantes <span class="code-operator">%>%</span>
+  <span class="code-function">filter</span>(nombre <span class="code-operator">%in%</span> <span class="code-function">c</span>(<span class="code-string">"Ana"</span>, <span class="code-string">"Luis"</span>))</code></pre>
+</div>
+
+                        <h4>mutate() - Crear/Modificar Columnas</h4>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Crear nueva columna</span>
+estudiantes <span class="code-operator">%>%</span>
+  <span class="code-function">mutate</span>(nota_100 = nota <span class="code-operator">*</span> <span class="code-number">100</span> / <span class="code-number">50</span>)
+
+<span class="code-comment"># Múltiples columnas</span>
+estudiantes <span class="code-operator">%>%</span>
+  <span class="code-function">mutate</span>(
+    nota_100 = nota <span class="code-operator">*</span> <span class="code-number">2</span>,
+    categoria = <span class="code-function">ifelse</span>(nota <span class="code-operator">>=</span> <span class="code-number">80</span>, <span class="code-string">"Alta"</span>, <span class="code-string">"Baja"</span>)
+  )
+
+<span class="code-comment"># Usar columnas recién creadas</span>
+estudiantes <span class="code-operator">%>%</span>
+  <span class="code-function">mutate</span>(
+    nota_100 = nota <span class="code-operator">*</span> <span class="code-number">2</span>,
+    resultado = <span class="code-function">ifelse</span>(nota_100 <span class="code-operator">>=</span> <span class="code-number">160</span>, <span class="code-string">"Aprobado"</span>, <span class="code-string">"Reprobado"</span>)
+  )</code></pre>
+</div>
+
+                        <h4>arrange() - Ordenar Filas</h4>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Orden ascendente</span>
+estudiantes <span class="code-operator">%>%</span>
+  <span class="code-function">arrange</span>(nota)
+
+<span class="code-comment"># Orden descendente</span>
+estudiantes <span class="code-operator">%>%</span>
+  <span class="code-function">arrange</span>(<span class="code-function">desc</span>(nota))
+
+<span class="code-comment"># Ordenar por múltiples columnas</span>
+estudiantes <span class="code-operator">%>%</span>
+  <span class="code-function">arrange</span>(edad, <span class="code-function">desc</span>(nota))</code></pre>
+</div>
+
+                        <h4>summarise() - Resumir Datos</h4>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Estadísticas simples</span>
+estudiantes <span class="code-operator">%>%</span>
+  <span class="code-function">summarise</span>(
+    promedio = <span class="code-function">mean</span>(nota),
+    maximo = <span class="code-function">max</span>(nota),
+    minimo = <span class="code-function">min</span>(nota),
+    total = <span class="code-function">n</span>()   <span class="code-comment"># Contar filas</span>
+  )</code></pre>
+</div>
+
+                        <h4>count() - Contar Observaciones</h4>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Contar por categoría</span>
+estudiantes <span class="code-operator">%>%</span>
+  <span class="code-function">count</span>(aprobado)
+
+<span class="code-comment"># Con ordenamiento</span>
+estudiantes <span class="code-operator">%>%</span>
+  <span class="code-function">count</span>(aprobado, sort = <span class="code-keyword">TRUE</span>)</code></pre>
+</div>
+                    </section>
+
+                    <section id="s4-agregacion">
+                        <h3>3.5 Agrupación y Joins</h3>
+
+                        <h4>group_by() - Agrupar Datos</h4>
+                        <p>La función <code class="inline">group_by()</code> cambia el comportamiento de las funciones
+                            posteriores para operar por grupos:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Estadísticas por grupo</span>
+estudiantes <span class="code-operator">%>%</span>
+  <span class="code-function">group_by</span>(aprobado) <span class="code-operator">%>%</span>
+  <span class="code-function">summarise</span>(
+    promedio = <span class="code-function">mean</span>(nota),
+    cantidad = <span class="code-function">n</span>(),
+    edad_promedio = <span class="code-function">mean</span>(edad)
+  )
+
+<span class="code-comment"># Operaciones por grupo con mutate</span>
+estudiantes <span class="code-operator">%>%</span>
+  <span class="code-function">group_by</span>(aprobado) <span class="code-operator">%>%</span>
+  <span class="code-function">mutate</span>(
+    nota_relativa = nota <span class="code-operator">-</span> <span class="code-function">mean</span>(nota)  <span class="code-comment"># Desviación del grupo</span>
+  )</code></pre>
+</div>
+
+                        <h4>Joins (Combinar Data Frames)</h4>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Data frames de ejemplo</span>
+estudiantes <span class="code-operator"><-</span> <span class="code-function">data.frame</span>(
+  id = <span class="code-number">1</span>:<span class="code-number">3</span>,
+  nombre = <span class="code-function">c</span>(<span class="code-string">"Ana"</span>, <span class="code-string">"Luis"</span>, <span class="code-string">"María"</span>)
+)
+
+calificaciones <span class="code-operator"><-</span> <span class="code-function">data.frame</span>(
+  id = <span class="code-function">c</span>(<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">4</span>),
+  nota = <span class="code-function">c</span>(<span class="code-number">85</span>, <span class="code-number">90</span>, <span class="code-number">78</span>)
+)
+
+<span class="code-comment"># left_join: Mantiene todas las filas del primer data frame</span>
+<span class="code-function">left_join</span>(estudiantes, calificaciones, by = <span class="code-string">"id"</span>)
+
+<span class="code-comment"># inner_join: Solo filas presentes en ambos</span>
+<span class="code-function">inner_join</span>(estudiantes, calificaciones, by = <span class="code-string">"id"</span>)
+
+<span class="code-comment"># full_join: Todas las filas de ambos</span>
+<span class="code-function">full_join</span>(estudiantes, calificaciones, by = <span class="code-string">"id"</span>)</code></pre>
+</div>
+
+                        <div class="info-box">
+                            <h4>📊 Tipos de Join</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Función</th>
+                                        <th>Descripción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code class="inline">left_join()</code></td>
+                                        <td>Mantiene todas las filas de X</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code class="inline">right_join()</code></td>
+                                        <td>Mantiene todas las filas de Y</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code class="inline">inner_join()</code></td>
+                                        <td>Solo filas presentes en ambos</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code class="inline">full_join()</code></td>
+                                        <td>Todas las filas de ambos</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code class="inline">anti_join()</code></td>
+                                        <td>Filas de X que no están en Y</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h4>Pipeline Completo de Ejemplo</h4>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Análisis completo con dplyr</span>
+estudiantes <span class="code-operator">%>%</span>
+  <span class="code-comment"># 1. Filtrar estudiantes activos</span>
+  <span class="code-function">filter</span>(estado == <span class="code-string">"activo"</span>) <span class="code-operator">%>%</span>
+  
+  <span class="code-comment"># 2. Calcular métricas por programa</span>
+  <span class="code-function">group_by</span>(programa) <span class="code-operator">%>%</span>
+  
+  <span class="code-comment"># 3. Crear resumen</span>
+  <span class="code-function">summarise</span>(
+    total = <span class="code-function">n</span>(),
+    promedio_nota = <span class="code-function">mean</span>(nota_final, na.rm = <span class="code-keyword">TRUE</span>),
+    tasa_aprobacion = <span class="code-function">mean</span>(aprobado) <span class="code-operator">*</span> <span class="code-number">100</span>,
+    .groups = <span class="code-string">"drop"</span>  <span class="code-comment"># Desagrupar al final</span>
+  ) <span class="code-operator">%>%</span>
+  
+  <span class="code-comment"># 4. Filtrar programas con suficientes estudiantes</span>
+  <span class="code-function">filter</span>(total <span class="code-operator">>=</span> <span class="code-number">10</span>) <span class="code-operator">%>%</span>
+  
+  <span class="code-comment"># 5. Ordenar por tasa de aprobación</span>
+  <span class="code-function">arrange</span>(<span class="code-function">desc</span>(tasa_aprobacion))</code></pre>
+</div>
+                    </section>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- SECCIÓN 5: VISUALIZACIÓN -->
+                <section id="sec5" class="section-slide">
+                    <h2>Sección 5: Visualización de Datos con ggplot2</h2>
+
+                    <p>La visualización de datos es fundamental en el análisis estadístico. <span
+                            class="highlight">ggplot2</span> es el paquete más popular de R para crear gráficos de alta
+                        calidad basado en la "Gramática de Gráficos" (Grammar of Graphics).</p>
+
+                    <section id="s5-ggplot">
+                        <h3>5.1 Fundamentos de ggplot2</h3>
+
+                        <h4>¿Qué es ggplot2?</h4>
+                        <p>ggplot2 es un paquete del tidyverse que implementa la Gramática de Gráficos, un sistema para
+                            describir gráficos en capas. Su filosofía se basa en tres componentes principales:</p>
+
+                        <div class="concepto-clave">
+                            <h4>🎯 Los 3 Componentes de ggplot2</h4>
+                            <ol>
+                                <li><strong>Datos:</strong> El data frame que contiene tu información</li>
+                                <li><strong>Estéticas (aes):</strong> Cómo se mapean las variables a elementos visuales
+                                    (ejes, colores, tamaños)</li>
+                                <li><strong>Geometrías (geom):</strong> El tipo de gráfico (puntos, barras, líneas,
+                                    etc.)</li>
+                            </ol>
+                        </div>
+
+                        <h4>Sintaxis Básica</h4>
+                        <p>La estructura fundamental de cualquier gráfico con ggplot2 es:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-function">library</span>(ggplot2)
+
+<span class="code-comment"># Estructura base</span>
+<span class="code-function">ggplot</span>(data = <span class="code-operator">&lt;</span>DATA<span class="code-operator">&gt;</span>) <span class="code-operator">+</span>
+  <span class="code-function">&lt;</span>GEOM_FUNCTION<span class="code-operator">&gt;</span>(mapping = <span class="code-function">aes</span>(<span class="code-operator">&lt;</span>MAPPINGS<span class="code-operator">&gt;</span>))
+
+<span class="code-comment"># Ejemplo con dataset iris</span>
+<span class="code-function">ggplot</span>(data = iris) <span class="code-operator">+</span>
+  <span class="code-function">geom_point</span>(mapping = <span class="code-function">aes</span>(x = Sepal.Length, y = Petal.Length))</code></pre>
+</div>
+
+                        <div class="tip-box">
+                            <h4>💡 Atajo en RStudio</h4>
+                            <p>Puedes usar el operador pipe con ggplot2 de forma natural:</p>
+                            <div class="sourceCode" data-lang="R">
+<pre><code>iris <span class="code-operator">%&gt;%</span>
+  <span class="code-function">ggplot</span>(<span class="code-function">aes</span>(x = Sepal.Length, y = Petal.Length)) <span class="code-operator">+</span>
+  <span class="code-function">geom_point</span>()</code></pre>
+</div>
+
+                        <h4>Instalación</h4>
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Instalar el tidyverse completo (incluye ggplot2)</span>
+<span class="code-function">install.packages</span>(<span class="code-string">"tidyverse"</span>)
+
+<span class="code-comment"># O instalar solo ggplot2</span>
+<span class="code-function">install.packages</span>(<span class="code-string">"ggplot2"</span>)
+
+<span class="code-comment"># Cargar el paquete</span>
+<span class="code-function">library</span>(ggplot2)</code></pre>
+</div>
+
+                        <h4>Capas y Personalización</h4>
+                        <p>Puedes agregar múltiples capas y personalizar cada aspecto del gráfico:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-function">ggplot</span>(data = iris, <span class="code-function">aes</span>(x = Sepal.Length, y = Petal.Length)) <span class="code-operator">+</span>
+  <span class="code-function">geom_point</span>(<span class="code-function">aes</span>(color = Species, size = Petal.Width)) <span class="code-operator">+</span>
+  <span class="code-function">geom_smooth</span>(method = <span class="code-string">"lm"</span>, color = <span class="code-string">"black"</span>) <span class="code-operator">+</span>
+  <span class="code-function">labs</span>(
+    title = <span class="code-string">"Relación entre Sepal.Length y Petal.Length"</span>,
+    subtitle = <span class="code-string">"Dataset Iris"</span>,
+    x = <span class="code-string">"Sepal Length (cm)"</span>,
+    y = <span class="code-string">"Petal Length (cm)"</span>,
+    color = <span class="code-string">"Especie"</span>
+  ) <span class="code-operator">+</span>
+  <span class="code-function">theme_minimal</span>()</code></pre>
+</div>
+                    </section>
+
+                    <section id="s5-tipos">
+                        <h3>5.2 Tipos de Gráficos</h3>
+
+                        <h4>Gráfico de Dispersión (Scatter Plot)</h4>
+                        <p>Ideal para explorar relaciones entre dos variables continuas:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Scatter plot básico</span>
+<span class="code-function">ggplot</span>(iris, <span class="code-function">aes</span>(x = Sepal.Length, y = Sepal.Width)) <span class="code-operator">+</span>
+  <span class="code-function">geom_point</span>(<span class="code-function">aes</span>(color = Species)) <span class="code-operator">+</span>
+  <span class="code-function">labs</span>(title = <span class="code-string">"Sepal: Largo vs Ancho"</span>)
+
+<span class="code-comment"># Con transparencia (para muchos datos)</span>
+<span class="code-function">geom_point</span>(alpha = <span class="code-number">0.6</span>)
+
+<span class="code-comment"># Con forma por grupo</span>
+<span class="code-function">geom_point</span>(<span class="code-function">aes</span>(shape = Species))</code></pre>
+</div>
+
+                        <h4>Gráfico de Barras</h4>
+                        <p>Para visualizar conteos o proporciones por categoría:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Conteo automático por categoría</span>
+<span class="code-function">ggplot</span>(iris, <span class="code-function">aes</span>(x = Species)) <span class="code-operator">+</span>
+  <span class="code-function">geom_bar</span>(fill = <span class="code-string">"steelblue"</span>) <span class="code-operator">+</span>
+  <span class="code-function">labs</span>(title = <span class="code-string">"Conteo por Especie"</span>, y = <span class="code-string">"Cantidad"</span>)
+
+<span class="code-comment"># Barras con valores precalculados</span>
+resumen <span class="code-operator"><-</span> iris <span class="code-operator">%&gt;%</span>
+  <span class="code-function">group_by</span>(Species) <span class="code-operator">%&gt;%</span>
+  <span class="code-function">summarise</span>(promedio = <span class="code-function">mean</span>(Sepal.Length))
+
+<span class="code-function">ggplot</span>(resumen, <span class="code-function">aes</span>(x = Species, y = promedio)) <span class="code-operator">+</span>
+  <span class="code-function">geom_col</span>(fill = <span class="code-string">"coral"</span>) <span class="code-operator">+</span>
+  <span class="code-function">labs</span>(title = <span class="code-string">"Promedio de Sepal.Length por Especie"</span>)</code></pre>
+</div>
+
+                        <h4>Histograma</h4>
+                        <p>Para visualizar la distribución de una variable continua:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Histograma básico</span>
+<span class="code-function">ggplot</span>(iris, <span class="code-function">aes</span>(x = Sepal.Length)) <span class="code-operator">+</span>
+  <span class="code-function">geom_histogram</span>(bins = <span class="code-number">15</span>, fill = <span class="code-string">"darkgreen"</span>, color = <span class="code-string">"white"</span>) <span class="code-operator">+</span>
+  <span class="code-function">labs</span>(title = <span class="code-string">"Distribución de Sepal.Length"</span>)
+
+<span class="code-comment"># Con densidad superpuesta</span>
+<span class="code-function">geom_histogram</span>(<span class="code-function">aes</span>(y = <span class="code-function">after_stat</span>(density)), bins = <span class="code-number">15</span>) <span class="code-operator">+</span>
+  <span class="code-function">geom_density</span>(color = <span class="code-string">"red"</span>, size = <span class="code-number">1</span>)
+
+<span class="code-comment"># Por grupo (faceting)</span>
+<span class="code-function">ggplot</span>(iris, <span class="code-function">aes</span>(x = Sepal.Length)) <span class="code-operator">+</span>
+  <span class="code-function">geom_histogram</span>(bins = <span class="code-number">10</span>, fill = <span class="code-string">"purple"</span>) <span class="code-operator">+</span>
+  <span class="code-function">facet_wrap</span>(<span class="code-operator">~</span>Species, ncol = <span class="code-number">1</span>)</code></pre>
+</div>
+
+                        <h4>Diagrama de Caja (Boxplot)</h4>
+                        <p>Para comparar distribuciones entre grupos:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Boxplot básico</span>
+<span class="code-function">ggplot</span>(iris, <span class="code-function">aes</span>(x = Species, y = Sepal.Length)) <span class="code-operator">+</span>
+  <span class="code-function">geom_boxplot</span>(<span class="code-function">aes</span>(fill = Species)) <span class="code-operator">+</span>
+  <span class="code-function">labs</span>(title = <span class="code-string">"Sepal.Length por Especie"</span>) <span class="code-operator">+</span>
+  <span class="code-function">theme</span>(legend.position = <span class="code-string">"none"</span>)
+
+<span class="code-comment"># Con puntos individuales (jitter)</span>
+<span class="code-function">geom_boxplot</span>(outlier.shape = <span class="code-keyword">NA</span>) <span class="code-operator">+</span>
+  <span class="code-function">geom_jitter</span>(width = <span class="code-number">0.2</span>, alpha = <span class="code-number">0.5</span>)</code></pre>
+</div>
+
+                        <h4>Gráfico de Líneas</h4>
+                        <p>Para visualizar tendencias a lo largo del tiempo:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Crear datos de ejemplo con fecha</span>
+datos_tiempo <span class="code-operator"><-</span> <span class="code-function">data.frame</span>(
+  fecha = <span class="code-function">seq.Date</span>(<span class="code-function">as.Date</span>(<span class="code-string">"2026-01-01"</span>), by = <span class="code-string">"month"</span>, length.out = <span class="code-number">12</span>),
+  valor = <span class="code-function">c</span>(<span class="code-number">10</span>, <span class="code-number">15</span>, <span class="code-number">13</span>, <span class="code-number">18</span>, <span class="code-number">22</span>, <span class="code-number">25</span>, <span class="code-number">23</span>, <span class="code-number">28</span>, <span class="code-number">30</span>, <span class="code-number">27</span>, <span class="code-number">32</span>, <span class="code-number">35</span>)
+)
+
+<span class="code-function">ggplot</span>(datos_tiempo, <span class="code-function">aes</span>(x = fecha, y = valor)) <span class="code-operator">+</span>
+  <span class="code-function">geom_line</span>(color = <span class="code-string">"steelblue"</span>, size = <span class="code-number">1.2</span>) <span class="code-operator">+</span>
+  <span class="code-function">geom_point</span>(color = <span class="code-string">"darkred"</span>, size = <span class="code-number">2</span>) <span class="code-operator">+</span>
+  <span class="code-function">labs</span>(title = <span class="code-string">"Tendencia Mensual"</span>, x = <span class="code-string">"Fecha"</span>, y = <span class="code-string">"Valor"</span>)</code></pre>
+</div>
+
+                        <h4>Faceting: Múltiples Gráficos</h4>
+                        <p>Crear múltiples gráficos por subgrupos:</p>
+
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Faceting por una variable</span>
+<span class="code-function">ggplot</span>(iris, <span class="code-function">aes</span>(x = Sepal.Length, y = Sepal.Width)) <span class="code-operator">+</span>
+  <span class="code-function">geom_point</span>(<span class="code-function">aes</span>(color = Petal.Length)) <span class="code-operator">+</span>
+  <span class="code-function">facet_wrap</span>(<span class="code-operator">~</span>Species) <span class="code-operator">+</span>
+  <span class="code-function">scale_color_gradient</span>(low = <span class="code-string">"blue"</span>, high = <span class="code-string">"red"</span>)
+
+<span class="code-comment"># Faceting por dos variables</span>
+<span class="code-function">facet_grid</span>(fila <span class="code-operator">~</span> columna)</code></pre>
+</div>
+
+                        <div class="info-box">
+                            <h4>📊 Temas de ggplot2</h4>
+                            <p>ggplot2 incluye varios temas predefinidos:</p>
+                            <ul>
+                                <li><code class="inline">theme_minimal()</code> - Limpio y moderno</li>
+                                <li><code class="inline">theme_classic()</code> - Estilo clásico</li>
+                                <li><code class="inline">theme_dark()</code> - Fondo oscuro</li>
+                                <li><code class="inline">theme_bw()</code> - Blanco y negro</li>
+                            </ul>
+                        </div>
+
+                        <h4>Guardar Gráficos</h4>
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Guardar el último gráfico mostrado</span>
+<span class="code-function">ggsave</span>(<span class="code-string">"mi_grafico.png"</span>, width = <span class="code-number">8</span>, height = <span class="code-number">6</span>, dpi = <span class="code-number">300</span>)
+
+<span class="code-comment"># Guardar un gráfico específico</span>
+mi_plot <span class="code-operator"><-</span> <span class="code-function">ggplot</span>(iris, <span class="code-function">aes</span>(x = Species, y = Sepal.Length)) <span class="code-operator">+</span>
+  <span class="code-function">geom_boxplot</span>()
+<span class="code-function">ggsave</span>(<span class="code-string">"boxplot_iris.pdf"</span>, plot = mi_plot)</code></pre>
+</div>
+
+                        <div class="tip-box">
+                            <h4>💡 Recursos de ggplot2</h4>
+                            <ul>
+                                <li><strong>Cheat Sheet:</strong> <a
+                                        href="https://rstudio.github.io/cheatsheets/data-visualization.pdf"
+                                        target="_blank">Data Visualization Cheat Sheet</a></li>
+                                <li><strong>Sitio web:</strong> <a href="https://ggplot2.tidyverse.org/"
+                                        target="_blank">ggplot2.tidyverse.org</a></li>
+                                <li><strong>Galería:</strong> <a href="https://r-graph-gallery.com/" target="_blank">R
+                                        Graph Gallery</a></li>
+                            </ul>
+                        </div>
+                    </section>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- EJERCICIOS -->
+                <section id="ejercicios" class="section-slide">
+                    <h2>Ejercicios Prácticos</h2>
+
+                    <p>A continuación encontrarás ejercicios para practicar los conceptos aprendidos en cada semana.</p>
+
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <div class="exercise-number">1</div>
+                            <h4>Fundamentos de R</h4>
+                        </div>
+                        <p><strong>Crea un script que:</strong></p>
+                        <ol>
+                            <li>Defina variables con tu nombre, edad y ciudad</li>
+                            <li>Cree un vector con tus 5 números favoritos</li>
+                            <li>Calcule la media y suma de esos números</li>
+                            <li>Cree una secuencia del 1 al 100 con incrementos de 5</li>
+                        </ol>
+                    </div>
+
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <div class="exercise-number">2</div>
+                            <h4>Data Frames</h4>
+                        </div>
+                        <p><strong>Crea un data frame con información de 5 películas:</strong></p>
+                        <ol>
+                            <li>Columnas: título, año, género, calificación (1-10)</li>
+                            <li>Filtra las películas con calificación mayor a 7</li>
+                            <li>Ordena por año de lanzamiento</li>
+                            <li>Calcula la calificación promedio por género</li>
+                        </ol>
+                    </div>
+
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <div class="exercise-number">3</div>
+                            <h4>Funciones</h4>
+                        </div>
+                        <p><strong>Crea las siguientes funciones:</strong></p>
+                        <ol>
+                            <li>Una función que convierta grados Celsius a Fahrenheit</li>
+                            <li>Una función que calcule el IMC dado peso y altura</li>
+                            <li>Una función que clasifique el IMC (bajo, normal, sobrepeso, obesidad)</li>
+                            <li>Aplica tus funciones a un vector de 5 personas</li>
+                        </ol>
+                    </div>
+
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <div class="exercise-number">4</div>
+                            <h4>dplyr</h4>
+                        </div>
+                        <p><strong>Usando el dataset iris (incluido en R):</strong></p>
+                        <ol>
+                            <li>Filtra solo las flores de la especie "setosa"</li>
+                            <li>Calcula el promedio de Sepal.Length por especie</li>
+                            <li>Crea una nueva columna con el ratio Sepal.Length/Sepal.Width</li>
+                            <li>Encuentra la especie con el pétalo más largo en promedio</li>
+                        </ol>
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Solución parcial</span>
+<span class="code-function">library</span>(dplyr)
+
+iris <span class="code-operator">%>%</span>
+  <span class="code-function">group_by</span>(Species) <span class="code-operator">%>%</span>
+  <span class="code-function">summarise</span>(
+    promedio_petalo = <span class="code-function">mean</span>(Petal.Length),
+    max_petalo = <span class="code-function">max</span>(Petal.Length)
+  ) <span class="code-operator">%>%</span>
+  <span class="code-function">arrange</span>(<span class="code-function">desc</span>(promedio_petalo))</code></pre>
+</div>
+
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <div class="exercise-number">5</div>
+                            <h4>Visualización con ggplot2</h4>
+                        </div>
+                        <p><strong>Usando el dataset iris, crea los siguientes gráficos:</strong></p>
+                        <ol>
+                            <li>Un scatter plot de Sepal.Length vs Sepal.Width coloreado por especie</li>
+                            <li>Un boxplot que compare Petal.Length entre las tres especies</li>
+                            <li>Un histograma de la distribución de Petal.Width con densidad superpuesta</li>
+                            <li>Un gráfico de barras que muestre el promedio de Petal.Length por especie</li>
+                        </ol>
+                        <div class="sourceCode" data-lang="R">
+<pre><code><span class="code-comment"># Ejemplo de solución para el ejercicio 5.2</span>
+<span class="code-function">library</span>(ggplot2)
+
+<span class="code-function">ggplot</span>(iris, <span class="code-function">aes</span>(x = Species, y = Petal.Length)) <span class="code-operator">+</span>
+  <span class="code-function">geom_boxplot</span>(<span class="code-function">aes</span>(fill = Species)) <span class="code-operator">+</span>
+  <span class="code-function">labs</span>(
+    title = <span class="code-string">"Petal.Length por Especie"</span>,
+    x = <span class="code-string">"Especie"</span>,
+    y = <span class="code-string">"Petal Length (cm)"</span>
+  ) <span class="code-operator">+</span>
+  <span class="code-function">theme_minimal</span>()</code></pre>
+</div>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- RECURSOS -->
+                <section id="recursos" class="section-slide">
+                    <h2>Recursos Adicionales</h2>
+
+                    <h3>Documentación Oficial</h3>
+                    <ul>
+                        <li><a href="https://www.r-project.org/" target="_blank">R Project</a> - Sitio oficial de R</li>
+                        <li><a href="https://posit.co/" target="_blank">Posit (RStudio)</a> - Documentación de RStudio
+                        </li>
+                        <li><a href="https://dplyr.tidyverse.org/" target="_blank">dplyr</a> - Documentación oficial de
+                            dplyr</li>
+                        <li><a href="https://ggplot2.tidyverse.org/" target="_blank">ggplot2</a> - Documentación oficial
+                            de
+                            ggplot2</li>
+                        <li><a href="https://r4ds.had.co.nz/" target="_blank">R for Data Science</a> - Libro gratuito
+                            online
+                        </li>
+                    </ul>
+
+                    <h3>Cheat Sheets</h3>
+                    <ul>
+                        <li><a href="https://rstudio.github.io/cheatsheets/html/rstudio-ide.html"
+                                target="_blank">RStudio
+                                IDE Cheat Sheet</a></li>
+                        <li><a href="https://rstudio.github.io/cheatsheets/html/data-transformation.html"
+                                target="_blank">Data Transformation with dplyr</a></li>
+                        <li><a href="https://rstudio.github.io/cheatsheets/data-visualization.html" target="_blank">Data
+                                Visualization with ggplot2</a></li>
+                        <li><a href="https://rstudio.github.io/cheatsheets/html/rmarkdown.html"
+                                target="_blank">RMarkdown
+                                Cheat Sheet</a></li>
+                    </ul>
+
+                    <h3>Práctica Online</h3>
+                    <ul>
+                        <li><a href="https://www.datacamp.com/" target="_blank">DataCamp</a> - Cursos interactivos de R
+                        </li>
+                        <li><a href="https://swirlstats.com/" target="_blank">Swirl</a> - Aprende R dentro de R</li>
+                        <li><a href="https://exercism.org/tracks/r" target="_blank">Exercism</a> - Ejercicios prácticos
+                            de R
+                        </li>
+                    </ul>
+
+                    <div class="info-box">
+                        <h4>📧 Contacto</h4>
+                        <p>Para dudas sobre el contenido del módulo, contacta al profesor:</p>
+                        <p><strong>Javier Mauricio Sierra</strong></p>
+                        <p>Período: 18 de marzo - 7 de mayo de 2026</p>
+                    </div>
+                </section>
+
+                <footer
+                    style="margin-top: 80px; padding-top: 40px; border-top: 2px solid #E2E8F0; text-align: center; color: #64748B;">
+                    <p class="text-sm">Fundamentos de Estadística - Módulo 1</p>
+                    <p class="text-xs mt-2">Maestría en Comunicación, Culturas Digitales y Visualización de Datos</p>
+                    <p class="text-xs mt-1">Universidad Santo Tomás - 2026</p>
+                </footer>
+            </main>
+        </div>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scrollToTopBtn" title="Volver arriba" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Navigation Arrows -->
+    <button class="nav-arrow prev" id="prevBtn" title="Sección anterior">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="nav-arrow next" id="nextBtn" title="Siguiente sección">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+
+    <!-- Section Counter -->
+    <div class="section-counter" id="sectionCounter">
+        1 / 7
+    </div>
+
+    <!-- Progress Dots -->
+    <div class="progress-dots" id="progressDots"></div>
+
+    <!-- Keyboard Hint -->
+    <div class="keyboard-hint" id="keyboardHint">
+        <kbd>←</kbd> <kbd>→</kbd> para navegar
+    </div>
+
+    <script>
+        // Section navigation
+        const slides = document.querySelectorAll('.section-slide');
+        let currentSlide = 0;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
+                if (i === index) {
+                    slide.classList.add('active');
+                }
+            });
+
+            // Update navigation
+            updateNavigation();
+            updateProgressDots();
+            updateCounter();
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        function updateNavigation() {
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === slides.length - 1;
+        }
+
+        function updateCounter() {
+            document.getElementById('sectionCounter').textContent = `${currentSlide + 1} / ${slides.length}`;
+        }
+
+        function createProgressDots() {
+            const container = document.getElementById('progressDots');
+            container.innerHTML = '';
+            slides.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot';
+                if (i === currentSlide) dot.classList.add('active');
+                dot.addEventListener('click', () => {
+                    currentSlide = i;
+                    showSlide(currentSlide);
+                });
+                container.appendChild(dot);
+            });
+        }
+
+        function updateProgressDots() {
+            const dots = document.querySelectorAll('.progress-dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        // Event listeners
+        document.getElementById('prevBtn').addEventListener('click', prevSlide);
+        document.getElementById('nextBtn').addEventListener('click', nextSlide);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                document.body.classList.add('prevent-scroll');
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                document.body.classList.add('prevent-scroll');
+                prevSlide();
+            }
+        });
+
+        // Hide keyboard hint after first interaction
+        let hintVisible = true;
+        document.addEventListener('keydown', () => {
+            if (hintVisible) {
+                document.getElementById('keyboardHint').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('keyboardHint').style.display = 'none';
+                }, 300);
+                hintVisible = false;
+            }
+        });
+
+        // Initialize
+        createProgressDots();
+        showSlide(0);
+
+        // Setup VS Code style code blocks
+        setupCodeBlocks();
+
+        // Sidebar toggle functionality
+        const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+        const sidebarPanel = document.getElementById('sidebar-panel');
+        const sidebarToggleIcon = document.getElementById('sidebarToggleIcon');
+
+        sidebarToggleBtn.addEventListener('click', () => {
+            sidebarPanel.classList.toggle('collapsed');
+            if (sidebarPanel.classList.contains('collapsed')) {
+                sidebarToggleIcon.className = 'fas fa-bars text-sm';
+            } else {
+                sidebarToggleIcon.className = 'fas fa-times text-sm';
+            }
+        });
+
+        // Sidebar navigation
+        const navButtons = document.querySelectorAll('.sidebar-nav-item');
+        navButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.getAttribute('data-target');
+
+                // Find which section contains this target
+                slides.forEach((slide, index) => {
+                    if (slide.id === target || slide.contains(document.getElementById(target))) {
+                        currentSlide = index;
+                        showSlide(currentSlide);
+                    }
+                });
+
+                // Update active state
+                navButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        // Scroll to top button
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('visible');
+            } else {
+                scrollToTopBtn.classList.remove('visible');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Initialize highlight.js for code blocks
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightElement(block);
+            });
+        });
+
+        // ===== VS Code Style Code Blocks =====
+        function setupCodeBlocks() {
+            const blocks = document.querySelectorAll('div.sourceCode');
+            blocks.forEach(function (block) {
+                const lang = block.getAttribute('data-lang') || 'R';
+
+                // Si ya tiene header, ignorar
+                if (block.querySelector('.sourceCode-header')) return;
+
+                const pre = block.querySelector('pre');
+                if (!pre) return;
+
+                // Crear header
+                const header = document.createElement('div');
+                header.className = 'sourceCode-header';
+
+                const title = document.createElement('span');
+                title.className = 'sourceCode-title';
+                title.textContent = lang + ' - Ejemplo';
+
+                const buttons = document.createElement('div');
+                buttons.className = 'sourceCode-buttons';
+
+                const toggleBtn = document.createElement('button');
+                toggleBtn.type = 'button';
+                toggleBtn.onclick = function () { toggleCodeBlock(this); };
+                toggleBtn.innerHTML = '<i class="fas fa-eye"></i> <span>Ocultar</span>';
+
+                const copyBtn = document.createElement('button');
+                copyBtn.type = 'button';
+                copyBtn.onclick = function () { copyCodeBlock(this); };
+                copyBtn.innerHTML = '<i class="fas fa-copy"></i> <span>Copiar</span>';
+
+                buttons.appendChild(toggleBtn);
+                buttons.appendChild(copyBtn);
+                header.appendChild(title);
+                header.appendChild(buttons);
+                block.insertBefore(header, block.firstChild);
+
+                // Aplicar highlight.js
+                const code = block.querySelector('code');
+                if (code && window.hljs) {
+                    code.className = 'language-' + lang.toLowerCase();
+                    hljs.highlightElement(code);
+                }
+            });
+        }
+
+        function toggleCodeBlock(btn) {
+            const wrapper = btn.closest('div.sourceCode');
+            const pre = wrapper.querySelector('pre');
+            const span = btn.querySelector('span');
+
+            if (wrapper.classList.contains('collapsed')) {
+                wrapper.classList.remove('collapsed');
+                btn.innerHTML = '<i class="fas fa-eye"></i> <span>Ocultar</span>';
+            } else {
+                wrapper.classList.add('collapsed');
+                btn.innerHTML = '<i class="fas fa-eye-slash"></i> <span>Mostrar</span>';
+            }
+        }
+
+        function copyCodeBlock(btn) {
+            const wrapper = btn.closest('div.sourceCode');
+            const code = wrapper.querySelector('code');
+            if (!code) return;
+            const text = code.textContent || code.innerText;
+            navigator.clipboard.writeText(text).then(function () {
+                btn.innerHTML = '<i class="fas fa-check"></i> <span>¡Copiado!</span>';
+                btn.classList.add('copied');
+                setTimeout(function () {
+                    btn.innerHTML = '<i class="fas fa-copy"></i> <span>Copiar</span>';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+
+</html>

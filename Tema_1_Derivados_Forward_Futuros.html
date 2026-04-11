@@ -1,0 +1,2117 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Material de estudio sobre Derivados, Contratos Forward y Futuros - Universidad Santo Tomás">
+    <meta name="author" content="Universidad Santo Tomás - Facultad de Estadística">
+    <meta content="#3D008D" name="theme-color" />
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>" />
+    <title>Derivados, Contratos Forward y Futuros - Material de Estudio USTA</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3D008D',
+                        secondary: '#ED1E79',
+                        navy: '#001A4D',
+                        gold: '#FDB913',
+                        bg: '#F8FAFC',
+                        surface: '#FFFFFF',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --usta-primary: #3D008D;
+            --usta-secondary: #ED1E79;
+            --usta-navy: #001A4D;
+            --usta-navy-light: #002868;
+            --usta-gold: #FDB913;
+            --usta-bg: #F8FAFC;
+            --usta-surface: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #F8FAFC;
+            color: #1E293B;
+            scroll-behavior: smooth;
+        }
+
+        code, pre {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .usta-gradient {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+        }
+
+        .usta-header {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.08) 0%, rgba(237, 30, 121, 0.08) 100%);
+            border: 1px solid rgba(61, 0, 141, 0.2);
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 3.5rem;
+            height: 3.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(61, 0, 141, 0.4);
+            transition: all 0.3s ease;
+            z-index: 50;
+            border: none;
+        }
+
+        .scroll-to-top.visible {
+            display: flex;
+        }
+
+        .scroll-to-top:hover {
+            background: linear-gradient(140deg, #4A00A8 0%, #FF2D8A 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(61, 0, 141, 0.5);
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #3D008D, #ED1E79);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #4A00A8, #FF2D8A);
+        }
+
+        button:focus-visible, a:focus-visible {
+            outline: 2px solid #ED1E79;
+            outline-offset: 2px;
+        }
+
+        .module-content h2 {
+            color: #3D008D;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid #ED1E79;
+        }
+
+        .module-content h3 {
+            color: #3D008D;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.75rem 0 1rem 0;
+        }
+
+        .module-content h4 {
+            color: #ED1E79;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        .module-content p {
+            margin-bottom: 1rem;
+            text-align: justify;
+            line-height: 1.8;
+        }
+
+        .module-content ul, .module-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .module-content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.7;
+        }
+
+        .module-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .module-content th, .module-content td {
+            padding: 1rem 1.25rem;
+            text-align: center;
+        }
+
+        .module-content th {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .module-content tr:nth-child(even) {
+            background: rgba(61, 0, 141, 0.03);
+        }
+
+        .module-content tr:hover {
+            background: rgba(61, 0, 141, 0.08);
+        }
+
+        .module-content code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #3D008D;
+            background: rgba(61, 0, 141, 0.08);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        .module-content pre code {
+            background: transparent;
+            padding: 0;
+            color: #d4d4d4;
+        }
+
+        .module-content strong { color: #3D008D; }
+        .module-content em { color: #ED1E79; }
+
+        .katex-display {
+            margin: 1.25em 0;
+            overflow-x: auto;
+        }
+
+        .definition-box {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-left: 4px solid #3b82f6;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .definition-box h4 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: #1e40af;
+            background: transparent;
+            padding: 0;
+            border: none;
+        }
+
+        .example-box {
+            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+            border-left: 4px solid var(--usta-primary);
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .example-box h4 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: var(--usta-primary);
+            background: transparent;
+            padding: 0;
+            border: none;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border-left: 4px solid #ef4444;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .warning-box h4 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: #991b1b;
+            background: transparent;
+            padding: 0;
+            border: none;
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid var(--usta-gold);
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .concept-box h4 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: #92400e;
+            font-weight: 700;
+            background: transparent;
+            padding: 0;
+            border: none;
+        }
+
+        .formula-box {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.05) 0%, rgba(237, 30, 121, 0.05) 100%);
+            border: 1px solid rgba(61, 0, 141, 0.2);
+            border-left: 4px solid var(--usta-primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            overflow-x: auto;
+        }
+
+        .interpretation-box {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border-left: 4px solid #10b981;
+            padding: 1rem 1.25rem;
+            margin: 1rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .interpretation-box strong { color: #065f46; }
+
+        .nota {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-left: 4px solid #10B981;
+            margin: 1.5rem 0;
+        }
+
+        .nota h4 {
+            color: #059669;
+            margin-top: 0;
+        }
+
+        .resumen {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid var(--usta-gold);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .resumen h4 {
+            color: #92400e;
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+            background: transparent;
+            padding: 0;
+            border: none;
+        }
+
+        .concepto-clave {
+            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+            border-left: 4px solid var(--usta-primary);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .concepto-clave h4 {
+            color: var(--usta-primary);
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+            background: transparent;
+            padding: 0;
+            border: none;
+        }
+
+        .module-content .output {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            border-left: 4px solid #10B981;
+            margin: 1rem 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+        }
+
+        .module-content .ejercicio {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.08) 0%, rgba(237, 30, 121, 0.05) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #ED1E79;
+            margin: 1.5rem 0;
+        }
+
+        .module-content .ejercicio h4 {
+            color: #3D008D;
+            margin-top: 0;
+        }
+
+        .exercise-box {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 2px solid #0ea5e9;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .exercise-box h4 {
+            color: #0369a1;
+            border-left: 4px solid #0ea5e9;
+            background: transparent;
+            margin: 0 0 1rem 0;
+            padding: 0.5rem 1rem;
+        }
+
+        .solution-box {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid #22c55e;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .solution-box h4 {
+            color: #15803d;
+            border-left: 4px solid #22c55e;
+            background: transparent;
+            margin: 0 0 1rem 0;
+            padding: 0.5rem 1rem;
+        }
+
+        .sourceCode-wrapper {
+            position: relative;
+            margin: 1.75rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #1e1e1e;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        .sourceCode-titlebar {
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            height: 36px;
+            background: #323233;
+            border-bottom: 1px solid #252526;
+            user-select: none;
+        }
+
+        .sourceCode-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .sourceCode-dots span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .sourceCode-dots .dot-close { background: #ff5f57; }
+        .sourceCode-dots .dot-min { background: #ffbd2e; }
+        .sourceCode-dots .dot-max { background: #28c940; }
+
+        .sourceCode-tab {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 12px;
+            height: 100%;
+            background: #1e1e1e;
+            border-top: 2px solid #007acc;
+            border-right: 1px solid #252526;
+            font-size: 0.78rem;
+            color: #cccccc;
+        }
+
+        .sourceCode-tab .tab-icon { width: 14px; height: 14px; }
+        .sourceCode-tab .tab-icon.python { color: #f7c948; }
+
+        .sourceCode-body {
+            display: flex;
+            margin: 0;
+            overflow-x: auto;
+            background: #1e1e1e;
+        }
+
+        .sourceCode-gutter {
+            padding: 16px 0;
+            text-align: right;
+            user-select: none;
+            color: #858585;
+            font-size: 0.82rem;
+            line-height: 1.65;
+            font-family: 'Fira Code', monospace;
+            min-width: 40px;
+            padding-right: 12px;
+            padding-left: 12px;
+            border-right: 1px solid #2d2d2d;
+            background: #1e1e1e;
+            flex-shrink: 0;
+        }
+
+        .sourceCode-wrapper pre {
+            margin: 0;
+            padding: 16px;
+            overflow-x: auto;
+            background: #1e1e1e;
+            flex: 1;
+        }
+
+        .sourceCode-wrapper code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.87rem;
+            line-height: 1.65;
+            color: #d4d4d4;
+            background: transparent !important;
+        }
+
+        blockquote {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.08) 0%, rgba(237, 30, 121, 0.08) 100%);
+            border-left: 4px solid var(--usta-primary);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+            font-style: italic;
+            color: #4A5568;
+        }
+
+        blockquote p { margin: 0; }
+
+        #sidebar-panel {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            width: 16rem;
+            min-width: 16rem;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            overflow-y: auto;
+            transition: width 0.3s ease, min-width 0.3s ease, opacity 0.25s ease;
+            z-index: 40;
+        }
+
+        #sidebar-panel.collapsed {
+            width: 0;
+            min-width: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-brand h2 {
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        .sidebar-brand p {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 0.25rem;
+            margin-bottom: 0;
+            text-align: left;
+        }
+
+        .sidebar-nav {
+            padding: 1rem;
+        }
+
+        .sidebar-nav-item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 0.65rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            text-align: left;
+            margin-bottom: 0.25rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: rgba(255, 255, 255, 0.6);
+            background: transparent;
+        }
+
+        .sidebar-nav-item:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-nav-item.active {
+            color: white;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            box-shadow: 0 4px 12px rgba(61, 0, 141, 0.3);
+        }
+
+        .sidebar-nav-item .check-mark {
+            color: #10B981;
+            flex-shrink: 0;
+        }
+
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 50;
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(61, 0, 141, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-toggle-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 18px rgba(61, 0, 141, 0.5);
+        }
+
+        .main-layout {
+            display: flex;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 1.5rem 0;
+        }
+
+        .table-responsive table { margin: 0; }
+
+        @media print {
+            #sidebar-panel, .sidebar-toggle-btn, .scroll-to-top { display: none !important; }
+            .main-content { margin-left: 0 !important; padding: 0 !important; }
+            body { background: white !important; }
+        }
+
+        @media (max-width: 768px) {
+            .main-layout { flex-direction: column; }
+            .main-content { margin-left: 0; padding: 1rem; }
+            #sidebar-panel { 
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                width: 16rem;
+                z-index: 100;
+            }
+            #sidebar-panel.show { display: flex; }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+
+    <button class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Mostrar/Ocultar menú">
+        <i class="fas fa-bars text-sm" id="sidebarToggleIcon"></i>
+    </button>
+
+    <div class="main-layout">
+
+        <div id="sidebar-panel">
+            <div class="sidebar-brand">
+                <h2><i class="fas fa-chart-line"></i> <span>Derivados <span style="color: #FDB913;">Forward</span></span></h2>
+                <p>Finanzas Cuantitativas • USTA 2026</p>
+            </div>
+            <nav class="sidebar-nav" id="module-nav"></nav>
+        </div>
+
+        <div class="flex-grow flex flex-col" style="min-width:0;">
+            <main class="flex-grow bg-white rounded-tl-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div id="content-area" class="p-6 md:p-10 module-content"></div>
+            </main>
+        </div>
+    </div>
+
+    <footer class="usta-header mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <i class="fas fa-book-open"></i> Referencias Bibliográficas
+            </h3>
+            <ul class="space-y-3 text-white/90 text-sm">
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Working, H. (1949). <em class="text-gold">The Theory of Price of Storage</em>. American Journal of Agricultural Economics.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Hull, J. C. (2018). <em class="text-gold">Options, Futures, and Other Derivatives</em> (10th ed.). Pearson.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Schwartz, E. (1997). <em class="text-gold">The Stochastic Behavior of Commodity Prices</em>. Journal of Finance.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Ederington, L. (1979). <em class="text-gold">The Hedging Performance of the New Futures Markets</em>. Journal of Finance.</span>
+                </li>
+            </ul>
+            <div class="mt-6 pt-6 border-t border-white/20 text-center">
+                <p class="text-white font-medium">Material de Estudio — <span class="text-gold">USTA</span></p>
+                <p class="text-xs mt-1 text-white/60">Derivados, Contratos Forward y Futuros • Tema 1</p>
+            </div>
+        </div>
+    </footer>
+
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="Volver arriba">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        const courseData = {
+            title: "Derivados, Contratos Forward y Futuros",
+            modules: [
+                { title: "1. Objetivos de Aprendizaje" },
+                { title: "2. Fundamentos Teóricos" },
+                { title: "3. Desarrollo Formal" },
+                { title: "4. Ejemplo Aplicado" },
+                { title: "5. Ejercicios Prácticos" },
+                { title: "6. Cuestionario" },
+                { title: "7. Referencias" },
+                { title: "8. Actividad Aplicada" }
+            ]
+        };
+
+        let currentModuleIndex = 0;
+        let completedModules = new Set();
+
+        const moduleNav = document.getElementById('module-nav');
+        const contentArea = document.getElementById('content-area');
+
+        function init() {
+            renderNav();
+            loadModule(0);
+        }
+
+        function renderNav() {
+            moduleNav.innerHTML = '';
+            courseData.modules.forEach((mod, index) => {
+                const btn = document.createElement('button');
+                const isActive = index === currentModuleIndex;
+                const isDone = completedModules.has(index);
+                btn.className = `sidebar-nav-item${isActive ? ' active' : ''}`;
+                btn.innerHTML = `<span style="line-height:1.3;">${mod.title}</span>${isDone ? '<span class="check-mark">✓</span>' : ''}`;
+                btn.onclick = () => loadModule(index);
+                moduleNav.appendChild(btn);
+            });
+        }
+
+        function loadModule(index) {
+            currentModuleIndex = index;
+            renderNav();
+            const template = document.getElementById(`module-${index + 1}`);
+            if (template) {
+                contentArea.innerHTML = '';
+                const content = template.content.cloneNode(true);
+                contentArea.appendChild(content);
+
+                const navButtons = document.createElement('div');
+                navButtons.className = 'mt-10 pt-6 border-t border-gray-200 flex justify-between items-center';
+                navButtons.innerHTML = `
+                    ${index > 0 ? `<button onclick="loadModule(${index - 1})" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-secondary transition-colors"><span>←</span> Anterior</button>` : '<div></div>'}
+                    <button onclick="markComplete(${index})" class="px-4 py-2 text-sm font-medium text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors">${completedModules.has(index) ? '✓ Completado' : 'Marcar como completado'}</button>
+                    ${index < courseData.modules.length - 1 ? `<button onclick="loadModule(${index + 1})" class="flex items-center gap-2 px-4 py-2 bg-secondary hover:bg-secondary/90 text-white rounded-lg text-sm font-medium transition-colors">Siguiente <span>→</span></button>` : '<div class="text-center"><span class="text-emerald-600 font-bold">🎉 ¡Tema Completado!</span></div>'}
+                `;
+                contentArea.appendChild(navButtons);
+
+                setupCodeBlocks();
+                wrapTables();
+
+                if (typeof renderMathInElement !== 'undefined') {
+                    renderMathInElement(contentArea, {
+                        delimiters: [
+                            { left: '$$', right: '$$', display: true },
+                            { left: '$', right: '$', display: false }
+                        ],
+                        throwOnError: false
+                    });
+                }
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function markComplete(index) {
+            if (!completedModules.has(index)) {
+                completedModules.add(index);
+                renderNav();
+                loadModule(index);
+            }
+        }
+
+        function wrapTables() {
+            contentArea.querySelectorAll('table').forEach(function (table) {
+                if (!table.closest('.table-responsive')) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'table-responsive';
+                    table.parentNode.insertBefore(wrapper, table);
+                    wrapper.appendChild(table);
+                }
+            });
+        }
+
+        function setupCodeBlocks() {
+            const pres = contentArea.querySelectorAll('pre');
+            pres.forEach(function (pre) {
+                if (pre.closest('.sourceCode-wrapper')) return;
+
+                const code = pre.querySelector('code');
+                if (!code) return;
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'sourceCode-wrapper';
+
+                const titlebar = document.createElement('div');
+                titlebar.className = 'sourceCode-titlebar';
+                titlebar.innerHTML = `
+                    <div class="sourceCode-dots"><span class="dot-close"></span><span class="dot-min"></span><span class="dot-max"></span></div>
+                    <div class="sourceCode-tab"><i class="fab fa-python tab-icon python"></i>cobertura_derivados.py</div>
+                `;
+
+                const rawText = code.textContent;
+                const lines = rawText.split('\n');
+                if (lines[lines.length - 1].trim() === '') lines.pop();
+                let gutterHTML = '';
+                for (let i = 1; i <= lines.length; i++) {
+                    gutterHTML += '<div>' + i + '</div>';
+                }
+
+                const bodyWrapper = document.createElement('div');
+                bodyWrapper.className = 'sourceCode-body';
+                bodyWrapper.innerHTML = `<div class="sourceCode-gutter">${gutterHTML}</div>`;
+
+                pre.parentNode.insertBefore(wrapper, pre);
+                wrapper.appendChild(titlebar);
+                wrapper.appendChild(bodyWrapper);
+                bodyWrapper.appendChild(pre);
+
+                if (window.hljs) {
+                    code.classList.add('language-python');
+                    hljs.highlightElement(code);
+                }
+            });
+        }
+
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            scrollToTopBtn.classList.toggle('visible', window.scrollY > 300);
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        const sidebarPanel = document.getElementById('sidebar-panel');
+        const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+        let sidebarCollapsed = false;
+        if (sidebarToggleBtn && sidebarPanel) {
+            sidebarToggleBtn.addEventListener('click', () => {
+                sidebarCollapsed = !sidebarCollapsed;
+                sidebarPanel.classList.toggle('collapsed', sidebarCollapsed);
+                sidebarToggleBtn.innerHTML = sidebarCollapsed
+                    ? '<i class="fas fa-chevron-right"></i>'
+                    : '<i class="fas fa-bars text-sm"></i>';
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(init, 100);
+        });
+    </script>
+
+    <template id="module-1">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">Módulo 1</div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Objetivos de Aprendizaje</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Comprender y aplicar instrumentos derivados lineales con bases estadísticas rigurosas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <p>El diseño de este módulo obedece a la necesidad de estructurar un marco analítico riguroso para la comprensión y aplicación de instrumentos derivados lineales. Al finalizar el estudio exhaustivo de este tema, el investigador y profesional en finanzas cuantitativas poseerá las competencias técnicas necesarias para:</p>
+
+            <ol>
+                <li><strong>Diferenciar y modelar matemáticamente</strong> las discrepancias de valoración estructural entre los contratos a plazo (forward contracts) y los contratos de futuros (futures contracts), demostrando analíticamente el impacto del mecanismo de liquidación diaria o valoración a mercado (mark-to-market) y las tasas de interés estocásticas sobre la fijación de precios mediante el cálculo del ajuste por convexidad (convexity adjustment).</li>
+                <li><strong>Derivar e interpretar</strong> el modelo de costo de acarreo (cost of carry) aplicable tanto a activos de inversión como a activos de consumo, incorporando variables estocásticas como el rendimiento de conveniencia (convenience yield) y los costos de almacenamiento (storage costs) variables en el tiempo, analizando su impacto en la estructura temporal de los precios.</li>
+                <li><strong>Calcular empírica y teóricamente</strong> el ratio de cobertura de mínima varianza (minimum variance hedge ratio) empleando técnicas econométricas que abarcan desde Mínimos Cuadrados Ordinarios (Ordinary Least Squares, OLS) hasta modelos de cointegración, fundamentando las decisiones en la teoría de carteras de Johnson y Stein.</li>
+                <li><strong>Diseñar e implementar</strong> algoritmos computacionales en Python para estimar dinámicamente la correlación entre activos en el mercado al contado (spot market) y el mercado de derivados, aplicando el ajuste de cola (tailing the hedge) para optimizar el número de contratos en posiciones de cobertura sujetas a márgenes de variación diaria.</li>
+                <li><strong>Evaluar estadísticamente</strong> la efectividad de una estrategia de cobertura midiendo la reducción de la varianza residual y cuantificando el riesgo de base (basis risk), contrastando empíricamente las propiedades de reversión a la media (mean reversion) lineal y no lineal en la base de diferentes clases de activos.</li>
+            </ol>
+
+            <div class="concept-box">
+                <h4><i class="fas fa-info-circle"></i> Competencias a Desarrollar</h4>
+                <ul>
+                    <li>Comprensión de la microestructura de mercados Forward vs. Futuros</li>
+                    <li>Modelamiento estocástico de precios de derivados</li>
+                    <li>Implementación de estrategias de cobertura óptima</li>
+                    <li>Análisis econométrico de series temporales financieras</li>
+                </ul>
+            </div>
+        </div>
+    </template>
+
+    <template id="module-2">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">Módulo 2</div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Fundamentos Teóricos y Estadísticos</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">📚</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Comprender la naturaleza institucional y las propiedades estadísticas de los derivados.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2>2.1. Naturaleza Institucional: Contratos Forward vs. Contratos de Futuros</h2>
+
+            <p>A nivel macroeconómico y fundamental, los contratos <em>forward</em> y los futuros cumplen una función económica equivalente: permiten a dos contrapartes fijar en el tiempo presente ($t$) el precio exacto de una transacción física o financiera que ocurrirá en una fecha de vencimiento futura ($T$). Sin embargo, la microestructura de sus respectivos mercados introduce divergencias estadísticas y financieras críticas.</p>
+
+            <p>Los contratos <em>forward</em> son instrumentos extrabursátiles (Over-The-Counter, OTC) estructurados a la medida de las necesidades de flujo de caja de las contrapartes. En este ecosistema, el riesgo de crédito (credit risk) o riesgo de contraparte es bilateral, asimétrico y acumulativo, dado que la liquidación del contrato ocurre íntegramente en la fecha de vencimiento. Matemáticamente, el flujo de caja terminal en $T$ para una posición larga (long position) se define como $S_T - K$, donde $S_T$ es el precio <em>spot</em> al vencimiento y $K$ es el precio de entrega pactado en $t$. Al no existir flujos intermedios, el valor presente del contrato fluctúa libremente sin requerimientos de capital inmovilizado.</p>
+
+            <p>Por el contrario, los contratos de futuros se negocian en bolsas organizadas (por ejemplo, el Chicago Mercantile Exchange, CME). Su característica institucional definitoria es la interposición de una cámara de compensación (clearinghouse) que actúa como contraparte central, eliminando el riesgo de crédito bilateral directo. Para garantizar el cumplimiento, la cámara impone el mecanismo de <strong>valoración a mercado diaria</strong> (mark-to-market). Esta liquidación diaria transforma un único y potencialmente catastrófico riesgo de crédito al vencimiento en una serie de riesgos de liquidación diarios diminutos, mitigando drásticamente el riesgo de incumplimiento sistémico.</p>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Característica Estructural</th>
+                            <th>Contrato Forward (OTC)</th>
+                            <th>Contrato de Futuros (Exchange-Traded)</th>
+                            <th>Impacto Estadístico y Financiero</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Estandarización</strong></td>
+                            <td>Personalizado (tamaño, fecha, subyacente)</td>
+                            <td>Altamente estandarizado</td>
+                            <td>Los futuros presentan mayor liquidez y menor bid-ask spread, reduciendo el ruido de microestructura</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Riesgo de Contraparte</strong></td>
+                            <td>Alto y bilateral (acumulativo hasta $T$)</td>
+                            <td>Prácticamente nulo (mitigado por clearinghouse)</td>
+                            <td>La prima de riesgo de impago se incorpora en el precio forward, pero no en el precio del futuro</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Liquidación</strong></td>
+                            <td>Único pago al vencimiento en $T$</td>
+                            <td>Liquidación diaria (mark-to-market)</td>
+                            <td>Genera dependencia de la trayectoria de las tasas de interés (convexidad)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Requerimientos de Capital</strong></td>
+                            <td>Generalmente nulos o basados en líneas de crédito</td>
+                            <td>Margen inicial y margen de mantenimiento estrictos</td>
+                            <td>El costo de oportunidad del capital inmovilizado afecta el rendimiento neto de la estrategia</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>2.2. Conexión con la Teoría de la Medida y Procesos Estocásticos</h2>
+
+            <p>El Teorema Fundamental de la Valoración de Activos establece que, en ausencia de oportunidades de arbitraje (no-arbitrage pricing), el precio de cualquier derivado debe ser una martingala bajo la medida neutral al riesgo $\mathbb{Q}$.</p>
+
+            <p>El precio <em>forward</em> $f_{t,T}$ pactado en el momento $t$ para entrega en $T$ se define estructuralmente de tal forma que el valor inicial del contrato para ambas partes sea exactamente cero. Descontando a la tasa libre de riesgo determinista $r$, la ecuación de fijación de precios dicta:</p>
+
+            <div class="formula-box">
+                $$0 = \mathbb{E}^{\mathbb{Q}} \left[ e^{-r(T-t)} \left( S_T - f_{t,T} \right) \right]$$
+            </div>
+
+            <p>Dado que el precio $f_{t,T}$ es conocido y pactado en $t$ (es decir, es $\mathcal{F}_t$-medible con respecto a la filtración de información disponible), se puede extraer del operador de expectativa, deduciendo que el precio <em>forward</em> es simplemente la expectativa neutral al riesgo del precio <em>spot</em> terminal:</p>
+
+            <div class="formula-box">
+                $$f_{t,T} = \mathbb{E}^{\mathbb{Q}}[S_T]$$
+            </div>
+
+            <p>Si las tasas de interés intertemporales son perfectamente deterministas, se demuestra matemáticamente que el precio del futuro $F_{t,T}$ (cotizado en bolsa con liquidación diaria) coincide de manera exacta con el precio <em>forward</em> $f_{t,T}$. Sin embargo, la evidencia empírica rechaza la hipótesis de tasas deterministas. Cuando las tasas son estocásticas ($r_t$), el proceso de liquidación diaria del futuro genera una correlación endógena entre los cambios en el precio del futuro y las variaciones en la tasa de interés de financiamiento. Esta interacción dinámica rompe la equivalencia teórica $F_{t,T} = f_{t,T}$ y da lugar al fenómeno conocido como <strong>ajuste por convexidad</strong> (convexity adjustment), el cual será formalizado exhaustivamente en la Sección 3.3.</p>
+
+            <h2>2.3. Propiedades Estadísticas de la Base y Reversión a la Media</h2>
+
+            <p>En la econometría de series temporales financieras, la base (basis) en el tiempo $t$ se define de forma estándar como la divergencia contemporánea entre el precio al contado $S_t$ (precio spot en el momento $t$) y el precio del futuro $F_{t,T}$ cotizado en $t$ para vencimiento en $T$:</p>
+
+            <div class="formula-box">
+                $$b_t = S_t - F_{t,T}$$
+            </div>
+
+            <p>A medida que el tiempo converge hacia la fecha de vencimiento ($t \to T$), el principio estricto de no arbitraje exige que $F_{T,T} = S_T$, fenómeno conocido como convergencia de la base.</p>
+
+            <p>La literatura especializada en microestructura de mercados demuestra que la base exhibe propiedades de reversión a la media (mean reversion) altamente significativas. Investigaciones avanzadas, como las de Sarno y Monoyios (2002), han demostrado empíricamente utilizando métodos de integración Montecarlo que la reversión a la media de la base en futuros sobre índices bursátiles (como el S&P 500 y el FTSE 100) <strong>no es un proceso lineal</strong>.</p>
+
+            <div class="interpretation-box">
+                <h4 style="margin-top:0; color:#065f46;"><i class="fas fa-lightbulb"></i> Reversión a la Media No Lineal</h4>
+                <p>Para choques <strong>pequeños</strong> en el nivel de la base, la serie muestra una persistencia sustancial (comportamiento cercano a una caminata aleatoria) debido a que la desviación no supera los costos de transacción bidireccionales. No obstante, para choques <strong>grandes</strong> que cruzan los umbrales de no arbitraje, la base exhibe una reversión a la media altamente no lineal y violenta hacia su valor de equilibrio, impulsada por la ejecución algorítmica de estrategias de arbitraje.</p>
+            </div>
+
+            <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> Riesgo de Base</h4>
+                <p>La volatilidad estocástica de la base constituye el riesgo de base. Este es el riesgo fundamental residual que asume un gestor de cartera (hedger) al diseñar estrategias de cobertura imperfectas, donde el activo subyacente de la exposición física difiere en naturaleza, calidad o fecha de vencimiento del activo de cobertura empleado (cobertura cruzada o cross-hedging).</p>
+            </div>
+        </div>
+    </template>
+
+    <template id="module-3">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">Módulo 3</div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Desarrollo Formal</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🔬</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Formalizar las relaciones estocásticas de arbitraje y optimización de carteras.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2>3.1. Notación y Supuestos</h2>
+
+            <ul>
+                <li><strong>$t$:</strong> Momento actual de valoración (continuo)</li>
+                <li><strong>$T$:</strong> Fecha de vencimiento y liquidación del contrato</li>
+                <li><strong>$S_t$:</strong> Precio del activo subyacente en el mercado <em>spot</em> en $t$</li>
+                <li><strong>$F_{t,T}$:</strong> Precio del futuro cotizado en $t$ para entrega en $T$</li>
+                <li><strong>$r$:</strong> Tasa de interés libre de riesgo continua y anualizada</li>
+                <li><strong>$q$:</strong> Tasa de dividendo continuo anualizado (aplicable a índices bursátiles)</li>
+                <li><strong>$u$:</strong> Costo de almacenamiento (storage cost) proporcional, continuo y anualizado</li>
+                <li><strong>$y$:</strong> Rendimiento de conveniencia continuo (convenience yield)</li>
+                <li><strong>$\sigma_S, \sigma_F$:</strong> Volatilidades condicionales del activo <em>spot</em> y del futuro, respectivamente</li>
+                <li><strong>$\rho$:</strong> Coeficiente de correlación de Pearson contemporáneo entre los retornos de $S$ y $F$</li>
+            </ul>
+
+            <div class="concept-box">
+                <h4><i class="fas fa-info-circle"></i> Supuestos</h4>
+                <p>Mercados financieramente perfectos: liquidez infinita, ausencia de costos de transacción, capacidad de venta en corto con uso total de los ingresos, y divisibilidad continua de activos. La dinámica del precio spot sigue un Movimiento Browniano Geométrico (GBM) bajo la medida de probabilidad física $\mathbb{P}$:</p>
+                <div class="formula-box">
+                    $$dS_t = \mu S_t dt + \sigma_S S_t dW_t$$
+                </div>
+                <p>Donde $\mu$ es el parámetro de deriva esperada (drift) y $W_t$ es un proceso estándar de Wiener (movimiento Browniano estándar), es decir, un proceso estocástico con $W_0 = 0$, incrementos independientes y $W_t - W_s \sim \mathcal{N}(0, t-s)$. El término $dW_t$ representa un shock aleatorio infinitesimal con distribución $\mathcal{N}(0, dt)$, siendo la fuente de aleatoriedad en la evolución del precio.</p>
+            </div>
+
+            <h2>3.2. El Modelo Generalizado de Costo de Acarreo</h2>
+
+            <h3>3.2.1. Valoración de Activos de Inversión Puros</h3>
+
+            <p>Para un activo de inversión puro con tasa de dividendo continua $q$:</p>
+
+            <div class="formula-box">
+                $$F_{t,T} = S_t e^{(r - q)(T - t)}$$
+            </div>
+
+            <div class="example-box">
+                <h4><i class="fas fa-calculator"></i> Demostración por No Arbitraje</h4>
+                <p>Supóngase por contradicción que el mercado cotiza el futuro con una prima injustificada: $F_{t,T} > S_t e^{(r - q)(T - t)}$. Un arbitrajista racional ejecuta la siguiente estrategia en el tiempo $t$:</p>
+                <ol>
+                    <li>Toma prestados $S_t$ dólares a la tasa libre de riesgo $r$.</li>
+                    <li>Utiliza el capital para comprar exactamente una unidad del activo en el mercado <em>spot</em>.</li>
+                    <li>Toma una posición corta (short position) en un contrato de futuros al precio pactado $F_{t,T}$.</li>
+                    <li>Durante el intervalo $[t, T]$, el activo genera dividendos continuos a tasa $q$, reinvertidos inmediatamente en el propio activo. Al vencimiento, el arbitrajista posee $e^{q(T-t)}$ unidades del activo físico.</li>
+                </ol>
+                <p>En el momento terminal $T$, el arbitrajista entrega los activos acumulados para satisfacer su obligación del contrato futuro, recibiendo en efectivo $F_{t,T} \cdot e^{q(T-t)}$. Simultáneamente, debe repagar el préstamo inicial más los intereses acumulados, cuyo monto es $S_t \cdot e^{r(T-t)}$. El flujo de caja neto libre de riesgo es:</p>
+                <div class="formula-box">
+                    $$\Pi_T = F_{t,T} \cdot e^{q(T-t)} - S_t \cdot e^{r(T-t)}$$
+                </div>
+                <p>Si $F_{t,T} > S_t e^{(r-q)(T-t)}$, entonces $\Pi_T > 0$: se genera dinero sin riesgo, violando la hipótesis de no arbitraje. Las fuerzas del arbitraje incrementarán la demanda en el mercado <em>spot</em> (elevando $S_t$) y la presión vendedora en el mercado de futuros (hundiendo $F_{t,T}$) hasta que la igualdad se restaure.</p>
+            </div>
+
+            <h3>3.2.2. Valoración de Activos de Consumo y Commodities</h3>
+
+            <p>Las materias primas físicas (petróleo crudo, gas natural, metales básicos, productos agrícolas) introducen fuertes asimetrías operativas que invalidan el modelo simple de inversión. Mantener inventario físico de un producto fungible incurre en costos de almacenamiento ($u$) reales, que incluyen bodegaje, seguros y mermas. Investigaciones utilizando bases de datos patentadas del Louisiana Offshore Oil Port (LOOP) demuestran empíricamente que los costos proporcionales de almacenamiento de crudo exhiben variaciones temporales considerables y representan en promedio un <strong>0.50% mensual</strong> respecto al precio <em>spot</em>.</p>
+
+            <p>Simultáneamente, mantener el activo físico proporciona un beneficio operativo inherente por la disponibilidad inmediata frente a choques inesperados de oferta o picos de demanda. Una refinería que posee inventario físico de crudo puede mantener sus operaciones ininterrumpidas durante una crisis geopolítica; un contrato de futuros en papel no posee esta utilidad funcional inmediata. Este flujo de servicios implícito se define económicamente como el <strong>rendimiento de conveniencia</strong> ($y$).</p>
+
+            <p>Sintetizando estas variables, la ecuación de valoración generalizada para futuros de materias primas adopta la forma:</p>
+
+            <div class="formula-box">
+                $$F_{t,T} = S_t e^{(r + u - y)(T - t)}$$
+            </div>
+
+            <p>La estructura temporal de los futuros (term structure) se clasifica en dos regímenes termodinámicos de mercado:</p>
+
+            <div class="concept-box">
+                <h4><i class="fas fa-chart-line"></i> Regímenes de la Estructura Temporal</h4>
+                <ul>
+                    <li><strong>Mercado al Alza (Contango):</strong> Ocurre cuando los costos de financiación y almacenamiento superan al beneficio operativo de poseer el activo ($r + u > y$), lo que implica matemáticamente que $F_{t,T} > S_t$. Es el estado natural de mercados con alta disponibilidad de inventario comercial y sobreoferta, donde el mercado debe compensar financieramente a los tenedores para que almacenen el excedente.</li>
+                    <li><strong>Mercado a la Baja (Backwardation):</strong> Ocurre cuando la escasez física impulsa el rendimiento de conveniencia a niveles extremos, dominando la estructura de costos ($y > r + u$), lo que resulta en $F_{t,T} < S_t$. El <em>backwardation</em> refleja una crisis de disponibilidad a corto plazo; la posesión física del activo genera una prima inmensa. Históricamente, materias primas con almacenamiento costoso y limitado (como el gas natural, cuya volatilidad del acarreo ronda el <strong>156% anualizado</strong>) experimentan <em>backwardation</em> mucho más severos que activos fácilmente almacenables (como la plata, con una volatilidad del acarreo del <strong>2%</strong>).</li>
+                </ul>
+            </div>
+
+            <div class="interpretation-box">
+                <h4 style="margin-top:0; color:#065f46;"><i class="fas fa-book-open"></i> Modelización Avanzada</h4>
+                <p>La literatura académica avanzada (e.g., Brennan, 1958; Schwartz, 1997) modela la dinámica del rendimiento de conveniencia de forma endógena como una variable estocástica latente, frecuentemente descrita mediante un proceso de reversión a la media de Ornstein-Uhlenbeck (OU) acoplado a la dinámica del precio <em>spot</em>, garantizando la consistencia conjunta en la valoración.</p>
+            </div>
+
+            <h2>3.3. Ajuste por Convexidad</h2>
+
+            <p>Como se anticipó en la Sección 2.2, cuando la tasa de interés $r_t$ es una variable aleatoria estocástica (en contraste con la tasa determinista $r$ asumida en 3.1), la convergencia estricta entre precios <em>forward</em> y futuros colapsa debido al mecanismo de liquidación diaria. Para formalizar esta divergencia, introducimos dos parámetros estadísticos adicionales:</p>
+            <ul>
+                <li><strong>$\sigma_r$:</strong> volatilidad instantánea (anualizada) de la tasa de interés $r_t$.</li>
+                <li><strong>$\rho_{r,S}$:</strong> coeficiente de correlación contemporáneo entre los cambios en la tasa de interés $r_t$ y el precio del activo subyacente $S_t$. Captura la covarianza normalizada entre la curva de rendimientos y el activo.</li>
+            </ul>
+            <p>Considérese analíticamente un escenario donde el precio del activo subyacente $S_t$ y la tasa de interés $r_t$ exhiben una fuerte correlación estadística positiva, $\rho_{r,S} > 0$:</p>
+
+            <div class="interpretation-box">
+                <h4 style="margin-top:0; color:#065f46;"><i class="fas fa-sync-alt"></i> Mecanismo Intuitivo del Sesgo</h4>
+                <ol style="margin-top:0.5rem;">
+                    <li>Si el precio del contrato de futuro aumenta debido a un choque macroeconómico positivo, el inversor que mantiene la posición larga (long) recibe un flujo de caja en efectivo inmediato en su cuenta de margen al final del día de negociación.</li>
+                    <li>Dado que los precios están correlacionados positivamente con las tasas de interés, este evento de ganancia coincide temporalmente con un entorno donde las tasas de interés $r_t$ son <strong>altas</strong>. En consecuencia, el exceso de efectivo se reinvierte a un rendimiento superior.</li>
+                    <li>De forma inversa, si el precio del futuro sufre una caída, el inversor en posición larga experimenta una pérdida. Sin embargo, este entorno correlacionado implica que las tasas de interés son ahora <strong>bajas</strong>, por lo que el costo de financiarse para cubrir la pérdida es correspondientemente barato.</li>
+                </ol>
+                <p>Este mecanismo crea un sesgo asimétrico y sistemático que favorece a la posición larga en el contrato de futuros. Para compensar esta externalidad de valoración a mercado, el equilibrio de no arbitraje exige que el precio cotizado del futuro sea estrictamente superior al precio <em>forward</em> teórico: $F_{t,T} > f_{t,T}$.</p>
+            </div>
+
+            <p>Mediante la aplicación rigurosa del Lema de Itô multidimensional y la evaluación de expectativas bajo la medida neutral al riesgo a través del Teorema de Feynman-Kac, la magnitud aproximada del ajuste por convexidad para contratos de maduración corta y media se deriva matemáticamente como:</p>
+
+            <div class="formula-box">
+                $$F_{t,T} - f_{t,T} \approx \frac{1}{2} F_{t,T} \cdot \sigma_r \cdot \sigma_S \cdot \rho_{r,S} \cdot (T-t)^2$$
+            </div>
+
+            <div class="interpretation-box">
+                <h4 style="margin-top:0; color:#065f46;"><i class="fas fa-university"></i> Aplicación Práctica</h4>
+                <p>En los mercados de renta fija y derivados de tasas de interés (como los futuros sobre Eurodollar o acuerdos de tasas forward FRA), este ajuste por convexidad no es un mero artefacto teórico, sino un <strong>requerimiento computacional crítico</strong> para construir e interpolar curvas de rendimiento implícitas libres de arbitraje (yield curves bootstrapping) a partir de cotizaciones bursátiles.</p>
+            </div>
+
+            <h2>3.4. Ratio de Cobertura de Mínima Varianza</h2>
+
+            <p>En la gestión de riesgos institucionales, las posiciones en derivados rara vez persiguen propósitos especulativos puros, sino que buscan mitigar exposiciones en el mercado <em>spot</em>. Supóngase una entidad que mantiene una posición larga en un activo físico valorado en $V_A$ dólares. Para inmunizar la cartera frente a fluctuaciones de precios, la entidad vende en corto $N$ contratos de futuros, cada uno con valor nocional $V_F$.</p>
+
+            <p>Definiendo $\Delta S$ como el log-retorno (cambio porcentual continuo) del activo subyacente y $\Delta F$ como el retorno correspondiente del instrumento futuro durante el horizonte de cobertura, la variación en el valor de la cartera conjunta cubierta (hedged portfolio, $V_c$) se expresa linealmente como:</p>
+
+            <div class="formula-box">
+                $$\Delta V_c = \Delta S - h \cdot \Delta F$$
+            </div>
+
+            <p>Donde el escalar $h$ representa el <strong>ratio de cobertura (hedge ratio)</strong>: la proporción del valor de la exposición física que debe replicarse en el mercado de futuros. El objetivo matemático del gestor, basándose en la formulación clásica de la <strong>Teoría de Carteras de Johnson (1960) y Stein (1961)</strong>, es minimizar incondicionalmente la varianza de la cartera conjunta:</p>
+
+            <div class="formula-box">
+                $$\text{Var}(\Delta V_c) = \sigma_S^2 + h^2 \sigma_F^2 - 2h \cdot \text{Cov}(\Delta S, \Delta F)$$
+            </div>
+
+            <p>Para hallar el mínimo global de esta función cuadrática continua y convexa, se calcula la derivada parcial con respecto a la variable de control $h$ y se impone la condición de primer orden (First-Order Condition, FOC) igualándola a cero:</p>
+
+            <div class="formula-box">
+                $$\frac{\partial \text{Var}(\Delta V_c)}{\partial h} = 2h \sigma_F^2 - 2 \cdot \text{Cov}(\Delta S, \Delta F) = 0$$
+            </div>
+
+            <p>Resolviendo algebraicamente para el valor óptimo de $h$, se obtiene la ecuación fundamental del ratio de cobertura de mínima varianza:</p>
+
+            <div class="formula-box">
+                $$h^* = \frac{\text{Cov}(\Delta S, \Delta F)}{\sigma_F^2} = \rho \frac{\sigma_S}{\sigma_F}$$
+            </div>
+
+            <div class="interpretation-box">
+                <h4 style="margin-top:0; color:#065f46;"><i class="fas fa-chart-bar"></i> Interpretación Econométrica</h4>
+                <p>Esta deducción formal demuestra analíticamente que $h^*$ es estadísticamente equivalente a la pendiente $\beta$ estimada mediante una regresión lineal de Mínimos Cuadrados Ordinarios (OLS) con la especificación:</p>
+                <div class="formula-box">
+                    $$\Delta S_t = \alpha + h^* \cdot \Delta F_t + \epsilon_t$$
+                </div>
+                <p>Donde $\alpha$ es el intercepto de la regresión (deriva no explicada por el futuro) y $\epsilon_t$ es el término de error aleatorio (residuales), que captura el riesgo de base no cubierto.</p>
+            </div>
+
+            <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> Limitaciones del Modelo OLS</h4>
+                <p>El método OLS clásico asume erróneamente que la varianza condicional de los retornos es homocedástica y constante en el tiempo, una fuerte violación de los hechos estilizados de las series temporales financieras.</p>
+                <ul style="margin-top:0.5rem;">
+                    <li><strong>Modelos GARCH/M-GARCH:</strong> Modelos avanzados utilizan especificaciones Multivariantes GARCH para estimar covarianzas dinámicas que capturan el agrupamiento de volatilidad (volatility clustering).</li>
+                    <li><strong>Cointegración y VECM:</strong> Si las series de precios nivelados $S_t$ y $F_{t,T}$ son procesos integrados de orden 1, I(1), pero están cointegrados, la estimación del ratio debe incorporar un término de corrección de errores (Vector Error Correction Model, VECM) para evitar omitir la información sobre la relación de equilibrio a largo plazo.</li>
+                </ul>
+            </div>
+
+            <h2>3.5. Ajuste de Cola (Tailing the Hedge)</h2>
+
+            <p>La implementación puramente teórica de $h^*$ asume implícitamente que el instrumento de cobertura es un contrato <em>forward</em> tradicional, donde toda la acumulación de ganancias o pérdidas cristaliza únicamente en el momento $T$. Sin embargo, debido a la liquidación diaria bursátil (mark-to-market), los flujos de efectivo de los futuros generan o devengan intereses de forma continua durante toda la duración de la cobertura, impactando el valor presente real de la posición.</p>
+
+            <p>Para compensar microscópicamente el efecto del valor del dinero en el tiempo y alinear las sensibilidades, los gestores cuantitativos aplican un procedimiento denominado <strong>ajuste de cola</strong> (tailing the hedge). En términos prácticos, el ajuste transforma el cálculo para operar estrictamente en valores en dólares actualizados (dollar equivalence) en lugar de unidades nominales de activo subyacente.</p>
+
+            <div class="formula-box">
+                $$N_t^* = h^* \times \frac{V_A}{V_{F,t}}$$
+            </div>
+
+            <div class="interpretation-box">
+                <h4 style="margin-top:0; color:#065f46;"><i class="fas fa-redo"></i> Rebalanceo Dinámico</h4>
+                <p>Donde $V_A$ representa el valor monetario total de la posición física subyacente a cubrir y $V_{F,t}$ es el valor nocional monetario actual de un único contrato de futuros en el momento $t$, que se descompone como el precio de cotización del futuro multiplicado por el multiplicador estándar del contrato (contract multiplier) estipulado por la bolsa. A medida que el precio del mercado fluctúa iterativamente día tras día, la variable en el denominador $V_{F,t}$ cambia de magnitud, lo que obliga matemáticamente al gestor de riesgos a ejecutar algoritmos de <strong>rebalanceo dinámico continuo</strong> (dynamic hedging) para mantener la condición de varianza mínima en la cartera.</p>
+            </div>
+        </div>
+    </template>
+
+    <template id="module-4">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">Módulo 4</div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Ejemplo Aplicado: Arbitraje y Cobertura Dinámica</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">💻</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Implementar algoritmos de cobertura en Python.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2>4.1. Contexto Cuantitativo del Problema</h2>
+
+            <p>Un gestor institucional de portafolio de materias primas (<em>commodity pool operator</em>) mantiene una exposición larga estructural (<em>long bias</em>) en crudo WTI (West Texas Intermediate) físico transado en el mercado <em>spot</em> de <strong>Cushing, Oklahoma</strong>. Debido a desajustes temporales de liquidez en el CME Group, el operador diseña una estrategia para cubrir el riesgo de precio cruzado utilizando los contratos de futuros de crudo Brent (BRN) del mercado <strong>ICE de Londres</strong>, un proxy líquido.</p>
+
+            <p>El objetivo algorítmico es estimar empíricamente el ratio de cobertura de mínima varianza utilizando un enfoque incondicional OLS y evaluar el comportamiento estadístico de la base entre ambas series temporales energéticas. Nótese que el desajuste geográfico entre Cushing (spot) y Londres (futuros) introducirá un riesgo de base residual irreducible, el cual se cuantificará empíricamente al final del análisis.</p>
+
+            <h2>4.2. Pseudocódigo Estructurado de la Metodología</h2>
+
+            <div class="concept-box">
+                <h4><i class="fas fa-list-ol"></i> Procedimiento: Cobertura Óptima por Cointegración</h4>
+                <ol>
+                    <li><strong>Inicializar el entorno</strong> importando librerías numéricas (numpy, pandas, scipy.stats) y de visualización (matplotlib).</li>
+                    <li><strong>Definir hiperparámetros estocásticos:</strong> semilla aleatoria, drift esperado ($\mu$), volatilidades individuales ($\sigma_{WTI}, \sigma_{Brent}$) y correlación ($\rho$).</li>
+                    <li><strong>Simular series temporales</strong> $S_{WTI}$ y $F_{Brent}$ usando descomposición de Cholesky sobre un proceso multivariado de Movimiento Browniano Geométrico para garantizar la dependencia estructural.</li>
+                    <li><strong>Test de Cointegración Engle-Granger</strong> (conceptual):
+                        <ul>
+                            <li>Ejecutar regresión OLS: $S_{WTI} = \beta \cdot F_{Brent} + \alpha$</li>
+                            <li>Extraer residuales (base sintética)</li>
+                            <li>Aplicar test Augmented Dickey-Fuller (ADF) sobre residuales para rechazar no-estacionariedad</li>
+                        </ul>
+                    </li>
+                    <li><strong>Calcular hedge ratio empírico:</strong>
+                        <ul>
+                            <li>Computar matriz de varianzas-covarianzas de log-retornos</li>
+                            <li>Aislar $\text{Cov}(\Delta S, \Delta F)$ y $\sigma_F^2$</li>
+                            <li>Derivar $h^* = \text{Cov}/\sigma_F^2$</li>
+                        </ul>
+                    </li>
+                    <li><strong>Aplicar ajuste de cola</strong> (tailing the hedge) para transformar $h^*$ continuo en número discreto de contratos bursátiles (multiplicador: 1000 barriles por contrato).</li>
+                    <li><strong>Construir portafolios:</strong> control (sin cobertura) y tratamiento (cubierto con futuros cortos).</li>
+                    <li><strong>Extraer métricas de desempeño:</strong> reducción porcentual de varianza anualizada y graficar trayectoria del capital.</li>
+                </ol>
+            </div>
+
+            <h2>4.3. Implementación Funcional en Python</h2>
+
+            <p>La implementación computacional genera un entorno de simulación Monte Carlo determinista y calcula el parámetro $h^* = \rho \cdot \sigma_S / \sigma_F$ mediante operaciones puras de álgebra lineal bidimensional, evitando dependencias de librerías de alto nivel (como <code>statsmodels</code>) para facilitar la comprensión del algoritmo matricial subyacente.</p>
+
+            <pre><code class="language-python">import numpy as np
+import pandas as pd
+from scipy import stats
+import matplotlib.pyplot as plt
+
+# ---------------------------------------------------------
+# Configuración del entorno de visualización académico
+# ---------------------------------------------------------
+plt.style.use('seaborn-v0_8-whitegrid')
+plt.rcParams['font.family'] = 'serif'
+
+# ---------------------------------------------------------
+# 1. Simulación Estocástica Multivariada de Precios
+# ---------------------------------------------------------
+def simular_precios_correlacionados(n_dias=252, S0_wti=80.0, F0_brent=85.0,
+                                    mu=0.03, sigma_wti=0.28, sigma_brent=0.25, rho=0.88):
+    """
+    Genera trayectorias de precios sintéticas simulando la microestructura
+    de activos energéticos correlacionados bajo un Movimiento Browniano Geométrico.
+    """
+    np.random.seed(101)  # Fijar estado para reproductibilidad académica
+    dt = 1 / 252  # Escalonamiento temporal diario anualizado
+
+    # Construcción matemática de la matriz de varianza-covarianza (Sigma)
+    cov_cruzada = rho * sigma_wti * sigma_brent
+    matriz_covarianza = np.array([[sigma_wti**2, cov_cruzada],
+                                   [cov_cruzada, sigma_brent**2]])
+
+    # Descomposición de Cholesky para introducir correlación en variables i.i.d.
+    L = np.linalg.cholesky(matriz_covarianza)
+    Z_no_correlacionado = np.random.normal(size=(2, n_dias))
+    Z_correlacionado = L.dot(Z_no_correlacionado)
+
+    # Ecuación de evolución de retornos continuos (ajuste de deriva de Itô)
+    drift_wti = (mu - 0.5 * sigma_wti**2) * dt
+    drift_brent = (mu - 0.5 * sigma_brent**2) * dt
+
+    retornos_wti = drift_wti + Z_correlacionado[0] * np.sqrt(dt)
+    retornos_brent = drift_brent + Z_correlacionado[1] * np.sqrt(dt)
+
+    # Integración exponencial para retornar a la escala de precios
+    S_wti = S0_wti * np.exp(np.cumsum(retornos_wti))
+    F_brent = F0_brent * np.exp(np.cumsum(retornos_brent))
+
+    fechas = pd.date_range(start='2024-01-01', periods=n_dias, freq='B')
+    df = pd.DataFrame({'WTI_Spot': S_wti, 'Brent_Future': F_brent}, index=fechas)
+    return df
+
+datos_simulados = simular_precios_correlacionados()
+
+# ---------------------------------------------------------
+# 2. Análisis Econométrico y Estimación OLS
+# ---------------------------------------------------------
+# Transformación a log-retornos estacionarios de primer orden
+retornos = np.log(datos_simulados / datos_simulados.shift(1))
+retornos.dropna(inplace=True)
+
+# Computación de la matriz de varianzas-covarianzas empírica de la muestra
+cov_matrix_empirica = np.cov(retornos['WTI_Spot'], retornos['Brent_Future'])
+cov_wb = cov_matrix_empirica[0, 1]
+var_b = cov_matrix_empirica[1, 1]
+
+# Ratio de Cobertura de Mínima Varianza (Derivación paramétrica directa)
+h_star = cov_wb / var_b
+
+# Verificación estadística mediante scipy.stats (OLS univariado)
+regresion_ols = stats.linregress(retornos['Brent_Future'], retornos['WTI_Spot'])
+
+print(f"--- Análisis Estadístico Avanzado de Cobertura ---")
+print(f"Ratio Mínima Varianza OLS Directo (h*):   {h_star:.5f}")
+print(f"Pendiente Beta del modelo Scipy (OLS):    {regresion_ols.slope:.5f}")
+print(f"Correlación muestral de Pearson (rho):    {regresion_ols.rvalue:.5f}")
+print(f"Estadístico R-cuadrado del ajuste:        {regresion_ols.rvalue**2:.5f}\n")
+
+# ---------------------------------------------------------
+# 3. Aplicación Financiera: Ajuste de Cola (Tailing the hedge)
+# ---------------------------------------------------------
+# Parámetros del portafolio institucional
+valor_portafolio_spot = 15_000_000  # USD 15 Millones de exposición física WTI
+precio_brent = datos_simulados['Brent_Future'].iloc[-1]  # Precio (NO retorno)
+tamanio_estandar_contrato_brent = 1000  # Un contrato ICE controla 1000 barriles
+valor_nocional_contrato = precio_brent * tamanio_estandar_contrato_brent
+
+# Cálculo del número de contratos continuos penalizando por mark-to-market
+numero_contratos_optimos = h_star * (valor_portafolio_spot / valor_nocional_contrato)
+print(f"Número de Contratos exactos (con ajuste de cola): {numero_contratos_optimos:.3f} contratos.")
+print(f"Transacción Operativa recomendada: VENDER {int(round(numero_contratos_optimos, 0))} contratos ICE Brent.\n")
+
+# ---------------------------------------------------------
+# 4. Simulación del Desempeño del Portafolio y Reducción de Varianza
+# ---------------------------------------------------------
+# Portafolio Control (Solo riesgo físico largo)
+capital_inicial_usd = valor_portafolio_spot
+unidades_fisicas_wti = capital_inicial_usd / datos_simulados['WTI_Spot'].iloc[0]
+datos_simulados['Portafolio_Desnudo'] = unidades_fisicas_wti * datos_simulados['WTI_Spot']
+
+# Portafolio Tratamiento (Físico + Derivado Corto)
+unidades_derivado_corto = numero_contratos_optimos * tamanio_estandar_contrato_brent
+# Acumulación lineal de pérdidas y ganancias (PnL) del contrato de futuros vendido
+datos_simulados['PnL_Acumulado_Futuro'] = unidades_derivado_corto * (datos_simulados['Brent_Future'].iloc[0] - datos_simulados['Brent_Future'])
+datos_simulados['Portafolio_Inmunizado'] = datos_simulados['Portafolio_Desnudo'] + datos_simulados['PnL_Acumulado_Futuro']
+
+# Evaluación de la Efectividad de la Cobertura (Hedging Effectiveness)
+varianza_desnudo_anualizada = datos_simulados['Portafolio_Desnudo'].pct_change().var() * 252
+varianza_inmunizado_anualizada = datos_simulados['Portafolio_Inmunizado'].pct_change().var() * 252
+efectividad_cobertura = (1 - (varianza_inmunizado_anualizada / varianza_desnudo_anualizada)) * 100
+
+print(f"Varianza Anualizada (Riesgo Abierto):  {varianza_desnudo_anualizada:.4f}")
+print(f"Varianza Anualizada (Riesgo Cubierto): {varianza_inmunizado_anualizada:.4f}")
+print(f"Efectividad de Cobertura (Reducción):  {efectividad_cobertura:.2f}%")
+
+# ---------------------------------------------------------
+# 5. Visualización Científica
+# ---------------------------------------------------------
+plt.figure(figsize=(11, 5.5))
+plt.plot(datos_simulados.index, datos_simulados['Portafolio_Desnudo'],
+         label=f'Riesgo Direccional Abierto ($\\sigma^2$: {varianza_desnudo_anualizada:.3f})', linewidth=1.5, color='#d62728')
+plt.plot(datos_simulados.index, datos_simulados['Portafolio_Inmunizado'],
+         label=f'Riesgo Inmunizado (OLS Cobertura Cruzada) ($\\sigma^2$: {varianza_inmunizado_anualizada:.3f})', linewidth=2, color='#1f77b4', alpha=0.9)
+
+plt.title('Evaluación de Desempeño: Trayectoria Estocástica de Portafolios (WTI-Brent)', fontsize=13, fontweight='bold')
+plt.ylabel('Valor Patrimonial del Portafolio (USD)', fontsize=11)
+plt.xlabel('Horizonte de Proyección Temporal', fontsize=11)
+plt.axhline(y=capital_inicial_usd, color='grey', linestyle='--', linewidth=0.8)
+plt.legend(loc='best', fontsize=10, frameon=True)
+plt.tight_layout()
+plt.show()</code></pre>
+
+            <h2>4.4. Resultados</h2>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Métrica de Desempeño Evaluada</th>
+                            <th>Resultados Típicos</th>
+                            <th>Implicación Estadística</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Ratio de Cobertura OLS ($h^*$)</strong></td>
+                            <td>$0.9856$ (cercano a 1.0)</td>
+                            <td>La volatilidad del mercado subyacente y de cobertura es simétrica en magnitud, limitando la divergencia estructural</td>
+                        </tr>
+                        <tr>
+                            <td><strong>R-cuadrado ($R^2$)</strong></td>
+                            <td>$0.7744$</td>
+                            <td>El futuro (Brent) logra explicar de manera lineal el 77.4% de la dispersión general de los retornos del activo real (WTI)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Varianza (Riesgo Abierto)</strong></td>
+                            <td>$0.0784$ (alta volatilidad)</td>
+                            <td>La estructura del portafolio físico desnudo enfrenta una volatilidad destructiva considerable para métricas de riesgo como el VaR</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Efectividad de la Cobertura</strong></td>
+                            <td>$77.44\%$ de reducción de riesgo</td>
+                            <td>El portafolio está optimizado bajo teoría de Markowitz adaptada, convirtiendo la varianza direccional cruda en varianza puramente de base relativa</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="interpretation-box">
+                <h4 style="margin-top:0; color:#065f46;"><i class="fas fa-lightbulb"></i> Interpretación de Resultados</h4>
+                <p>La ejecución del algoritmo matricial modela cómo la aplicación paramétrica estricta de $h^*$ mediante el ajuste discreto de contratos actúa absorbiendo sistemáticamente los impactos vectoriales de la varianza. La representación gráfica de los resultados estabiliza la curvatura patrimonial general de la entidad, aislando exitosamente al capital expuesto de las perturbaciones incontrolables y estocásticas de la dinámica energética. El riesgo residual observable (aproximadamente un $22\%$ remanente) captura y visualiza matemáticamente el <strong>riesgo de base irreducible</strong> de la regresión y el uso de instrumentos no estandarizados espacialmente (Cushing vs. Londres).</p>
+            </div>
+        </div>
+    </template>
+
+    <template id="module-5">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">Módulo 5</div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Ejercicios Prácticos</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">✏️</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Aplicar los conceptos aprendidos a problemas concretos con derivaciones detalladas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-box">
+                <h4><i class="fas fa-pencil-alt"></i> Ejercicio 1: Deducción Inversa del Costo de Acarreo y Rendimiento de Conveniencia</h4>
+                <p><strong>Dificultad:</strong> Intermedia</p>
+                
+                <p><strong>Enunciado:</strong></p>
+                <ul>
+                    <li>Precio spot del cobre: $S_t = \$8,500$ por tonelada métrica</li>
+                    <li>Tasa libre de riesgo continua: $r = 4.5\%$ anual</li>
+                    <li>Costo de almacenamiento: $120$ anuales fijos por tonelada</li>
+                    <li>Precio del futuro a 6 meses: $F_{t,T} = \$8,530$</li>
+                    <li>Madurez: $T = 0.5$ años</li>
+                </ul>
+                <p><strong>Determine:</strong> El rendimiento de conveniencia continuo y anualizado ($y$) que los agentes del mercado están infiriendo.</p>
+                <p><strong>Interprete:</strong> El régimen de la estructura a plazo (term structure).</p>
+                
+                <div class="solution-box">
+                    <h4><i class="fas fa-check-circle"></i> Solución Integral al Ejercicio 1</h4>
+                    
+                    <p><strong>Paso 1: Identificación y Parametrización de Variables Discretas a Continuas</strong></p>
+                    <p>Se establece el precio contemporáneo $S_t = 8500$. La tasa determinista es $r = 0.045$. La fracción temporal expresada en años es $T-t = 0.5$. La cotización objetiva de mercado para el contrato es $F_{t,T} = 8530$.</p>
+                    <p>El primer paso analítico exige homogeneizar la métrica del costo de almacenaje. El costo proporcional físico $u$ debe parametrizarse como un costo continuo, equivalente al dividendo sobre acciones:</p>
+                    <div class="formula-box">
+                        $$u = \frac{120}{8500} \approx 0.014117 \text{ o un } 1.4117\% \text{ en forma continua anualizada}$$
+                    </div>
+                    
+                    <p><strong>Paso 2: Planteamiento Axiomático de la Ecuación</strong></p>
+                    <p>Iniciamos con el teorema base del modelo de costo de acarreo de Working (1949) con fricciones reales:</p>
+                    <div class="formula-box">
+                        $$F_{t,T} = S_t e^{(r + u - y)(T-t)}$$
+                    </div>
+                    
+                    <p><strong>Paso 3: Despeje Algebraico del Parámetro Latente $y$</strong></p>
+                    <p>Extrayendo logaritmos neperianos a ambos lados de la expresión para eliminar la asimetría exponencial:</p>
+                    <div class="formula-box">
+                        $$\ln\left(\frac{F_{t,T}}{S_t}\right) = (r + u - y)(T-t)$$
+                    </div>
+                    <div class="formula-box">
+                        $$y = r + u - \frac{\ln(F_{t,T} / S_t)}{T-t}$$
+                    </div>
+                    
+                    <p><strong>Paso 4: Ejecución Numérica</strong></p>
+                    <div class="formula-box">
+                        $$y = 0.045 + 0.014117 - \frac{\ln(8530 / 8500)}{0.5}$$
+                    </div>
+                    <div class="formula-box">
+                        $$y = 0.059117 - \frac{\ln(1.003529)}{0.5} = 0.059117 - \frac{0.003523}{0.5}$$
+                    </div>
+                    <div class="formula-box">
+                        $$y = 0.059117 - 0.007046 = 0.052071$$
+                    </div>
+                    
+                    <p><strong>Conclusión y Exégesis Financiera:</strong></p>
+                    <p>El rendimiento operativo de conveniencia continuo y anualizado inferido directamente de la microestructura del mercado de futuros LME es del <strong>5.21%</strong>. Dado que la suma agregada de los costos formales de retención de inventario ($r+u = 5.91\%$) excede estructuralmente la utilidad intrínseca implícita del metal físico para sus productores ($y = 5.21\%$), la curva a plazo del cobre exhibe formalmente una estructura en estado <strong>contango</strong>. El mercado de capitales está obligando a compensar a los administradores de bodegaje en lugar de penalizar el déficit.</p>
+                </div>
+            </div>
+
+            <div class="exercise-box">
+                <h4><i class="fas fa-pencil-alt"></i> Ejercicio 2: Calibración Estadística de Cobertura, Ajuste de Cola y Riesgo de Base</h4>
+                <p><strong>Dificultad:</strong> Avanzada</p>
+                
+                <p><strong>Enunciado:</strong></p>
+                <ul>
+                    <li>Volumen de plata en bóveda: $50,000$ onzas troy</li>
+                    <li>Valor de liquidación: $\$24.00$/oz</li>
+                    <li>Valor total posición: $V_A = 50,000 \times 24 = \$1,200,000$</li>
+                    <li>Horizonte de cobertura: $T = 0.25$ años (3 meses)</li>
+                    <li>Tamaño contrato CME: $5,000$ onzas troy</li>
+                    <li>Precio forward implícito del futuro: $\$24.50$/oz</li>
+                    <li>Valor nocional un contrato: $V_F = 5,000 \times 24.50 = \$122,500$</li>
+                    <li>Volatilidad spot: $\sigma_S = 1.50\%$</li>
+                    <li>Volatilidad futuro: $\sigma_F = 1.80\%$</li>
+                    <li>Correlación Pearson: $\rho = 0.92$</li>
+                </ul>
+                
+                <p><strong>Se pide:</strong></p>
+                <ol>
+                    <li>Determinar el ratio de cobertura de mínima varianza incondicional ($h^*$)</li>
+                    <li>Calcular el número óptimo de contratos aplicando Ajuste de Cola (Tailing the Hedge)</li>
+                </ol>
+                
+                <div class="solution-box">
+                    <h4><i class="fas fa-check-circle"></i> Solución Integral al Ejercicio 2</h4>
+                    
+                    <p><strong>Etapa A: Derivación Analítica del Coeficiente Estacionario OLS ($h^*$)</strong></p>
+                    <p>La condición de primer orden de mínima varianza se reduce econométricamente a la ponderación del nivel de correlación escalado por la asimetría en volatilidad histórica:</p>
+                    <div class="formula-box">
+                        $$h^* = \rho \frac{\sigma_S}{\sigma_F} = 0.92 \times \frac{0.015}{0.018}$$
+                    </div>
+                    <div class="formula-box">
+                        $$h^* = 0.92 \times 0.833333 = 0.76666$$
+                    </div>
+                    <p>El modelo dictamina que, incondicionalmente, por cada punto porcentual marginal expuesto, el futuro debe cubrir solo 0.76 unidades proporcionales debido a que la volatilidad del contrato listado ($1.80\%$) es estructuralmente mayor a la volatilidad del metal basal puro ($1.50\%$).</p>
+                    
+                    <p><strong>Etapa B: Dimensionalidad con Ajuste por Variación de Márgenes</strong></p>
+                    <p>El nominal en dólares constante (sin fluctuaciones mark-to-market) de la posición larga al contado es:</p>
+                    <div class="formula-box">
+                        $$V_A = 50,000 \text{ oz} \times \$24.00/\text{oz} = \$1,200,000$$
+                    </div>
+                    <p>La magnitud del multiplicador por el riesgo nocional subyacente para un solo contrato listado de futuros (evaluado hoy) asciende a:</p>
+                    <div class="formula-box">
+                        $$V_F = 5,000 \text{ oz} \times \$24.50/\text{oz} = \$122,500$$
+                    </div>
+                    <p>La formulación avanzada generalizada impone la ecuación de ajuste de cola:</p>
+                    <div class="formula-box">
+                        $$N^* = h^* \times \frac{V_A}{V_F}$$
+                    </div>
+                    <div class="formula-box">
+                        $$N^* = 0.76666 \times \frac{1,200,000}{122,500} = 0.76666 \times 9.795918 = 7.5101 \text{ contratos}$$
+                    </div>
+                    
+                    <p><strong>Conclusión Operativa Exenta de Sesgo:</strong></p>
+                    <p>Para maximizar la función objetivo de Stein (1976), el director de tesorería del corporativo industrial está compelido normativamente a ejecutar una posición direccional corta incondicional por la magnitud fraccionaria de <strong>7.51 contratos estandarizados CME</strong>. Evidentemente, dada la naturaleza intrínseca indivisible de los contratos interbancarios, el modelo operativo dictaminará la consolidación paramétrica hacia un valor entero (idealmente estructurando bandas dinámicas de tolerancia y truncando en 7 u 8 posiciones según la convexidad asimétrica de la estructura de capital).</p>
+                </div>
+            </div>
+
+            <div class="exercise-box">
+                <h4><i class="fas fa-pencil-alt"></i> Ejercicio 3: Derivación Analítica del Ajuste por Convexidad Estocástica</h4>
+                <p><strong>Dificultad:</strong> Experto</p>
+                
+                <p><strong>Enunciado:</strong></p>
+                <ul>
+                    <li>Precio forward OTC (2 años): $f_{t,T} = \$100.00$</li>
+                    <li>Madurez: $T = 2$ años</li>
+                    <li>Volatilidad tasa de interés: $\sigma_r = 1.5\%$</li>
+                    <li>Volatilidad activo subyacente: $\sigma_S = 20\%$</li>
+                    <li>Correlación entre tasa y precio: $\rho_{r,S} = 0.60$</li>
+                </ul>
+                
+                <p><strong>Se pide:</strong></p>
+                <ol>
+                    <li>Estimar el precio teórico del contrato de futuro equivalente</li>
+                    <li>Justificar la dirección del sesgo direccional</li>
+                </ol>
+                
+                <div class="solution-box">
+                    <h4><i class="fas fa-check-circle"></i> Solución Integral al Ejercicio 3</h4>
+                    
+                    <p><strong>Fase 1: Consolidación Dimensional de Inputs</strong></p>
+                    <p>La formulación paramétrica exógena arroja los valores iniciales formales:</p>
+                    <div class="formula-box">
+                        $$f_{t,T} = 100.00, \quad T = 2 \text{ (años)}, \quad \sigma_r = 0.015, \quad \sigma_S = 0.20, \quad \rho_{r,S} = 0.60$$
+                    </div>
+                    
+                    <p><strong>Fase 2: Construcción Algebraica del Término Corrector</strong></p>
+                    <p>La expresión diferencial deducida mediante el operador multivariado de Itô evalúa el delta de precios (ajuste mark-to-market acumulativo normalizado):</p>
+                    <div class="formula-box">
+                        $$\Delta_{convexity} = F_{t,T} - f_{t,T} \approx \frac{1}{2} F_{t,T} \cdot \sigma_r \cdot \sigma_S \cdot \rho_{r,S} \cdot (T-t)^2$$
+                    </div>
+                    <p>Dado empíricamente que la variación real de convexidad suele materializarse en el nivel base o la magnitud de micro-fracciones, es normativo y aceptable bajo simplificaciones numéricas sustituir aproximativamente el escalar iterativo derecho $F_{t,T}$ en el desarrollo de la ecuación por el estimador sesgado estático disponible $f_{t,T}$:</p>
+                    <div class="formula-box">
+                        $$F_{t,T} \approx f_{t,T} \times \left(1 + \frac{1}{2} \sigma_r \cdot \sigma_S \cdot \rho_{r,S} \cdot (T-t)^2\right)$$
+                    </div>
+                    
+                    <p><strong>Fase 3: Ejecución Recursiva del Producto Escalar</strong></p>
+                    <p>Proporción de ajuste normalizada:</p>
+                    <div class="formula-box">
+                        $$\frac{1}{2} \cdot \sigma_r \cdot \sigma_S \cdot \rho_{r,S} \cdot (T-t)^2 = \frac{1}{2} \cdot 0.015 \cdot 0.20 \cdot 0.60 \cdot (2)^2 = 0.5 \cdot 0.0018 \cdot 4 = 0.0036$$
+                    </div>
+                    <p>Traducción nominal estocástica:</p>
+                    <div class="formula-box">
+                        $$F_{t,T} = 100.00 \times (1 + 0.0036) = 100.36$$
+                    </div>
+                    
+                    <p><strong>Fundamentación Axiomática Causativa:</strong></p>
+                    <p>El modelamiento teórico ratifica analíticamente que la cotización formal de compensación bursátil del futuro ($\$100.36$) excede perentoriamente y de forma estricta a la equivalente <em>forward</em> OTC pura exenta de fricciones colaterales ($\$100.00$). La asimetría causal es profunda: el choque correlacional fuertemente positivo estimula que las apreciaciones estructurales de capital en el nivel subyacente $S$ gatillen depósitos incrementales masivos de liquidez a mercado (<em>margin inflows</em>) coincidentemente en intervalos coyunturales macroeconómicos de tipos altos. Los arbitrajistas pueden destinar este diferencial superavitario inter-días en instrumentos que reportan alto desempeño a tasa de descuento $r_t$. Por consiguiente, la opcionalidad exótica estipulada estructuralmente en la cláusula mark-to-market confiere un activo virtual valioso a las posesiones largas en futuros; la fijación del contrato reacciona encareciéndose formalmente al alza con respecto al precio forward.</p>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="module-6">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">Módulo 6</div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Cuestionario de Autoevaluación</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">✅</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Evaluar rigurosamente la comprensión de los conceptos mediante preguntas de análisis.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ejercicio">
+                <h4>Pregunta 1</h4>
+                <p><strong>Contexto:</strong> Escenario donde los inventarios físicos de una materia prima estandarizada experimentan una disrupción aguda en sus cadenas de valor (choque negativo extremo en la función de oferta inelástica).</p>
+                <p><strong>Pregunta:</strong> ¿Cuál evento describe precisamente el comportamiento de equilibrio microestructural regido por el modelo paramétrico de rendimiento de conveniencia?</p>
+                <ul>
+                    <li>A) El rendimiento de conveniencia colapsa, forzando contango</li>
+                    <li>B) El rendimiento de conveniencia se expande, impulsando backwardation</li>
+                    <li>C) El almacenamiento sube exponencialmente pero simétricamente, paralizando la inclinación de plazos</li>
+                    <li>D) Las correlaciones de base exhiben ruido blanco absoluto</li>
+                </ul>
+                <div class="solution-box">
+                    <h4><i class="fas fa-check-circle"></i> Respuesta: B</h4>
+                    <p>La escasez aguda subyacente amplifica la valía incondicional intertemporal del control propietario directo del activo basal por sobre cualquier promesa condicionada de un contrato virtual demorado para entrega terminal. En jerga técnica, esta asimetría dispara desproporcionadamente la variable estocástica intrínseca de conveniencia, designada algebraicamente como $y$. Invocando el paradigma analítico condicionado estructural $F_{t,T} = S_t e^{(r+u-y)(T-t)}$, una inflación hipertrófica en la estimación marginal de $y$ altera inexorablemente al exponente, forzándolo paramétricamente al rango netamente negativo. En consecuencia formal, la fijación del contrato futuro $F_{t,T}$ debe rendirse fraccionariamente por debajo del valor estocástico $S_t$, confirmando axiomáticamente el modelo dictaminado clásico de un régimen "backwardation".</p>
+                </div>
+            </div>
+
+            <div class="ejercicio">
+                <h4>Pregunta 2</h4>
+                <p><strong>Contexto:</strong> Teorema de Feynman-Kac con tasas de financiación continuamente estocásticas (modelos Ho-Lee) y correlación estadísticamente negativa muy fuerte entre cotizaciones de acciones listadas y tasas activas a la vista.</p>
+                <p><strong>Pregunta:</strong> ¿Qué dictamina la axiomática deductiva sobre pares paralelos futuros-forward con nominal y plazos absolutos gemelos?</p>
+                <ul>
+                    <li>A) La cotización teórica de compensación futura cotiza con penalización prima mayor que el par OTC forward</li>
+                    <li>B) Ambos precios cotizan idénticamente (hipótesis Cox-Ingersoll-Ross)</li>
+                    <li>C) El instrumento listado con mark-to-market cotiza marginalmente por debajo del OTC</li>
+                    <li>D) Las covarianzas cruzadas se eximen en activos de capital no redimible fraccionario</li>
+                </ul>
+                <div class="solution-box">
+                    <h4><i class="fas fa-check-circle"></i> Respuesta: C</h4>
+                    <p>El análisis microestructural profundo postula que la condición subyacente de la liquidación iterativa estandarizada en margen (mark-to-market) condiciona los flujos inter-temporales subyugando las posiciones activas en la canasta direccional a la correlación exógena de tasas. Invocando una dependencia estocástica negativa empírica entre las variables subyacentes, cualquier colapso macroestructural bajista en los precios del listado futuro deviene matemáticamente en desajustes patrimoniales que demandan aportes masivos exógenos por <em>margin-call</em> forzosos de la cámara bursátil.</p>
+                </div>
+            </div>
+
+            <div class="ejercicio">
+                <h4>Pregunta 3</h4>
+                <p><strong>Contexto:</strong> Teorías financieras cuantitativas de coberturas cruzadas imperfectas y modelamiento OLS para deducir el coeficiente fraccionario ($h^*$).</p>
+                <p><strong>Pregunta:</strong> ¿Bajo qué condición los gestores alcanzan certidumbre de varianza cuadrática incondicional estrictamente paralela?</p>
+                <ul>
+                    <li>A) Asumiendo $h = 1$ en todos los ecosistemas</li>
+                    <li>B) Ajustando paramétricamente el estimador beta: $h^* = \frac{\text{Cov}(\Delta S, \Delta F)}{\sigma_F^2}$</li>
+                    <li>C) Forzando al subyacente a converger en caminata aleatoria markoviana pura</li>
+                    <li>D) Cuando el error base sobrepasa umbrales del cuarto momento estadístico</li>
+                </ul>
+                <div class="solution-box">
+                    <h4><i class="fas fa-check-circle"></i> Respuesta: B</h4>
+                    <p>Las demostraciones metodológicas en la Sección 3.4 comprueban incontrovertiblemente bajo la optimización univariada cuadrática estocástica la obtención del mínimo absoluto y global incondicional de una cartera mediante el ajuste preciso que subyace en la resolución iterativa $h^* = \frac{\text{Cov}(\Delta S, \Delta F)}{\sigma_F^2}$. Este desarrollo es asimilable al Teorema de Gauss-Márkov para estructuras lineales y regresores estacionarios. Promover el falso dogma de instituir $h=1$ anula absolutamente tanto al ruido diferencial del activo físico como a la disparidad simétrica estructural multivariante.</p>
+                </div>
+            </div>
+
+            <div class="ejercicio">
+                <h4>Pregunta 4</h4>
+                <p><strong>Contexto:</strong> Metodología "Tailing the Hedge" (Ajuste de Cola).</p>
+                <p><strong>Pregunta:</strong> ¿A qué falla del ecosistema de capital responde primordialmente esta metodología?</p>
+                <ul>
+                    <li>A) Optimización contable para mitigar espectro residual microeconómico</li>
+                    <li>B) Rediseño paramétrico que inhibe el impacto asimétrico inter-días del mark-to-market</li>
+                    <li>C) Ajuste de funciones gaussianas frente a fat tails extremos</li>
+                    <li>D) Exigencias burocráticas de regulaciones macro-prudenciales</li>
+                </ul>
+                <div class="solution-box">
+                    <h4><i class="fas fa-check-circle"></i> Respuesta: B</h4>
+                    <p>La infraestructura operativa del mercado formal liquidado estandarizado por <em>clearinghouse</em> dictamina forzosamente ajustes por revalorizaciones diarias irrevocables de posiciones latentes que transicionan ininterrumpidamente las fluctuaciones intrínsecas patrimoniales a reinversiones activas continuas con depósitos exigibles (mark-to-market). El refinamiento denominado "tailing the hedge" fracciona, reduce y optimiza iterativamente el volumen subyacente inicial escalado matemáticamente del lote formal para compensar subyacentemente y neutralizar estos efectos espurios nocivos.</p>
+                </div>
+            </div>
+
+            <div class="ejercicio">
+                <h4>Pregunta 5</h4>
+                <p><strong>Contexto:</strong> Teoría micro-econométrica estadística de carteras y estrategias especulativas o de cobertura en activos paralelos divergentes.</p>
+                <p><strong>Pregunta:</strong> ¿Qué comportamiento estocástico deben reflejar las variables dinámicas de precio para condicionar el éxito estadístico?</p>
+                <ul>
+                    <li>A) Magnitudes correlacionadas con raíces unitarias independientes y derivas gaussianas</li>
+                    <li>B) Comportamientos estrictamente homocedásticos sin heterogeneidad GARCH</li>
+                    <li>C) Procesos integrados y rígidamente cointegrados con combinación lineal estacionaria</li>
+                    <li>D) Distanciadas en espacios de estado con varianza extrema asincrónica</li>
+                </ul>
+                <div class="solution-box">
+                    <h4><i class="fas fa-check-circle"></i> Respuesta: C</h4>
+                    <p>El andamiaje estocástico matemático demuestra estadísticamente que modelizar la correlación de Pearson no detenta confiabilidad en ecosistemas de activos integrados de grado 1 —series I(1)—. No obstante, al estructurar pruebas de vectores analíticos como el contraste de Engle-Granger o metodologías de factores Johansen, la estipulación de la <strong>cointegración subyacente axiomática</strong> atestigua que la divergencia marginal latente deviene en un conjunto estocástico estacionario —I(0)—. Esto ampara y legitima que la base exhibirá reversión de tendencia y fluctuación controlada que colapsará a sus umbrales paramétricos medios a medio-largo plazo.</p>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="module-7">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">Módulo 7</div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Recursos Complementarios</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">📖</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Ampliar el conocimiento con literatura especializada.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Referencias Bibliográficas</h2>
+
+            <div class="concept-box">
+                <h4><i class="fas fa-book"></i> Referencias Fundamentales</h4>
+                <ul>
+                    <li><strong>Working, H. (1949)</strong> — <em>The Theory of Price of Storage</em>. American Journal of Agricultural Economics, 39(6), 1254–1262. Fundamento del modelo de costo de acarreo (Sección 3.2).</li>
+                    <li><strong>Hull, J. C. (2018)</strong> — <em>Options, Futures, and Other Derivatives</em> (10th ed.). Pearson. Texto insignia que sustenta las derivaciones de ajuste de cola, convexidad y cobertura óptima (Secciones 3.3–3.5).</li>
+                    <li><strong>Schwartz, E. (1997)</strong> — <em>The Stochastic Behavior of Commodity Prices: Implications for Valuation and Hedging</em>. Journal of Finance, 52(3), 923–973. Modelo multifactor de Ornstein-Uhlenbeck para convenience yield (Sección 3.2.2).</li>
+                    <li><strong>Ederington, L. H. (1979)</strong> — <em>The Hedging Performance of the New Futures Markets</em>. Journal of Finance, 34(1), 157–170. Estimación empírica del ratio $h^*$ mediante OLS (Sección 3.4).</li>
+                    <li><strong>Johnson, L. L. (1960)</strong> — <em>The Theory of Hedging and Speculation in Commodity Futures</em>. Review of Economic Studies, 27(3), 139–151. Formulación original de mínima varianza (Sección 3.4).</li>
+                    <li><strong>Stein, J. L. (1961)</strong> — <em>The Simultaneous Determination of Spot and Futures Prices</em>. American Economic Review, 51(5), 1012–1025. Complemento teórico a Johnson (Sección 3.4).</li>
+                    <li><strong>Sarno, L. &amp; Monoyios, M. (2002)</strong> — <em>Mean Reversion in Stock Index Futures Markets: A Nonlinear Analysis</em>. Journal of Futures Markets, 22(4), 285–314. Evidencia empírica de reversión no lineal de la base en S&amp;P 500 y FTSE 100 (Sección 2.3).</li>
+                    <li><strong>Brennan, M. J. (1958)</strong> — <em>The Supply of Storage</em>. American Economic Review, 48(1), 50–72. Modelización endógena del rendimiento de conveniencia (Sección 3.2.2).</li>
+                </ul>
+            </div>
+
+            <div class="nota">
+                <h4><i class="fas fa-laptop-code"></i> Recursos Computacionales</h4>
+                <ul>
+                    <li><strong>Statsmodels:</strong> Para cointegración Engle-Granger y Johansen</li>
+                    <li><strong>ARCH/GARCH:</strong> Para modelar volatilidad condicional</li>
+                    <li><strong>Scipy:</strong> Para cálculos econométricos</li>
+                    <li><strong>Jupyter Notebooks:</strong> Para análisis interactivo</li>
+                </ul>
+            </div>
+
+            <h2>Resumen del Tema</h2>
+
+            <div class="resumen">
+                <h4><i class="fas fa-flag-checkered"></i> Puntos Clave</h4>
+                <ul>
+                    <li>Los contratos forward y futuros tienen diferencias estructurales en liquidación y riesgo de contraparte</li>
+                    <li>El modelo de costo de acarreo relaciona precios spot y futuros</li>
+                    <li>El ajuste por convexidad corrige la diferencia entre precios forward y futuros bajo tasas estocásticas</li>
+                    <li>El ratio de cobertura de mínima varianza optimiza la reducción de riesgo</li>
+                    <li>El ajuste de cola compensa los efectos del mark-to-market</li>
+                </ul>
+            </div>
+
+            <blockquote>
+                <p>"El estudio de los instrumentos derivados exige una comprensión profunda tanto de la dinámica estocástica subyacente de los activos como de los mecanismos institucionales que rigen su negociación y liquidación."</p>
+            </blockquote>
+        </div>
+    </template>
+
+    <template id="module-8">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Actividad Aplicada</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">🛠️ Proyecto Integrador: Sistema de Gestión de Cobertura con Derivados</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">👥</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Proyecto grupal — Grupos de máximo 3 estudiantes</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Construir un dashboard interactivo (Python/Streamlit, R/Shiny o Power BI) que implemente valoración de forwards/futuros, simulación Monte Carlo de cobertura óptima y backtesting del hedge ratio sobre activos reales.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Contexto y motivación</h3>
+            <p>En la práctica profesional, los administradores de riesgo y tesoreros corporativos no trabajan con fórmulas aisladas sino con <strong>sistemas integrados</strong> que conectan datos de mercado, modelos cuantitativos de cobertura y visualizaciones ejecutivas para la toma de decisiones. Este proyecto simula ese flujo completo: desde la obtención de datos abiertos hasta la entrega de un tablero que un comité de riesgos pueda usar para evaluar estrategias de cobertura.</p>
+            <p>El uso de herramientas de <strong>inteligencia artificial generativa</strong> (ChatGPT, Claude, Gemini, GitHub Copilot, etc.) está <strong>explícitamente permitido y alentado</strong> como acelerador, bajo las condiciones detalladas más adelante.</p>
+
+            <h3>Rol asignado</h3>
+            <div class="example-box">
+                <h4><i class="fas fa-building"></i> Escenario corporativo</h4>
+                <p>Ustedes son el <strong>equipo de gestión de tesorería</strong> de una empresa colombiana que importa commodities o mantiene inventarios expuestos a volatilidad de precios. La empresa utiliza <strong>contratos forward y/o futuros</strong> para cubrir parcialmente su exposición al precio de materias primas o tipos de cambio. El comité de riesgos les pide un <strong>tablero interactivo</strong> que permita monitorear posiciones, simular escenarios de cobertura y validar el hedge ratio empíricamente.</p>
+            </div>
+
+            <h3>Fases del proyecto</h3>
+
+            <h4>Fase 1 — Datos y caracterización del activo a cubrir (semana 1)</h4>
+            <div class="concepto-clave">
+                <h4><i class="fas fa-database"></i> Tareas</h4>
+                <ul>
+                    <li><strong>Seleccionar 2–3 activos</strong> (commodities, acciones o tipos de cambio) con al menos 2 años de datos históricos diarios. Fuentes sugeridas: Yahoo Finance (<code>yfinance</code>), Banco de la República, FRED, OANDA.</li>
+                    <li><strong>Identificar el instrumento de cobertura</strong>: contratos forward OTC o futuros listados (para crudo WTI/Brent, oro, plata, USD/COP, etc.).</li>
+                    <li><strong>Calcular</strong> precios spot, precios forward implícitos, rendimientos logarítmicos y volatilidad histórica (ventana móvil de 30 o 60 días).</li>
+                    <li><strong>Analizar la base</strong>: calcular $b_t = S_t - F_{t,T}$ y su evolución temporal.</li>
+                    <li><strong>Documentar</strong> fuentes de datos, especificación del contrato de futuros (multiplicador, vencimiento) y cualquier ajuste por confluencia de mercados.</li>
+                </ul>
+            </div>
+
+            <h4>Fase 2 — Modelo de costo de acarreo y ajuste por convexidad (semana 2)</h4>
+            <div class="concepto-clave">
+                <h4><i class="fas fa-chart-line"></i> Tareas</h4>
+                <ul>
+                    <li><strong>Calcular el precio teórico forward</strong> usando la paridad <em>cost-of-carry</em>: $F_{t,T} = S_t e^{(r + u - y)(T-t)}$.</li>
+                    <li><strong>Estimar el rendimiento de conveniencia</strong> ($y$) de forma implícita a partir de precios de mercado observados.</li>
+                    <li><strong>Identificar el régimen de term structure</strong>: determinar si el mercado está en contango o backwardation y explicar las implicaciones para la estrategia de cobertura.</li>
+                    <li><strong>Si las tasas son estocásticas</strong>, calcular el ajuste por convexidad: $\Delta_{convexity} \approx \frac{1}{2} F_{t,T} \cdot \sigma_r \cdot \sigma_S \cdot \rho_{r,S} \cdot (T-t)^2$.</li>
+                    <li><strong>Visualizar</strong> la curva forward (precios de futuros para distintos vencimientos) y compararla con la curva teórica.</li>
+                </ul>
+            </div>
+
+            <h4>Fase 3 — Ratio de cobertura y ajuste de cola (semana 3)</h4>
+            <div class="concepto-clave">
+                <h4><i class="fas fa-sliders-h"></i> Tareas</h4>
+                <ul>
+                    <li><strong>Estimar el hedge ratio de mínima varianza</strong> mediante OLS: $h^* = \frac{\text{Cov}(\Delta S, \Delta F)}{\sigma_F^2} = \rho \frac{\sigma_S}{\sigma_F}$.</li>
+                    <li><strong>Aplicar el ajuste de cola</strong> (tailing the hedge) para obtener el número óptimo de contratos: $N^* = h^* \times \frac{V_A}{V_F}$.</li>
+                    <li><strong>Si hay cointegración</strong> entre spot y futuro, aplicar el método de Engle-Granger o Johansen para verificar la relación de equilibrio y estimar el hedge ratio de cointegración.</li>
+                    <li><strong>Simular</strong> $n \geq 10{,}000$ escenarios de P&L del portafolio cubierto vs. no cubierto para validar la efectividad de la cobertura.</li>
+                    <li><strong>Permitir en el tablero</strong> que el usuario ajuste interactivamente el ratio de cobertura, el número de contratos y el horizonte de la cobertura.</li>
+                </ul>
+            </div>
+
+            <h4>Fase 4 — Backtesting y análisis de efectividad (semana 4)</h4>
+            <div class="concepto-clave">
+                <h4><i class="fas fa-shield-alt"></i> Tareas</h4>
+                <ul>
+                    <li><strong>Backtesting de la cobertura:</strong> aplicar la estrategia de cobertura sobre al menos 250 días históricos y calcular:
+                        <ul>
+                            <li>Reducción de varianza efectiva: $\frac{\text{Var}(\Delta V_{sin\_cubrir}) - \text{Var}(\Delta V_{cubierto})}{\text{Var}(\Delta V_{sin\_cubrir})}$</li>
+                            <li>Riesgo de base residual (basis risk)</li>
+                            <li>Comparación de Sharpe ratios con y sin cobertura</li>
+                        </ul>
+                    </li>
+                    <li><strong>Probar robustez:</strong> variar el hedge ratio (asignar $h = 0.5, 0.75, 1.0, h^*$) y documentar cuál minimiza la varianza ex-post.</li>
+                    <li><strong>Stress testing:</strong> diseñar al menos 2 escenarios:
+                        <ul>
+                            <li>Un escenario <strong>histórico</strong> de disrupción de oferta (ej. choque petrolero, crisis financiera): aplicar los retornos reales al portafolio.</li>
+                            <li>Un escenario <strong>hipotético</strong> de backwardation extremo donde el rendimiento de conveniencia sube drásticamente.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Presentar</strong> resultados en tablas resumen y gráficos comparativos.</li>
+                </ul>
+            </div>
+
+            <h4>Fase 5 — Dashboard interactivo y entrega (semana 5)</h4>
+            <div class="concepto-clave">
+                <h4><i class="fas fa-tv"></i> Tareas</h4>
+                <ul>
+                    <li><strong>Integrar</strong> las fases 1–4 en un dashboard unificado con navegación por pestañas.</li>
+                    <li><strong>Plataforma:</strong> el grupo elige:
+                        <ul>
+                            <li><strong>Streamlit</strong> (Python) — recomendado</li>
+                            <li><strong>Shiny</strong> (R)</li>
+                            <li><strong>Power BI</strong> con cálculos en Python/R conectados vía script</li>
+                        </ul>
+                    </li>
+                    <li>El dashboard debe ser <strong>funcional y navegable sin código visible</strong>.</li>
+                    <li>Incluir una <strong>pestaña de metodología</strong> que explique cada modelo.</li>
+                </ul>
+            </div>
+
+            <h3>Entregables</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Entregable</th>
+                            <th>Formato</th>
+                            <th>Peso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><strong>Dashboard interactivo funcional</strong></td>
+                            <td>URL desplegada (Streamlit Cloud, shinyapps.io) o archivo .pbix</td>
+                            <td>40%</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td><strong>Repositorio de código</strong></td>
+                            <td>GitHub con README.md explicativo</td>
+                            <td>20%</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td><strong>Informe técnico</strong></td>
+                            <td>PDF, máx. 10 páginas, estructura IMRyD</td>
+                            <td>25%</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td><strong>Bitácora de uso de IA</strong></td>
+                            <td>Sección dentro del informe</td>
+                            <td>10%</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td><strong>Sustentación oral</strong></td>
+                            <td>15 min + 5 de preguntas, todos participan</td>
+                            <td>5%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Estructura mínima sugerida del dashboard</h3>
+            <div class="definition-box">
+                <h4><i class="fas fa-columns"></i> Pestañas o secciones recomendadas</h4>
+                <ol>
+                    <li><strong>📊 Portafolio y Base:</strong> precios spot y futuro, evolución de la base $b_t = S_t - F_{t,T}$, volatilidad rolling.</li>
+                    <li><strong>📈 Curva Forward y Costo de Acarreo:</strong> precios teóricos vs. observados, rendimiento de conveniencia implícito, régimen contango/backwardation.</li>
+                    <li><strong>🎯 Ratio de Cobertura:</strong> cálculo OLS y cointegración, ajuste de cola, número óptimo de contratos con controles interactivos.</li>
+                    <li><strong>🎲 Simulación Monte Carlo:</strong> P&L cubierto vs. no cubierto, histograma, reducción de varianza.</li>
+                    <li><strong>✅ Backtesting:</strong> efectividad histórica de la cobertura, Sharpe ratios, análisis de basis risk.</li>
+                    <li><strong>⚠️ Stress Testing:</strong> escenarios históricos e hipotéticos, impacto en el portafolio cubierto.</li>
+                    <li><strong>📝 Metodología:</strong> descripción de modelos, supuestos, limitaciones.</li>
+                </ol>
+            </div>
+
+            <p>A continuación se presenta un esqueleto de referencia en Streamlit para orientar la estructura:</p>
+
+            <pre><code data-language="Python">import streamlit as st
+import numpy as np
+import pandas as pd
+import yfinance as yf
+from scipy import stats
+import plotly.graph_objects as go
+
+st.set_page_config(page_title="Cobertura con Derivados", layout="wide")
+st.title("🏦 Sistema de Gestión de Cobertura con Forward y Futuros")
+
+# ─── SIDEBAR: Parámetros globales ───
+st.sidebar.header("⚙️ Configuración")
+activo = st.sidebar.selectbox(
+    "Activo a cubrir",
+    ["WTI Crude", "Brent Crude", "Oro", "Plata", "USD/COP", "Cobre"]
+)
+ticker_spot = st.sidebar.text_input("Ticker Spot (Yahoo)", "CL=F")
+ticker_future = st.sidebar.text_input("Ticker Futuro (Yahoo)", "BZ=F")
+fecha_inicio = st.sidebar.date_input("Fecha inicio", pd.Timestamp("2022-01-01"))
+h_ratio = st.sidebar.slider("Hedge Ratio (h*)", 0.5, 1.5, 1.0)
+n_sims = st.sidebar.select_slider("Simulaciones MC", [1000, 5000, 10000], 5000)
+
+# ─── CARGA DE DATOS ───
+@st.cache_data
+def cargar_datos(ticker_spot, ticker_future, inicio):
+    df_spot = yf.download(ticker_spot, start=inicio)["Adj Close"]
+    df_future = yf.download(ticker_future, start=inicio)["Adj Close"]
+    return df_spot, df_future
+
+precios_spot, precios_future = cargar_datos(ticker_spot, ticker_future, fecha_inicio)
+
+# ─── CÁLCULO DE VARIABLES ───
+returns_spot = np.log(precios_spot / precios_spot.shift(1)).dropna()
+returns_future = np.log(precios_future / precios_future.shift(1)).dropna()
+
+# Hedge ratio OLS
+cov_matrix = np.cov(returns_spot, returns_future)
+h_ols = cov_matrix[0, 1] / cov_matrix[1, 1]
+
+# Base
+base = precios_spot - precios_future
+
+# ─── PESTAÑAS ───
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+    "📊 Portafolio y Base", "📈 Curva Forward", "🎯 Ratio de Cobertura",
+    "🎲 Monte Carlo", "✅ Backtesting", "⚠️ Stress Test", "📝 Metodología"
+])
+
+with tab1:
+    st.header("Análisis de Portafolio y Base")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("Precios Spot y Futuro")
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=precios_spot.index, y=precios_spot, name="Spot"))
+        fig.add_trace(go.Scatter(x=precios_future.index, y=precios_future, name="Futuro"))
+        st.plotly_chart(fig)
+    with col2:
+        st.subheader("Base (Spot - Futuro)")
+        st.line_chart(base)
+
+with tab2:
+    st.header("Modelo de Costo de Acarreo")
+    st.info("Implementar: F_t,T = S_t * exp((r + u - y)(T-t))")
+    # TODO: solicitar tasa r, costo u, calcular y implícito
+    # TODO: determinar régimen contango vs backwardation
+
+with tab3:
+    st.header("Ratio de Cobertura y Ajuste de Cola")
+    st.metric("Hedge Ratio OLS (h*)", f"{h_ols:.4f}")
+    # TODO: calcular número óptimo de contratos con tailing
+    st.info("Implementar: N* = h* × (VA / VF)")
+
+with tab4:
+    st.header("Simulación Monte Carlo")
+    # TODO: simular P&L cubierto vs. no cubierto
+    # TODO: histograma con VaR/ES
+    st.info("Implementar simulación MC con parámetros del sidebar.")
+
+with tab5:
+    st.header("Backtesting de la Cobertura")
+    # TODO: calcular reducción de varianza ex-post
+    # TODO: comparar Sharpe ratios
+    st.info("Implementar backtesting sobre últimos 250 días.")
+
+with tab6:
+    st.header("Stress Testing")
+    # TODO: escenario histórico y escenario hipotético
+    st.info("Implementar al menos 2 escenarios de stress.")
+
+with tab7:
+    st.header("Metodología")
+    st.markdown("""
+    ### Modelos utilizados
+    - **Costo de Acarreo:** $F_{t,T} = S_t e^{(r+u-y)(T-t)}$
+    - **Hedge Ratio OLS:** $h^* = \\frac{\\text{Cov}(\\Delta S, \\Delta F)}{\\sigma_F^2}$
+    - **Ajuste de Cola:** $N^* = h^* \\times \\frac{V_A}{V_F}$
+    - **Convexity Adjustment:** $\\Delta_{convexity} \\approx \\frac{1}{2} F_{t,T} \\sigma_r \\sigma_S \\rho_{r,S} (T-t)^2$
+    ### Fuentes de datos
+    - Yahoo Finance vía `yfinance`
+    - Tasas del Banco de la República
+    ### Limitaciones
+    - Volatilidad constante (GBM)
+    - Hedging imperfecto por basis risk
+    """)</code></pre>
+
+            <h3>Política de uso de herramientas de inteligencia artificial</h3>
+            <div class="definition-box">
+                <h4><i class="fas fa-robot"></i> Lineamientos para el uso de IA</h4>
+                <p>El uso de herramientas de IA generativa es <strong>permitido y fomentado</strong> como parte del flujo de trabajo profesional. Sin embargo, la IA es un <strong>copiloto, no el piloto</strong>.</p>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>✅ Usos permitidos</th>
+                            <th>⚠️ Usos con condiciones</th>
+                            <th>❌ Usos prohibidos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Generar borradores de código (Python, R)</td>
+                            <td>Generar texto para el informe → debe ser revisado por el grupo</td>
+                            <td>Entregar texto o código sin revisión ni comprensión</td>
+                        </tr>
+                        <tr>
+                            <td>Depurar errores (debugging)</td>
+                            <td>Pedir explicaciones de fórmulas → documentar en la bitácora</td>
+                            <td>Copiar la bitácora de otro grupo</td>
+                        </tr>
+                        <tr>
+                            <td>Explorar opciones de visualización</td>
+                            <td>Generar datos sintéticos para pruebas → no como datos finales</td>
+                            <td>Fabricar resultados o cálculos</td>
+                        </tr>
+                        <tr>
+                            <td>Traducir código entre lenguajes</td>
+                            <td>Optimizar rendimiento → entender la optimización</td>
+                            <td>Usar IA durante la sustentación oral</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="warning-box">
+                <h4><i class="fas fa-file-alt"></i> Bitácora de uso de IA (obligatoria)</h4>
+                <p>Cada grupo debe incluir como anexo del informe una <strong>bitácora</strong> que registre:</p>
+                <ul>
+                    <li>Fecha y herramienta utilizada (ej. "ChatGPT-4, 15/03/2026")</li>
+                    <li>Propósito (ej. "Debugging del cálculo de hedge ratio OLS")</li>
+                    <li>Resultado o código generado</li>
+                    <li>Validación realizada por el grupo</li>
+                </ul>
+            </div>
+
+            <div class="concept-box">
+                <h4><i class="fas fa-check-circle"></i> Criterios de evaluación destacados</h4>
+                <ul>
+                    <li><strong>Rigor cuantitativo:</strong> implementación correcta de las fórmulas del curso (cost-of-carry, h*, tailing, convexity adjustment)</li>
+                    <li><strong>Integración del dashboard:</strong> conexión lógica entre fases y pestañas</li>
+                    <li><strong>Análisis crítico:</strong> interpretación de resultados, discusión de limitaciones</li>
+                    <li><strong>Presentación visual:</strong> gráficos claros, tablas legibles, navegación intuitiva</li>
+                    <li><strong>Documentación:</strong> código comentado, README.md, bitácora de IA</li>
+                </ul>
+            </div>
+        </div>
+    </template>
+
+</body>
+</html>

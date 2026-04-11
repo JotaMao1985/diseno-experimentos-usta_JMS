@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Slides</title>
+    <style>
+        .section-slide {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .section-slide.active {
+            display: block;
+            opacity: 1;
+            animation: fadeInSlide 0.5s ease-out;
+        }
+
+        @keyframes fadeInSlide {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 60;
+            width: 3.5rem;
+            height: 3.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(61, 0, 141, 0.4);
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .nav-arrow:hover {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 8px 25px rgba(61, 0, 141, 0.5);
+        }
+
+        .nav-arrow.prev { left: 2rem; }
+        .nav-arrow.next { right: 2rem; }
+        .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        .section-counter {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(61, 0, 141, 0.4);
+            z-index: 60;
+        }
+    </style>
+</head>
+<body>
+    <section id="slide1" class="section-slide">
+        <h1>Slide 1: Introducción</h1>
+        <p>Este es el primer slide</p>
+    </section>
+
+    <section id="slide2" class="section-slide">
+        <h1>Slide 2: Contenido</h1>
+        <p>Este es el segundo slide con más contenido</p>
+    </section>
+
+    <section id="slide3" class="section-slide">
+        <h1>Slide 3: Conclusión</h1>
+        <p>Este es el último slide</p>
+    </section>
+
+    <button class="nav-arrow prev" id="prevBtn">◀</button>
+    <button class="nav-arrow next" id="nextBtn">▶</button>
+    <div class="section-counter" id="sectionCounter">1 / 3</div>
+
+    <script>
+        const slides = document.querySelectorAll('.section-slide');
+        let currentSlide = 0;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
+                if (i === index) {
+                    slide.classList.add('active');
+                }
+            });
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === slides.length - 1;
+            document.getElementById('sectionCounter').textContent = `${index + 1} / ${slides.length}`;
+        }
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (currentSlide > 0) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                if (currentSlide < slides.length - 1) {
+                    currentSlide++;
+                    showSlide(currentSlide);
+                }
+            } else if (e.key === 'ArrowLeft') {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    showSlide(currentSlide);
+                }
+            }
+        });
+
+        showSlide(0);
+    </script>
+</body>
+</html>

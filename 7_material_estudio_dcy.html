@@ -2,1370 +2,2668 @@
 <html lang="es">
 
 <head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <meta name="description"
- content="Material de estudio sobre Diseños en Cuadrados de Youden para Diseño de Experimentos - Universidad Santo Tomás">
- <meta name="author" content="Z.ai">
- <meta content="#3D008D" name="theme-color" />
- <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>" />
- <title>Diseños en Cuadrados de Youden - Material de Estudio USTA</title>
-
- <!-- Preconnect for performance -->
- <link rel="preconnect" href="https://fonts.googleapis.com">
- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
- <!-- External Resources -->
- <script src="https://cdn.tailwindcss.com"></script>
- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
- <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
- rel="stylesheet">
- <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-
- <!-- KaTeX for LaTeX rendering -->
- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
- <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
- <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-
- <!-- Highlight.js VS Code Dark+ -->
- <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css" rel="stylesheet">
- <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-
- <!-- Tailwind Configuration -->
- <script>
- tailwind.config = {
- theme: {
- extend: {
- fontFamily: {
- sans: ['Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
- },
- colors: {
- primary: '#3D008D',
- secondary: '#ED1E79',
- navy: '#001A4D',
- gold: '#FDB913',
- bg: '#F8FAFC',
- surface: '#FFFFFF',
- }
- }
- }
- }
- </script>
-
- <style>
- :root {
- --usta-primary: #3D008D;
- --usta-secondary: #ED1E79;
- --usta-navy: #001A4D;
- --usta-navy-light: #002868;
- --usta-gold: #FDB913;
- --usta-bg: #F8FAFC;
- --usta-surface: #FFFFFF;
- }
-
- body {
- font-family: 'Montserrat', sans-serif;
- background-color: #F8FAFC;
- color: #1E293B;
- scroll-behavior: smooth;
- }
-
- code, pre {
- font-family: 'Fira Code', monospace;
- }
-
- /* USTA Gradient Background */
- .usta-gradient {
- background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
- }
-
- /* USTA Navy Header */
- .usta-header {
- background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
- }
-
- /* ===== SIDEBAR DARK STYLE ===== */
- #sidebar-panel {
- background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
- flex-shrink: 0;
- overflow-y: auto;
- display: flex;
- flex-direction: column;
- width: 16rem;
- min-width: 16rem;
- transition: width 0.3s ease, min-width 0.3s ease, opacity 0.25s ease;
- z-index: 40;
- }
-
- #sidebar-panel.collapsed {
- width: 0;
- min-width: 0;
- opacity: 0;
- overflow: hidden;
- }
-
- .sidebar-brand {
- padding: 1.5rem;
- border-bottom: 1px solid rgba(255, 255, 255, 0.1);
- }
-
- .sidebar-brand h2 {
- color: white;
- font-weight: 700;
- font-size: 1rem;
- letter-spacing: -0.02em;
- display: flex;
- align-items: center;
- gap: 0.5rem;
- margin: 0;
- padding: 0;
- border: none;
- }
-
- .sidebar-brand p {
- font-size: 0.7rem;
- color: rgba(255, 255, 255, 0.5);
- margin-top: 0.25rem;
- margin-bottom: 0;
- text-align: left;
- }
-
- .sidebar-nav { padding: 1rem; }
-
- .sidebar-nav-item {
- width: 100%;
- display: flex;
- align-items: center;
- justify-content: space-between;
- gap: 0.75rem;
- padding: 0.65rem 0.75rem;
- font-size: 0.8rem;
- font-weight: 500;
- border-radius: 0.5rem;
- text-align: left;
- margin-bottom: 0.25rem;
- border: none;
- cursor: pointer;
- transition: all 0.2s ease;
- color: rgba(255, 255, 255, 0.6);
- background: transparent;
- }
-
- .sidebar-nav-item:hover {
- color: white;
- background: rgba(255, 255, 255, 0.1);
- }
-
- .sidebar-nav-item.active {
- color: white;
- background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
- box-shadow: 0 4px 12px rgba(61, 0, 141, 0.3);
- }
-
- .sidebar-nav-item .check-mark {
- color: #10B981;
- flex-shrink: 0;
- }
-
- /* Floating sidebar toggle button */
- .sidebar-toggle-btn {
- position: fixed;
- top: 1rem;
- left: 1rem;
- z-index: 50;
- width: 2.5rem;
- height: 2.5rem;
- background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
- color: white;
- border: none;
- border-radius: 50%;
- display: flex;
- align-items: center;
- justify-content: center;
- cursor: pointer;
- box-shadow: 0 4px 12px rgba(61, 0, 141, 0.4);
- transition: all 0.2s ease;
- }
-
- .sidebar-toggle-btn:hover {
- transform: scale(1.1);
- box-shadow: 0 6px 18px rgba(61, 0, 141, 0.5);
- }
-
- .main-layout { display: flex; flex-grow: 1; width: 100%; }
-
- /* Scroll to top button */
- .scroll-to-top {
- position: fixed;
- bottom: 2rem;
- right: 2rem;
- width: 3.5rem;
- height: 3.5rem;
- background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
- color: white;
- border-radius: 50%;
- display: none;
- align-items: center;
- justify-content: center;
- cursor: pointer;
- box-shadow: 0 6px 15px rgba(61, 0, 141, 0.4);
- transition: all 0.3s ease;
- z-index: 50;
- border: none;
- }
-
- .scroll-to-top.visible { display: flex; }
-
- .scroll-to-top:hover {
- background: linear-gradient(140deg, #4A00A8 0%, #FF2D8A 100%);
- transform: translateY(-3px);
- box-shadow: 0 10px 25px rgba(61, 0, 141, 0.5);
- }
-
- /* Fade-in animation */
- .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
-
- @keyframes fadeIn {
- from { opacity: 0; transform: translateY(10px); }
- to { opacity: 1; transform: translateY(0); }
- }
-
- /* Custom Scrollbar */
- ::-webkit-scrollbar { width: 8px; height: 8px; }
- ::-webkit-scrollbar-track { background: #f1f5f9; }
- ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #3D008D, #ED1E79); border-radius: 4px; }
- ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #4A00A8, #FF2D8A); }
-
- /* Focus styles */
- button:focus-visible, a:focus-visible {
- outline: 2px solid #ED1E79;
- outline-offset: 2px;
- }
-
- /* Content Styling */
- .module-content h2 {
- color: #3D008D;
- font-size: 1.5rem;
- font-weight: 700;
- margin-bottom: 1.25rem;
- padding-bottom: 0.75rem;
- border-bottom: 3px solid #ED1E79;
- }
-
- .module-content h3 {
- color: #3D008D;
- font-size: 1.25rem;
- font-weight: 600;
- margin: 1.75rem 0 1rem 0;
- }
-
- .module-content h4 {
- color: #ED1E79;
- font-size: 1.1rem;
- font-weight: 600;
- margin: 1.5rem 0 0.75rem 0;
- }
-
- .module-content p {
- margin-bottom: 1rem;
- text-align: justify;
- line-height: 1.8;
- }
-
- .module-content ul, .module-content ol {
- margin-left: 1.5rem;
- margin-bottom: 1rem;
- }
-
- .module-content li {
- margin-bottom: 0.5rem;
- line-height: 1.7;
- }
-
- .module-content aside {
- background: linear-gradient(135deg, rgba(253, 185, 19, 0.1) 0%, rgba(253, 185, 19, 0.05) 100%);
- border-left: 4px solid #FDB913;
- border-radius: 8px;
- padding: 1rem 1.25rem;
- margin: 1.5rem 0;
- }
-
- .module-content aside strong { color: #B8860B; }
-
- .module-content table {
- width: 100%;
- border-collapse: collapse;
- margin: 1.5rem 0;
- font-size: 0.95rem;
- border-radius: 12px;
- overflow: hidden;
- box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
- }
-
- .module-content th, .module-content td {
- padding: 1rem 1.25rem;
- text-align: center;
- }
-
- .module-content th {
- background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
- color: white;
- font-weight: 600;
- }
-
- .module-content tr:nth-child(even) { background: rgba(61, 0, 141, 0.03); }
- .module-content tr:hover { background: rgba(61, 0, 141, 0.08); }
-
- .module-content code {
- font-family: 'Fira Code', monospace;
- font-size: 0.9rem;
- color: #3D008D;
- background: rgba(61, 0, 141, 0.08);
- padding: 0.15rem 0.4rem;
- border-radius: 4px;
- }
-
- .module-content pre code {
- background: transparent;
- padding: 0;
- color: #d4d4d4;
- }
-
- .module-content strong { color: #3D008D; }
- .module-content em { color: #ED1E79; }
-
- /* KaTeX display */
- .katex-display { margin: 1.25em 0; overflow-x: auto; }
-
- /* ===== Custom boxes ===== */
- .definition-box {
- background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
- border-left: 4px solid #3b82f6;
- padding: 1.25rem;
- margin: 1.5rem 0;
- border-radius: 0 12px 12px 0;
- }
-
- .definition-box h4 {
- margin-top: 0; margin-bottom: 0.75rem;
- color: #1e40af;
- background: transparent; padding: 0; border: none; border-radius: 0;
- }
-
- .example-box {
- background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
- border-left: 4px solid var(--usta-primary);
- padding: 1.25rem;
- margin: 1.5rem 0;
- border-radius: 0 12px 12px 0;
- }
-
- .example-box h4 {
- margin-top: 0; margin-bottom: 0.75rem;
- color: var(--usta-primary);
- background: transparent; padding: 0; border: none; border-radius: 0;
- }
-
- .warning-box {
- background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
- border-left: 4px solid #ef4444;
- padding: 1.25rem;
- margin: 1.5rem 0;
- border-radius: 0 12px 12px 0;
- }
-
- .warning-box h4 {
- margin-top: 0; margin-bottom: 0.75rem;
- color: #991b1b;
- background: transparent; padding: 0; border: none; border-radius: 0;
- }
-
- .concept-box {
- background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
- border-left: 4px solid var(--usta-gold);
- padding: 1.25rem 1.5rem;
- margin: 1.5rem 0;
- border-radius: 0 12px 12px 0;
- }
-
- .concept-box h4 {
- margin-top: 0; margin-bottom: 0.75rem;
- color: #92400e; font-weight: 700;
- background: transparent; padding: 0; border: none; border-radius: 0;
- }
-
- .formula-box {
- background: linear-gradient(135deg, rgba(61, 0, 141, 0.05) 0%, rgba(237, 30, 121, 0.05) 100%);
- border: 1px solid rgba(61, 0, 141, 0.2);
- border-radius: 12px;
- padding: 1.5rem;
- margin: 1.5rem 0;
- text-align: center;
- overflow-x: auto;
- }
-
- .interpretation-box {
- background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
- border-left: 4px solid #10b981;
- padding: 1rem 1.25rem;
- margin: 1rem 0;
- border-radius: 0 12px 12px 0;
- }
-
- .interpretation-box strong { color: #065f46; }
-
- /* Concepto clave / nota / ejercicio (from file 3) */
- .concepto-clave {
- background: linear-gradient(135deg, rgba(61, 0, 141, 0.06) 0%, rgba(237, 30, 121, 0.04) 100%);
- padding: 1.5rem;
- border-radius: 12px;
- border-left: 4px solid #3D008D;
- margin: 1.5rem 0;
- }
-
- .concepto-clave h4 { color: #3D008D; margin-top: 0; }
-
- .nota {
- background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
- padding: 1.25rem;
- border-radius: 12px;
- border-left: 4px solid #10B981;
- margin: 1.5rem 0;
- }
-
- .nota h4 { color: #059669; margin-top: 0; }
-
- /* ===== YOUDEN GRID (from file 7) ===== */
- .youden-grid {
- display: grid;
- gap: 2px;
- margin: 1.5rem auto;
- max-width: 450px;
- }
-
- .youden-cell {
- aspect-ratio: 1;
- display: flex;
- align-items: center;
- justify-content: center;
- font-weight: 700;
- font-size: 1rem;
- border-radius: 4px;
- color: white;
- flex-direction: column;
- position: relative;
- gap: 2px;
- }
-
- .youden-cell .cell-letter { font-size: 1.1rem; }
- .youden-cell .cell-value { font-size: 0.9rem; opacity: 0.9; }
- .youden-cell.header-cell { background: #ddd; color: #333; font-size: 0.75rem; }
- .youden-cell.header-row { background: var(--usta-secondary); font-size: 0.75rem; }
- .youden-cell.cell-A { background: var(--usta-primary); }
- .youden-cell.cell-B { background: var(--usta-secondary); }
- .youden-cell.cell-C { background: var(--usta-navy); }
- .youden-cell.cell-D { background: var(--usta-gold); color: var(--usta-navy); }
- .youden-cell.cell-E { background: #059669; }
-
- .grid-4x3 { grid-template-columns: repeat(4, 1fr); }
- .grid-8x4 { grid-template-columns: repeat(8, 1fr); }
-
- .youden-legend {
- display: flex;
- flex-wrap: wrap;
- gap: 1.5rem;
- justify-content: center;
- margin: 1.5rem 0;
- padding: 1rem;
- background: #f8f8f8;
- border-radius: 8px;
- }
-
- .legend-section { display: flex; align-items: center; gap: 0.5rem; }
- .legend-section-title { font-weight: 700; font-size: 0.85rem; color: #333; margin-right: 0.5rem; }
- .legend-item { display: flex; align-items: center; gap: 0.3rem; font-size: 0.8rem; }
- .legend-color {
- width: 24px; height: 24px; border-radius: 4px;
- display: flex; align-items: center; justify-content: center;
- font-size: 0.7rem; font-weight: 700;
- }
-
- /* ===== VS Code Style Code Blocks ===== */
- .sourceCode-wrapper {
- position: relative;
- margin: 1.75rem 0;
- border-radius: 8px;
- overflow: hidden;
- background: #1e1e1e;
- box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255,255,255,0.05);
- }
-
- .sourceCode-titlebar {
- display: flex; align-items: center; padding: 0 12px; height: 36px;
- background: #323233; border-bottom: 1px solid #252526; user-select: none;
- }
-
- .sourceCode-dots { display: flex; gap: 8px; }
- .sourceCode-dots span { width: 12px; height: 12px; border-radius: 50%; display: block; }
- .sourceCode-dots .dot-close { background: #ff5f57; }
- .sourceCode-dots .dot-min { background: #ffbd2e; }
- .sourceCode-dots .dot-max { background: #28c940; }
-
- .sourceCode-tab {
- display: flex; align-items: center; gap: 6px; padding: 0 12px; height: 100%;
- background: #1e1e1e; border-top: 2px solid #007acc; border-right: 1px solid #252526;
- font-size: 0.78rem; color: #cccccc; font-family: 'Segoe UI', 'Montserrat', sans-serif;
- }
-
- .sourceCode-tab .tab-icon { width: 14px; height: 14px; }
- .sourceCode-tab .tab-icon.python { color: #f7c948; }
-
- .sourceCode-actions { display: flex; gap: 4px; margin-left: auto; }
-
- .sourceCode-actions button {
- background: transparent; border: none; color: #858585; cursor: pointer;
- padding: 4px 8px; border-radius: 4px; font-size: 0.72rem;
- font-family: 'Segoe UI', 'Montserrat', sans-serif;
- display: flex; align-items: center; gap: 4px; transition: all 0.2s ease;
- }
-
- .sourceCode-actions button:hover { background: #3c3c3c; color: #cccccc; }
- .sourceCode-actions button.copied { color: #4ec9b0; }
-
- .sourceCode-body { display: flex; margin: 0; overflow-x: auto; background: #1e1e1e; }
- .sourceCode-body.collapsed { display: none; }
-
- .sourceCode-gutter {
- padding: 16px 0; text-align: right; user-select: none;
- color: #858585; font-size: 0.82rem; line-height: 1.65;
- font-family: 'Fira Code', 'Consolas', monospace;
- min-width: 40px; padding-right: 12px; padding-left: 12px;
- border-right: 1px solid #2d2d2d; background: #1e1e1e; flex-shrink: 0;
- }
-
- .sourceCode-gutter div { height: 1.65em; }
-
- .sourceCode-wrapper pre {
- margin: 0; padding: 16px; overflow-x: auto; background: #1e1e1e;
- flex: 1; border-radius: 0; border: none; box-shadow: none;
- }
-
- .sourceCode-wrapper code {
- font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
- font-size: 0.87rem; line-height: 1.65; color: #d4d4d4;
- background: transparent !important;
- }
-
- .sourceCode-minimap {
- width: 28px;
- background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.01) 100%);
- border-left: 1px solid #2d2d2d; flex-shrink: 0;
- }
-
- .sourceCode-wrapper pre::-webkit-scrollbar { height: 8px; }
- .sourceCode-wrapper pre::-webkit-scrollbar-track { background: #1e1e1e; }
- .sourceCode-wrapper pre::-webkit-scrollbar-thumb { background: rgba(121,121,121,0.4); border-radius: 4px; }
-
- /* VS Code Dark+ Syntax Highlighting */
- .hljs-keyword { color: #569cd6; }
- .hljs-built_in { color: #4ec9b0; }
- .hljs-type { color: #4ec9b0; }
- .hljs-literal { color: #569cd6; }
- .hljs-number { color: #b5cea8; }
- .hljs-string { color: #ce9178; }
- .hljs-comment { color: #6a9955; font-style: italic; }
- .hljs-function { color: #dcdcaa; }
- .hljs-title { color: #dcdcaa; }
- .hljs-params { color: #9cdcfe; }
- .hljs-operator { color: #d4d4d4; }
- .hljs-punctuation { color: #d4d4d4; }
- .hljs-variable { color: #9cdcfe; }
- .hljs-attr { color: #9cdcfe; }
- .hljs-class .hljs-title { color: #4ec9b0; }
- .hljs-meta { color: #c586c0; }
-
- .code-title { display: none; }
-
- .formula-number { float: right; color: #64748B; font-size: 0.9rem; }
-
- /* Code Output */
- .code-output {
- background: #1a1a2e; border: 1px solid #2d2d4a;
- border-radius: 0 0 8px 8px; margin-top: -8px; margin-bottom: 1.5rem; overflow: hidden;
- }
-
- .code-output-header {
- background: rgba(76, 175, 80, 0.15); padding: 0.4rem 1rem;
- border-bottom: 1px solid #2d2d4a;
- }
-
- .code-output-title {
- color: #4CAF50; font-weight: 700;
- font-family: 'Montserrat', sans-serif; font-size: 0.85rem;
- }
-
- .code-output-body {
- padding: 1rem; color: #e0e0e0;
- font-family: 'Fira Code', 'Courier New', monospace;
- font-size: 0.85rem; white-space: pre-wrap; line-height: 1.6; margin: 0;
- }
-
- /* Reference list */
- .reference-list { display: flex; flex-direction: column; gap: 1rem; }
-
- /* Details/summary styling */
- details summary {
- cursor: pointer; font-weight: 600; color: var(--usta-primary);
- }
-
- /* Table responsive */
- .table-responsive {
- overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 1.5rem 0;
- }
-
- .table-responsive table { margin: 0; }
-
- /* Responsive */
- @media (max-width: 480px) {
- .youden-grid { max-width: 100%; }
- .youden-cell { font-size: 0.8rem; }
- }
- </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Material de estudio sobre Diseños en Cuadrados de Youden para Diseño de Experimentos - Universidad Santo Tomás">
+    <meta name="author" content="Universidad Santo Tomás - Facultad de Estadística">
+    <meta content="#3D008D" name="theme-color" />
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>" />
+    <title>Diseños en Cuadrados de Youden - Material de Estudio USTA</title>
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- External Resources -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- KaTeX for LaTeX rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Highlight.js VS Code Dark+ -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+
+    <!-- Chart.js for plots -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3D008D',
+                        secondary: '#ED1E79',
+                        navy: '#001A4D',
+                        gold: '#FDB913',
+                        bg: '#F8FAFC',
+                        surface: '#FFFFFF',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --usta-primary: #3D008D;
+            --usta-secondary: #ED1E79;
+            --usta-navy: #001A4D;
+            --usta-navy-light: #002868;
+            --usta-gold: #FDB913;
+            --usta-bg: #F8FAFC;
+            --usta-surface: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #F8FAFC;
+            color: #1E293B;
+            scroll-behavior: smooth;
+        }
+
+        code,
+        pre {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* USTA Gradient Background */
+        .usta-gradient {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+        }
+
+        /* USTA Navy Header */
+        .usta-header {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+        }
+
+        /* USTA Card Style */
+        .usta-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .usta-card:hover {
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+            transform: translateY(-4px);
+        }
+
+        /* Tip box USTA style */
+        .tip-box {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.08) 0%, rgba(237, 30, 121, 0.08) 100%);
+            border: 1px solid rgba(61, 0, 141, 0.2);
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        /* Step connector for pipeline */
+        .step-connector::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #3D008D, #ED1E79);
+            opacity: 0.3;
+            z-index: 1;
+        }
+
+        .step-connector:last-child::after {
+            display: none;
+        }
+
+        /* Scroll to top button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 3.5rem;
+            height: 3.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(61, 0, 141, 0.4);
+            transition: all 0.3s ease;
+            z-index: 50;
+            border: none;
+        }
+
+        .scroll-to-top.visible {
+            display: flex;
+        }
+
+        .scroll-to-top:hover {
+            background: linear-gradient(140deg, #4A00A8 0%, #FF2D8A 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(61, 0, 141, 0.5);
+        }
+
+        /* Fade-in animation */
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #3D008D, #ED1E79);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #4A00A8, #FF2D8A);
+        }
+
+        /* Focus styles */
+        button:focus-visible,
+        a:focus-visible {
+            outline: 2px solid #ED1E79;
+            outline-offset: 2px;
+        }
+
+        /* Content Styling */
+        .module-content h2 {
+            color: #3D008D;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid #ED1E79;
+        }
+
+        .module-content h3 {
+            color: #3D008D;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.75rem 0 1rem 0;
+        }
+
+        .module-content h4 {
+            color: #ED1E79;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        .module-content p {
+            margin-bottom: 1rem;
+            text-align: justify;
+            line-height: 1.8;
+        }
+
+        .module-content ul,
+        .module-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .module-content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.7;
+        }
+
+        .module-content aside {
+            background: linear-gradient(135deg, rgba(253, 185, 19, 0.1) 0%, rgba(253, 185, 19, 0.05) 100%);
+            border-left: 4px solid #FDB913;
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .module-content aside strong {
+            color: #B8860B;
+        }
+
+        .module-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .module-content th,
+        .module-content td {
+            padding: 1rem 1.25rem;
+            text-align: center;
+        }
+
+        .module-content th {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .module-content tr:nth-child(even) {
+            background: rgba(61, 0, 141, 0.03);
+        }
+
+        .module-content tr:hover {
+            background: rgba(61, 0, 141, 0.08);
+        }
+
+        .module-content code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #3D008D;
+            background: rgba(61, 0, 141, 0.08);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        .module-content pre code {
+            background: transparent;
+            padding: 0;
+            color: #d4d4d4;
+        }
+
+        .module-content strong {
+            color: #3D008D;
+        }
+
+        .module-content em {
+            color: #ED1E79;
+        }
+
+        /* KaTeX display */
+        .katex-display {
+            margin: 1.25em 0;
+            overflow-x: auto;
+        }
+
+        /* ===== Custom boxes ===== */
+        .definition-box {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-left: 4px solid #3b82f6;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .definition-box h4 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: #1e40af;
+            background: transparent;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+        }
+
+        .example-box {
+            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+            border-left: 4px solid var(--usta-primary);
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .example-box h4 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: var(--usta-primary);
+            background: transparent;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border-left: 4px solid #ef4444;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .warning-box h4 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: #991b1b;
+            background: transparent;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid var(--usta-gold);
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .concept-box h4 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: #92400e;
+            font-weight: 700;
+            background: transparent;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+        }
+
+        .formula-box {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.05) 0%, rgba(237, 30, 121, 0.05) 100%);
+            border: 1px solid rgba(61, 0, 141, 0.2);
+            border-left: 4px solid var(--usta-primary, #3D008D);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            overflow-x: auto;
+        }
+
+        .interpretation-box {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border-left: 4px solid #10b981;
+            padding: 1rem 1.25rem;
+            margin: 1rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .interpretation-box strong {
+            color: #065f46;
+        }
+
+        /* Concepto clave / nota / ejercicio (from file 3) */
+        .concepto-clave {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.06) 0%, rgba(237, 30, 121, 0.04) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #3D008D;
+            margin: 1.5rem 0;
+        }
+
+        .concepto-clave h4 {
+            color: #3D008D;
+            margin-top: 0;
+        }
+
+        .nota {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-left: 4px solid #10B981;
+            margin: 1.5rem 0;
+        }
+
+        .nota h4 {
+            color: #059669;
+            margin-top: 0;
+        }
+
+        /* Output block */
+        .module-content .output {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            border-left: 4px solid #10B981;
+            margin: 1rem 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+        }
+
+        /* Tooltip Styles */
+        .tooltip-term {
+            position: relative;
+            border-bottom: 2px dotted #ED1E79;
+            cursor: help;
+            font-weight: 600;
+            color: #3D008D;
+        }
+
+        .tooltip-term:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #3D008D 0%, #2D0066 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 400;
+            width: 280px;
+            text-align: left;
+            line-height: 1.5;
+            box-shadow: 0 10px 25px rgba(61, 0, 141, 0.3);
+            z-index: 1000;
+            margin-bottom: 8px;
+        }
+
+        .tooltip-term:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: #3D008D;
+            margin-bottom: -8px;
+            z-index: 1001;
+        }
+
+        .module-content .ejercicio {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.08) 0%, rgba(237, 30, 121, 0.05) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #ED1E79;
+            margin: 1.5rem 0;
+        }
+
+        .module-content .ejercicio h4 {
+            color: #3D008D;
+            margin-top: 0;
+        }
+
+        .module-content .resumen {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.06) 0%, rgba(237, 30, 121, 0.04) 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-left: 4px solid #3D008D;
+            margin-bottom: 1.5rem;
+        }
+
+        .module-content .resumen h4 {
+            margin-top: 0;
+            color: #3D008D;
+        }
+
+        /* Code scrollbar */
+        .code-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .code-scroll::-webkit-scrollbar-track {
+            background: #2d2d2d;
+        }
+
+        .code-scroll::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #3D008D, #ED1E79);
+            border-radius: 4px;
+        }
+
+        /* ===== YOUDEN GRID (from file 7) ===== */
+        .youden-grid {
+            display: grid;
+            gap: 2px;
+            margin: 1.5rem auto;
+            max-width: 450px;
+        }
+
+        .youden-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 4px;
+            color: white;
+            flex-direction: column;
+            position: relative;
+            gap: 2px;
+        }
+
+        .youden-cell .cell-letter {
+            font-size: 1.1rem;
+        }
+
+        .youden-cell .cell-value {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .youden-cell.header-cell {
+            background: #ddd;
+            color: #333;
+            font-size: 0.75rem;
+        }
+
+        .youden-cell.header-row {
+            background: #ED1E79;
+            font-size: 0.75rem;
+        }
+
+        .youden-cell.cell-A {
+            background: #3D008D;
+        }
+
+        .youden-cell.cell-B {
+            background: #ED1E79;
+        }
+
+        .youden-cell.cell-C {
+            background: #001A4D;
+        }
+
+        .youden-cell.cell-D {
+            background: #FDB913;
+            color: #001A4D;
+        }
+
+        .youden-cell.cell-E {
+            background: #059669;
+        }
+
+        .grid-4x3 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .grid-8x4 {
+            grid-template-columns: repeat(8, 1fr);
+        }
+
+        .youden-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #f8f8f8;
+            border-radius: 8px;
+        }
+
+        .legend-section {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-section-title {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #333;
+            margin-right: 0.5rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.8rem;
+        }
+
+        .legend-color {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        /* ===== VS Code Style Code Blocks ===== */
+        .sourceCode-wrapper {
+            position: relative;
+            margin: 1.75rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #1e1e1e;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+
+        .sourceCode-titlebar {
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            height: 36px;
+            background: #323233;
+            border-bottom: 1px solid #252526;
+            user-select: none;
+        }
+
+        .sourceCode-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .sourceCode-dots span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .sourceCode-dots .dot-close {
+            background: #ff5f57;
+        }
+
+        .sourceCode-dots .dot-min {
+            background: #ffbd2e;
+        }
+
+        .sourceCode-dots .dot-max {
+            background: #28c940;
+        }
+
+        .sourceCode-tab {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 12px;
+            height: 100%;
+            background: #1e1e1e;
+            border-top: 2px solid #007acc;
+            border-right: 1px solid #252526;
+            font-size: 0.78rem;
+            color: #cccccc;
+            font-family: 'Segoe UI', 'Montserrat', sans-serif;
+        }
+
+        .sourceCode-tab .tab-icon {
+            width: 14px;
+            height: 14px;
+        }
+
+        .sourceCode-tab .tab-icon.python {
+            color: #f7c948;
+        }
+
+        .sourceCode-actions {
+            display: flex;
+            gap: 4px;
+            margin-left: auto;
+        }
+
+        .sourceCode-actions button {
+            background: transparent;
+            border: none;
+            color: #858585;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-family: 'Segoe UI', 'Montserrat', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .sourceCode-actions button:hover {
+            background: #3c3c3c;
+            color: #cccccc;
+        }
+
+        .sourceCode-actions button.copied {
+            color: #4ec9b0;
+        }
+
+        .sourceCode-body {
+            display: flex;
+            margin: 0;
+            overflow-x: auto;
+            background: #1e1e1e;
+        }
+
+        .sourceCode-body.collapsed {
+            display: none;
+        }
+
+        .sourceCode-gutter {
+            padding: 16px 0;
+            text-align: right;
+            user-select: none;
+            color: #858585;
+            font-size: 0.82rem;
+            line-height: 1.65;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            min-width: 40px;
+            padding-right: 12px;
+            padding-left: 12px;
+            border-right: 1px solid #2d2d2d;
+            background: #1e1e1e;
+            flex-shrink: 0;
+        }
+
+        .sourceCode-gutter div {
+            height: 1.65em;
+        }
+
+        .sourceCode-wrapper pre {
+            margin: 0;
+            padding: 16px;
+            overflow-x: auto;
+            background: #1e1e1e;
+            flex: 1;
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+        }
+
+        .sourceCode-wrapper code {
+            font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+            font-size: 0.87rem;
+            line-height: 1.65;
+            color: #d4d4d4;
+            background: transparent !important;
+        }
+
+        .sourceCode-minimap {
+            width: 28px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border-left: 1px solid #2d2d2d;
+            flex-shrink: 0;
+        }
+
+        .sourceCode-wrapper pre::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .sourceCode-wrapper pre::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+
+        .sourceCode-wrapper pre::-webkit-scrollbar-thumb {
+            background: rgba(121, 121, 121, 0.4);
+            border-radius: 4px;
+        }
+
+        /* VS Code Dark+ Syntax Highlighting */
+        .hljs-keyword {
+            color: #569cd6;
+        }
+
+        .hljs-built_in {
+            color: #4ec9b0;
+        }
+
+        .hljs-type {
+            color: #4ec9b0;
+        }
+
+        .hljs-literal {
+            color: #569cd6;
+        }
+
+        .hljs-number {
+            color: #b5cea8;
+        }
+
+        .hljs-string {
+            color: #ce9178;
+        }
+
+        .hljs-comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .hljs-function {
+            color: #dcdcaa;
+        }
+
+        .hljs-title {
+            color: #dcdcaa;
+        }
+
+        .hljs-params {
+            color: #9cdcfe;
+        }
+
+        .hljs-operator {
+            color: #d4d4d4;
+        }
+
+        .hljs-punctuation {
+            color: #d4d4d4;
+        }
+
+        .hljs-variable {
+            color: #9cdcfe;
+        }
+
+        .hljs-attr {
+            color: #9cdcfe;
+        }
+
+        .hljs-class .hljs-title {
+            color: #4ec9b0;
+        }
+
+        .hljs-meta {
+            color: #c586c0;
+        }
+
+        .code-title {
+            display: none;
+        }
+
+        .formula-number {
+            float: right;
+            color: #64748B;
+            font-size: 0.9rem;
+        }
+
+        /* Code Output */
+        .code-output {
+            background: #1a1a2e;
+            border: 1px solid #2d2d4a;
+            border-radius: 0 0 8px 8px;
+            margin-top: -8px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .code-output-header {
+            background: rgba(76, 175, 80, 0.15);
+            padding: 0.4rem 1rem;
+            border-bottom: 1px solid #2d2d4a;
+        }
+
+        .code-output-title {
+            color: #4CAF50;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+        }
+
+        .code-output-body {
+            padding: 1rem;
+            color: #e0e0e0;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Reference list */
+        .reference-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Details/summary styling */
+        details summary {
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--usta-primary);
+        }
+
+        /* Table responsive */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 1.5rem 0;
+        }
+
+        .table-responsive table {
+            margin: 0;
+        }
+
+        /* Exercise and Solution boxes */
+        .exercise-box {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 2px solid #0ea5e9;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .exercise-box h4 {
+            color: #0369a1;
+            border-left: 4px solid #0ea5e9;
+            background: transparent;
+            margin: 0 0 1rem 0;
+            padding: 0.5rem 1rem;
+        }
+
+        .solution-box {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid #22c55e;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .solution-box h4 {
+            color: #15803d;
+            border-left: 4px solid #22c55e;
+            background: transparent;
+            margin: 0 0 1rem 0;
+            padding: 0.5rem 1rem;
+        }
+
+        /* Legacy syntax highlighting classes */
+        .syntax-kwd {
+            color: #569cd6;
+            font-weight: bold;
+        }
+
+        .syntax-cls {
+            color: #4ec9b0;
+        }
+
+        .syntax-str {
+            color: #ce9178;
+        }
+
+        .syntax-com {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .syntax-func {
+            color: #dcdcaa;
+        }
+
+        .syntax-self {
+            color: #9cdcfe;
+            font-style: italic;
+        }
+
+        .syntax-num {
+            color: #b5cea8;
+        }
+
+        /* Old span classes for backward compatibility */
+        .kwd {
+            color: #569cd6;
+            font-weight: bold;
+        }
+
+        .cls {
+            color: #4ec9b0;
+        }
+
+        .str {
+            color: #ce9178;
+        }
+
+        .com {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .func {
+            color: #dcdcaa;
+        }
+
+        .num {
+            color: #b5cea8;
+        }
+
+        .op {
+            color: #d4d4d4;
+        }
+
+        .var {
+            color: #9cdcfe;
+        }
+
+        /* Blockquote */
+        blockquote {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.08) 0%, rgba(237, 30, 121, 0.08) 100%);
+            border-left: 4px solid var(--usta-primary);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+            font-style: italic;
+            color: #4A5568;
+            box-shadow: 0 2px 10px rgba(61, 0, 141, 0.1);
+        }
+
+        blockquote p {
+            margin: 0;
+        }
+
+        img,
+        figure {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            margin: 2rem auto;
+            display: block;
+        }
+
+        figcaption {
+            text-align: center;
+            color: #64748B;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        a {
+            color: var(--usta-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--usta-secondary);
+            text-decoration: underline;
+        }
+
+        .section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .section.level1 {
+            display: none;
+        }
+
+        .section.level1.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        .spa-nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .spa-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none !important;
+            transition: all 0.3s ease;
+            background-color: var(--usta-primary, #3D008D);
+            color: white !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .spa-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            background-color: var(--usta-secondary, #ED1E79);
+            color: white !important;
+        }
+
+        .spa-btn-prev {
+            background-color: #64748b;
+        }
+
+        .spa-btn-prev:hover {
+            background-color: #475569;
+        }
+
+        #TOC ul li.active>a {
+            font-weight: bold;
+            color: #e74c3c !important;
+            border-left: 3px solid #e74c3c !important;
+            padding-left: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--usta-primary) 0%, var(--usta-secondary) 100%);
+            color: white;
+        }
+
+        th,
+        td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        tbody tr:hover {
+            background: linear-gradient(90deg, rgba(61, 0, 141, 0.05) 0%, rgba(237, 30, 121, 0.05) 100%);
+        }
+
+        :not(pre)>code {
+            background: rgba(61, 0, 141, 0.09);
+            color: var(--usta-primary);
+            border: 1px solid rgba(61, 0, 141, 0.18);
+            padding: 0.12rem 0.45rem;
+            border-radius: 5px;
+            font-size: 0.87em;
+        }
+
+        /* ===== SIDEBAR DARK STYLE (from file 5) ===== */
+        #sidebar-panel {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+            flex-shrink: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            width: 16rem;
+            min-width: 16rem;
+            transition: width 0.3s ease, min-width 0.3s ease, opacity 0.25s ease;
+            z-index: 40;
+        }
+
+        #sidebar-panel.collapsed {
+            width: 0;
+            min-width: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            padding-top: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-brand h2 {
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        .sidebar-brand p {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 0.25rem;
+            margin-bottom: 0;
+            text-align: left;
+        }
+
+        .sidebar-nav {
+            padding: 1rem;
+        }
+
+        .sidebar-nav-item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 0.65rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            text-align: left;
+            margin-bottom: 0.25rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: rgba(255, 255, 255, 0.6);
+            background: transparent;
+        }
+
+        .sidebar-nav-item:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-nav-item.active {
+            color: white;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            box-shadow: 0 4px 12px rgba(61, 0, 141, 0.3);
+        }
+
+        .sidebar-nav-item .check-mark {
+            color: #10B981;
+            flex-shrink: 0;
+        }
+
+        /* Floating sidebar toggle button */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 50;
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(61, 0, 141, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-toggle-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 18px rgba(61, 0, 141, 0.5);
+        }
+
+        /* Layout adjustment */
+        .main-layout {
+            display: flex;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        /* Code copy button */
+        .code-copy-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 6px;
+            background: rgba(51, 65, 85, 0.5);
+            color: #94a3b8;
+            font-size: 11px;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-left: auto;
+        }
+
+        .code-copy-btn:hover {
+            background: rgba(51, 65, 85, 0.8);
+            color: #e2e8f0;
+        }
+
+        /* Print styles */
+        @media print {
+
+            #TOC,
+            .toc-toggle,
+            #toc-overlay {
+                display: none !important;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                padding: 0 !important;
+            }
+
+            .usta-header-banner {
+                background: white !important;
+                color: black !important;
+                box-shadow: none !important;
+            }
+
+            .usta-header-banner h1 {
+                color: black !important;
+            }
+
+            body {
+                background: white !important;
+            }
+        }
+
+        /* Main container */
+        .main-container {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        @media (max-width: 768px) {
+            #TOC {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+
+            body:not(.toc-collapsed) #TOC {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .main-container {
+                padding: 1rem;
+                margin: 0.5rem;
+            }
+
+            .usta-header-banner {
+                padding: 1.5rem;
+            }
+
+            .usta-header-banner h1 {
+                font-size: 1.75rem;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .youden-grid {
+                max-width: 100%;
+            }
+
+            .youden-cell {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
 </head>
 
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
 
- <!-- Floating Sidebar Toggle Button -->
- <button class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Mostrar/Ocultar menú" aria-label="Toggle sidebar">
- <i class="fas fa-bars text-sm" id="sidebarToggleIcon"></i>
- </button>
-
- <div class="main-layout">
-
- <!-- Sidebar Navigation -->
- <div id="sidebar-panel">
- <div class="sidebar-brand">
- <h2><i class="fas fa-th text-secondary"></i> DCY <span style="color: #FDB913;">Youden</span></h2>
- <p>Diseño de Experimentos &bull; USTA 2026</p>
- </div>
- <nav class="sidebar-nav" id="module-nav">
- <!-- Nav items injected via JS -->
- </nav>
- </div>
-
- <!-- Main Content Area -->
- <div class="flex-grow flex flex-col" style="min-width:0;">
- <main class="flex-grow bg-white rounded-tl-xl shadow-sm border border-gray-200 overflow-hidden">
- <div id="content-area" class="p-6 md:p-10 module-content">
- <!-- Content injected via JS -->
- </div>
- </main>
- </div>
- </div>
-
- <!-- Footer -->
- <footer class="usta-header mt-8">
- <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
- <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
- <i class="fas fa-book-open"></i> Referencias Bibliográficas
- </h3>
- <ul class="space-y-3 text-white/90 text-sm">
- <li class="flex items-start gap-2">
- <i class="fas fa-bookmark text-secondary mt-1"></i>
- <span>Montgomery, D. C. (2019). <em class="text-gold">Design and Analysis of Experiments</em> (10th ed.). Wiley.</span>
- </li>
- <li class="flex items-start gap-2">
- <i class="fas fa-bookmark text-secondary mt-1"></i>
- <span>Youden, W. J. (1937). Use of incomplete block replications in estimating tobacco-mosaic virus. <em class="text-gold">Contributions from Boyce Thompson Institute</em>, 9, 41-48.</span>
- </li>
- <li class="flex items-start gap-2">
- <i class="fas fa-bookmark text-secondary mt-1"></i>
- <span>Cochran, W. G. &amp; Cox, G. M. (1992). <em class="text-gold">Experimental Designs</em> (2nd ed.). Wiley.</span>
- </li>
- <li class="flex items-start gap-2">
- <i class="fas fa-bookmark text-secondary mt-1"></i>
- <span>García Leal, J. &amp; Lara Porras, A.M. (1998). <em class="text-gold">Diseño Estadístico de Experimentos. Análisis de la Varianza</em>. Grupo Editorial Universitario.</span>
- </li>
- </ul>
- <div class="mt-6 pt-6 border-t border-white/20 text-center">
- <p class="text-white font-medium">Material de Estudio — <span class="text-gold">USTA</span></p>
- <p class="text-xs mt-1 text-white/60">Diseño de Experimentos &bull; Diseños en Cuadrados de Youden</p>
- </div>
- </div>
- </footer>
-
- <!-- Scroll to Top Button -->
- <button class="scroll-to-top" id="scrollToTopBtn" aria-label="Volver arriba">
- <i class="fas fa-arrow-up"></i>
- </button>
-
- <!-- Module Content Templates -->
- 
- <template id="module-1">
- <div class="animate-fade-in">
- <div class="border-b border-gray-100 pb-6 mb-6">
- <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
- Módulo 1
- </div>
- <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Introducción</h2>
- <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
- <span class="text-xl">🎯
- </span><div>
- <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
- <p class="text-gray-600 text-sm" style="margin:0;">Comprender qué son los cuadrados de Youden y su relación con los cuadros latinos.</p>
- </div>
- </div>
- </div>
-
- <h2>¿Qué es un Cuadrado de Youden?</h2>
-
- <div class="definition-box">
- <h4><i class="fas fa-book"></i> Definición</h4>
- <p>Un <strong>Cuadrado de Youden</strong> es un diseño en cuadrado latino <em>incompleto</em>, donde el número de niveles de uno de los factores de bloqueo es menor que el número de tratamientos. Estos diseños fueron estudiados por <strong>W.J. Youden</strong> y se conocen como <strong>cuadrados de Youden</strong>.</p>
- </div>
-
- <p>En el diseño en cuadrado latino se requiere que los tres factores (filas, columnas y letras latinas) tengan el mismo número de niveles, es decir que haya el mismo número de filas, de columnas y de letras latinas. Sin embargo, puede suceder que el número de niveles disponibles de uno de los factores de control sea menor que el número de tratamientos, en este caso estaríamos ante un diseño en cuadrado latino <em>incompleto</em>.</p>
-
- <h2>Relación con el Cuadrado Latino</h2>
-
- <div class="concept-box">
- <h4><i class="fas fa-lightbulb"></i> Característica Principal</h4>
- <p>Un Cuadrado de Youden puede considerarse como un <strong>cuadrado latino al que le falta al menos una columna</strong>. Sin embargo, un cuadrado latino no se convierte en un Cuadrado de Youden eliminando arbitrariamente más de una columna.</p>
- </div>
-
- <h3>Ejemplo: Experimento con Semillas de Trigo</h3>
-
- <p>Consideremos un experimento sobre el rendimiento de la semilla de trigo, en el que se está interesado en estudiar <strong>4 tipos de semillas</strong> y se desea eliminar estadísticamente el efecto del tipo de insecticida y abono. Pero supongamos que solo se dispone de <strong>3 tipos de abono</strong>. Para realizar este experimento se decidió utilizar un Cuadrado de Youden con:</p>
-
- <ul>
- <li><strong>4 filas:</strong> Tipos de insecticida (i₁, i₂, i₃, i₄)</li>
- <li><strong>3 columnas:</strong> Tipos de abono (a₁, a₂, a₃)</li>
- <li><strong>4 letras latinas:</strong> Tipos de semillas (A, B, C, D)</li>
- </ul>
-
- <h3>Datos del Cuadrado de Youden (Tabla 5-15)</h3>
-
- <div class="youden-grid grid-4x3" style="max-width: 450px;">
- <div class="youden-cell header-cell">Insect./Abono</div>
- <div class="youden-cell header-cell">a₁</div>
- <div class="youden-cell header-cell">a₂</div>
- <div class="youden-cell header-cell">a₃</div>
- <div class="youden-cell header-row">i₁</div>
- <div class="youden-cell cell-A"><span class="cell-letter">A</span><span class="cell-value">23</span></div>
- <div class="youden-cell cell-B"><span class="cell-letter">B</span><span class="cell-value">25</span></div>
- <div class="youden-cell cell-C"><span class="cell-letter">C</span><span class="cell-value">16</span></div>
- <div class="youden-cell header-row">i₂</div>
- <div class="youden-cell cell-B"><span class="cell-letter">B</span><span class="cell-value">18</span></div>
- <div class="youden-cell cell-C"><span class="cell-letter">C</span><span class="cell-value">15</span></div>
- <div class="youden-cell cell-D"><span class="cell-letter">D</span><span class="cell-value">17</span></div>
- <div class="youden-cell header-row">i₃</div>
- <div class="youden-cell cell-C"><span class="cell-letter">C</span><span class="cell-value">19</span></div>
- <div class="youden-cell cell-D"><span class="cell-letter">D</span><span class="cell-value">25</span></div>
- <div class="youden-cell cell-A"><span class="cell-letter">A</span><span class="cell-value">18</span></div>
- <div class="youden-cell header-row">i₄</div>
- <div class="youden-cell cell-D"><span class="cell-letter">D</span><span class="cell-value">21</span></div>
- <div class="youden-cell cell-A"><span class="cell-letter">A</span><span class="cell-value">12</span></div>
- <div class="youden-cell cell-B"><span class="cell-letter">B</span><span class="cell-value">20</span></div>
- </div>
-
- <div class="youden-legend">
- <div class="legend-section">
- Tratamiento (Semilla):
- <div class="legend-item"><div class="legend-color" style="background: var(--usta-primary); color: white;">A</div></div>
- <div class="legend-item"><div class="legend-color" style="background: var(--usta-secondary); color: white;">B</div></div>
- <div class="legend-item"><div class="legend-color" style="background: var(--usta-navy); color: white;">C</div></div>
- <div class="legend-item"><div class="legend-color" style="background: var(--usta-gold); color: var(--usta-navy);">D</div></div>
- </div>
- </div>
-
- <div class="concept-box">
- <h4><i class="fas fa-info-circle"></i> Observación Importante</h4>
- <p>Este diseño se convierte en un cuadrado latino si se le añade la columna: <strong>D, A, B, C</strong>. Cada tratamiento aparece exactamente una vez en cada columna.</p>
- </div>
-
- <h2>Conexión con Bloques Incompletos Balanceados</h2>
-
- <p>Un Cuadrado de Youden se puede considerar como un <strong>diseño en bloques incompletos balanceado y simétrico</strong> en el que las filas corresponden a los bloques. En efecto, si asignamos:</p>
-
- <ul>
- <li>El <strong>factor principal</strong> a las letras latinas</li>
- <li>Un <strong>factor secundario</strong>, que tiene el mismo número de niveles que el factor principal, a las filas</li>
- <li>Un <strong>factor secundario</strong>, que tiene menor número de niveles que el factor principal, a las columnas</li>
- </ul>
-
- <p>Entonces, un cuadrado de Youden es un diseño en bloques incompletos balanceado y simétrico en el que:</p>
-
- <ol>
- <li>Cada tratamiento ocurre una vez en cada columna</li>
- <li>La posición del tratamiento dentro de un bloque indica el nivel del factor secundario correspondiente a las columnas</li>
- <li>El número de réplicas de un tratamiento dado es igual al número de tratamientos por bloque</li>
- </ol>
- </div>
- </template>
-
- <template id="module-2">
- <div class="animate-fade-in">
- <div class="border-b border-gray-100 pb-6 mb-6">
- <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
- Módulo 2
- </div>
- <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Modelo Estadístico</h2>
- <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
- <span class="text-xl">🎯
- </span><div>
- <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
- <p class="text-gray-600 text-sm" style="margin:0;">Formular el modelo lineal del diseño de Youden.</p>
- </div>
- </div>
- </div>
-
- <h2>Modelo Lineal</h2>
-
- <div class="formula-box">
- $$y_{ijk} = \mu + \tau_i + \beta_j + \gamma_k + \varepsilon_{ijk} \quad , \quad \begin{cases} i = 1,2,\ldots,I \\ j = 1,2,\ldots,J \\ k = 1,2,\ldots,K \end{cases} \quad \text{con } I = J \text{ y } K < I$$
- </div>
-
- <p>donde:</p>
-
- <ul>
- <li>$\mu$: media global</li>
- <li>$\tau_i$: efecto producido por el $i$-ésimo tratamiento. Dichos efectos están sujetos a la restricción $\sum_i \tau_i = 0$</li>
- <li>$\beta_j$: efecto producido por el $j$-ésimo bloque. Dichos efectos están sujetos a la restricción $\sum_j \beta_j = 0$</li>
- <li>$\gamma_k$: efecto producido la $k$-ésima posición (columna). Dichos efectos están sujetos a la restricción $\sum_k \gamma_k = 0$. Cada posición ocurre una vez en cada bloque y con cada tratamiento</li>
- <li>$\varepsilon_{ijk}$: variables aleatorias independientes con distribución $N(0, \sigma^2)$</li>
- </ul>
-
- <h2>Parámetros del Diseño</h2>
-
- <table>
- <thead>
- <tr>
- <th>Parámetro</th>
- <th>Descripción</th>
- <th>Valor en el Ejemplo</th>
- </tr>
- </thead>
- <tbody>
- <tr>
- <td>$I$</td>
- <td>Número de tratamientos (letras latinas)</td>
- <td>4</td>
- </tr>
- <tr>
- <td>$J$</td>
- <td>Número de bloques (filas), con $I = J$</td>
- <td>4</td>
- </tr>
- <tr>
- <td>$K$</td>
- <td>Número de columnas (posiciones), con $K < I$</td>
- <td>3</td>
- </tr>
- <tr>
- <td>$R$</td>
- <td>Número de réplicas por tratamiento ($R = K$)</td>
- <td>3</td>
- </tr>
- <tr>
- <td>$N$</td>
- <td>Número total de observaciones ($N = IR = JK$)</td>
- <td>12</td>
- </tr>
- <tr>
- <td>$\lambda$</td>
- <td>Parámetro de equilibrio: $\lambda = R\dfrac{K-1}{I-1}$</td>
- <td>$3 \times \dfrac{2}{3} = 2$</td>
- </tr>
- </tbody>
- </table>
-
- <div class="concept-box">
- <h4><i class="fas fa-lightbulb"></i> Interpretación de $\lambda$</h4>
- <p>El parámetro $\lambda$ indica cuántas veces aparece cada par de tratamientos juntos en el mismo bloque. En el ejemplo, $\lambda = 2$ significa que cada par de tratamientos coincide en exactamente 2 bloques.</p>
- </div>
-
- <h2>Totales Ajustados</h2>
-
- <p>El análisis del modelo se realiza de la misma manera que en el diseño en bloques incompletos balanceados, añadiéndole el cálculo de la suma de cuadrados correspondiente a la posición (columna). Para ello se utilizan <strong>totales ajustados</strong>:</p>
-
- <h3>Totales Ajustados de Tratamientos</h3>
-
- <div class="formula-box">
- $$T_i = y_{i..} - \frac{1}{K}\sum_{j=1}^{J} n_{ij} \, y_{.j.} \qquad i = 1, 2, \cdots, I$$
- </div>
-
- <p>donde:</p>
- <ul>
- <li>$y_{i..}$: se obtiene sumando las observaciones en las que la letra latina se ha fijado al nivel $i$</li>
- <li>$y_{.j.}$: se obtiene sumando las observaciones correspondientes al bloque $j$-ésimo</li>
- <li>$n_{ij} = \begin{cases} 1 & \text{si el tratamiento } i \text{ ocurre en el bloque } j \\ 0 & \text{en otro caso} \end{cases}$</li>
- </ul>
-
- <div class="concept-box">
- <h4><i class="fas fa-calculator"></i> Nota</h4>
- <p>La expresión $\frac{1}{K}\sum_{j=1}^{J} n_{ij} \, y_{.j.}$ es el valor medio de los totales de los bloques que contienen al tratamiento $i$-ésimo.</p>
- </div>
-
- <h3>Totales Ajustados de Bloques</h3>
-
- <div class="formula-box">
- $$B_j = y_{.j.} - \frac{1}{R}\sum_{i=1}^{I} n_{ij} \, y_{i..} \qquad j = 1, 2, \cdots, J$$
- </div>
- </div>
- </template>
-
- <template id="module-3">
- <div class="animate-fade-in">
- <div class="border-b border-gray-100 pb-6 mb-6">
- <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
- Módulo 3
- </div>
- <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Sumas de Cuadrados</h2>
- <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
- <span class="text-xl">🎯
- </span><div>
- <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
- <p class="text-gray-600 text-sm" style="margin:0;">Calcular las sumas de cuadrados ajustadas para el diseño.</p>
- </div>
- </div>
- </div>
-
- <h2>Descomposición de la Variabilidad Total</h2>
-
- <p>En este diseño la variabilidad total $SCT$ se descompone en:</p>
-
- <div class="formula-box">
- $$SCT = SCTr^{*} + SCBl + SCC + SCR$$</div>
-
- <h2>Fórmulas de Sumas de Cuadrados</h2>
-
- <h3>Suma de Cuadrados de Tratamientos Ajustada ($SCTr^{*}$</h3>
-
- <p>La suma de cuadrados ajustada de los tratamientos, cuya expresión coincide con la correspondiente a los diseños en bloques incompletos balanceados:</p>
-
- <div class="formula-box">
- $$SCTr^{*} = \frac{K \displaystyle\sum_{i=1}^{I} T_i^2}{\lambda I}$$</div>
-
- <p>siendo $\lambda = R\dfrac{K-1}{I-1}$K− y $T_i$ el total ajustado del $i$-ésimo tratamiento.</p>
-
- <h3>Suma de Cuadrados de Bloques ($SCBl$</h3>
-
- <div class="formula-box">
- $$SCBl = \sum_{j=1}^{J} \frac{y_{.j.}^2}{K} - \frac{y_{\cdots}^2}{N}$$
- </div>
-
- <h3>Suma de Cuadrados de Columnas ($SCC$</h3>
-
- <div class="formula-box">
- $$SCC = \sum_{k=1}^{K} \frac{y_{..k}^2}{J} - \frac{y_{\cdots}^2}{N}$$
- </div>
-
- <p>donde $y_{..k}$ se obtiene sumando las observaciones correspondientes a la columna $k$-ésima.</p>
-
- <h3>Suma de Cuadrados Total ($SCT$</h3>
-
- <div class="formula-box">
- $$SCT = \sum_{j=1}^{J}\sum_{k=1}^{K} y_{(.)jk}^2 - \frac{y_{\cdots}^2}{N}$$
- </div>
-
- <p>donde $y_{(.)jk}$ indica la observación correspondiente a la fila $j$ y la columna $k$, independientemente de la letra que corresponda.</p>
-
- <h2>Grados de Libertad</h2>
-
- <table>
- <thead>
- <tr>
- <th>Fuente de Variación</th>
- <th>Grados de Libertad</th>
- </tr>
- </thead>
- <tbody>
- <tr>
- <td>$SCT$</td>
- <td>$N - 1$</td>
- </tr>
- <tr>
- <td>$SCTr^{*}$</td>
- <td>$I - 1$</td>
- </tr>
- <tr>
- <td>$SCBl$</td>
- <td>$J - 1$</td>
- </tr>
- <tr>
- <td>$SCC$</td>
- <td>$K - 1$</td>
- </tr>
- <tr>
- <td>$SCR$</td>
- <td>$N - 2I - K + 2$</td>
- </tr>
- </tbody>
- </table>
-
- <div class="concept-box">
- <h4><i class="fas fa-check-circle"></i> Verificación</h4>
- <p>La suma de todos los grados de libertad debe ser igual a $N - 1$:</p>
- <p>$(I-1) + (J-1) + (K-1) + (N-2I-K+2) = N - 1$</p>
- </div>
- </div>
- </template>
-
- <template id="module-4">
- <div class="animate-fade-in">
- <div class="border-b border-gray-100 pb-6 mb-6">
- <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
- Módulo 4
- </div>
- <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Tabla ANOVA</h2>
- <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
- <span class="text-xl">🎯
- </span><div>
- <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
- <p class="text-gray-600 text-sm" style="margin:0;">Construir la tabla ANOVA y realizar pruebas de hipótesis.</p>
- </div>
- </div>
- </div>
-
- <h2>Estructura de la Tabla ANOVA</h2>
-
- <p>La tabla ANOVA para contrastar la igualdad de los efectos de los tratamientos se presenta a continuación:</p>
-
- <table>
- <thead>
- <tr>
- <th>Fuente de Variación</th>
- <th>Suma de Cuadrados</th>
- <th>GL</th>
- <th>Cuadrados Medios</th>
- <th>$F_{\text{exp}}$</th>
- </tr>
- </thead>
- <tbody>
- <tr>
- <td>Trat. ajustados</td>
- <td>$\dfrac{K\displaystyle\sum_{i=1}^{I}T_i^2}{\lambda I}$</td>
- <td>$I - 1$</td>
- <td>$\dfrac{SCTr^{*}}{I-1}$</td>
- <td>$\dfrac{MCTr^{*}}{MCR}$</td>
- </tr>
- <tr>
- <td>Bloq. no ajust.</td>
- <td>$\displaystyle\sum_{j=1}^{J}\dfrac{y_{.j.}^2}{K} - \dfrac{y_{\cdots}^2}{N}$</td>
- <td>$J - 1$</td>
- <td></td>
- <td></td>
- </tr>
- <tr>
- <td>Columnas</td>
- <td>$\displaystyle\sum_{k=1}^{K}\dfrac{y_{..k}^2}{J} - \dfrac{y_{\cdots}^2}{N}$</td>
- <td>$K - 1$</td>
- <td></td>
- <td></td>
- </tr>
- <tr>
- <td>Residual</td>
- <td>$SCT - SCTr^{*} - SCBl - SCC$</td>
- <td>$N - 2I - K + 2$</td>
- <td>$\dfrac{SCR}{N-2I-K+2}$</td>
- <td></td>
- </tr>
- <tr>
- <td><strong>TOTAL</strong></td>
- <td>$\displaystyle\sum_{jk} y_{(.)jk}^2 - \dfrac{y_{\cdots}^2}{N}$</td>
- <td>$N - 1$</td>
- <td></td>
- <td></td>
- </tr>
- </tbody>
- </table>
-
- <h2>Regla de Decisión</h2>
-
- <div class="interpretation-box">
- <strong><i class="fas fa-gavel"></i> Contraste de hipótesis para tratamientos:</strong><br>
- $H_0: \tau_1 = \tau_2 = \cdots = \tau_I = 0$<br>
- $H_1:$: Al menos un $\tau_i \neq 0$=<br><br>
- <strong>Decisión:</strong> Se rechaza $H_0$ si $F_{\text{exp}} > F_{\alpha, \, I-1, \, N-2I-K+2}$&gt;α,I−1,N−2I−K+2
- </div>
- </div>
- </template>
-
- <template id="module-5">
- <div class="animate-fade-in">
- <div class="border-b border-gray-100 pb-6 mb-6">
- <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
- Módulo 5
- </div>
- <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">ANOVA con Bloques Ajustados</h2>
- <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
- <span class="text-xl">🎯
- </span><div>
- <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
- <p class="text-gray-600 text-sm" style="margin:0;">Analizar el efecto de bloques con sumas ajustadas.</p>
- </div>
- </div>
- </div>
-
- <h2>Contraste para el Efecto de los Bloques</h2>
-
- <p>Al igual que en el diseño en bloques incompletos balanceados, puede resultar de interés contrastar también la igualdad del efecto de los bloques. Para ello la $SCT$ se debe descomponer de la siguiente forma:</p>
-
- <div class="formula-box">
- $$SCT = SCTr + SCBl^{*} + SCC + SCR$$</div>
-
- <p>donde:</p>
-
- <h3>Suma de Cuadrados de Tratamientos (no ajustada)</h3>
-
- <div class="formula-box">
- $$SCTr = \sum_{i=1}^{I} \frac{y_{i..}^2}{K} - \frac{y_{\cdots}^2}{N}$$∑Ii..2−⋯2
- </div>
-
- <h3>Suma de Cuadrados de Bloques Ajustada ($SCBl^{*}$</h3>
-
- <div class="formula-box">
- $$SCBl^{*} = \frac{R \displaystyle\sum_{j=1}^{J} B_j^2}{\lambda J}$$</div>
-
- <p>siendo:</p>
- <ul>
- <li>$R$: número de veces que cada tratamiento se presenta en el diseño</li>
- <li>$B_j$: total ajustado del $j$-ésimo bloque, dado por:
- <div class="formula-box">
- $$B_j = y_{.j.} - \frac{1}{R}\sum_{i=1}^{I} n_{ij} \, y_{i..} \qquad j = 1, 2, \cdots, J$$
- </div>
- </li>
- </ul>
-
- <h2>Tabla ANOVA (Bloques Ajustados)</h2>
-
- <table>
- <thead>
- <tr>
- <th>Fuente de Variación</th>
- <th>Suma de Cuadrados</th>
- <th>GL</th>
- <th>Cuadrados Medios</th>
- <th>$F_{\text{exp}}$</th>
- </tr>
- </thead>
- <tbody>
- <tr>
- <td>Trat. no ajust.</td>
- <td>$\displaystyle\sum_{i=1}^{I}\dfrac{y_{i..}^2}{K} - \dfrac{y_{\cdots}^2}{N}$</td>
- <td>$I - 1$</td>
- <td></td>
- <td></td>
- </tr>
- <tr>
- <td>Bloq. ajustados</td>
- <td>$\dfrac{R\displaystyle\sum_{j=1}^{J}B_j^2}{\lambda J}$</td>
- <td>$J - 1$</td>
- <td>$\dfrac{SCBl^{*}}{J-1}$</td>
- <td>$\dfrac{MCBl^{*}}{MCR}$</td>
- </tr>
- <tr>
- <td>Columnas</td>
- <td>$\displaystyle\sum_{k=1}^{K}\dfrac{y_{..k}^2}{J} - \dfrac{y_{\cdots}^2}{N}$</td>
- <td>$K - 1$</td>
- <td></td>
- <td></td>
- </tr>
- <tr>
- <td>Residual</td>
- <td>$SCT - SCTr - SCBl^{*} - SCC$</td>
- <td>$N - 2I - K + 2$</td>
- <td>$\dfrac{SCR}{N-2I-K+2}$</td>
- <td></td>
- </tr>
- <tr>
- <td><strong>TOTAL</strong></td>
- <td>$\displaystyle\sum_{jk} y_{(.)jk}^2 - \dfrac{y_{\cdots}^2}{N}$</td>
- <td>$N - 1$</td>
- <td></td>
- <td></td>
- </tr>
- </tbody>
- </table>
-
- <div class="interpretation-box">
- <strong><i class="fas fa-gavel"></i> Contraste de hipótesis para bloques:</strong><br>
- $H_0: \beta_1 = \beta_2 = \cdots = \beta_J = 0$<br>
- $H_1:$: Al menos un $\beta_j \neq 0$=<br><br>
- <strong>Decisión:</strong> Se rechaza $H_0$ si $F_{\text{exp}} > F_{\alpha, \, J-1, \, N-2I-K+2}$&gt;α,J−1,N−2I−K+2
- </div>
- </div>
- </template>
-
- <template id="module-6">
- <div class="animate-fade-in">
- <div class="border-b border-gray-100 pb-6 mb-6">
- <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
- Módulo 6
- </div>
- <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Ejemplo Completo</h2>
- <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
- <span class="text-xl">🎯
- </span><div>
- <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
- <p class="text-gray-600 text-sm" style="margin:0;">Aplicar el diseño de Youden con cálculos paso a paso.</p>
- </div>
- </div>
- </div>
-
- <div class="example-box">
- <h4><i class="fas fa-flask"></i> Ejemplo: Rendimiento de Semillas de Trigo</h4>
- <p>Se desea estudiar el rendimiento de 4 tipos de semillas de trigo. Se utiliza un diseño en Cuadrado de Youden para controlar el efecto del tipo de insecticida y del tipo de abono. Se dispone de 4 insecticidas (bloques) y 3 abonos (columnas).</p>
- </div>
-
- <h2>Datos del Experimento (Tabla 5-18)</h2>
-
- <div class="youden-grid grid-4x3" style="max-width: 450px;">
- <div class="youden-cell header-cell">Insect./Abono</div>
- <div class="youden-cell header-cell">a₁</div>
- <div class="youden-cell header-cell">a₂</div>
- <div class="youden-cell header-cell">a₃</div>
- <div class="youden-cell header-row">i₁</div>
- <div class="youden-cell cell-A"><span class="cell-letter">A</span><span class="cell-value">23</span></div>
- <div class="youden-cell cell-B"><span class="cell-letter">B</span><span class="cell-value">25</span></div>
- <div class="youden-cell cell-C"><span class="cell-letter">C</span><span class="cell-value">16</span></div>
- <div class="youden-cell header-row">i₂</div>
- <div class="youden-cell cell-B"><span class="cell-letter">B</span><span class="cell-value">18</span></div>
- <div class="youden-cell cell-C"><span class="cell-letter">C</span><span class="cell-value">15</span></div>
- <div class="youden-cell cell-D"><span class="cell-letter">D</span><span class="cell-value">17</span></div>
- <div class="youden-cell header-row">i₃</div>
- <div class="youden-cell cell-C"><span class="cell-letter">C</span><span class="cell-value">19</span></div>
- <div class="youden-cell cell-D"><span class="cell-letter">D</span><span class="cell-value">25</span></div>
- <div class="youden-cell cell-A"><span class="cell-letter">A</span><span class="cell-value">18</span></div>
- <div class="youden-cell header-row">i₄</div>
- <div class="youden-cell cell-D"><span class="cell-letter">D</span><span class="cell-value">21</span></div>
- <div class="youden-cell cell-A"><span class="cell-letter">A</span><span class="cell-value">12</span></div>
- <div class="youden-cell cell-B"><span class="cell-letter">B</span><span class="cell-value">20</span></div>
- </div>
-
- <div class="youden-legend">
- <div class="legend-section">
- Tratamiento (Semilla):
- <div class="legend-item"><div class="legend-color" style="background: var(--usta-primary); color: white;">A</div></div>
- <div class="legend-item"><div class="legend-color" style="background: var(--usta-secondary); color: white;">B</div></div>
- <div class="legend-item"><div class="legend-color" style="background: var(--usta-navy); color: white;">C</div></div>
- <div class="legend-item"><div class="legend-color" style="background: var(--usta-gold); color: var(--usta-navy);">D</div></div>
- </div>
- </div>
-
- <h2>Parámetros del Modelo</h2>
-
- <ul>
- <li>$I = J = 4$</li>
- <li>$K = R = 3$</li>
- <li>$N = IR = JK = 12$</li>
- <li>$\lambda = R\dfrac{K-1}{I-1} = 3 \times \dfrac{2}{3} = 2$</li>
- </ul>
-
- <h2>Tablas de Totales</h2>
-
- <h3>Totales por Bloque (Insecticidas) - $y_{.j.}$</h3>
- <table>
- <thead>
- <tr>
- <th>Bloque</th>
- <th>i₁</th>
- <th>i₂</th>
- <th>i₃</th>
- <th>i₄</th>
- </tr>
- </thead>
- <tbody>
- <tr>
- <td><strong>Total $y_{.j.}$</strong></td>
- <td>64</td>
- <td>50</td>
- <td>62</td>
- <td>53</td>
- </tr>
- <tr>
- <td><strong>$y_{.j.}^2$</strong></td>
- <td>4096</td>
- <td>2500</td>
- <td>3844</td>
- <td>2809</td>
- </tr>
- </tbody>
- </table>
-
- <h3>Totales por Columna (Abonos) - $y_{..k}$</h3>
- <table>
- <thead>
- <tr>
- <th>Columna</th>
- <th>a₁</th>
- <th>a₂</th>
- <th>a₃</th>
- <th><strong>Total</strong></th>
- </tr>
- </thead>
- <tbody>
- <tr>
- <td><strong>Total $y_{..k}$</strong></td>
- <td>81</td>
- <td>77</td>
- <td>71</td>
- <td><strong>229</strong></td>
- </tr>
- <tr>
- <td><strong>$y_{..k}^2$</strong></td>
- <td>6561</td>
- <td>5929</td>
- <td>5041</td>
- <td>17531</td>
- </tr>
- </tbody>
- </table>
-
- <h3>Totales por Tratamiento (Semillas) - $y_{i..}$</h3>
- <table>
- <thead>
- <tr>
- <th>Tratamiento</th>
- <th>A</th>
- <th>B</th>
- <th>C</th>
- <th>D</th>
- <th>Total</th>
- </tr>
- </thead>
- <tbody>
- <tr>
- <td><strong>Observaciones</strong></td>
- <td>23, 18, 12</td>
- <td>25, 18, 20</td>
- <td>16, 15, 19</td>
- <td>17, 25, 21</td>
- <td></td>
- </tr>
- <tr>
- <td><strong>$y_{i..}$</strong></td>
- <td>53</td>
- <td>63</td>
- <td>50</td>
- <td>63</td>
- <td><strong>229</strong></td>
- </tr>
- <tr>
- <td><strong>$y_{i..}^2$</strong></td>
- <td>2809</td>
- <td>3969</td>
- <td>2500</td>
- <td>3969</td>
- <td>13247</td>
- </tr>
- </tbody>
- </table>
-
- <h2>Cálculo de Sumas de Cuadrados</h2>
-
- <pre><code data-language="Python">import numpy as np
+    <!-- Floating Sidebar Toggle Button -->
+    <button class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Mostrar/Ocultar menú" aria-label="Toggle sidebar">
+        <i class="fas fa-bars text-sm" id="sidebarToggleIcon"></i>
+    </button>
+
+    <div class="main-layout">
+
+        <!-- Sidebar Navigation -->
+        <div id="sidebar-panel">
+            <div class="sidebar-brand">
+                <h2><i class="fas fa-puzzle-piece"></i> <span>Cuadrados <span style="color: #FDB913;">de Youden</span></span></h2>
+                <p>Diseño de Experimentos • USTA 2026</p>
+            </div>
+            <nav class="sidebar-nav" id="module-nav">
+                <!-- Nav items injected via JS -->
+            </nav>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-grow flex flex-col" style="min-width:0;">
+            <main class="flex-grow bg-white rounded-tl-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div id="content-area" class="p-6 md:p-10 module-content">
+                    <!-- Content injected via JS -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="usta-header mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <i class="fas fa-book-open"></i> Referencias Bibliográficas
+            </h3>
+            <ul class="space-y-3 text-white/90 text-sm">
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Montgomery, D. C. (2019). <em class="text-gold">Design and Analysis of Experiments</em> (10th
+                        ed.). Wiley.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Youden, W. J. (1937). Use of incomplete block replications in estimating tobacco-mosaic virus.
+                        <em class="text-gold">Contributions from Boyce Thompson Institute</em>, 9, 41-48.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Cochran, W. G. &amp; Cox, G. M. (1992). <em class="text-gold">Experimental Designs</em> (2nd
+                        ed.). Wiley.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>García Leal, J. &amp; Lara Porras, A.M. (1998). <em class="text-gold">Diseño Estadístico de
+                            Experimentos. Análisis de la Varianza</em>. Grupo Editorial Universitario.</span>
+                </li>
+            </ul>
+            <div class="mt-6 pt-6 border-t border-white/20 text-center">
+                <p class="text-white font-medium">Material de Estudio — <span class="text-gold">USTA</span></p>
+                <p class="text-xs mt-1 text-white/60">Diseño de Experimentos &bull; Diseños en Cuadrados de Youden</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="Volver arriba">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Module Content Templates -->
+
+    <template id="module-1">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    Módulo 1
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Introducción</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Comprender qué son los cuadrados de Youden y
+                            su relación con los cuadros latinos.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2>¿Qué es un Cuadrado de Youden?</h2>
+
+            <div class="definition-box">
+                <h4><i class="fas fa-book"></i> Definición</h4>
+                <p>Un <strong>Cuadrado de Youden</strong> es un diseño en cuadrado latino <em>incompleto</em>, donde el
+                    número de niveles de uno de los factores de bloqueo es menor que el número de tratamientos. Estos
+                    diseños fueron estudiados por <strong>W.J. Youden</strong> y se conocen como <strong>cuadrados de
+                        Youden</strong>.</p>
+            </div>
+
+            <p>En el diseño en cuadrado latino se requiere que los tres factores (filas, columnas y letras latinas)
+                tengan el mismo número de niveles, es decir que haya el mismo número de filas, de columnas y de letras
+                latinas. Sin embargo, puede suceder que el número de niveles disponibles de uno de los factores de
+                control sea menor que el número de tratamientos, en este caso estaríamos ante un diseño en cuadrado
+                latino <em>incompleto</em>.</p>
+
+            <h2>Relación con el Cuadrado Latino</h2>
+
+            <div class="concept-box">
+                <h4><i class="fas fa-lightbulb"></i> Característica Principal</h4>
+                <p>Un Cuadrado de Youden puede considerarse como un <strong>cuadrado latino al que le falta al menos una
+                        columna</strong>. Sin embargo, un cuadrado latino no se convierte en un Cuadrado de Youden
+                    eliminando arbitrariamente más de una columna.</p>
+            </div>
+
+            <h3>Ejemplo: Experimento con Semillas de Trigo</h3>
+
+            <p>Consideremos un experimento sobre el rendimiento de la semilla de trigo, en el que se está interesado en
+                estudiar <strong>4 tipos de semillas</strong> y se desea eliminar estadísticamente el efecto del tipo de
+                insecticida y abono. Pero supongamos que solo se dispone de <strong>3 tipos de abono</strong>. Para
+                realizar este experimento se decidió utilizar un Cuadrado de Youden con:</p>
+
+            <ul>
+                <li><strong>4 filas:</strong> Tipos de insecticida (i₁, i₂, i₃, i₄)</li>
+                <li><strong>3 columnas:</strong> Tipos de abono (a₁, a₂, a₃)</li>
+                <li><strong>4 letras latinas:</strong> Tipos de semillas (A, B, C, D)</li>
+            </ul>
+
+            <h3>Datos del Cuadrado de Youden (Tabla 5-15)</h3>
+
+            <div class="youden-grid grid-4x3" style="max-width: 450px;">
+                <div class="youden-cell header-cell">Insect./Abono</div>
+                <div class="youden-cell header-cell">a₁</div>
+                <div class="youden-cell header-cell">a₂</div>
+                <div class="youden-cell header-cell">a₃</div>
+                <div class="youden-cell header-row">i₁</div>
+                <div class="youden-cell cell-A"><span class="cell-letter">A</span><span class="cell-value">23</span>
+                </div>
+                <div class="youden-cell cell-B"><span class="cell-letter">B</span><span class="cell-value">25</span>
+                </div>
+                <div class="youden-cell cell-C"><span class="cell-letter">C</span><span class="cell-value">16</span>
+                </div>
+                <div class="youden-cell header-row">i₂</div>
+                <div class="youden-cell cell-B"><span class="cell-letter">B</span><span class="cell-value">18</span>
+                </div>
+                <div class="youden-cell cell-C"><span class="cell-letter">C</span><span class="cell-value">15</span>
+                </div>
+                <div class="youden-cell cell-D"><span class="cell-letter">D</span><span class="cell-value">17</span>
+                </div>
+                <div class="youden-cell header-row">i₃</div>
+                <div class="youden-cell cell-C"><span class="cell-letter">C</span><span class="cell-value">19</span>
+                </div>
+                <div class="youden-cell cell-D"><span class="cell-letter">D</span><span class="cell-value">25</span>
+                </div>
+                <div class="youden-cell cell-A"><span class="cell-letter">A</span><span class="cell-value">18</span>
+                </div>
+                <div class="youden-cell header-row">i₄</div>
+                <div class="youden-cell cell-D"><span class="cell-letter">D</span><span class="cell-value">21</span>
+                </div>
+                <div class="youden-cell cell-A"><span class="cell-letter">A</span><span class="cell-value">12</span>
+                </div>
+                <div class="youden-cell cell-B"><span class="cell-letter">B</span><span class="cell-value">20</span>
+                </div>
+            </div>
+
+            <div class="youden-legend">
+                <div class="legend-section">
+                    Tratamiento (Semilla):
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #3D008D; color: white;">A</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ED1E79; color: white;">B</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #001A4D; color: white;">C</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #FDB913; color: #001A4D;">D</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <h4><i class="fas fa-info-circle"></i> Observación Importante</h4>
+                <p>Este diseño se convierte en un cuadrado latino si se le añade la columna: <strong>D, A, B,
+                        C</strong>. Cada tratamiento aparece exactamente una vez en cada columna.</p>
+            </div>
+
+            <h2>Conexión con Bloques Incompletos Balanceados</h2>
+
+            <p>Un Cuadrado de Youden se puede considerar como un <strong>diseño en bloques incompletos balanceado y
+                    simétrico</strong> en el que las filas corresponden a los bloques. En efecto, si asignamos:</p>
+
+            <ul>
+                <li>El <strong>factor principal</strong> a las letras latinas</li>
+                <li>Un <strong>factor secundario</strong>, que tiene el mismo número de niveles que el factor principal,
+                    a las filas</li>
+                <li>Un <strong>factor secundario</strong>, que tiene menor número de niveles que el factor principal, a
+                    las columnas</li>
+            </ul>
+
+            <p>Entonces, un cuadrado de Youden es un diseño en bloques incompletos balanceado y simétrico en el que:</p>
+
+            <ol>
+                <li>Cada tratamiento ocurre una vez en cada columna</li>
+                <li>La posición del tratamiento dentro de un bloque indica el nivel del factor secundario
+                    correspondiente a las columnas</li>
+                <li>El número de réplicas de un tratamiento dado es igual al número de tratamientos por bloque</li>
+            </ol>
+        </div>
+    </template>
+
+    <template id="module-2">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    Módulo 2
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Modelo Estadístico
+                </h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Formular el modelo lineal del diseño de
+                            Youden.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Modelo Lineal</h2>
+
+            <div class="formula-box">
+                $$y_{ijk} = \mu + \tau_i + \beta_j + \gamma_k + \varepsilon_{ijk} \quad , \quad \begin{cases} i =
+                1,2,\ldots,I \\ j = 1,2,\ldots,J \\ k = 1,2,\ldots,K \end{cases} \quad \text{con } I = J \text{ y } K <
+                    I$$ </div>
+
+                    <p>donde:</p>
+
+                    <ul>
+                        <li>$\mu$: media global</li>
+                        <li>$\tau_i$: efecto producido por el $i$-ésimo tratamiento. Dichos efectos están sujetos a la
+                            restricción $\sum_i \tau_i = 0$</li>
+                        <li>$\beta_j$: efecto producido por el $j$-ésimo bloque. Dichos efectos están sujetos a la
+                            restricción $\sum_j \beta_j = 0$</li>
+                        <li>$\gamma_k$: efecto producido la $k$-ésima posición (columna). Dichos efectos están sujetos a
+                            la restricción $\sum_k \gamma_k = 0$. Cada posición ocurre una vez en cada bloque y con cada
+                            tratamiento</li>
+                        <li>$\varepsilon_{ijk}$: variables aleatorias independientes con distribución $N(0, \sigma^2)$
+                        </li>
+                    </ul>
+
+                    <h2>Parámetros del Diseño</h2>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parámetro</th>
+                                <th>Descripción</th>
+                                <th>Valor en el Ejemplo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>$I$</td>
+                                <td>Número de tratamientos (letras latinas)</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td>$J$</td>
+                                <td>Número de bloques (filas), con $I = J$</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td>$K$</td>
+                                <td>Número de columnas (posiciones), con $K < I$</td>
+                                <td>3</td>
+                            </tr>
+                            <tr>
+                                <td>$R$</td>
+                                <td>Número de réplicas por tratamiento ($R = K$)</td>
+                                <td>3</td>
+                            </tr>
+                            <tr>
+                                <td>$N$</td>
+                                <td>Número total de observaciones ($N = IR = JK$)</td>
+                                <td>12</td>
+                            </tr>
+                            <tr>
+                                <td>$\lambda$</td>
+                                <td>Parámetro de equilibrio: $\lambda = R\dfrac{K-1}{I-1}$</td>
+                                <td>$3 \times \dfrac{2}{3} = 2$</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="concept-box">
+                        <h4><i class="fas fa-lightbulb"></i> Interpretación de $\lambda$</h4>
+                        <p>El parámetro $\lambda$ indica cuántas veces aparece cada par de tratamientos juntos en el
+                            mismo bloque. En el ejemplo, $\lambda = 2$ significa que cada par de tratamientos coincide
+                            en exactamente 2 bloques.</p>
+                    </div>
+
+                    <h2>Totales Ajustados</h2>
+
+                    <p>El análisis del modelo se realiza de la misma manera que en el diseño en bloques incompletos
+                        balanceados, añadiéndole el cálculo de la suma de cuadrados correspondiente a la posición
+                        (columna). Para ello se utilizan <strong>totales ajustados</strong>:</p>
+
+                    <h3>Totales Ajustados de Tratamientos</h3>
+
+                    <div class="formula-box">
+                        $$T_i = y_{i..} - \frac{1}{K}\sum_{j=1}^{J} n_{ij} \, y_{.j.} \qquad i = 1, 2, \cdots, I$$
+                    </div>
+
+                    <p>donde:</p>
+                    <ul>
+                        <li>$y_{i..}$: se obtiene sumando las observaciones en las que la letra latina se ha fijado al
+                            nivel $i$</li>
+                        <li>$y_{.j.}$: se obtiene sumando las observaciones correspondientes al bloque $j$-ésimo</li>
+                        <li>$n_{ij} = \begin{cases} 1 & \text{si el tratamiento } i \text{ ocurre en el bloque } j \\ 0
+                            & \text{en otro caso} \end{cases}$</li>
+                    </ul>
+
+                    <div class="concept-box">
+                        <h4><i class="fas fa-calculator"></i> Nota</h4>
+                        <p>La expresión $\frac{1}{K}\sum_{j=1}^{J} n_{ij} \, y_{.j.}$ es el valor medio de los totales
+                            de los bloques que contienen al tratamiento $i$-ésimo.</p>
+                    </div>
+
+                    <h3>Totales Ajustados de Bloques</h3>
+
+                    <div class="formula-box">
+                        $$B_j = y_{.j.} - \frac{1}{R}\sum_{i=1}^{I} n_{ij} \, y_{i..} \qquad j = 1, 2, \cdots, J$$
+                    </div>
+            </div>
+    </template>
+
+    <template id="module-3">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    Módulo 3
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Sumas de Cuadrados
+                </h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Calcular las sumas de cuadrados ajustadas
+                            para el diseño.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Descomposición de la Variabilidad Total</h2>
+
+            <p>En este diseño la variabilidad total $SCT$ se descompone en:</p>
+
+            <div class="formula-box">
+                $$SCT = SCTr^{*} + SCBl + SCC + SCR$$</div>
+
+            <h2>Fórmulas de Sumas de Cuadrados</h2>
+
+            <h3>Suma de Cuadrados de Tratamientos Ajustada ($SCTr^{*}$</h3>
+
+            <p>La suma de cuadrados ajustada de los tratamientos, cuya expresión coincide con la correspondiente a los
+                diseños en bloques incompletos balanceados:</p>
+
+            <div class="formula-box">
+                $$SCTr^{*} = \frac{K \displaystyle\sum_{i=1}^{I} T_i^2}{\lambda I}$$</div>
+
+            <p>siendo $\lambda = R\dfrac{K-1}{I-1}$K− y $T_i$ el total ajustado del $i$-ésimo tratamiento.</p>
+
+            <h3>Suma de Cuadrados de Bloques ($SCBl$</h3>
+
+            <div class="formula-box">
+                $$SCBl = \sum_{j=1}^{J} \frac{y_{.j.}^2}{K} - \frac{y_{\cdots}^2}{N}$$
+            </div>
+
+            <h3>Suma de Cuadrados de Columnas ($SCC$</h3>
+
+            <div class="formula-box">
+                $$SCC = \sum_{k=1}^{K} \frac{y_{..k}^2}{J} - \frac{y_{\cdots}^2}{N}$$
+            </div>
+
+            <p>donde $y_{..k}$ se obtiene sumando las observaciones correspondientes a la columna $k$-ésima.</p>
+
+            <h3>Suma de Cuadrados Total ($SCT$</h3>
+
+            <div class="formula-box">
+                $$SCT = \sum_{j=1}^{J}\sum_{k=1}^{K} y_{(.)jk}^2 - \frac{y_{\cdots}^2}{N}$$
+            </div>
+
+            <p>donde $y_{(.)jk}$ indica la observación correspondiente a la fila $j$ y la columna $k$,
+                independientemente de la letra que corresponda.</p>
+
+            <h2>Grados de Libertad</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fuente de Variación</th>
+                        <th>Grados de Libertad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>$SCT$</td>
+                        <td>$N - 1$</td>
+                    </tr>
+                    <tr>
+                        <td>$SCTr^{*}$</td>
+                        <td>$I - 1$</td>
+                    </tr>
+                    <tr>
+                        <td>$SCBl$</td>
+                        <td>$J - 1$</td>
+                    </tr>
+                    <tr>
+                        <td>$SCC$</td>
+                        <td>$K - 1$</td>
+                    </tr>
+                    <tr>
+                        <td>$SCR$</td>
+                        <td>$N - 2I - K + 2$</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="concept-box">
+                <h4><i class="fas fa-check-circle"></i> Verificación</h4>
+                <p>La suma de todos los grados de libertad debe ser igual a $N - 1$:</p>
+                <p>$(I-1) + (J-1) + (K-1) + (N-2I-K+2) = N - 1$</p>
+            </div>
+        </div>
+    </template>
+
+    <template id="module-4">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    Módulo 4
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Tabla ANOVA</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Construir la tabla ANOVA y realizar pruebas
+                            de hipótesis para tratamientos.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2><i class="fas fa-table"></i> Estructura de la Tabla ANOVA</h2>
+
+            <p>La tabla ANOVA para contrastar la igualdad de los efectos de los tratamientos se presenta a continuación:
+            </p>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fuente de Variación</th>
+                            <th>Suma de Cuadrados</th>
+                            <th>GL</th>
+                            <th>Cuadrado Medio</th>
+                            <th>$F_{\text{exp}}$</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Trat. ajustados</strong></td>
+                            <td>$SCTr^{*} = \dfrac{K\displaystyle\sum_{i=1}^{I}T_i^2}{\lambda I}$</td>
+                            <td>$I - 1$</td>
+                            <td>$CMTr^{*} = \dfrac{SCTr^{*}}{I-1}$</td>
+                            <td>$F = \dfrac{CMTr^{*}}{CMR}$</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bloq. no ajust.</strong></td>
+                            <td>$SCBl = \displaystyle\sum_{j=1}^{J}\dfrac{y_{.j.}^2}{K} - \dfrac{y_{\cdots}^2}{N}$</td>
+                            <td>$J - 1$</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Columnas</strong></td>
+                            <td>$SCC = \displaystyle\sum_{k=1}^{K}\dfrac{y_{..k}^2}{J} - \dfrac{y_{\cdots}^2}{N}$</td>
+                            <td>$K - 1$</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Residual</strong></td>
+                            <td>$SCR = SCT - SCTr^{*} - SCBl - SCC$</td>
+                            <td>$N - 2I - K + 2$</td>
+                            <td>$CMR = \dfrac{SCR}{N-2I-K+2}$</td>
+                            <td>—</td>
+                        </tr>
+                        <tr style="background: rgba(1, 40, 32, 0.05);">
+                            <td><strong>TOTAL</strong></td>
+                            <td>$SCT = \displaystyle\sum_{j=1}^{J}\sum_{k=1}^{K} y_{(.)jk}^2 - \dfrac{y_{\cdots}^2}{N}$
+                            </td>
+                            <td>$N - 1$</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="concept-box">
+                <h4><i class="fas fa-lightbulb"></i> Notas Importantes</h4>
+                <ul>
+                    <li>Los <strong>tratamientos se ajustan</strong> porque el diseño es incompleto (no todos los
+                        tratamientos aparecen en todos los bloques)</li>
+                    <li>Los <strong>bloques NO se ajustan</strong> en esta versión de la tabla (se usan totales simples)
+                    </li>
+                    <li>Las <strong>columnas</strong> representan el tercer factor de bloqueo y se incluyen sin ajuste
+                    </li>
+                    <li>El <strong>residual</strong> se obtiene por diferencia para asegurar que $SCT = SCTr^{*} + SCBl
+                        + SCC + SCR$</li>
+                </ul>
+            </div>
+
+            <h2><i class="fas fa-gavel"></i> Prueba de Hipótesis para Tratamientos</h2>
+
+            <div class="definition-box">
+                <h4><i class="fas fa-clipboard-list"></i> Planteamiento del Contraste</h4>
+
+                <p><strong>Hipótesis nula:</strong></p>
+                <div class="formula-box" style="margin: 1rem 0;">
+                    $$H_0: \tau_1 = \tau_2 = \cdots = \tau_I = 0$$
+                </div>
+                <p style="font-size: 0.9rem; color: #64748B;"><em>No existe diferencia significativa entre los
+                        tratamientos (semillas)</em></p>
+
+                <p><strong>Hipótesis alternativa:</strong></p>
+                <div class="formula-box" style="margin: 1rem 0;">
+                    $$H_1: \text{Al menos un } \tau_i \neq 0$$
+                </div>
+                <p style="font-size: 0.9rem; color: #64748B;"><em>Al menos un tratamiento produce un efecto
+                        significativo</em></p>
+            </div>
+
+            <h2><i class="fas fa-calculator"></i> Estadístico de Prueba</h2>
+
+            <div class="formula-box">
+                $$F_{\text{exp}} = \frac{CMTr^{*}}{CMR} \sim F_{I-1, \, N-2I-K+2}$$
+            </div>
+
+            <div class="interpretation-box">
+                <strong><i class="fas fa-check-circle"></i> Regla de Decisión:</strong><br><br>
+                Se rechaza $H_0$ al nivel de significancia $\alpha$ si:
+                <div class="formula-box" style="margin: 1rem 0;">
+                    $$F_{\text{exp}} > F_{\alpha, \, I-1, \, N-2I-K+2}$$
+                </div>
+                donde $F_{\alpha, \, I-1, \, N-2I-K+2}$ es el cuantil $(1-\alpha)$ de la distribución $F$ de
+                Fisher-Snedecor con $I-1$ y $N-2I-K+2$ grados de libertad.
+            </div>
+
+            <h2><i class="fas fa-chart-line"></i> Interpretación del Resultado</h2>
+
+            <div class="tip-box">
+                <h4><i class="fas fa-info-circle"></i> ¿Cómo interpretar el valor p?</h4>
+                <ul style="margin-top: 0.75rem;">
+                    <li><strong>Si $p\text{-value} < \alpha$</strong> (típicamente 0.05): Se rechaza $H_0$. Hay
+                                evidencia estadística de que al menos un tratamiento es diferente.</li>
+                    <li><strong>Si $p\text{-value} \geq \alpha$</strong>: No se rechaza $H_0$. No hay evidencia
+                        suficiente para afirmar diferencias entre tratamientos.</li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <h4><i class="fas fa-flask"></i> Ejemplo Numérico (Continuación)</h4>
+                <p>Supongamos que obtenemos los siguientes resultados del ANOVA:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fuente</th>
+                            <th>SC</th>
+                            <th>GL</th>
+                            <th>CM</th>
+                            <th>$F_{\text{exp}}$</th>
+                            <th>$p$-value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Trat. ajustados</td>
+                            <td>45.67</td>
+                            <td>3</td>
+                            <td>15.22</td>
+                            <td>4.85</td>
+                            <td>0.0342</td>
+                        </tr>
+                        <tr>
+                            <td>Bloq. no ajust.</td>
+                            <td>28.92</td>
+                            <td>3</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>Columnas</td>
+                            <td>12.17</td>
+                            <td>2</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>Residual</td>
+                            <td>12.58</td>
+                            <td>4</td>
+                            <td>3.14</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td><strong>TOTAL</strong></td>
+                            <td>99.34</td>
+                            <td>11</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p style="margin-top: 1rem;"><strong>Decisión:</strong> Como $p\text{-value} = 0.0342 < 0.05$, se
+                        rechaza $H_0$. Hay evidencia estadística de que al menos un tipo de semilla produce un
+                        rendimiento diferente.</p>
+            </div>
+
+            <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> Precaución</h4>
+                <p>El rechazo de $H_0$ <strong>NO indica cuáles tratamientos son diferentes</strong>. Para identificar
+                    qué pares de tratamientos difieren, se requieren <strong>pruebas de comparaciones múltiples</strong>
+                    (Tukey, Duncan, Scheffé, etc.), que se estudian en módulos posteriores.</p>
+            </div>
+
+            <div class="concept-box">
+                <h4><i class="fas fa-key"></i> Puntos Clave para Recordar</h4>
+                <ol>
+                    <li>En Youden, los <strong>tratamientos siempre se ajustan</strong> por el desbalance del diseño
+                    </li>
+                    <li>Los grados de libertad del residual son: $N - 2I - K + 2$ (verificar que suma $N-1$)</li>
+                    <li>El estadístico $F$ compara el cuadrado medio de tratamientos ajustados con el residual</li>
+                    <li>Un resultado significativo indica diferencias, pero <strong>no dice cuáles</strong> grupos
+                        difieren</li>
+                </ol>
+            </div>
+        </div>
+    </template>
+
+    <template id="module-5">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    Módulo 5
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">ANOVA con Bloques
+                    Ajustados</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Analizar el efecto de bloques con sumas
+                            ajustadas y comprender su importancia en diseños desbalanceados.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2>¿Por Qué Ajustar por Bloques?</h2>
+
+            <p>En un Cuadrado de Youden, el diseño es <strong>incompleto</strong> porque el número de columnas es menor
+                que el número de tratamientos. Esto crea un <strong>desequilibrio</strong> que requiere ajustar las
+                sumas de cuadrados para obtener pruebas válidas.</p>
+
+            <div class="concept-box">
+                <h4><i class="fas fa-key"></i> Concepto Clave</h4>
+                <p>Cuando los tratamientos no aparecen el mismo número de veces en cada bloque, las <strong>sumas de
+                        cuadradas no ajustadas</strong> pueden estar <em>confundidas</em> con efectos de bloques. Por
+                    ello, se calcula la <strong>suma de cuadrados de bloques ajustada</strong> ($SCBl^*$) que elimina
+                    este confundimiento.</p>
+            </div>
+
+            <h2>Descomposición de la Suma de Cuadrados Total</h2>
+
+            <p>La suma de cuadrados total ($SCT$) se descompone de la siguiente forma:</p>
+
+            <div class="formula-box">
+                $$SCT = SCTr + SCBl^{*} + SCC + SCR$$
+            </div>
+
+            <p>donde:</p>
+            <ul>
+                <li><strong>$SCTr$</strong>: Suma de cuadrados de tratamientos (no ajustada)</li>
+                <li><strong>$SCBl^*$</strong>: Suma de cuadrados de bloques <em>ajustada</em></li>
+                <li><strong>$SCC$</strong>: Suma de cuadrados de columnas</li>
+                <li><strong>$SCR$</strong>: Suma de cuadrados residual</li>
+            </ul>
+
+            <h3>1. Suma de Cuadrados de Tratamientos (no ajustada)</h3>
+
+            <div class="formula-box">
+                $$SCTr = \sum_{i=1}^{I} \frac{y_{i..}^2}{K} - \frac{y_{\cdots}^2}{N}$$
+            </div>
+
+            <div class="interpretation-box">
+                <strong><i class="fas fa-info-circle"></i> Interpretación:</strong> Esta fórmula es similar a la del
+                diseño completamente al azar. Se elevan al cuadrado los totales de cada tratamiento, se dividen por el
+                número de observaciones por tratamiento ($K$), y se resta el factor de corrección.
+            </div>
+
+            <h3>2. Suma de Cuadrados de Bloques Ajustada ($SCBl^{*}$)</h3>
+
+            <div class="formula-box">
+                $$SCBl^{*} = \frac{R \displaystyle\sum_{j=1}^{J} B_j^2}{\lambda J}$$
+            </div>
+
+            <p>siendo:</p>
+            <ul>
+                <li><strong>$R$</strong>: número de veces que cada tratamiento se presenta en el diseño</li>
+                <li><strong>$B_j$</strong>: total ajustado del $j$-ésimo bloque, dado por:
+                    <div class="formula-box">
+                        $$B_j = y_{.j.} - \frac{1}{R}\sum_{i=1}^{I} n_{ij} \, y_{i..} \qquad j = 1, 2, \cdots, J$$
+                    </div>
+                </li>
+                <li><strong>$n_{ij}$</strong>: indicador que vale 1 si el tratamiento $i$ está en el bloque $j$, y 0 en
+                    caso contrario</li>
+                <li><strong>$\lambda$</strong>: parámetro de balance del diseño incompleto</li>
+            </ul>
+
+            <div class="concept-box">
+                <h4><i class="fas fa-lightbulb"></i> ¿Qué representa $B_j$?</h4>
+                <p>El total ajustado del bloque $j$ ($B_j$) es la diferencia entre el total observado del bloque
+                    ($y_{.j.}$) y el promedio ponderado de los totales de los tratamientos que aparecen en ese bloque.
+                    Esto <strong>elimina el efecto de los tratamientos</strong> y aísla el efecto puro del bloque.</p>
+            </div>
+
+            <h3>3. Suma de Cuadrados de Columnas</h3>
+
+            <div class="formula-box">
+                $$SCC = \sum_{k=1}^{K} \frac{y_{..k}^2}{J} - \frac{y_{\cdots}^2}{N}$$
+            </div>
+
+            <h2>Tabla ANOVA Completa (Bloques Ajustados)</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fuente de Variación</th>
+                        <th>Suma de Cuadrados</th>
+                        <th>GL</th>
+                        <th>Cuadrados Medios</th>
+                        <th>$F_{\text{exp}}$</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Trat. no ajust.</td>
+                        <td>$\displaystyle\sum_{i=1}^{I}\dfrac{y_{i..}^2}{K} - \dfrac{y_{\cdots}^2}{N}$</td>
+                        <td>$I - 1$</td>
+                        <td>$\dfrac{SCTr}{I-1}$</td>
+                        <td>$\dfrac{MCTr}{MCR}$</td>
+                    </tr>
+                    <tr>
+                        <td>Bloq. ajustados</td>
+                        <td>$\dfrac{R\displaystyle\sum_{j=1}^{J}B_j^2}{\lambda J}$</td>
+                        <td>$J - 1$</td>
+                        <td>$\dfrac{SCBl^{*}}{J-1}$</td>
+                        <td>$\dfrac{MCBl^{*}}{MCR}$</td>
+                    </tr>
+                    <tr>
+                        <td>Columnas</td>
+                        <td>$\displaystyle\sum_{k=1}^{K}\dfrac{y_{..k}^2}{J} - \dfrac{y_{\cdots}^2}{N}$</td>
+                        <td>$K - 1$</td>
+                        <td>$\dfrac{SCC}{K-1}$</td>
+                        <td>$\dfrac{MCC}{MCR}$</td>
+                    </tr>
+                    <tr>
+                        <td>Residual</td>
+                        <td>$SCT - SCTr - SCBl^{*} - SCC$</td>
+                        <td>$N - 2I - K + 2$</td>
+                        <td>$\dfrac{SCR}{N-2I-K+2}$</td>
+                        <td>—</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                        <td><strong>TOTAL</strong></td>
+                        <td>$\displaystyle\sum_{jk} y_{(.)jk}^2 - \dfrac{y_{\cdots}^2}{N}$</td>
+                        <td>$N - 1$</td>
+                        <td>—</td>
+                        <td>—</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Contraste de Hipótesis</h2>
+
+            <h3>Para Tratamientos</h3>
+            <div class="interpretation-box">
+                <strong><i class="fas fa-gavel"></i> Hipótesis:</strong><br>
+                $H_0: \tau_1 = \tau_2 = \cdots = \tau_I = 0$<br>
+                $H_1$: Al menos un $\tau_i \neq 0$<br><br>
+                <strong>Decisión:</strong> Se rechaza $H_0$ si $F_{\text{exp}} > F_{\alpha, \, I-1, \, N-2I-K+2}$
+            </div>
+
+            <h3>Para Bloques (Ajustados)</h3>
+            <div class="interpretation-box">
+                <strong><i class="fas fa-gavel"></i> Hipótesis:</strong><br>
+                $H_0: \beta_1 = \beta_2 = \cdots = \beta_J = 0$<br>
+                $H_1$: Al menos un $\beta_j \neq 0$<br><br>
+                <strong>Decisión:</strong> Se rechaza $H_0$ si $F_{\text{exp}} > F_{\alpha, \, J-1, \, N-2I-K+2}$
+            </div>
+
+            <h3>Para Columnas</h3>
+            <div class="interpretation-box">
+                <strong><i class="fas fa-gavel"></i> Hipótesis:</strong><br>
+                $H_0: \gamma_1 = \gamma_2 = \cdots = \gamma_K = 0$<br>
+                $H_1$: Al menos un $\gamma_k \neq 0$<br><br>
+                <strong>Decisión:</strong> Se rechaza $H_0$ si $F_{\text{exp}} > F_{\alpha, \, K-1, \, N-2I-K+2}$
+            </div>
+
+            <h2>Ejemplo Paso a Paso</h2>
+
+            <div class="example-box">
+                <h4><i class="fas fa-flask"></i> Ejemplo: Semillas de Trigo</h4>
+                <p>Retomemos el experimento con 4 tipos de semillas (A, B, C, D), 4 insecticidas (bloques) y 3 abonos
+                    (columnas).</p>
+            </div>
+
+            <h3>Datos del Experimento</h3>
+
+            <div class="youden-grid grid-4x3" style="max-width: 450px;">
+                <div class="youden-cell header-cell">Insect./Abono</div>
+                <div class="youden-cell header-cell">a₁</div>
+                <div class="youden-cell header-cell">a₂</div>
+                <div class="youden-cell header-cell">a₃</div>
+                <div class="youden-cell header-row">i₁</div>
+                <div class="youden-cell cell-A"><span class="cell-letter">A</span><span class="cell-value">23</span>
+                </div>
+                <div class="youden-cell cell-B"><span class="cell-letter">B</span><span class="cell-value">25</span>
+                </div>
+                <div class="youden-cell cell-C"><span class="cell-letter">C</span><span class="cell-value">16</span>
+                </div>
+                <div class="youden-cell header-row">i₂</div>
+                <div class="youden-cell cell-B"><span class="cell-letter">B</span><span class="cell-value">18</span>
+                </div>
+                <div class="youden-cell cell-C"><span class="cell-letter">C</span><span class="cell-value">15</span>
+                </div>
+                <div class="youden-cell cell-D"><span class="cell-letter">D</span><span class="cell-value">17</span>
+                </div>
+                <div class="youden-cell header-row">i₃</div>
+                <div class="youden-cell cell-C"><span class="cell-letter">C</span><span class="cell-value">19</span>
+                </div>
+                <div class="youden-cell cell-D"><span class="cell-letter">D</span><span class="cell-value">25</span>
+                </div>
+                <div class="youden-cell cell-A"><span class="cell-letter">A</span><span class="cell-value">18</span>
+                </div>
+                <div class="youden-cell header-row">i₄</div>
+                <div class="youden-cell cell-D"><span class="cell-letter">D</span><span class="cell-value">21</span>
+                </div>
+                <div class="youden-cell cell-A"><span class="cell-letter">A</span><span class="cell-value">12</span>
+                </div>
+                <div class="youden-cell cell-B"><span class="cell-letter">B</span><span class="cell-value">20</span>
+                </div>
+            </div>
+
+            <div class="youden-legend">
+                <div class="legend-section">
+                    Tratamiento (Semilla):
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #3D008D; color: white;">A</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ED1E79; color: white;">B</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #001A4D; color: white;">C</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #FDB913; color: #001A4D;">D</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Paso 1: Calculares los Totales</h3>
+
+            <h4>Totales por Bloque (Insecticidas) - $y_{.j.}$</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Bloque</th>
+                        <th>i₁</th>
+                        <th>i₂</th>
+                        <th>i₃</th>
+                        <th>i₄</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>$y_{.j.}$</strong></td>
+                        <td>64</td>
+                        <td>50</td>
+                        <td>62</td>
+                        <td>53</td>
+                        <td><strong>229</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Totales por Columna (Abonos) - $y_{..k}$</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Columna</th>
+                        <th>a₁</th>
+                        <th>a₂</th>
+                        <th>a₃</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>$y_{..k}$</strong></td>
+                        <td>81</td>
+                        <td>77</td>
+                        <td>71</td>
+                        <td><strong>229</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Totales por Tratamiento (Semillas) - $y_{i..}$</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tratamiento</th>
+                        <th>A</th>
+                        <th>B</th>
+                        <th>C</th>
+                        <th>D</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>$y_{i..}$</strong></td>
+                        <td>53</td>
+                        <td>63</td>
+                        <td>50</td>
+                        <td>63</td>
+                        <td><strong>229</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Paso 2: Calculares los Totales Ajustados de Bloques ($B_j$)</h3>
+
+            <p>Para cada bloque, calculamos:</p>
+
+            <div class="formula-box">
+                $$B_j = y_{.j.} - \frac{1}{R}\sum_{i=1}^{I} n_{ij} \, y_{i..}$$
+            </div>
+
+            <p>donde $R = 3$ (cada tratamiento aparece 3 veces) y $n_{ij} = 1$ si el tratamiento $i$ está en el bloque
+                $j$.</p>
+
+            <p><strong>Bloque i₁:</strong> Contiene A, B, C</p>
+            <div class="formula-box">
+                $$B_1 = 64 - \frac{1}{3}(53 + 63 + 50) = 64 - \frac{166}{3} = 64 - 55.33 = 8.67$$
+            </div>
+
+            <p><strong>Bloque i₂:</strong> Contiene B, C, D</p>
+            <div class="formula-box">
+                $$B_2 = 50 - \frac{1}{3}(63 + 50 + 63) = 50 - \frac{176}{3} = 50 - 58.67 = -8.67$$
+            </div>
+
+            <p><strong>Bloque i₃:</strong> Contiene C, D, A</p>
+            <div class="formula-box">
+                $$B_3 = 62 - \frac{1}{3}(50 + 63 + 53) = 62 - \frac{166}{3} = 62 - 55.33 = 6.67$$
+            </div>
+
+            <p><strong>Bloque i₄:</strong> Contiene D, A, B</p>
+            <div class="formula-box">
+                $$B_4 = 53 - \frac{1}{3}(63 + 53 + 63) = 53 - \frac{179}{3} = 53 - 59.67 = -6.67$$
+            </div>
+
+            <h3>Paso 3: Calcular $SCBl^*$</h3>
+
+            <div class="formula-box">
+                $$SCBl^{*} = \frac{R \displaystyle\sum_{j=1}^{J} B_j^2}{\lambda J} = \frac{3 \times (8.67^2 + (-8.67)^2
+                + 6.67^2 + (-6.67)^2)}{2 \times 4}$$
+            </div>
+
+            <div class="formula-box">
+                $$SCBl^{*} = \frac{3 \times (75.17 + 75.17 + 44.49 + 44.49)}{8} = \frac{3 \times 239.32}{8} =
+                \frac{717.96}{8} = 89.75$$
+            </div>
+
+            <div class="tip-box">
+                <h4><i class="fas fa-calculator"></i> Nota sobre los Cálculos</h4>
+                <p>En la práctica, estos cálculos se realizan con software estadístico (R, SAS, SPSS). Sin embargo, es
+                    fundamental comprender la lógica detrás de los ajustes para interpretar correctamente los
+                    resultados.</p>
+            </div>
+
+            <h2>Interpretación de Resultados</h2>
+
+            <div class="interpretation-box">
+                <strong><i class="fas fa-chart-bar"></i> ¿Cómo interpretar la tabla ANOVA?</strong>
+                <ol style="margin-top: 0.75rem;">
+                    <li><strong>Para tratamientos:</strong> Si $F_{\text{exp}} > F_{\text{tabla}}$, existe evidencia de
+                        que al menos un tratamiento (semilla) produce un rendimiento diferente, después de ajustar por
+                        bloques y columnas.</li>
+                    <li><strong>Para bloques:</strong> Si $F_{\text{exp}} > F_{\text{tabla}}$, el efecto del insecticida
+                        (bloques) es significativo, lo que justifica el uso del diseño para controlar esta fuente de
+                        variación.</li>
+                    <li><strong>Para columnas:</strong> Si $F_{\text{exp}} > F_{\text{tabla}}$, el tipo de abono tiene
+                        un efecto significativo sobre el rendimiento.</li>
+                </ol>
+            </div>
+
+            <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> Precaución</h4>
+                <p>El rechazo de $H_0$ <strong>NO indica cuáles tratamientos son diferentes</strong>. Para identificar
+                    qué pares de tratamientos difieren, se requieren <strong>pruebas de comparaciones múltiples</strong>
+                    (Tukey, Duncan, Scheffé, etc.).</p>
+            </div>
+
+            <div class="concept-box">
+                <h4><i class="fas fa-key"></i> Puntos Clave para Recordar</h4>
+                <ol>
+                    <li>En Youden, los <strong>tratamientos siempre se ajustan</strong> por el desbalance del diseño
+                    </li>
+                    <li>Los grados de libertad del residual son: $N - 2I - K + 2$</li>
+                    <li>El estadístico $F$ compara cada cuadrado medio con el residual</li>
+                    <li>Un resultado significativo indica diferencias, pero <strong>no dice cuáles</strong> grupos
+                        difieren</li>
+                    <li>La suma de cuadrados de bloques ajustada ($SCBl^*$) elimina el confundimiento con tratamientos
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </template>
+
+    <template id="module-6">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    Módulo 6
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Ejemplo Completo</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Aplicar el diseño de Youden con cálculos paso
+                            a paso.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="example-box">
+                <h4><i class="fas fa-flask"></i> Ejemplo: Rendimiento de Semillas de Trigo</h4>
+                <p>Se desea estudiar el rendimiento de 4 tipos de semillas de trigo. Se utiliza un diseño en Cuadrado de
+                    Youden para controlar el efecto del tipo de insecticida y del tipo de abono. Se dispone de 4
+                    insecticidas (bloques) y 3 abonos (columnas).</p>
+            </div>
+
+            <h2>Datos del Experimento (Tabla 5-18)</h2>
+
+            <div class="youden-grid grid-4x3" style="max-width: 450px;">
+                <div class="youden-cell header-cell">Insect./Abono</div>
+                <div class="youden-cell header-cell">a₁</div>
+                <div class="youden-cell header-cell">a₂</div>
+                <div class="youden-cell header-cell">a₃</div>
+                <div class="youden-cell header-row">i₁</div>
+                <div class="youden-cell cell-A"><span class="cell-letter">A</span><span class="cell-value">23</span>
+                </div>
+                <div class="youden-cell cell-B"><span class="cell-letter">B</span><span class="cell-value">25</span>
+                </div>
+                <div class="youden-cell cell-C"><span class="cell-letter">C</span><span class="cell-value">16</span>
+                </div>
+                <div class="youden-cell header-row">i₂</div>
+                <div class="youden-cell cell-B"><span class="cell-letter">B</span><span class="cell-value">18</span>
+                </div>
+                <div class="youden-cell cell-C"><span class="cell-letter">C</span><span class="cell-value">15</span>
+                </div>
+                <div class="youden-cell cell-D"><span class="cell-letter">D</span><span class="cell-value">17</span>
+                </div>
+                <div class="youden-cell header-row">i₃</div>
+                <div class="youden-cell cell-C"><span class="cell-letter">C</span><span class="cell-value">19</span>
+                </div>
+                <div class="youden-cell cell-D"><span class="cell-letter">D</span><span class="cell-value">25</span>
+                </div>
+                <div class="youden-cell cell-A"><span class="cell-letter">A</span><span class="cell-value">18</span>
+                </div>
+                <div class="youden-cell header-row">i₄</div>
+                <div class="youden-cell cell-D"><span class="cell-letter">D</span><span class="cell-value">21</span>
+                </div>
+                <div class="youden-cell cell-A"><span class="cell-letter">A</span><span class="cell-value">12</span>
+                </div>
+                <div class="youden-cell cell-B"><span class="cell-letter">B</span><span class="cell-value">20</span>
+                </div>
+            </div>
+
+            <div class="youden-legend">
+                <div class="legend-section">
+                    Tratamiento (Semilla):
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #3D008D; color: white;">A</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ED1E79; color: white;">B</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #001A4D; color: white;">C</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #FDB913; color: #001A4D;">D</div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Parámetros del Modelo</h2>
+
+            <ul>
+                <li>$I = J = 4$</li>
+                <li>$K = R = 3$</li>
+                <li>$N = IR = JK = 12$</li>
+                <li>$\lambda = R\dfrac{K-1}{I-1} = 3 \times \dfrac{2}{3} = 2$</li>
+            </ul>
+
+            <h2>Tablas de Totales</h2>
+
+            <h3>Totales por Bloque (Insecticidas) - $y_{.j.}$</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Bloque</th>
+                        <th>i₁</th>
+                        <th>i₂</th>
+                        <th>i₃</th>
+                        <th>i₄</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Total $y_{.j.}$</strong></td>
+                        <td>64</td>
+                        <td>50</td>
+                        <td>62</td>
+                        <td>53</td>
+                    </tr>
+                    <tr>
+                        <td><strong>$y_{.j.}^2$</strong></td>
+                        <td>4096</td>
+                        <td>2500</td>
+                        <td>3844</td>
+                        <td>2809</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Totales por Columna (Abonos) - $y_{..k}$</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Columna</th>
+                        <th>a₁</th>
+                        <th>a₂</th>
+                        <th>a₃</th>
+                        <th><strong>Total</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Total $y_{..k}$</strong></td>
+                        <td>81</td>
+                        <td>77</td>
+                        <td>71</td>
+                        <td><strong>229</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>$y_{..k}^2$</strong></td>
+                        <td>6561</td>
+                        <td>5929</td>
+                        <td>5041</td>
+                        <td>17531</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Totales por Tratamiento (Semillas) - $y_{i..}$</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tratamiento</th>
+                        <th>A</th>
+                        <th>B</th>
+                        <th>C</th>
+                        <th>D</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Observaciones</strong></td>
+                        <td>23, 18, 12</td>
+                        <td>25, 18, 20</td>
+                        <td>16, 15, 19</td>
+                        <td>17, 25, 21</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><strong>$y_{i..}$</strong></td>
+                        <td>53</td>
+                        <td>63</td>
+                        <td>50</td>
+                        <td>63</td>
+                        <td><strong>229</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>$y_{i..}^2$</strong></td>
+                        <td>2809</td>
+                        <td>3969</td>
+                        <td>2500</td>
+                        <td>3969</td>
+                        <td>13247</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Cálculo de Sumas de Cuadrados</h2>
+
+            <pre><code data-language="Python">import numpy as np
 from scipy import stats
 
 # ══════════════════════════════════════════════════
@@ -1407,11 +2705,11 @@ print(f"Totales de columna y_..k: {y_col}")
 print(f"Totales de tratam. y_i..: {y_treat}")
 print(f"Total general y_...: {y_total}")</code></pre>
 
- <div class="code-output">
- <div class="code-output-header">
- <span class="code-output-title"><i class="fas fa-terminal"></i> Output
- </div>
- <pre class="code-output-body">=======================================================
+            <div class="code-output">
+                <div class="code-output-header">
+                    <span class="code-output-title"><i class="fas fa-terminal"></i> Output
+                </div>
+                <pre class="code-output-body">=======================================================
 PARÁMETROS DEL DISEÑO
 =======================================================
 I = J = 4, K = R = 3, N = 12
@@ -1421,11 +2719,11 @@ Totales de bloque y_.j.: [64 50 62 53]
 Totales de columna y_..k: [81 77 71]
 Totales de tratam. y_i..: [53 63 50 63]
 Total general y_...: 229</pre>
- </div>
+            </div>
 
- <h3>Sumas de Cuadrados y Totales Ajustados</h3>
+            <h3>Sumas de Cuadrados y Totales Ajustados</h3>
 
- <pre><code data-language="Python"># ══════════════════════════════════════════════════
+            <pre><code data-language="Python"># ══════════════════════════════════════════════════
 # SUMAS DE CUADRADOS
 # ══════════════════════════════════════════════════
 SCT = (y ** 2).sum() - y_total ** 2 / N
@@ -1467,11 +2765,11 @@ print(f" = {SCT:.2f} - {SCTr_adj:.2f} - {SCBl:.2f} - {SCC:.2f} = {SCR:.2f}")
 print(f"\n=== VERIFICACIÓN ===")
 print(f"{SCTr_adj:.2f} + {SCBl:.2f} + {SCC:.2f} + {SCR:.2f} = {SCTr_adj+SCBl+SCC+SCR:.2f}")</code></pre>
 
- <div class="code-output">
- <div class="code-output-header">
- <span class="code-output-title"><i class="fas fa-terminal"></i> Output
- </div>
- <pre class="code-output-body">SCT = Σy² - y²/N = 4543 - 52441/12 = 172.92
+            <div class="code-output">
+                <div class="code-output-header">
+                    <span class="code-output-title"><i class="fas fa-terminal"></i> Output
+                </div>
+                <pre class="code-output-body">SCT = Σy² - y²/N = 4543 - 52441/12 = 172.92
 SCBl = Σy.j.²/K - y²/N = 13249/3 - 4370.08 = 46.25
 SCC = Σy..k²/J - y²/N = 17531/4 - 4370.08 = 12.67
 
@@ -1489,11 +2787,11 @@ SCR = SCT - SCTr* - SCBl - SCC
 
 === VERIFICACIÓN ===
 89.00 + 46.25 + 12.67 + 25.00 = 172.92</pre>
- </div>
+            </div>
 
- <h2>Tabla ANOVA - Tratamientos Corregidos (Tabla 5-20)</h2>
+            <h2>Tabla ANOVA - Tratamientos Corregidos (Tabla 5-20)</h2>
 
- <pre><code data-language="Python"># ══════════════════════════════════════════════════
+            <pre><code data-language="Python"># ══════════════════════════════════════════════════
 # TABLA ANOVA - TRATAMIENTOS AJUSTADOS
 # ══════════════════════════════════════════════════
 gl_Tr = I - 1 # 3
@@ -1528,11 +2826,11 @@ print(f"F_exp = {F_exp:.3f}, p = {p_val:.4f}")
 print(f"Como F_exp = {F_exp:.2f} < F_crit = {F_crit:.2f} → NO se rechaza H0")
 print("Los efectos de los tratamientos (semillas) NO son significativos.")</code></pre>
 
- <div class="code-output">
- <div class="code-output-header">
- <span class="code-output-title"><i class="fas fa-terminal"></i> Output
- </div>
- <pre class="code-output-body">======================================================================
+            <div class="code-output">
+                <div class="code-output-header">
+                    <span class="code-output-title"><i class="fas fa-terminal"></i> Output
+                </div>
+                <pre class="code-output-body">======================================================================
 TABLA ANOVA - TRATAMIENTOS CORREGIDOS (Tabla 5-20)
 ======================================================================
 Fuente SC GL CM F p
@@ -1550,66 +2848,70 @@ F_crítico (0.05, 3, 3) = 9.28
 F_exp = 3.560, p = 0.1595
 Como F_exp = 3.56 &lt; F_crit = 9.28 → NO se rechaza H0
 Los efectos de los tratamientos (semillas) NO son significativos.</pre>
- </div>
+            </div>
 
- <table>
- <thead>
- <tr>
- <th>Fuente de Variación</th>
- <th>SC</th>
- <th>GL</th>
- <th>CM</th>
- <th>$F_{\text{exp}}$</th>
- </tr>
- </thead>
- <tbody>
- <tr>
- <td>Trat. corregidos</td>
- <td>89.00</td>
- <td>3</td>
- <td>29.67</td>
- <td>3.560</td>
- </tr>
- <tr>
- <td>Bloques-no-corregidos</td>
- <td>46.25</td>
- <td>3</td>
- <td>-</td>
- <td>-</td>
- </tr>
- <tr>
- <td>Columnas</td>
- <td>12.67</td>
- <td>2</td>
- <td>-</td>
- <td>-</td>
- </tr>
- <tr>
- <td>Residual</td>
- <td>25.00</td>
- <td>3</td>
- <td>8.33</td>
- <td>-</td>
- </tr>
- <tr>
- <td><strong>TOTAL</strong></td>
- <td><strong>172.92</strong></td>
- <td><strong>11</strong></td>
- <td>-</td>
- <td>-</td>
- </tr>
- </tbody>
- </table>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fuente de Variación</th>
+                        <th>SC</th>
+                        <th>GL</th>
+                        <th>CM</th>
+                        <th>$F_{\text{exp}}$</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Trat. corregidos</td>
+                        <td>89.00</td>
+                        <td>3</td>
+                        <td>29.67</td>
+                        <td>3.560</td>
+                    </tr>
+                    <tr>
+                        <td>Bloques-no-corregidos</td>
+                        <td>46.25</td>
+                        <td>3</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Columnas</td>
+                        <td>12.67</td>
+                        <td>2</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Residual</td>
+                        <td>25.00</td>
+                        <td>3</td>
+                        <td>8.33</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td><strong>TOTAL</strong></td>
+                        <td><strong>172.92</strong></td>
+                        <td><strong>11</strong></td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
 
- <div class="interpretation-box">
- <strong><i class="fas fa-chart-line"></i> Conclusión (tratamientos):</strong> Al nivel de significancia del 5%, con $F_{0.05;\,3,\,3} = 9.28$= y $F_{\text{exp}} = 3.560$, se tiene que $< F_{\text{crítico}}$&lt;crıˊtico. <strong>No se rechaza $H_0$</strong>. Los efectos de los tratamientos (tipo de semilla) no son significativos.
- </div>
+            <div class="interpretation-box">
+                <strong><i class="fas fa-chart-line"></i> Conclusión (tratamientos):</strong> Al nivel de significancia
+                del 5%, con $F_{0.05;\,3,\,3} = 9.28$= y $F_{\text{exp}} = 3.560$, se tiene que $<
+                    F_{\text{crítico}}$&lt;crıˊtico. <strong>No se rechaza $H_0$</strong>. Los efectos de los
+                    tratamientos (tipo de semilla) no son significativos.
+            </div>
 
- <h2>Análisis de los Bloques (Tabla 5-21)</h2>
+            <h2>Análisis de los Bloques (Tabla 5-21)</h2>
 
- <p>Si se quiere analizar también el efecto de los bloques, tendremos que calcular la suma de cuadrados de tratamientos (no ajustada) y la suma de cuadrados ajustada de los bloques:</p>
+            <p>Si se quiere analizar también el efecto de los bloques, tendremos que calcular la suma de cuadrados de
+                tratamientos (no ajustada) y la suma de cuadrados ajustada de los bloques:</p>
 
- <pre><code data-language="Python"># ══════════════════════════════════════════════════
+            <pre><code data-language="Python"># ══════════════════════════════════════════════════
 # TABLA ANOVA - BLOQUES AJUSTADOS (Tabla 5-21)
 # ══════════════════════════════════════════════════
 
@@ -1662,11 +2964,11 @@ else:
  print(f"Como F_exp < F_crit → NO se rechaza H0 para bloques")
  print("Los efectos de los bloques (insecticidas) NO son significativos.")</code></pre>
 
- <div class="code-output">
- <div class="code-output-header">
- <span class="code-output-title"><i class="fas fa-terminal"></i> Output
- </div>
- <pre class="code-output-body">SCTr = Σy_i..²/K - y²/N = 13247/3 - 4370.08 = 45.58
+            <div class="code-output">
+                <div class="code-output-header">
+                    <span class="code-output-title"><i class="fas fa-terminal"></i> Output
+                </div>
+                <pre class="code-output-body">SCTr = Σy_i..²/K - y²/N = 13247/3 - 4370.08 = 45.58
 
 Totales ajustados de bloques (Bj):
  B_1 = 64 - (1/3)(53 + 63 + 50) = 8.67
@@ -1698,298 +3000,337 @@ F_crítico (0.05, 3, 3) = 9.28
 F_exp = 3.587, p = 0.1585
 Como F_exp &lt; F_crit → NO se rechaza H0 para bloques
 Los efectos de los bloques (insecticidas) NO son significativos.</pre>
- </div>
+            </div>
 
- <table>
- <thead>
- <tr>
- <th>Fuente de Variación</th>
- <th>SC</th>
- <th>GL</th>
- <th>CM</th>
- <th>$F_{\text{exp}}$</th>
- </tr>
- </thead>
- <tbody>
- <tr>
- <td>Trat-no-corregidos</td>
- <td>45.58</td>
- <td>3</td>
- <td>-</td>
- <td>-</td>
- </tr>
- <tr>
- <td>Bloques corregidos</td>
- <td>89.67</td>
- <td>3</td>
- <td>29.89</td>
- <td>3.587</td>
- </tr>
- <tr>
- <td>Columnas</td>
- <td>12.67</td>
- <td>2</td>
- <td>-</td>
- <td>-</td>
- </tr>
- <tr>
- <td>Residual</td>
- <td>25.00</td>
- <td>3</td>
- <td>8.33</td>
- <td>-</td>
- </tr>
- <tr>
- <td><strong>TOTAL</strong></td>
- <td><strong>172.92</strong></td>
- <td><strong>11</strong></td>
- <td>-</td>
- <td>-</td>
- </tr>
- </tbody>
- </table>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fuente de Variación</th>
+                        <th>SC</th>
+                        <th>GL</th>
+                        <th>CM</th>
+                        <th>$F_{\text{exp}}$</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Trat-no-corregidos</td>
+                        <td>45.58</td>
+                        <td>3</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Bloques corregidos</td>
+                        <td>89.67</td>
+                        <td>3</td>
+                        <td>29.89</td>
+                        <td>3.587</td>
+                    </tr>
+                    <tr>
+                        <td>Columnas</td>
+                        <td>12.67</td>
+                        <td>2</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Residual</td>
+                        <td>25.00</td>
+                        <td>3</td>
+                        <td>8.33</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td><strong>TOTAL</strong></td>
+                        <td><strong>172.92</strong></td>
+                        <td><strong>11</strong></td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
 
- <div class="interpretation-box">
- <strong><i class="fas fa-chart-line"></i> Conclusión (bloques):</strong> Al nivel de significancia del 5%, tampoco son significativos los efectos del tipo de insecticida ($F_{\text{exp}} = 3.587 < F_{0.05;\,3,\,3} = 9.28$;0.05;3,3=). No hay evidencia suficiente para concluir que los bloques (insecticidas) tengan un efecto significativo.
- </div>
- </div>
- </template>
+            <div class="interpretation-box">
+                <strong><i class="fas fa-chart-line"></i> Conclusión (bloques):</strong> Al nivel de significancia del
+                5%, tampoco son significativos los efectos del tipo de insecticida ($F_{\text{exp}} = 3.587 <
+                    F_{0.05;\,3,\,3}=9.28$;0.05;3,3=). No hay evidencia suficiente para concluir que los bloques
+                    (insecticidas) tengan un efecto significativo. </div>
+            </div>
+    </template>
 
- <template id="module-7">
- <div class="animate-fade-in">
- <div class="border-b border-gray-100 pb-6 mb-6">
- <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
- Módulo 7
- </div>
- <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Ejercicios</h2>
- <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
- <span class="text-xl">🎯
- </span><div>
- <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
- <p class="text-gray-600 text-sm" style="margin:0;">Practicar con problemas de aplicación.</p>
- </div>
- </div>
- </div>
+    <template id="module-7">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    Módulo 7
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Ejercicios</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Practicar con problemas de aplicación.</p>
+                    </div>
+                </div>
+            </div>
 
- <h2>Ejercicio 1</h2>
- <div class="example-box">
- <p>¿Cuál es la diferencia principal entre un Diseño en Cuadrado Latino y un Diseño en Cuadrado de Youden?</p>
- </div>
+            <h2>Ejercicio 1</h2>
+            <div class="example-box">
+                <p>¿Cuál es la diferencia principal entre un Diseño en Cuadrado Latino y un Diseño en Cuadrado de
+                    Youden?</p>
+            </div>
 
- <details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
- <summary class="cursor-pointer font-semibold text-usta-primary">Ver Solución</summary>
- <div class="mt-4">
- <p>La diferencia principal radica en el número de niveles de los factores de bloqueo:</p>
- <ul>
- <li><strong>Cuadrado Latino:</strong> Requiere que el número de filas, columnas y tratamientos sea igual ($I \times I$).</li>
- <li><strong>Cuadrado de Youden:</strong> Se utiliza cuando el número de niveles de uno de los factores de bloqueo (columnas) es menor que el número de tratamientos ($K < I$). Es un <strong>cuadrado latino incompleto</strong>.</li>
- </ul>
- <p>Un Cuadrado de Youden puede verse como un cuadrado latino al que se le ha eliminado al menos una columna, pero no de forma arbitraria.</p>
- </div>
- </details>
+            <details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                <summary class="cursor-pointer font-semibold text-usta-primary">Ver Solución</summary>
+                <div class="mt-4">
+                    <p>La diferencia principal radica en el número de niveles de los factores de bloqueo:</p>
+                    <ul>
+                        <li><strong>Cuadrado Latino:</strong> Requiere que el número de filas, columnas y tratamientos
+                            sea igual ($I \times I$).</li>
+                        <li><strong>Cuadrado de Youden:</strong> Se utiliza cuando el número de niveles de uno de los
+                            factores de bloqueo (columnas) es menor que el número de tratamientos ($K < I$). Es un
+                                <strong>cuadrado latino incompleto</strong>.</li>
+                    </ul>
+                    <p>Un Cuadrado de Youden puede verse como un cuadrado latino al que se le ha eliminado al menos una
+                        columna, pero no de forma arbitraria.</p>
+                </div>
+            </details>
 
- <h2>Ejercicio 2</h2>
- <div class="example-box">
- <p>En un Diseño en Cuadrado de Youden con $I = 5$ tratamientos y $K = 4$, calcule: $N$, $R$, $J$, $\lambda$ y los grados de libertad del residual.</p>
- </div>
+            <h2>Ejercicio 2</h2>
+            <div class="example-box">
+                <p>En un Diseño en Cuadrado de Youden con $I = 5$ tratamientos y $K = 4$, calcule: $N$, $R$, $J$,
+                    $\lambda$ y los grados de libertad del residual.</p>
+            </div>
 
- <details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
- <summary class="cursor-pointer font-semibold text-usta-primary">Ver Solución</summary>
- <div class="mt-4">
- <ul>
- <li>$J = I = 5$</li>
- <li>$R = K = 4$</li>
- <li>$N = J \times K = 5 \times 4 = 20$</li>
- <li>$\lambda = R\dfrac{K-1}{I-1} = 4 \times \dfrac{3}{4} = 3$</li>
- <li>$GL_{\text{Residual}} = N - 2I - K + 2 = 20 - 10 - 4 + 2 = 8$</li>
- </ul>
- </div>
- </details>
+            <details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                <summary class="cursor-pointer font-semibold text-usta-primary">Ver Solución</summary>
+                <div class="mt-4">
+                    <ul>
+                        <li>$J = I = 5$</li>
+                        <li>$R = K = 4$</li>
+                        <li>$N = J \times K = 5 \times 4 = 20$</li>
+                        <li>$\lambda = R\dfrac{K-1}{I-1} = 4 \times \dfrac{3}{4} = 3$</li>
+                        <li>$GL_{\text{Residual}} = N - 2I - K + 2 = 20 - 10 - 4 + 2 = 8$</li>
+                    </ul>
+                </div>
+            </details>
 
- <h2>Ejercicio 3</h2>
- <div class="example-box">
- <p>¿Cuáles son los grados de libertad del residual en un Cuadrado de Youden con $I = 4$, $K = 3$?</p>
- </div>
+            <h2>Ejercicio 3</h2>
+            <div class="example-box">
+                <p>¿Cuáles son los grados de libertad del residual en un Cuadrado de Youden con $I = 4$, $K = 3$?</p>
+            </div>
 
- <details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
- <summary class="cursor-pointer font-semibold text-usta-primary">Ver Solución</summary>
- <div class="mt-4">
- <p>Los grados de libertad del residual son:</p>
- <p>$$GL_{\text{Residual}} = N - 2I - K + 2$$</p>
- <p>Con $N = I \times K = 4 \times 3 = 12$:</p>
- <p>$$GL_{\text{Residual}} = 12 - 2(4) - 3 + 2 = 12 - 8 - 3 + 2 = 3$$</p>
- </div>
- </details>
+            <details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                <summary class="cursor-pointer font-semibold text-usta-primary">Ver Solución</summary>
+                <div class="mt-4">
+                    <p>Los grados de libertad del residual son:</p>
+                    <p>$$GL_{\text{Residual}} = N - 2I - K + 2$$</p>
+                    <p>Con $N = I \times K = 4 \times 3 = 12$:</p>
+                    <p>$$GL_{\text{Residual}} = 12 - 2(4) - 3 + 2 = 12 - 8 - 3 + 2 = 3$$</p>
+                </div>
+            </details>
 
- <h2>Ejercicio 4</h2>
- <div class="example-box">
- <p>¿Por qué es importante calcular los totales ajustados $T_i$ en el análisis de un Cuadrado de Youden?</p>
- </div>
+            <h2>Ejercicio 4</h2>
+            <div class="example-box">
+                <p>¿Por qué es importante calcular los totales ajustados $T_i$ en el análisis de un Cuadrado de Youden?
+                </p>
+            </div>
 
- <details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
- <summary class="cursor-pointer font-semibold text-usta-primary">Ver Solución</summary>
- <div class="mt-4">
- <p>Es importante porque en un Cuadrado de Youden cada tratamiento no aparece en todos los bloques (es un diseño incompleto). Los totales ajustados $T_i$ corrigen el efecto de los bloques sobre los tratamientos, permitiendo una comparación justa entre ellos. La fórmula:</p>
- <p>$$T_i = y_{i..} - \frac{1}{K}\sum_{j=1}^{J} n_{ij} \, y_{.j.}$$</p>
- <p>resta el promedio de los totales de los bloques que contienen al tratamiento $i$, eliminando así el sesgo producido por la distribución desigual de los tratamientos en los bloques.</p>
- </div>
- </details>
+            <details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                <summary class="cursor-pointer font-semibold text-usta-primary">Ver Solución</summary>
+                <div class="mt-4">
+                    <p>Es importante porque en un Cuadrado de Youden cada tratamiento no aparece en todos los bloques
+                        (es un diseño incompleto). Los totales ajustados $T_i$ corrigen el efecto de los bloques sobre
+                        los tratamientos, permitiendo una comparación justa entre ellos. La fórmula:</p>
+                    <p>$$T_i = y_{i..} - \frac{1}{K}\sum_{j=1}^{J} n_{ij} \, y_{.j.}$$</p>
+                    <p>resta el promedio de los totales de los bloques que contienen al tratamiento $i$, eliminando así
+                        el sesgo producido por la distribución desigual de los tratamientos en los bloques.</p>
+                </div>
+            </details>
 
- <h2>Ejercicio 5</h2>
- <div class="example-box">
- <p>¿Cómo se interpreta el parámetro $\lambda$ en un Cuadrado de Youden? Calcúlelo para el ejemplo del capítulo.</p>
- </div>
+            <h2>Ejercicio 5</h2>
+            <div class="example-box">
+                <p>¿Cómo se interpreta el parámetro $\lambda$ en un Cuadrado de Youden? Calcúlelo para el ejemplo del
+                    capítulo.</p>
+            </div>
 
- <details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
- <summary class="cursor-pointer font-semibold text-usta-primary">Ver Solución</summary>
- <div class="mt-4">
- <p>El parámetro $\lambda$:</p>
- <p>$$\lambda = R\frac{K-1}{I-1}$$</p>
- <p>Indica cuántas veces aparece cada par de tratamientos juntos en el mismo bloque. En un diseño <strong>balanceado</strong>, este valor es constante para todos los pares de tratamientos, lo que garantiza que todos los tratamientos tengan la misma precisión en sus comparaciones.</p>
- <p>En el ejemplo: con $R = K = 3$, $I = 4$:</p>
- <p>$$\lambda = 3 \times \frac{3-1}{4-1} = 3 \times \frac{2}{3} = 2$$</p>
- <p>Esto significa que cada par de tratamientos aparece juntos en exactamente 2 bloques. Por ejemplo, los tratamientos A y B coinciden en los bloques i₁ e i₄.</p>
- </div>
- </details>
+            <details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                <summary class="cursor-pointer font-semibold text-usta-primary">Ver Solución</summary>
+                <div class="mt-4">
+                    <p>El parámetro $\lambda$:</p>
+                    <p>$$\lambda = R\frac{K-1}{I-1}$$</p>
+                    <p>Indica cuántas veces aparece cada par de tratamientos juntos en el mismo bloque. En un diseño
+                        <strong>balanceado</strong>, este valor es constante para todos los pares de tratamientos, lo
+                        que garantiza que todos los tratamientos tengan la misma precisión en sus comparaciones.
+                    </p>
+                    <p>En el ejemplo: con $R = K = 3$, $I = 4$:</p>
+                    <p>$$\lambda = 3 \times \frac{3-1}{4-1} = 3 \times \frac{2}{3} = 2$$</p>
+                    <p>Esto significa que cada par de tratamientos aparece juntos en exactamente 2 bloques. Por ejemplo,
+                        los tratamientos A y B coinciden en los bloques i₁ e i₄.</p>
+                </div>
+            </details>
 
- <h2>Ejercicio 6</h2>
- <div class="example-box">
- <p>¿Cuál es la diferencia entre la tabla ANOVA con tratamientos ajustados (Tabla 5-20) y la tabla ANOVA con bloques ajustados (Tabla 5-21)?</p>
- </div>
+            <h2>Ejercicio 6</h2>
+            <div class="example-box">
+                <p>¿Cuál es la diferencia entre la tabla ANOVA con tratamientos ajustados (Tabla 5-20) y la tabla ANOVA
+                    con bloques ajustados (Tabla 5-21)?</p>
+            </div>
 
- <details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
- <summary class="cursor-pointer font-semibold text-usta-primary">Ver Solución</summary>
- <div class="mt-4">
- <p>La diferencia radica en qué efecto se contrasta:</p>
- <ul>
- <li><strong>Tabla 5-20 (Tratamientos ajustados):</strong> La descomposición es $SCT = SCTr^{*} + SCBl + SCC + SCR$. Se usa $SCTr^{*}$ (tratamientos ajustados por el efecto de bloques) para contrastar $H_0: \tau_1 = \cdots = \tau_I = 0$. Los bloques aparecen sin ajustar ($SCBl$</li>
- <li><strong>Tabla 5-21 (Bloques ajustados):</strong> La descomposición es $SCT = SCTr + SCBl^{*} + SCC + SCR$. Se usa $SCBl^{*}$ (bloques ajustados por el efecto de tratamientos) para contrastar $H_0: \beta_1 = \cdots = \beta_J = 0$. Los tratamientos aparecen sin ajustar ($SCTr$</li>
- </ul>
- <p>En ambos casos, el $SCR$ (residual) es el mismo, y el estadístico $F$ compara el cuadrado medio del efecto ajustado contra el cuadrado medio residual.</p>
- </div>
- </details>
- </div>
- </template>
+            <details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                <summary class="cursor-pointer font-semibold text-usta-primary">Ver Solución</summary>
+                <div class="mt-4">
+                    <p>La diferencia radica en qué efecto se contrasta:</p>
+                    <ul>
+                        <li><strong>Tabla 5-20 (Tratamientos ajustados):</strong> La descomposición es $SCT = SCTr^{*} +
+                            SCBl + SCC + SCR$. Se usa $SCTr^{*}$ (tratamientos ajustados por el efecto de bloques) para
+                            contrastar $H_0: \tau_1 = \cdots = \tau_I = 0$. Los bloques aparecen sin ajustar ($SCBl$
+                        </li>
+                        <li><strong>Tabla 5-21 (Bloques ajustados):</strong> La descomposición es $SCT = SCTr + SCBl^{*}
+                            + SCC + SCR$. Se usa $SCBl^{*}$ (bloques ajustados por el efecto de tratamientos) para
+                            contrastar $H_0: \beta_1 = \cdots = \beta_J = 0$. Los tratamientos aparecen sin ajustar
+                            ($SCTr$</li>
+                    </ul>
+                    <p>En ambos casos, el $SCR$ (residual) es el mismo, y el estadístico $F$ compara el cuadrado medio
+                        del efecto ajustado contra el cuadrado medio residual.</p>
+                </div>
+            </details>
+        </div>
+    </template>
 
- <template id="module-8">
- <div class="animate-fade-in">
- <div class="border-b border-gray-100 pb-6 mb-6">
- <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
- Módulo 8
- </div>
- <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Referencias</h2>
- <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
- <span class="text-xl">🎯
- </span><div>
- <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
- <p class="text-gray-600 text-sm" style="margin:0;">Consultar las fuentes bibliográficas.</p>
- </div>
- </div>
- </div>
+    <template id="module-8">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    Módulo 8
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Referencias</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Consultar las fuentes bibliográficas.</p>
+                    </div>
+                </div>
+            </div>
 
- <h2>Bibliografía Utilizada</h2>
+            <h2>Bibliografía Utilizada</h2>
 
- <div class="reference-list">
- <div class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200 mb-4">
- <div class="flex items-center mb-3">
- <div class="w-10 h-10 bg-usta-primary text-white rounded-full flex items-center justify-center font-bold mr-3">1</div>
- <h4 class="font-semibold text-slate-800">García Leal, J. &amp; Lara Porras, A.M.</h4>
- </div>
- <p class="text-sm text-slate-600 italic mb-2">Diseño Estadístico de Experimentos. Análisis de la Varianza.</p>
- <p class="text-sm text-slate-700">Grupo Editorial Universitario, 1998.</p>
- </div>
+            <div class="reference-list">
+                <div class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200 mb-4">
+                    <div class="flex items-center mb-3">
+                        <div
+                            class="w-10 h-10 bg-usta-primary text-white rounded-full flex items-center justify-center font-bold mr-3">
+                            1</div>
+                        <h4 class="font-semibold text-slate-800">García Leal, J. &amp; Lara Porras, A.M.</h4>
+                    </div>
+                    <p class="text-sm text-slate-600 italic mb-2">Diseño Estadístico de Experimentos. Análisis de la
+                        Varianza.</p>
+                    <p class="text-sm text-slate-700">Grupo Editorial Universitario, 1998.</p>
+                </div>
 
- <div class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200 mb-4">
- <div class="flex items-center mb-3">
- <div class="w-10 h-10 bg-usta-secondary text-white rounded-full flex items-center justify-center font-bold mr-3">2</div>
- <h4 class="font-semibold text-slate-800">Lara Porras, A.M.</h4>
- </div>
- <p class="text-sm text-slate-600 italic mb-2">Diseño Estadístico de Experimentos, Análisis de la Varianza y Temas Relacionados: Tratamiento Informático mediante SPSS.</p>
- <p class="text-sm text-slate-700">Proyecto Sur de Ediciones, 2000.</p>
- </div>
+                <div class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200 mb-4">
+                    <div class="flex items-center mb-3">
+                        <div
+                            class="w-10 h-10 bg-usta-secondary text-white rounded-full flex items-center justify-center font-bold mr-3">
+                            2</div>
+                        <h4 class="font-semibold text-slate-800">Lara Porras, A.M.</h4>
+                    </div>
+                    <p class="text-sm text-slate-600 italic mb-2">Diseño Estadístico de Experimentos, Análisis de la
+                        Varianza y Temas Relacionados: Tratamiento Informático mediante SPSS.</p>
+                    <p class="text-sm text-slate-700">Proyecto Sur de Ediciones, 2000.</p>
+                </div>
 
- <div class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200 mb-4">
- <div class="flex items-center mb-3">
- <div class="w-10 h-10 bg-amber-500 text-white rounded-full flex items-center justify-center font-bold mr-3">3</div>
- <h4 class="font-semibold text-slate-800">Cochran, W. G. &amp; Cox, G. M.</h4>
- </div>
- <p class="text-sm text-slate-600 italic mb-2">Experimental Designs.</p>
- <p class="text-sm text-slate-700">2nd Edition. John Wiley &amp; Sons, 1957.</p>
- </div>
+                <div class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200 mb-4">
+                    <div class="flex items-center mb-3">
+                        <div
+                            class="w-10 h-10 bg-amber-500 text-white rounded-full flex items-center justify-center font-bold mr-3">
+                            3</div>
+                        <h4 class="font-semibold text-slate-800">Cochran, W. G. &amp; Cox, G. M.</h4>
+                    </div>
+                    <p class="text-sm text-slate-600 italic mb-2">Experimental Designs.</p>
+                    <p class="text-sm text-slate-700">2nd Edition. John Wiley &amp; Sons, 1957.</p>
+                </div>
 
- <div class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200 mb-4">
- <div class="flex items-center mb-3">
- <div class="w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold mr-3">4</div>
- <h4 class="font-semibold text-slate-800">Montgomery, D. C.</h4>
- </div>
- <p class="text-sm text-slate-600 italic mb-2">Design and Analysis of Experiments.</p>
- <p class="text-sm text-slate-700">10th Edition. John Wiley &amp; Sons, 2019.</p>
- </div>
- </div>
- </div>
- </template>
+                <div class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200 mb-4">
+                    <div class="flex items-center mb-3">
+                        <div
+                            class="w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold mr-3">
+                            4</div>
+                        <h4 class="font-semibold text-slate-800">Montgomery, D. C.</h4>
+                    </div>
+                    <p class="text-sm text-slate-600 italic mb-2">Design and Analysis of Experiments.</p>
+                    <p class="text-sm text-slate-700">10th Edition. John Wiley &amp; Sons, 2019.</p>
+                </div>
+            </div>
+        </div>
+    </template>
 
- <script>
+    <script>
 
- // --- COURSE DATA ---
- const courseData = {
- title: "Diseños en Cuadrados de Youden",
- modules: [
- { id: 1, title: "Introducción", shortTitle: "Introducción", duration: "15 min" },
- { id: 2, title: "Modelo Estadístico", shortTitle: "Modelo", duration: "20 min" },
- { id: 3, title: "Sumas de Cuadrados", shortTitle: "Sumas de Cuadrados", duration: "20 min" },
- { id: 4, title: "Tabla ANOVA", shortTitle: "ANOVA", duration: "15 min" },
- { id: 5, title: "ANOVA con Bloques Ajustados", shortTitle: "Bloques Ajust.", duration: "20 min" },
- { id: 6, title: "Ejemplo Completo", shortTitle: "Ejemplo", duration: "30 min" },
- { id: 7, title: "Ejercicios", shortTitle: "Ejercicios", duration: "20 min" },
- { id: 8, title: "Referencias", shortTitle: "Referencias", duration: "5 min" }
- ]
- };
+        // --- COURSE DATA ---
+        const courseData = {
+            title: "Diseños en Cuadrados de Youden",
+            modules: [
+                { id: 1, title: "Introducción", shortTitle: "Introducción", duration: "15 min" },
+                { id: 2, title: "Modelo Estadístico", shortTitle: "Modelo", duration: "20 min" },
+                { id: 3, title: "Sumas de Cuadrados", shortTitle: "Sumas de Cuadrados", duration: "20 min" },
+                { id: 4, title: "Tabla ANOVA", shortTitle: "ANOVA", duration: "15 min" },
+                { id: 5, title: "ANOVA con Bloques Ajustados", shortTitle: "Bloques Ajust.", duration: "20 min" },
+                { id: 6, title: "Ejemplo Completo", shortTitle: "Ejemplo", duration: "30 min" },
+                { id: 7, title: "Ejercicios", shortTitle: "Ejercicios", duration: "20 min" },
+                { id: 8, title: "Referencias", shortTitle: "Referencias", duration: "5 min" }
+            ]
+        };
 
- // --- STATE MANAGEMENT ---
- let currentModuleIndex = 0;
- let completedModules = new Set();
+        // --- STATE MANAGEMENT ---
+        let currentModuleIndex = 0;
+        let completedModules = new Set();
 
- // --- DOM ELEMENTS ---
- const moduleNav = document.getElementById('module-nav');
- const contentArea = document.getElementById('content-area');
+        // --- DOM ELEMENTS ---
+        const moduleNav = document.getElementById('module-nav');
+        const contentArea = document.getElementById('content-area');
 
- // --- INIT ---
- function init() {
- renderNav();
- loadModule(0);
- }
+        // --- INIT ---
+        function init() {
+            renderNav();
+            loadModule(0);
+        }
 
- function renderNav() {
- moduleNav.innerHTML = '';
- courseData.modules.forEach((mod, index) => {
- const btn = document.createElement('button');
- const isActive = index === currentModuleIndex;
- const isDone = completedModules.has(index);
- btn.className = `sidebar-nav-item${isActive ? ' active' : ''}`;
- btn.innerHTML = `
- <span style="line-height:1.3;">${mod.title}</span>
- ${isDone ? '<span class="check-mark">✓</span>' : ''}
- `;
- btn.onclick = () => loadModule(index);
- moduleNav.appendChild(btn);
- });
- }
+        function renderNav() {
+            moduleNav.innerHTML = '';
+            courseData.modules.forEach((mod, index) => {
+                const btn = document.createElement('button');
+                const isActive = index === currentModuleIndex;
+                const isDone = completedModules.has(index);
+                btn.className = `sidebar-nav-item${isActive ? ' active' : ''}`;
+                btn.innerHTML = `
+  <span style="line-height:1.3;">${mod.title}</span>
+  ${isDone ? '<span class="check-mark">✓</span>' : ''}
+  `;
+                btn.onclick = () => loadModule(index);
+                moduleNav.appendChild(btn);
+            });
+        }
 
- function loadModule(index) {
- currentModuleIndex = index;
- renderNav();
+        function loadModule(index) {
+            currentModuleIndex = index;
+            renderNav();
 
- const template = document.getElementById(`module-${index + 1}`);
- if (template) {
- contentArea.innerHTML = '';
- const content = template.content.cloneNode(true);
- contentArea.appendChild(content);
+            const template = document.getElementById(`module-${index + 1}`);
+            if (template) {
+                contentArea.innerHTML = '';
+                const content = template.content.cloneNode(true);
+                contentArea.appendChild(content);
 
- // Add navigation buttons
- const navButtons = document.createElement('div');
- navButtons.className = 'mt-10 pt-6 border-t border-gray-200 flex justify-between items-center';
- navButtons.innerHTML = `
+                // Add navigation buttons
+                const navButtons = document.createElement('div');
+                navButtons.className = 'mt-10 pt-6 border-t border-gray-200 flex justify-between items-center';
+                navButtons.innerHTML = `
  ${index > 0 ? `
  <button onclick="loadModule(${index - 1})" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-secondary transition-colors">
  <span>←</span> Anterior
@@ -2005,201 +3346,202 @@ Los efectos de los bloques (insecticidas) NO son significativos.</pre>
  <span class="text-emerald-600 font-bold">🎉 ¡Tema Completado!</span>
  </div>`}
  `;
- contentArea.appendChild(navButtons);
+                contentArea.appendChild(navButtons);
 
- // VS Code style code blocks
- setupCodeBlocks();
+                // VS Code style code blocks
+                setupCodeBlocks();
 
- // Wrap tables for responsive
- wrapTables();
+                // Wrap tables for responsive
+                wrapTables();
 
- // Render LaTeX
- if (typeof renderMathInElement !== 'undefined') {
- renderMathInElement(contentArea, {
- delimiters: [
- { left: '$$', right: '$$', display: true },
- { left: '$', right: '$', display: false }
- ],
- throwOnError: false
- });
- }
- }
+                // Render LaTeX
+                if (typeof renderMathInElement !== 'undefined') {
+                    renderMathInElement(contentArea, {
+                        delimiters: [
+                            { left: '$$', right: '$$', display: true },
+                            { left: '$', right: '$', display: false }
+                        ],
+                        throwOnError: false
+                    });
+                }
+            }
 
- window.scrollTo({ top: 0, behavior: 'smooth' });
- }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
- function markComplete(index) {
- if (!completedModules.has(index)) {
- completedModules.add(index);
- renderNav();
- loadModule(index);
- }
- }
+        function markComplete(index) {
+            if (!completedModules.has(index)) {
+                completedModules.add(index);
+                renderNav();
+                loadModule(index);
+            }
+        }
 
- // ===== Responsive Tables =====
- function wrapTables() {
- contentArea.querySelectorAll('table').forEach(function(table) {
- if (!table.closest('.table-responsive')) {
- var wrapper = document.createElement('div');
- wrapper.className = 'table-responsive';
- table.parentNode.insertBefore(wrapper, table);
- wrapper.appendChild(table);
- }
- });
- }
+        // ===== Responsive Tables =====
+        function wrapTables() {
+            contentArea.querySelectorAll('table').forEach(function (table) {
+                if (!table.closest('.table-responsive')) {
+                    var wrapper = document.createElement('div');
+                    wrapper.className = 'table-responsive';
+                    table.parentNode.insertBefore(wrapper, table);
+                    wrapper.appendChild(table);
+                }
+            });
+        }
 
- // Scroll to Top
- const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        // Scroll to Top
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
 
- window.addEventListener('scroll', () => {
- if (window.scrollY > 300) {
- scrollToTopBtn.classList.add('visible');
- } else {
- scrollToTopBtn.classList.remove('visible');
- }
- });
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('visible');
+            } else {
+                scrollToTopBtn.classList.remove('visible');
+            }
+        });
 
- scrollToTopBtn.addEventListener('click', () => {
- window.scrollTo({ top: 0, behavior: 'smooth' });
- });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
 
- // ===== Sidebar Toggle =====
- const sidebarPanel = document.getElementById('sidebar-panel');
- const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
- const sidebarToggleIcon = document.getElementById('sidebarToggleIcon');
- let sidebarOpen = true;
+        // ===== Sidebar Toggle =====
+        const sidebarPanel = document.getElementById('sidebar-panel');
+        const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+        let sidebarCollapsed = false;
 
- sidebarToggleBtn.addEventListener('click', () => {
- sidebarOpen = !sidebarOpen;
- if (sidebarOpen) {
- sidebarPanel.classList.remove('collapsed');
- sidebarPanel.style.opacity = '1';
- sidebarToggleIcon.className = 'fas fa-times text-sm';
- } else {
- sidebarPanel.classList.add('collapsed');
- sidebarPanel.style.opacity = '0';
- sidebarToggleIcon.className = 'fas fa-bars text-sm';
- }
- });
+        if (sidebarToggleBtn && sidebarPanel) {
+            sidebarToggleBtn.addEventListener('click', () => {
+                sidebarCollapsed = !sidebarCollapsed;
+                if (sidebarCollapsed) {
+                    sidebarPanel.classList.add('collapsed');
+                    sidebarToggleBtn.innerHTML = '<i class="fas fa-chevron-right" aria-hidden="true"></i>';
+                    sidebarToggleBtn.setAttribute('aria-expanded', 'false');
+                } else {
+                    sidebarPanel.classList.remove('collapsed');
+                    sidebarToggleBtn.innerHTML = '<i class="fas fa-bars text-sm" id="sidebarToggleIcon"></i>';
+                    sidebarToggleBtn.setAttribute('aria-expanded', 'true');
+                }
+            });
+        }
 
- // ===== VS Code Style Code Blocks =====
- function setupCodeBlocks() {
- var pres = contentArea.querySelectorAll('pre');
- pres.forEach(function(pre) {
- if (pre.closest('.sourceCode-wrapper')) return;
- if (pre.closest('.code-output')) return;
+        // ===== VS Code Style Code Blocks =====
+        function setupCodeBlocks() {
+            var pres = contentArea.querySelectorAll('pre');
+            pres.forEach(function (pre) {
+                if (pre.closest('.sourceCode-wrapper')) return;
+                if (pre.closest('.code-output')) return;
 
- var code = pre.querySelector('code');
- if (!code) return;
+                var code = pre.querySelector('code');
+                if (!code) return;
 
- var prevEl = pre.previousElementSibling;
- if (prevEl && prevEl.classList.contains('code-title')) {
- prevEl.remove();
- }
+                var prevEl = pre.previousElementSibling;
+                if (prevEl && prevEl.classList.contains('code-title')) {
+                    prevEl.remove();
+                }
 
- var lang = code.getAttribute('data-language') || 'Python';
- var fileExt = lang === 'Python' ? '.py' : lang === 'R' ? '.R' : '.txt';
- var fileName = 'youden_analysis' + fileExt;
- var langIcon = '';
- if (lang === 'Python' || lang === 'python') {
- langIcon = '<svg class="tab-icon python" viewBox="0 0 24 24" fill="currentColor"><path d="M9.585 11.692h4.328s2.432.039 2.432-2.35V5.391S16.714 3 11.936 3C7.362 3 7.647 4.983 7.647 4.983l.006 2.055h4.363v.617H5.92s-2.927-.332-2.927 4.282 2.555 4.45 2.555 4.45h1.524v-2.141s-.083-2.554 2.513-2.554zm-.056-6.009a.784.784 0 1 1 0-1.569.784.784 0 0 1 0 1.569z"/><path d="M18.452 7.532h-1.524v2.141s.083 2.554-2.513 2.554h-4.328s-2.432-.04-2.432 2.35v3.951s-.369 2.391 4.409 2.391c4.573 0 4.288-1.983 4.288-1.983l-.006-2.054h-4.363v-.617h6.097s2.927.332 2.927-4.282-2.555-4.451-2.555-4.451zm-4.597 10.477a.784.784 0 1 1 0 1.569.784.784 0 0 1 0-1.569z"/></svg>';
- } else {
- langIcon = '<i class="fas fa-code tab-icon" style="font-size:12px"></i>';
- }
+                var lang = code.getAttribute('data-language') || 'Python';
+                var fileExt = lang === 'Python' ? '.py' : lang === 'R' ? '.R' : '.txt';
+                var fileName = 'youden_analysis' + fileExt;
+                var langIcon = '';
+                if (lang === 'Python' || lang === 'python') {
+                    langIcon = '<svg class="tab-icon python" viewBox="0 0 24 24" fill="currentColor"><path d="M9.585 11.692h4.328s2.432.039 2.432-2.35V5.391S16.714 3 11.936 3C7.362 3 7.647 4.983 7.647 4.983l.006 2.055h4.363v.617H5.92s-2.927-.332-2.927 4.282 2.555 4.45 2.555 4.45h1.524v-2.141s-.083-2.554 2.513-2.554zm-.056-6.009a.784.784 0 1 1 0-1.569.784.784 0 0 1 0 1.569z"/><path d="M18.452 7.532h-1.524v2.141s.083 2.554-2.513 2.554h-4.328s-2.432-.04-2.432 2.35v3.951s-.369 2.391 4.409 2.391c4.573 0 4.288-1.983 4.288-1.983l-.006-2.054h-4.363v-.617h6.097s2.927.332 2.927-4.282-2.555-4.451-2.555-4.451zm-4.597 10.477a.784.784 0 1 1 0 1.569.784.784 0 0 1 0-1.569z"/></svg>';
+                } else {
+                    langIcon = '<i class="fas fa-code tab-icon" style="font-size:12px"></i>';
+                }
 
- var wrapper = document.createElement('div');
- wrapper.className = 'sourceCode-wrapper';
+                var wrapper = document.createElement('div');
+                wrapper.className = 'sourceCode-wrapper';
 
- var titlebar = document.createElement('div');
- titlebar.className = 'sourceCode-titlebar';
- titlebar.innerHTML =
- '<div class="sourceCode-dots">' +
- '<span class="dot-close"></span>' +
- '<span class="dot-min"></span>' +
- '<span class="dot-max"></span>' +
- '</div>' +
- '<div class="sourceCode-tab">' +
- langIcon +
- '<span>' + fileName + '</span>' +
- '</div>' +
- '<div class="sourceCode-actions">' +
- '<button type="button" onclick="toggleCodeBlock(this)" title="Ocultar/Mostrar">' +
- '<i class="fas fa-eye"></i> Ocultar' +
- '</button>' +
- '<button type="button" onclick="copyCodeBlock(this)" title="Copiar código">' +
- '<i class="fas fa-copy"></i> Copiar' +
- '</button>' +
- '</div>';
+                var titlebar = document.createElement('div');
+                titlebar.className = 'sourceCode-titlebar';
+                titlebar.innerHTML =
+                    '<div class="sourceCode-dots">' +
+                    '<span class="dot-close"></span>' +
+                    '<span class="dot-min"></span>' +
+                    '<span class="dot-max"></span>' +
+                    '</div>' +
+                    '<div class="sourceCode-tab">' +
+                    langIcon +
+                    '<span>' + fileName + '</span>' +
+                    '</div>' +
+                    '<div class="sourceCode-actions">' +
+                    '<button type="button" onclick="toggleCodeBlock(this)" title="Ocultar/Mostrar">' +
+                    '<i class="fas fa-eye"></i> Ocultar' +
+                    '</button>' +
+                    '<button type="button" onclick="copyCodeBlock(this)" title="Copiar código">' +
+                    '<i class="fas fa-copy"></i> Copiar' +
+                    '</button>' +
+                    '</div>';
 
- var rawText = code.textContent;
- code.innerHTML = '';
- code.textContent = rawText;
+                var rawText = code.textContent;
+                code.innerHTML = '';
+                code.textContent = rawText;
 
- var lines = rawText.split('\n');
- if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
- var gutterHTML = '';
- for (var i = 1; i <= lines.length; i++) {
- gutterHTML += '<div>' + i + '</div>';
- }
- var gutter = document.createElement('div');
- gutter.className = 'sourceCode-gutter';
- gutter.innerHTML = gutterHTML;
+                var lines = rawText.split('\n');
+                if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+                var gutterHTML = '';
+                for (var i = 1; i <= lines.length; i++) {
+                    gutterHTML += '<div>' + i + '</div>';
+                }
+                var gutter = document.createElement('div');
+                gutter.className = 'sourceCode-gutter';
+                gutter.innerHTML = gutterHTML;
 
- var minimap = document.createElement('div');
- minimap.className = 'sourceCode-minimap';
+                var minimap = document.createElement('div');
+                minimap.className = 'sourceCode-minimap';
 
- var bodyWrapper = document.createElement('div');
- bodyWrapper.className = 'sourceCode-body';
+                var bodyWrapper = document.createElement('div');
+                bodyWrapper.className = 'sourceCode-body';
 
- if (window.hljs) {
- code.classList.add('language-python');
- hljs.highlightElement(code);
- }
+                if (window.hljs) {
+                    code.classList.add('language-python');
+                    hljs.highlightElement(code);
+                }
 
- pre.parentNode.insertBefore(wrapper, pre);
- bodyWrapper.appendChild(gutter);
- bodyWrapper.appendChild(pre);
- bodyWrapper.appendChild(minimap);
- wrapper.appendChild(titlebar);
- wrapper.appendChild(bodyWrapper);
- });
- }
+                pre.parentNode.insertBefore(wrapper, pre);
+                bodyWrapper.appendChild(gutter);
+                bodyWrapper.appendChild(pre);
+                bodyWrapper.appendChild(minimap);
+                wrapper.appendChild(titlebar);
+                wrapper.appendChild(bodyWrapper);
+            });
+        }
 
- function toggleCodeBlock(btn) {
- var wrapper = btn.closest('.sourceCode-wrapper');
- var body = wrapper.querySelector('.sourceCode-body');
- if (body.classList.contains('collapsed')) {
- body.classList.remove('collapsed');
- btn.innerHTML = '<i class="fas fa-eye"></i> Ocultar';
- } else {
- body.classList.add('collapsed');
- btn.innerHTML = '<i class="fas fa-eye-slash"></i> Mostrar';
- }
- }
+        function toggleCodeBlock(btn) {
+            var wrapper = btn.closest('.sourceCode-wrapper');
+            var body = wrapper.querySelector('.sourceCode-body');
+            if (body.classList.contains('collapsed')) {
+                body.classList.remove('collapsed');
+                btn.innerHTML = '<i class="fas fa-eye"></i> Ocultar';
+            } else {
+                body.classList.add('collapsed');
+                btn.innerHTML = '<i class="fas fa-eye-slash"></i> Mostrar';
+            }
+        }
 
- function copyCodeBlock(btn) {
- var wrapper = btn.closest('.sourceCode-wrapper');
- var code = wrapper.querySelector('code');
- if (!code) return;
- var text = code.textContent || code.innerText;
- navigator.clipboard.writeText(text).then(function() {
- var originalHTML = btn.innerHTML;
- btn.classList.add('copied');
- btn.innerHTML = '<i class="fas fa-check"></i> Copiado';
- setTimeout(function() {
- btn.classList.remove('copied');
- btn.innerHTML = originalHTML;
- }, 2000);
- }).catch(function(err) {
- console.error('Error al copiar:', err);
- });
- }
+        function copyCodeBlock(btn) {
+            var wrapper = btn.closest('.sourceCode-wrapper');
+            var code = wrapper.querySelector('code');
+            if (!code) return;
+            var text = code.textContent || code.innerText;
+            navigator.clipboard.writeText(text).then(function () {
+                var originalHTML = btn.innerHTML;
+                btn.classList.add('copied');
+                btn.innerHTML = '<i class="fas fa-check"></i> Copiado';
+                setTimeout(function () {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = originalHTML;
+                }, 2000);
+            }).catch(function (err) {
+                console.error('Error al copiar:', err);
+            });
+        }
 
- // Wait for KaTeX to load, then init
- document.addEventListener('DOMContentLoaded', () => {
- setTimeout(init, 100);
- });
- </script>
+        // Wait for KaTeX to load, then init
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(init, 100);
+        });
+    </script>
 </body>
 
 </html>

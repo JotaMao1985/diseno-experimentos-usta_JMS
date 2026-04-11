@@ -1,30 +1,33 @@
 <!DOCTYPE html>
 
 <html lang="es">
+
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<meta content="Material de estudio autónomo sobre diagnosis y validación del modelo en diseño de experimentos" name="description"/>
-<meta content="Z.ai" name="author"/>
-<title>Diseños en Cuadros Latinos - Material de Estudio USTA</title>
-<!-- Preconnect for performance -->
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<!-- External Resources -->
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet"/>
-<!-- KaTeX for LaTeX rendering -->
-<link href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" rel="stylesheet"/>
-<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-<!-- Highlight.js VS Code Dark+ -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-<!-- Tailwind Configuration -->
-<script>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="Material de estudio autónomo sobre diagnosis y validación del modelo en diseño de experimentos"
+        name="description" />
+    <meta content="Z.ai" name="author" />
+    <title>Diseños en Cuadros Latinos - Material de Estudio USTA</title>
+    <!-- Preconnect for performance -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <!-- External Resources -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet" />
+    <!-- KaTeX for LaTeX rendering -->
+    <link href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" rel="stylesheet" />
+    <script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <!-- Highlight.js VS Code Dark+ -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <!-- Tailwind Configuration -->
+    <script>
         tailwind.config = {
             theme: {
                 extend: {
@@ -43,7 +46,7 @@
             }
         }
     </script>
-<style>
+    <style>
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: #F8FAFC;
@@ -308,13 +311,36 @@
         }
 
         /* Legacy syntax highlighting (mapped to VS Code Dark+ colors) */
-        .syntax-kwd { color: #569cd6; font-weight: bold; }
-        .syntax-cls { color: #4ec9b0; }
-        .syntax-str { color: #ce9178; }
-        .syntax-com { color: #6a9955; font-style: italic; }
-        .syntax-func { color: #dcdcaa; }
-        .syntax-self { color: #9cdcfe; font-style: italic; }
-        .syntax-num { color: #b5cea8; }
+        .syntax-kwd {
+            color: #569cd6;
+            font-weight: bold;
+        }
+
+        .syntax-cls {
+            color: #4ec9b0;
+        }
+
+        .syntax-str {
+            color: #ce9178;
+        }
+
+        .syntax-com {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .syntax-func {
+            color: #dcdcaa;
+        }
+
+        .syntax-self {
+            color: #9cdcfe;
+            font-style: italic;
+        }
+
+        .syntax-num {
+            color: #b5cea8;
+        }
 
         /* Content Styling */
         .module-content h2 {
@@ -556,7 +582,7 @@
             border-radius: 8px;
             overflow: hidden;
             background: #1e1e1e;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255,255,255,0.05);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.05);
         }
 
         .sourceCode-titlebar {
@@ -569,11 +595,29 @@
             user-select: none;
         }
 
-        .sourceCode-dots { display: flex; gap: 8px; }
-        .sourceCode-dots span { width: 12px; height: 12px; border-radius: 50%; display: block; }
-        .sourceCode-dots .dot-close { background: #ff5f57; }
-        .sourceCode-dots .dot-min { background: #ffbd2e; }
-        .sourceCode-dots .dot-max { background: #28c940; }
+        .sourceCode-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .sourceCode-dots span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .sourceCode-dots .dot-close {
+            background: #ff5f57;
+        }
+
+        .sourceCode-dots .dot-min {
+            background: #ffbd2e;
+        }
+
+        .sourceCode-dots .dot-max {
+            background: #28c940;
+        }
 
         .sourceCode-tab {
             display: flex;
@@ -589,8 +633,14 @@
             font-family: 'Segoe UI', 'Montserrat', sans-serif;
         }
 
-        .sourceCode-tab .tab-icon { width: 14px; height: 14px; }
-        .sourceCode-tab .tab-icon.python { color: #f7c948; }
+        .sourceCode-tab .tab-icon {
+            width: 14px;
+            height: 14px;
+        }
+
+        .sourceCode-tab .tab-icon.python {
+            color: #f7c948;
+        }
 
         .sourceCode-actions {
             display: flex;
@@ -613,8 +663,14 @@
             transition: all 0.2s ease;
         }
 
-        .sourceCode-actions button:hover { background: #3c3c3c; color: #cccccc; }
-        .sourceCode-actions button.copied { color: #4ec9b0; }
+        .sourceCode-actions button:hover {
+            background: #3c3c3c;
+            color: #cccccc;
+        }
+
+        .sourceCode-actions button.copied {
+            color: #4ec9b0;
+        }
 
         .sourceCode-body {
             display: flex;
@@ -623,7 +679,9 @@
             background: #1e1e1e;
         }
 
-        .sourceCode-body.collapsed { display: none; }
+        .sourceCode-body.collapsed {
+            display: none;
+        }
 
         .sourceCode-gutter {
             padding: 16px 0;
@@ -641,7 +699,9 @@
             flex-shrink: 0;
         }
 
-        .sourceCode-gutter div { height: 1.65em; }
+        .sourceCode-gutter div {
+            height: 1.65em;
+        }
 
         .sourceCode-wrapper pre {
             margin: 0;
@@ -664,46 +724,133 @@
 
         .sourceCode-minimap {
             width: 28px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.01) 100%);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.01) 100%);
             border-left: 1px solid #2d2d2d;
             flex-shrink: 0;
         }
 
-        .sourceCode-wrapper pre::-webkit-scrollbar { height: 8px; }
-        .sourceCode-wrapper pre::-webkit-scrollbar-track { background: #1e1e1e; }
-        .sourceCode-wrapper pre::-webkit-scrollbar-thumb { background: rgba(121,121,121,0.4); border-radius: 4px; }
-        .sourceCode-wrapper pre::-webkit-scrollbar-thumb:hover { background: rgba(121,121,121,0.7); }
+        .sourceCode-wrapper pre::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .sourceCode-wrapper pre::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+
+        .sourceCode-wrapper pre::-webkit-scrollbar-thumb {
+            background: rgba(121, 121, 121, 0.4);
+            border-radius: 4px;
+        }
+
+        .sourceCode-wrapper pre::-webkit-scrollbar-thumb:hover {
+            background: rgba(121, 121, 121, 0.7);
+        }
 
         /* VS Code Dark+ Syntax Highlighting */
-        .hljs-keyword { color: #569cd6; }
-        .hljs-built_in { color: #4ec9b0; }
-        .hljs-type { color: #4ec9b0; }
-        .hljs-literal { color: #569cd6; }
-        .hljs-number { color: #b5cea8; }
-        .hljs-string { color: #ce9178; }
-        .hljs-comment { color: #6a9955; font-style: italic; }
-        .hljs-function { color: #dcdcaa; }
-        .hljs-title { color: #dcdcaa; }
-        .hljs-params { color: #9cdcfe; }
-        .hljs-operator { color: #d4d4d4; }
-        .hljs-punctuation { color: #d4d4d4; }
-        .hljs-variable { color: #9cdcfe; }
-        .hljs-attr { color: #9cdcfe; }
-        .hljs-class .hljs-title { color: #4ec9b0; }
-        .hljs-meta { color: #c586c0; }
+        .hljs-keyword {
+            color: #569cd6;
+        }
+
+        .hljs-built_in {
+            color: #4ec9b0;
+        }
+
+        .hljs-type {
+            color: #4ec9b0;
+        }
+
+        .hljs-literal {
+            color: #569cd6;
+        }
+
+        .hljs-number {
+            color: #b5cea8;
+        }
+
+        .hljs-string {
+            color: #ce9178;
+        }
+
+        .hljs-comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .hljs-function {
+            color: #dcdcaa;
+        }
+
+        .hljs-title {
+            color: #dcdcaa;
+        }
+
+        .hljs-params {
+            color: #9cdcfe;
+        }
+
+        .hljs-operator {
+            color: #d4d4d4;
+        }
+
+        .hljs-punctuation {
+            color: #d4d4d4;
+        }
+
+        .hljs-variable {
+            color: #9cdcfe;
+        }
+
+        .hljs-attr {
+            color: #9cdcfe;
+        }
+
+        .hljs-class .hljs-title {
+            color: #4ec9b0;
+        }
+
+        .hljs-meta {
+            color: #c586c0;
+        }
 
         /* Keep old span classes as fallback for existing markup */
-        .kwd { color: #569cd6; font-weight: bold; }
-        .cls { color: #4ec9b0; }
-        .str { color: #ce9178; }
-        .com { color: #6a9955; font-style: italic; }
-        .func { color: #dcdcaa; }
-        .num { color: #b5cea8; }
-        .op { color: #d4d4d4; }
-        .var { color: #9cdcfe; }
+        .kwd {
+            color: #569cd6;
+            font-weight: bold;
+        }
+
+        .cls {
+            color: #4ec9b0;
+        }
+
+        .str {
+            color: #ce9178;
+        }
+
+        .com {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .func {
+            color: #dcdcaa;
+        }
+
+        .num {
+            color: #b5cea8;
+        }
+
+        .op {
+            color: #d4d4d4;
+        }
+
+        .var {
+            color: #9cdcfe;
+        }
 
         /* Hide old code-title (replaced by VS Code titlebar) */
-        .code-title { display: none; }
+        .code-title {
+            display: none;
+        }
 
         /* Formula number */
         .formula-number {
@@ -711,20 +858,119 @@
             color: #64748B;
             font-size: 0.9rem;
         }
+
+        /* Module banner image */
+        .module-banner {
+            width: 100%;
+            max-height: 240px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 1.75rem;
+            box-shadow: 0 8px 24px rgba(61, 0, 141, 0.12);
+            display: block;
+        }
+
+        /* Comentario */
+        .comentario {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        /* Code output */
+        .code-output {
+            background: #1a1a2e;
+            border: 1px solid #2d2d4a;
+            border-radius: 0 0 8px 8px;
+            margin-top: -8px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .code-output-header {
+            background: rgba(76, 175, 80, 0.15);
+            padding: 0.4rem 1rem;
+            border-bottom: 1px solid #2d2d4a;
+        }
+
+        .code-output-title {
+            color: #4CAF50;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+        }
+
+        .code-output-body {
+            padding: 1rem;
+            color: #e0e0e0;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Box Classes */
+        .definition-box {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.06) 0%, rgba(237, 30, 121, 0.04) 100%);
+            border-left: 4px solid #3D008D;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .definition-box h4 {
+            color: #3D008D;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            background: transparent;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .warning-box h4 {
+            color: #b45309;
+            border-left: 4px solid #f59e0b;
+            background: transparent;
+            margin: 0 0 1rem 0;
+            padding: 0.5rem 1rem;
+            border-top: none;
+            border-right: none;
+            border-bottom: none;
+            border-radius: 0;
+        }
+
         /* === Latin Square & Flow Visualizations === */
         :root {
             --usta-primary: #3D008D;
         }
-        
+
         .latin-square-grid {
             display: grid;
             gap: 0.5rem;
             margin: 2rem auto;
             justify-content: center;
         }
-        .latin-square-grid.grid-3 { grid-template-columns: repeat(3, 3rem); }
-        .latin-square-grid.grid-4 { grid-template-columns: repeat(4, 3rem); }
-        .latin-square-grid.grid-5 { grid-template-columns: repeat(5, 3rem); }
+
+        .latin-square-grid.grid-3 {
+            grid-template-columns: repeat(3, 3rem);
+        }
+
+        .latin-square-grid.grid-4 {
+            grid-template-columns: repeat(4, 3rem);
+        }
+
+        .latin-square-grid.grid-5 {
+            grid-template-columns: repeat(5, 3rem);
+        }
 
         .latin-square-cell {
             aspect-ratio: 1;
@@ -739,14 +985,30 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s;
         }
-        
-        .latin-square-cell:hover { transform: scale(1.05); }
-        
-        .cell-A { background: linear-gradient(135deg, #10B981, #059669); }
-        .cell-B { background: linear-gradient(135deg, #3B82F6, #2563EB); }
-        .cell-C { background: linear-gradient(135deg, #F59E0B, #D97706); }
-        .cell-D { background: linear-gradient(135deg, #EF4444, #DC2626); }
-        .cell-E { background: linear-gradient(135deg, #8B5CF6, #7C3AED); }
+
+        .latin-square-cell:hover {
+            transform: scale(1.05);
+        }
+
+        .cell-A {
+            background: linear-gradient(135deg, #10B981, #059669);
+        }
+
+        .cell-B {
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+        }
+
+        .cell-C {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+        }
+
+        .cell-D {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+        }
+
+        .cell-E {
+            background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+        }
 
         .concept-diagram {
             display: flex;
@@ -756,6 +1018,7 @@
             margin: 2rem 0;
             flex-wrap: wrap;
         }
+
         .diagram-box {
             padding: 1rem;
             border-radius: 0.5rem;
@@ -766,10 +1029,19 @@
             min-width: 120px;
             border: 1px solid #E2E8F0;
         }
-        .diagram-row { border-top: 4px solid #10B981; }
-        .diagram-col { border-top: 4px solid #3B82F6; }
-        .diagram-treat { border-top: 4px solid #F59E0B; }
-        
+
+        .diagram-row {
+            border-top: 4px solid #10B981;
+        }
+
+        .diagram-col {
+            border-top: 4px solid #3B82F6;
+        }
+
+        .diagram-treat {
+            border-top: 4px solid #F59E0B;
+        }
+
         .diagram-arrow {
             font-size: 1.5rem;
             font-weight: bold;
@@ -777,630 +1049,1188 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
-<!-- Floating Sidebar Toggle Button -->
-<button aria-label="Toggle sidebar" class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Mostrar/Ocultar menú">
-<i class="fas fa-bars text-sm" id="sidebarToggleIcon"></i>
-</button>
-<div class="main-layout">
-<!-- Sidebar Navigation -->
-<div id="sidebar-panel">
-<div class="sidebar-brand">
-<h2><i class="fas fa-th text-secondary"></i> Diseño <span style="color: #FDB913;">DCL</span></h2>
-<p>Diseño de Experimentos • Cuadros Latinos • USTA</p>
-</div>
-<nav class="sidebar-nav" id="module-nav">
-<!-- Nav items injected via JS -->
-</nav>
-</div>
-<!-- Main Content Area -->
-<div class="flex-grow flex flex-col" style="min-width:0;">
-<main class="flex-grow bg-white rounded-tl-xl shadow-sm border border-gray-200 overflow-hidden">
-<div class="p-6 md:p-10 module-content" id="content-area">
-<!-- Content injected via JS -->
-</div>
-</main>
-</div>
-</div>
-<!-- Footer -->
-<footer class="usta-header mt-8">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-<i class="fas fa-book-open"></i> Referencias Bibliográficas
-            </h3>
-<ul class="space-y-3 text-white/90 text-sm">
-<li class="flex items-start gap-2">
-<i class="fas fa-bookmark text-secondary mt-1"></i>
-<span>Montgomery, D. C. (2017). <em class="text-gold">Design and Analysis of Experiments</em> (9th
-                        ed.). Wiley.</span>
-</li>
-<li class="flex items-start gap-2">
-<i class="fas fa-bookmark text-secondary mt-1"></i>
-<span>Box, G.E.P. &amp; Cox, D.R. (1964). An analysis of transformations. <em class="text-gold">Journal
-                            of the Royal Statistical Society, Series B</em>, 26(2), 211-252.</span>
-</li>
-<li class="flex items-start gap-2">
-<i class="fas fa-bookmark text-secondary mt-1"></i>
-<span>Scheffé, H. (1959). <em class="text-gold">The Analysis of Variance</em>. Wiley.</span>
-</li>
-<li class="flex items-start gap-2">
-<i class="fas fa-bookmark text-secondary mt-1"></i>
-<span>Bartlett, M.S. (1937). Properties of sufficiency and statistical tests. <em class="text-gold">Proceedings of the Royal Society of London, Series A</em>, 160,
-                        268-282.</span>
-</li>
-<li class="flex items-start gap-2">
-<i class="fas fa-bookmark text-secondary mt-1"></i>
-<span>Hartley, H.O. (1950). The maximum F-ratio as a short-cut test for heterogeneity of variance.
-                        <em class="text-gold">Biometrika</em>, 37, 308-312.</span>
-</li>
-<li class="flex items-start gap-2">
-<i class="fas fa-bookmark text-secondary mt-1"></i>
-<span>Cochran, W.G. (1941). The distribution of the largest of a set of estimated variances as a
-                        fraction of their total. <em class="text-gold">Annals of Eugenics</em>, 11, 47-52.</span>
-</li>
-</ul>
-<div class="mt-6 pt-6 border-t border-white/20 text-center">
-<p class="text-white font-medium">Material de Estudio — <span class="text-gold">USTA</span></p>
-<p class="text-xs mt-1 text-white/60">Diseño de Experimentos • Diagnosis y Validación del Modelo</p>
-</div>
-</div>
-</footer>
-<!-- Scroll to Top Button -->
-<button aria-label="Volver arriba" class="scroll-to-top" id="scrollToTopBtn">
-<i class="fas fa-arrow-up"></i>
-</button>
-<!-- Module Content Templates -->
-<template id="module-1"><div class="animate-fade-in">
-<div class="border-b border-gray-100 pb-6 mb-6">
-<div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
-<span>Módulo 1</span>
-</div>
-<h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Introducción al DCL</h2>
-<div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
-<span class="text-xl">🎯</span>
-<div>
-<h3 class="font-bold text-gray-800 text-sm" style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
-<p class="text-gray-600 text-sm" style="margin:0;">Comprender qué es un cuadro latino y cuándo utilizarlo.</p>
-</div>
-</div>
-</div>
-<article class="" id="introduccion" style="">
-<div class="definition-box">
-<h4>Definición</h4>
-<p>Un <strong>Diseño en Cuadro Latino (DCL)</strong> es un diseño experimental que permite controlar o eliminar dos fuentes de variabilidad (bloques) simultáneamente mediante la organización de los tratamientos en un arreglo cuadrado donde cada tratamiento aparece exactamente una vez en cada fila y cada columna.</p>
-</div>
-<p>Los Diseños en Cuadros Latinos son una extensión de los Diseños en Bloques Completos Aleatorizados (DBCA). Mientras que en un DBCA se controla una fuente de variación (bloques), el Cuadro Latino controla dos fuentes de variación simultáneamente (filas y columnas).</p>
-<h2>Antecedentes Históricos</h2>
-<p>El término "Cuadro Latino" se debe a Leonhard Euler, quien en 1782 estudió este tipo de arreglos como una generalización del concepto de cuadrados mágicos. En el contexto de diseño experimental, estos diseños fueron formalizados por Ronald Fisher y posteriormente ampliados por otros estadísticos.</p>
-<h2>Características Principales</h2>
-<ul>
-<li>Arreglo cuadrado de orden $p$: requiere $p^2$ observaciones</li>
-<li>Se tienen tres factores: tratamientos, filas y columnas</li>
-<li>Cada tratamiento aparece exactamente una vez en cada fila</li>
-<li>Cada tratamiento aparece exactamente una vez en cada columna</li>
-<li>Permite controlar dos fuentes de variabilidad simultáneamente</li>
-</ul>
-<h2>Ejemplo de Cuadro Latino 4×4</h2>
-<p>En un experimento agrícola donde se desea evaluar el rendimiento de 4 variedades de trigo ($A$, $B$, $C$, $D$) y se tienen 4 bloques de terreno (filas) y 4 tipos de suelo (columnas):</p>
-<div class="latin-square-grid grid-4">
-<div class="latin-square-cell cell-A">A</div>
-<div class="latin-square-cell cell-B">B</div>
-<div class="latin-square-cell cell-C">C</div>
-<div class="latin-square-cell cell-D">D</div>
-<div class="latin-square-cell cell-B">B</div>
-<div class="latin-square-cell cell-C">C</div>
-<div class="latin-square-cell cell-D">D</div>
-<div class="latin-square-cell cell-A">A</div>
-<div class="latin-square-cell cell-C">C</div>
-<div class="latin-square-cell cell-D">D</div>
-<div class="latin-square-cell cell-A">A</div>
-<div class="latin-square-cell cell-B">B</div>
-<div class="latin-square-cell cell-D">D</div>
-<div class="latin-square-cell cell-A">A</div>
-<div class="latin-square-cell cell-B">B</div>
-<div class="latin-square-cell cell-C">C</div>
-</div>
-<p style="text-align: center; font-size: 0.85rem; color: #64748b;">Nota: Cada letra (tratamiento) aparece exactamente una vez en cada fila y cada columna.</p>
-<h2>Notación</h2>
-<p>Un Cuadro Latino de orden $p$ se denota como $L_p$ o $\mathrm{Latin}(p)$. Por ejemplo:</p>
-<ul>
-<li>$L_3$: Cuadro Latino de orden 3 (9 observaciones)</li>
-<li>$L_4$: Cuadro Latino de orden 4 (16 observaciones)</li>
-<li>$L_5$: Cuadro Latino de orden 5 (25 observaciones)</li>
-</ul>
-<div class="formula-box">
-<p><strong>Número de observaciones:</strong></p>
-                        $$N = p^2$$
-                        <p>donde $p$ es el número de niveles de cada factor (filas, columnas, tratamientos)</p>
-</div>
-</article></div></template><template id="module-2"><div class="animate-fade-in">
-<div class="border-b border-gray-100 pb-6 mb-6">
-<div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
-<span>Módulo 2</span>
-</div>
-<h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Fundamentos Teóricos</h2>
-<div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
-<span class="text-xl">🎯</span>
-<div>
-<h3 class="font-bold text-gray-800 text-sm" style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
-<p class="text-gray-600 text-sm" style="margin:0;">Estudiar la estructura y condiciones de los cuadros latinos.</p>
-</div>
-</div>
-</div>
-<article class="" id="fundamentos" style="">
-<h2>Estructura Experimental</h2>
-<p>En un Diseño en Cuadro Latino se tienen tres factores, cada uno con $p$ niveles:</p>
-<ul>
-<li><strong>Filas:</strong> Representan el primer bloqueo (por ejemplo, bloques de terreno en dirección este-oeste)</li>
-<li><strong>Columnas:</strong> Representan el segundo bloqueo (por ejemplo, tipo de suelo o dirección norte-sur)</li>
-<li><strong>Tratamientos:</strong> Los $p$ niveles del factor de interés primario</li>
-</ul>
-<div class="concept-diagram">
-<div class="diagram-box diagram-row">
-<div>Filas</div>
-<div style="font-size: 0.75rem; font-weight: 400;">(Bloque 1)</div>
-</div>
-<div class="diagram-arrow">×</div>
-<div class="diagram-box diagram-col">
-<div>Columnas</div>
-<div style="font-size: 0.75rem; font-weight: 400;">(Bloque 2)</div>
-</div>
-<div class="diagram-arrow">×</div>
-<div class="diagram-box diagram-treat">
-<div>Tratamientos</div>
-<div style="font-size: 0.75rem; font-weight: 400;">(Efectos fijos)</div>
-</div>
-<div class="diagram-arrow">=</div>
-<div class="diagram-box" style="background: var(--usta-primary); color: white;">
-<div>Cuadro Latino</div>
-<div style="font-size: 0.75rem; font-weight: 400;">$p^2$ obs.</div>
-</div>
-</div>
-<h2>Supuestos del Modelo</h2>
-<div class="definition-box">
-<h4>Supuestos Fundamentales</h4>
-<p>No existe interacción entre los factores (filas, columnas y tratamientos). Este supuesto es crítico para la validez del análisis. Si se sospecha interacción, se debe considerar un diseño más complejo (por ejemplo, Cuadro Greco-Latino).</p>
-</div>
-<p>Los supuestos para el análisis de varianza de un Cuadro Latino son:</p>
-<ol>
-<li><strong>Normalidad:</strong> Los errores tienen distribución normal</li>
-<li><strong>Varianza constante:</strong> $\sigma^2$ es constante para todos los tratamientos</li>
-<li><strong>Independencia:</strong> Las observaciones son independientes</li>
-<li><strong>Aditividad:</strong> El modelo es aditivo (sin interacción)</li>
-</ol>
-<h2>Ventajas y Desventajas</h2>
-<div class="example-box">
-<h4>Ventajas</h4>
-<ul>
-<li>Control de dos fuentes de variabilidad simultáneamente</li>
-<li>Reduce el error experimental significativamente</li>
-<li>Diseño eficiente cuando los recursos son limitados</li>
-<li>Análisis estadístico relativamente sencillo</li>
-</ul>
-</div>
-<div class="warning-box">
-<h4>Desventajas</h4>
-<ul>
-<li>Requiere que el número de niveles sea igual para los tres factores</li>
-<li>El número de observaciones crece rápidamente ($p^2$)</li>
-<li>No permite estudiar interacciones entre filas, columnas y tratamientos</li>
-<li>No es adecuado si se sospecha interacción entre factores</li>
-</ul>
-</div>
-<h2>Principio de Ortogonalidad</h2>
-<p>En un Cuadro Latino, los tres factores (filas, columnas y tratamientos) son <strong>ortogonales</strong>, lo que significa que:</p>
-<div class="formula-box">
-                        $$\sum_{i=1}^{p} \sum_{j=1}^{p} (\text{efecto fila } i) \times (\text{efecto columna } j) = 0$$
-                        $$\sum_{i=1}^{p} \sum_{j=1}^{p} (\text{efecto fila } i) \times (\text{efecto tratamiento } k) = 0$$
-                        $$\sum_{i=1}^{p} \sum_{j=1}^{p} (\text{efecto columna } j) \times (\text{efecto tratamiento } k) = 0$$
-                    </div>
-<p>Esta ortogonalidad permite que los efectos de cada factor se estimen de manera independiente.</p>
-</article></div></template><template id="module-3"><div class="animate-fade-in">
-<div class="border-b border-gray-100 pb-6 mb-6">
-<div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
-<span>Módulo 3</span>
-</div>
-<h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Modelo Estadístico</h2>
-<div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
-<span class="text-xl">🎯</span>
-<div>
-<h3 class="font-bold text-gray-800 text-sm" style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
-<p class="text-gray-600 text-sm" style="margin:0;">Formular el modelo lineal del DCL y sus componentes.</p>
-</div>
-</div>
-</div>
-<article class="" id="modelo" style="">
-<h2>Modelo Lineal</h2>
-<p>El modelo estadístico para un Diseño en Cuadro Latino es:</p>
-<div class="formula-box">
-                        $$y_{ijk} = \mu + \rho_i + C_j + \tau_k + \varepsilon_{ijk}$$
-                    </div>
-<p>Donde:</p>
-<ul>
-<li>$y_{ijk}$: Observable en la fila $i$, columna $j$, con tratamiento $k$</li>
-<li>$\mu$: Media general</li>
-<li>$\rho_i$: Efecto de la fila $i$ (bloque 1), con $\sum_{i=1}^{p} \rho_i = 0$</li>
-<li>$C_j$: Efecto de la columna $j$ (bloque 2), con $\sum_{j=1}^{p} C_j = 0$</li>
-<li>$\tau_k$: Efecto del tratamiento $k$, con $\sum_{k=1}^{p} \tau_k = 0$</li>
-<li>$\varepsilon_{ijk}$: Error aleatorio, $\varepsilon_{ijk} \sim N(0, \sigma^2)$</li>
-</ul>
-<h2>Grados de Libertad</h2>
-<p>Los grados de libertad se dividen de la siguiente manera:</p>
-<table>
-<thead>
-<tr>
-<th>Fuente de Variación</th>
-<th>Grados de Libertad</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Filas (Bloques)</td>
-<td>$p - 1$</td>
-</tr>
-<tr>
-<td>Columnas (Bloques)</td>
-<td>$p - 1$</td>
-</tr>
-<tr>
-<td>Tratamientos</td>
-<td>$p - 1$</td>
-</tr>
-<tr>
-<td>Error</td>
-<td>$(p-1)(p-2)$</td>
-</tr>
-<tr>
-<td><strong>Total</strong></td>
-<td><strong>$p^2 - 1$</strong></td>
-</tr>
-</tbody>
-</table>
-<div class="formula-box">
-                        $$\text{GL}_{\text{Error}} = (p-1)(p-2) = p^2 - 1 - (p-1) - (p-1) - (p-1)$$
-                    </div>
-<h2>Cuasifactores</h2>
-<p>Para las sumas de cuadrados, definimos los siguientes elementos:</p>
-<div class="formula-box">
-                        $$y_{\cdots} = \sum_{i=1}^{p} \sum_{j=1}^{p} \sum_{k=1}^{p} y_{ijk}$$
-                        $$\bar{y}_{\cdots} = \frac{y_{\cdots}}{p^2}$$
-                    </div>
-<p><strong>Totales:</strong></p>
-<ul>
-<li>$y_{i\cdot\cdot}$: Total de la fila $i$ (suma sobre $j$ y $k$)</li>
-<li>$y_{\cdot j\cdot}$: Total de la columna $j$ (suma sobre $i$ y $k$)</li>
-<li>$y_{\cdot\cdot k}$: Total del tratamiento $k$ (suma sobre $i$ y $j$)</li>
-</ul>
-<h2>Fórmulas de Sumas de Cuadrados</h2>
-<div class="formula-box">
-                        $$\text{SC}_{\text{Total}} = \sum_{i,j,k} y_{ijk}^2 - \frac{y_{\cdots}^2}{p^2}$$
-                    </div>
-<div class="formula-box">
-                        $$\text{SC}_{\text{Filas}} = \frac{1}{p} \sum_{i=1}^{p} y_{i\cdot\cdot}^2 - \frac{y_{\cdots}^2}{p^2}$$
-                    </div>
-<div class="formula-box">
-                        $$\text{SC}_{\text{Columnas}} = \frac{1}{p} \sum_{j=1}^{p} y_{\cdot j\cdot}^2 - \frac{y_{\cdots}^2}{p^2}$$
-                    </div>
-<div class="formula-box">
-                        $$\text{SC}_{\text{Tratamientos}} = \frac{1}{p} \sum_{k=1}^{p} y_{\cdot\cdot k}^2 - \frac{y_{\cdots}^2}{p^2}$$
-                    </div>
-<div class="formula-box">
-                        $$\text{SC}_{\text{Error}} = \text{SC}_{\text{Total}} - \text{SC}_{\text{Filas}} - \text{SC}_{\text{Columnas}} - \text{SC}_{\text{Tratamientos}}$$
-                    </div>
-<h2>Cuadrados Medios</h2>
-<div class="formula-box">
-                        $$\text{CM}_{\text{Filas}} = \frac{\text{SC}_{\text{Filas}}}{p-1}$$
-                        $$\text{CM}_{\text{Columnas}} = \frac{\text{SC}_{\text{Columnas}}}{p-1}$$
-                        $$\text{CM}_{\text{Tratamientos}} = \frac{\text{SC}_{\text{Tratamientos}}}{p-1}$$
-                        $$\text{CM}_{\text{Error}} = \frac{\text{SC}_{\text{Error}}}{(p-1)(p-2)}$$
-                    </div>
-<h2>Estadístico F</h2>
-<p>Para probar la hipótesis nula de que no hay diferencias entre tratamientos:</p>
-<div class="formula-box">
-                        $$F_0 = \frac{\text{CM}_{\text{Tratamientos}}}{\text{CM}_{\text{Error}}}$$
-                    </div>
-<p>Se rechaza $H_0$ si $F_0 &gt; F_{\alpha,\; (p-1),\; (p-1)(p-2)}$ o si el valor $p$ asociado es menor que $\alpha$.</p>
-</article></div></template><template id="module-4"><div class="animate-fade-in">
-<div class="border-b border-gray-100 pb-6 mb-6">
-<div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
-<span>Módulo 4</span>
-</div>
-<h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Propiedades del Diseño</h2>
-<div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
-<span class="text-xl">🎯</span>
-<div>
-<h3 class="font-bold text-gray-800 text-sm" style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
-<p class="text-gray-600 text-sm" style="margin:0;">Conocer las propiedades estadísticas del cuadro latino.</p>
-</div>
-</div>
-</div>
-<article class="" id="propiedades" style="">
-<h2>Propiedades de los Cuadros Latinos</h2>
-<div class="definition-box">
-<h4>Propiedad Fundamental</h4>
-<p>En un Cuadro Latino de orden $p$, cada tratamiento aparece exactamente $p$ veces: una vez en cada fila y una vez en cada columna.</p>
-</div>
-<h2>Cuadros Latinos Estándar</h2>
-<p>Un Cuadro Latino se dice <strong>estándar</strong> o <strong>canónico</strong> si los tratamientos aparecen en orden en la primera fila y primera columna:</p>
-<h3>Cuadro Latino Estándar de orden 3:</h3>
-<div class="latin-square-grid grid-3" style="max-width: 200px;">
-<div class="latin-square-cell cell-A">A</div>
-<div class="latin-square-cell cell-B">B</div>
-<div class="latin-square-cell cell-C">C</div>
-<div class="latin-square-cell cell-B">B</div>
-<div class="latin-square-cell cell-C">C</div>
-<div class="latin-square-cell cell-A">A</div>
-<div class="latin-square-cell cell-C">C</div>
-<div class="latin-square-cell cell-A">A</div>
-<div class="latin-square-cell cell-B">B</div>
-</div>
-<h3>Cuadro Latino Estándar de orden 4:</h3>
-<div class="latin-square-grid grid-4" style="max-width: 250px;">
-<div class="latin-square-cell cell-A">A</div>
-<div class="latin-square-cell cell-B">B</div>
-<div class="latin-square-cell cell-C">C</div>
-<div class="latin-square-cell cell-D">D</div>
-<div class="latin-square-cell cell-B">B</div>
-<div class="latin-square-cell cell-C">C</div>
-<div class="latin-square-cell cell-D">D</div>
-<div class="latin-square-cell cell-A">A</div>
-<div class="latin-square-cell cell-C">C</div>
-<div class="latin-square-cell cell-D">D</div>
-<div class="latin-square-cell cell-A">A</div>
-<div class="latin-square-cell cell-B">B</div>
-<div class="latin-square-cell cell-D">D</div>
-<div class="latin-square-cell cell-A">A</div>
-<div class="latin-square-cell cell-B">B</div>
-<div class="latin-square-cell cell-C">C</div>
-</div>
-<h2>Número de Cuadros Latinos</h2>
-<p>El número de Cuadros Latinos no estándar de orden $p$ es:</p>
-<table>
-<thead>
-<tr>
-<th>Orden ($p$)</th>
-<th>Número de Cuadros Latinos</th>
-</tr>
-</thead>
-<tbody>
-<tr><td>1</td><td>1</td></tr>
-<tr><td>2</td><td>1</td></tr>
-<tr><td>3</td><td>1</td></tr>
-<tr><td>4</td><td>4</td></tr>
-<tr><td>5</td><td>56</td></tr>
-<tr><td>6</td><td>940</td></tr>
-<tr><td>7</td><td>16,940</td></tr>
-<tr><td>8</td><td>812,560</td></tr>
-</tbody>
-</table>
-<h2>Operaciones con Cuadros Latinos</h2>
-<h3>1. Cambio de Símbolos (Permutación de Tratamientos)</h3>
-<p>Si se intercambian los nombres de los tratamientos, se obtiene otro Cuadro Latino válido.</p>
-<h3>2. Permutación de Filas</h3>
-<p>Cualquier reordenamiento de las filas produce otro Cuadro Latino.</p>
-<h3>3. Permutación de Columnas</h3>
-<p>Cualquier reordenamiento de las columnas produce otro Cuadro Latino.</p>
-<h3>4. Transposición</h3>
-<p>Intercambiar filas por columnas (trasposición) preserva la propiedad del Cuadro Latino.</p>
-<div class="warning-box">
-<h4>Importante</h4>
-<p>Dos Cuadros Latinos se consideran esencialmente iguales si uno puede obtenerse del otro mediante una combinación de estas operaciones. A estos se les llama <strong>Cuadros Latinos isotópicos</strong>.</p>
-</div>
-<h2>Cuadros Greco-Latinos</h2>
-<p>Un <strong>Cuadro Greco-Latino</strong> es la extensión del Cuadro Latino que permite controlar un tercer factor de bloqueo mediante el uso de letras griegas.</p>
-<p>En un Cuadro Greco-Latino de orden $p$:</p>
-<ul>
-<li>Cada letra latina aparece exactamente una vez en cada fila y columna</li>
-<li>Cada letra griega aparece exactamente una vez en cada fila y columna</li>
-<li>Cada combinación letra latina-griega aparece a lo sumo una vez</li>
-</ul>
-<div class="formula-box">
-<p><strong>Condición de existencia:</strong></p>
-<p>Un Cuadro Greco-Latino de orden $p$ existe si y solo si existe un par de Cuadros Latinos ortogonales de orden $p$.</p>
-<p>Esto ocurre cuando $p$ es un número primo o una potencia de un número primo.</p>
-</div>
-<p>Para $p = 2$ y $p = 6$, no existen pares de Cuadros Latinos ortogonales, por lo tanto, no existen Cuadros Greco-Latinos de esos órdenes. Euler conjeturó que no existían para ningún $p \equiv 2 \pmod{4}$, pero esta conjetura fue refutada para $p \geq 10$.</p>
-</article></div></template><template id="module-5"><div class="animate-fade-in">
-<div class="border-b border-gray-100 pb-6 mb-6">
-<div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
-<span>Módulo 5</span>
-</div>
-<h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Ejemplo Numérico</h2>
-<div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
-<span class="text-xl">🎯</span>
-<div>
-<h3 class="font-bold text-gray-800 text-sm" style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
-<p class="text-gray-600 text-sm" style="margin:0;">Aplicar el DCL a un problema con cálculos paso a paso.</p>
-</div>
-</div>
-</div>
-<article class="" id="ejemplo" style="">
-<div class="example-box">
-<h4>Experimento de Rendimiento de Cuatro Variedades de Trigo</h4>
-<p>Se condujo un experimento para comparar el rendimiento (en bushels/acre) de cuatro variedades de trigo ($A$, $B$, $C$, $D$). Se utilizó un Diseño en Cuadro Latino 4×4 donde:</p>
-<ul>
-<li><strong>Filas:</strong> 4 bloques de terreno (orientación Este-Oeste)</li>
-<li><strong>Columnas:</strong> 4 tipos de suelo (orientación Norte-Sur)</li>
-<li><strong>Tratamientos:</strong> 4 variedades de trigo</li>
-</ul>
-</div>
-<h2>Datos Observados</h2>
-<table>
-<thead>
-<tr>
-<th>Bloque/Fila</th>
-<th>Col 1</th>
-<th>Col 2</th>
-<th>Col 3</th>
-<th>Col 4</th>
-<th>Total Fila</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Bloque 1</strong></td>
-<td>A: 42</td>
-<td>B: 38</td>
-<td>C: 51</td>
-<td>D: 44</td>
-<td><strong>175</strong></td>
-</tr>
-<tr>
-<td><strong>Bloque 2</strong></td>
-<td>B: 39</td>
-<td>C: 54</td>
-<td>D: 47</td>
-<td>A: 45</td>
-<td><strong>185</strong></td>
-</tr>
-<tr>
-<td><strong>Bloque 3</strong></td>
-<td>C: 50</td>
-<td>D: 45</td>
-<td>A: 49</td>
-<td>B: 41</td>
-<td><strong>185</strong></td>
-</tr>
-<tr>
-<td><strong>Bloque 4</strong></td>
-<td>D: 43</td>
-<td>A: 47</td>
-<td>B: 40</td>
-<td>C: 53</td>
-<td><strong>183</strong></td>
-</tr>
-<tr>
-<td><strong>Total Columna</strong></td>
-<td><strong>174</strong></td>
-<td><strong>184</strong></td>
-<td><strong>187</strong></td>
-<td><strong>183</strong></td>
-<td><strong>728</strong></td>
-</tr>
-</tbody>
-</table>
-<h2>Totales por Tratamiento</h2>
-<table>
-<thead>
-<tr>
-<th>Tratamiento</th>
-<th>A</th>
-<th>B</th>
-<th>C</th>
-<th>D</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Total</strong></td>
-<td>183</td>
-<td>158</td>
-<td>208</td>
-<td>179</td>
-</tr>
-<tr>
-<td><strong>Media</strong></td>
-<td>45.75</td>
-<td>39.50</td>
-<td>52.00</td>
-<td>44.75</td>
-</tr>
-</tbody>
-</table>
-<h2>Cálculos con Python</h2>
-<div class="sourceCode" data-lang="Python">
-<div class="sourceCode-header">
-<span class="sourceCode-title">Python</span>
-<div class="sourceCode-buttons">
-<button onclick="toggleCodeBlock(this)" type="button"><i class="fas fa-eye"></i> <span>Ocultar</span></button>
-<button onclick="copyCodeBlock(this)" type="button"><i class="fas fa-copy"></i> <span>Copiar</span></button>
-</div>
-</div>
-<pre><code>import numpy as np
 
-# Datos del Cuadro Latino 4x4
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+    <!-- Floating Sidebar Toggle Button -->
+    <button aria-label="Toggle sidebar" class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Mostrar/Ocultar menú">
+        <i class="fas fa-bars text-sm" id="sidebarToggleIcon"></i>
+    </button>
+    <div class="main-layout">
+        <!-- Sidebar Navigation -->
+        <div id="sidebar-panel">
+            <div class="sidebar-brand">
+                <h2><i class="fas fa-th text-secondary"></i> Diseño <span style="color: #FDB913;">DCL</span></h2>
+                <p>Diseño de Experimentos • Cuadros Latinos • USTA</p>
+            </div>
+            <nav class="sidebar-nav" id="module-nav">
+                <!-- Nav items injected via JS -->
+            </nav>
+        </div>
+        <!-- Main Content Area -->
+        <div class="flex-grow flex flex-col" style="min-width:0;">
+            <main class="flex-grow bg-white rounded-tl-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="p-6 md:p-10 module-content" id="content-area">
+                    <!-- Content injected via JS -->
+                </div>
+            </main>
+        </div>
+    </div>
+    <!-- Footer -->
+    <footer class="usta-header mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <i class="fas fa-book-open"></i> Referencias Bibliográficas
+            </h3>
+            <ul class="space-y-3 text-white/90 text-sm">
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Montgomery, D. C. (2017). <em class="text-gold">Design and Analysis of Experiments</em> (9th
+                        ed.). Wiley.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Box, G.E.P. &amp; Cox, D.R. (1964). An analysis of transformations. <em
+                            class="text-gold">Journal
+                            of the Royal Statistical Society, Series B</em>, 26(2), 211-252.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Scheffé, H. (1959). <em class="text-gold">The Analysis of Variance</em>. Wiley.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Bartlett, M.S. (1937). Properties of sufficiency and statistical tests. <em
+                            class="text-gold">Proceedings of the Royal Society of London, Series A</em>, 160,
+                        268-282.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Hartley, H.O. (1950). The maximum F-ratio as a short-cut test for heterogeneity of variance.
+                        <em class="text-gold">Biometrika</em>, 37, 308-312.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Cochran, W.G. (1941). The distribution of the largest of a set of estimated variances as a
+                        fraction of their total. <em class="text-gold">Annals of Eugenics</em>, 11, 47-52.</span>
+                </li>
+            </ul>
+            <div class="mt-6 pt-6 border-t border-white/20 text-center">
+                <p class="text-white font-medium">Diseñado por <span class="text-gold">Javier Mauricio Sierra</span></p>
+                <p class="text-xs mt-1 text-white/60">Diseño de Experimentos • Cuadros Latinos • USTA 2026</p>
+            </div>
+        </div>
+    </footer>
+    <!-- Scroll to Top Button -->
+    <button aria-label="Volver arriba" class="scroll-to-top" id="scrollToTopBtn">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    <!-- Module Content Templates -->
+    <template id="module-1">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 1</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Introducción al DCL
+                </h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm"
+                            style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Comprender qué es un cuadro latino, su
+                            motivación y cuándo utilizarlo para controlar dos fuentes de variabilidad simultáneamente.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <article class="" id="introduccion" style="">
+                <div class="definition-box">
+                    <h4>Definición</h4>
+                    <p>Un <strong>Diseño en Cuadro Latino (DCL)</strong> es un diseño experimental que permite controlar
+                        o eliminar dos fuentes de variabilidad (bloques) simultáneamente mediante la organización de los
+                        tratamientos en un arreglo cuadrado donde cada tratamiento aparece exactamente una vez en cada
+                        fila y cada columna.</p>
+                </div>
+
+                <h2>7.1 Motivación: De un Bloqueo a Dos</h2>
+                <p>En el modelo en bloques aleatorizados (DBCA) se considera un factor principal y un factor de control
+                    (variable de bloque) para eliminar su influencia en la variable respuesta y así reducir el error
+                    experimental. Sin embargo, en muchos experimentos existen <strong>dos fuentes de
+                        variabilidad</strong> que es necesario controlar simultáneamente.</p>
+                <p>Si se consideran simultáneamente dos variables de bloque, un diseño completo en bloques aleatorizados
+                    consistiría en formar un bloque para cada combinación de niveles de dichas variables y después
+                    aplicar todos los niveles del factor principal en cada uno de los bloques obtenidos.</p>
+
+                <div class="example-box">
+                    <h4>Ejemplo Introductorio: Rendimiento del Trigo</h4>
+                    <p>Supongamos un experimento en el que se quiere estudiar el efecto de distintos tipos de semilla en
+                        el rendimiento del trigo y se considera que en dicho rendimiento también pueden influir los
+                        tipos de abonos e insecticidas empleados.</p>
+                    <ul>
+                        <li><strong>Factor principal:</strong> Tipo de semilla (4 niveles: s₁, s₂, s₃, s₄)</li>
+                        <li><strong>Variable de bloque 1:</strong> Tipo de abono (4 niveles: a₁, a₂, a₃, a₄)</li>
+                        <li><strong>Variable de bloque 2:</strong> Tipo de insecticida (4 niveles: i₁, i₂, i₃, i₄)</li>
+                    </ul>
+                </div>
+
+                <h2>La Ventaja Clave: Eficiencia Experimental</h2>
+                <p>Un diseño en bloques completos con un factor principal y dos factores de bloque, con K₁, K₂ y K₃
+                    niveles en cada uno de los factores, requiere <strong>K₁ × K₂ × K₃</strong> unidades experimentales.
+                </p>
+
+                <div class="formula-box">
+                    <p><strong>Diseño completo en bloques:</strong></p>
+                    $$N_{\text{completo}} = K_1 \times K_2 \times K_3$$
+                    <p>En nuestro ejemplo: $4 \times 4 \times 4 = 64$ observaciones necesarias</p>
+                </div>
+
+                <div class="formula-box">
+                    <p><strong>Diseño en Cuadro Latino:</strong></p>
+                    $$N_{\text{latino}} = K^2$$
+                    <p>En nuestro ejemplo: $4^2 = 16$ observaciones necesarias</p>
+                </div>
+
+                <div class="tip-box">
+                    <p><strong>💡 Reducción drástica:</strong> Para K = 4, el diseño completo necesitaría $4^3 = 64$
+                        observaciones, mientras que el cuadro latino solo necesita $4^2 = 16$ observaciones. Esto
+                        representa una reducción del <strong>75%</strong> en el número de unidades experimentales.</p>
+                </div>
+
+                <p>Esta reducción es crucial cuando existen limitaciones económicas, de tiempo o de disponibilidad de
+                    material experimental. El cuadro latino logra esto utilizando una <strong>fracción</strong> del
+                    diseño completo, seleccionando una parte que permite estimar los efectos de interés bajo ciertas
+                    hipótesis generales.</p>
+
+                <h2>Características Principales</h2>
+                <ul>
+                    <li>Arreglo cuadrado de orden $K$: requiere $K^2$ observaciones</li>
+                    <li>Se controlan tres fuentes de variabilidad: filas, columnas y tratamientos</li>
+                    <li>Cada tratamiento aparece exactamente una vez en cada fila</li>
+                    <li>Cada tratamiento aparece exactamente una vez en cada columna</li>
+                    <li>El número de niveles debe ser el mismo para los tres factores</li>
+                    <li>Se asume que <strong>no existe interacción</strong> entre ninguna pareja de factores</li>
+                </ul>
+
+                <h2>Definición Formal de Cuadro Latino</h2>
+                <div class="concepto-clave">
+                    <h4><i class="fas fa-th"></i> Cuadro Latino de Orden K</h4>
+                    <p>Recibe el nombre de <strong>cuadro latino de orden K</strong> a una disposición en filas y
+                        columnas de K letras latinas (o símbolos), de tal forma que cada letra aparece una sola vez en
+                        cada fila y en cada columna.</p>
+                </div>
+
+                <h2>Ejemplo de Cuadro Latino 4×4</h2>
+                <p>En el experimento agrícola con 4 variedades de trigo ($A$, $B$, $C$, $D$), 4 bloques de terreno
+                    (filas) y 4 tipos de suelo (columnas):</p>
+                <div class="latin-square-grid grid-4">
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                </div>
+                <p style="text-align: center; font-size: 0.85rem; color: #64748b;">Nota: Cada letra (tratamiento)
+                    aparece exactamente una vez en cada fila y cada columna.</p>
+
+                <h2>Notación</h2>
+                <p>Un Cuadro Latino de orden $K$ se denota como $L_K$. Por ejemplo:</p>
+                <ul>
+                    <li>$L_3$: Cuadro Latino de orden 3 (9 observaciones)</li>
+                    <li>$L_4$: Cuadro Latino de orden 4 (16 observaciones)</li>
+                    <li>$L_5$: Cuadro Latino de orden 5 (25 observaciones)</li>
+                </ul>
+
+                <div class="nota">
+                    <h4><i class="fas fa-info-circle"></i> Nota Histórica</h4>
+                    <p>El término "Cuadro Latino" se debe a Leonhard Euler (1782), quien estudió estos arreglos como
+                        generalización de los cuadrados mágicos. En el contexto de diseño experimental, fueron
+                        formalizados por Ronald Fisher y posteriormente ampliados por otros estadísticos.</p>
+                </div>
+            </article>
+        </div>
+    </template><template id="module-2">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 2</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Fundamentos Teóricos
+                </h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm"
+                            style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Estudiar la estructura, construcción y
+                            condiciones de los cuadros latinos según la sección 7.2.1 del PDF.</p>
+                    </div>
+                </div>
+            </div>
+            <article class="" id="fundamentos" style="">
+                <h2>7.2.1 Descripción del Modelo</h2>
+                <p>Los diseños en cuadros latinos son apropiados cuando es necesario controlar <strong>dos fuentes de
+                        variabilidad</strong>. En dichos diseños el número de niveles del factor principal tiene que
+                    coincidir con el número de niveles de las dos variables de bloque o factores secundarios y además
+                    hay que suponer que <strong>no existe interacción</strong> entre ninguna pareja de factores.</p>
+                <p>Supongamos que el número de niveles de cada uno de los factores es $K$. El diseño en cuadro latino
+                    utiliza $K^2$ bloques, cada uno de estos bloques corresponde a una de las posibles combinaciones de
+                    niveles de los dos factores de control. En cada bloque se aplica un solo tratamiento de manera que
+                    cada tratamiento debe aparecer con cada uno de los niveles de los dos factores de control.</p>
+                <p>Si consideramos una tabla de doble entrada donde las filas y las columnas representan cada uno de los
+                    dos factores de bloque y las celdillas los niveles del factor principal o tratamientos, el
+                    requerimiento anterior supone que cada tratamiento debe aparecer una vez y sólo una en cada fila y
+                    en cada columna.</p>
+
+                <h2>Construcción de Cuadros Latinos</h2>
+                <h3>Cuadro Latino Estándar</h3>
+                <p>Un cuadrado latino se denomina <strong>estándar</strong> cuando las letras de la primera fila y la
+                    primera columna están ordenadas alfabéticamente. Se parte de una primera fila con las letras latinas
+                    ordenadas alfabéticamente:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Columna 1</th>
+                            <th>Columna 2</th>
+                            <th>Columna 3</th>
+                            <th>···</th>
+                            <th>Columna K</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Fila 1</strong></td>
+                            <td>A</td>
+                            <td>B</td>
+                            <td>C</td>
+                            <td>···</td>
+                            <td>K</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Las sucesivas filas se obtienen moviendo la <strong>primera letra de la fila anterior a la última
+                        posición</strong> (construcción por <strong>permutación cíclica</strong>). El cuadrado así
+                    obtenido es un cuadrado latino estándar.</p>
+
+                <h3>Ejemplo: Cuadro Latino Estándar de orden 4</h3>
+                <div class="latin-square-grid grid-4">
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                </div>
+
+                <div class="nota">
+                    <h4><i class="fas fa-info-circle"></i> Nota</h4>
+                    <p>A parte de los cuadros latinos obtenidos por permutación cíclica, existen otros cuadros latinos
+                        diferentes, estándares y no estándares.</p>
+                </div>
+
+                <h2>Procedimiento de Aleatorización</h2>
+                <div class="concepto-clave">
+                    <h4><i class="fas fa-list-ol"></i> Pasos del Procedimiento</h4>
+                    <ol>
+                        <li><strong>Se elige aleatoriamente</strong> un cuadro latino de los disponibles.</li>
+                        <li><strong>Se asigna aleatoriamente</strong> el orden de las filas y columnas.</li>
+                        <li><strong>Se asignan aleatoriamente</strong> los tres factores a las filas, columnas y letras,
+                            respectivamente.</li>
+                    </ol>
+                </div>
+
+                <h2>Ilustración: Ejemplo del Trigo</h2>
+                <p>El instituto de experimentación agrícola estudia <strong>4 tipos de semilla de trigo</strong> (s₁,
+                    s₂, s₃, s₄) controlando <strong>abono</strong> (a₁, a₂, a₃, a₄) e <strong>insecticida</strong> (i₁,
+                    i₂, i₃, i₄).</p>
+
+                <h3>Paso 1: Cuadro latino elegido al azar</h3>
+                <div class="latin-square-grid grid-4">
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                </div>
+
+                <h3>Paso 2: Reordenar filas → orden (2, 3, 1, 4)</h3>
+                <div class="latin-square-grid grid-4">
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                </div>
+
+                <h3>Paso 3: Reordenar columnas → orden (4, 3, 1, 2)</h3>
+                <div class="latin-square-grid grid-4">
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                </div>
+
+                <h3>Paso 4: Asignar factores (filas=insecticidas, columnas=semillas, letras=abonos)</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="5">Tabla 5-2. Diseño Final</th>
+                        </tr>
+                        <tr>
+                            <th rowspan="2">Insecticidas</th>
+                            <th colspan="4">Abonos</th>
+                        </tr>
+                        <tr>
+                            <th>a₁</th>
+                            <th>a₂</th>
+                            <th>a₃</th>
+                            <th>a₄</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>i₁</strong></td>
+                            <td>s₄</td>
+                            <td>s₃</td>
+                            <td>s₁</td>
+                            <td>s₂</td>
+                        </tr>
+                        <tr>
+                            <td><strong>i₂</strong></td>
+                            <td>s₂</td>
+                            <td>s₁</td>
+                            <td>s₃</td>
+                            <td>s₄</td>
+                        </tr>
+                        <tr>
+                            <td><strong>i₃</strong></td>
+                            <td>s₃</td>
+                            <td>s₄</td>
+                            <td>s₂</td>
+                            <td>s₁</td>
+                        </tr>
+                        <tr>
+                            <td><strong>i₄</strong></td>
+                            <td>s₁</td>
+                            <td>s₂</td>
+                            <td>s₄</td>
+                            <td>s₃</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>Características del Diseño en Cuadro Latino</h2>
+                <div class="concepto-clave">
+                    <h4><i class="fas fa-check-circle"></i> Resumen de Características</h4>
+                    <ol>
+                        <li><strong>Se controlan tres fuentes de variabilidad:</strong> un factor principal y dos
+                            factores de bloque.</li>
+                        <li><strong>Cada uno de los factores tiene el mismo número de niveles, K.</strong></li>
+                        <li><strong>Cada nivel del factor principal aparece una vez en cada fila y una vez en cada
+                                columna.</strong></li>
+                        <li><strong>No hay interacción entre los factores.</strong></li>
+                    </ol>
+                </div>
+
+                <h2>Supuestos del Modelo</h2>
+                <div class="definition-box">
+                    <h4>Supuestos Fundamentales</h4>
+                    <p>No existe interacción entre los factores (filas, columnas y tratamientos). Este supuesto es
+                        crítico para la validez del análisis.</p>
+                </div>
+                <ol>
+                    <li><strong>Normalidad:</strong> Los errores tienen distribución normal $N(0, \sigma^2)$</li>
+                    <li><strong>Varianza constante:</strong> $\sigma^2$ es constante para todos los tratamientos</li>
+                    <li><strong>Independencia:</strong> Las observaciones son independientes</li>
+                    <li><strong>Aditividad:</strong> El modelo es aditivo (sin interacción)</li>
+                </ol>
+
+                <h2>Ventajas y Desventajas</h2>
+                <div class="example-box">
+                    <h4>Ventajas</h4>
+                    <ul>
+                        <li>Control de dos fuentes de variabilidad simultáneamente</li>
+                        <li>Reduce drásticamente el número de unidades experimentales (de $K^3$ a $K^2$)</li>
+                        <li>Diseño eficiente cuando los recursos son limitados</li>
+                    </ul>
+                </div>
+                <div class="warning-box">
+                    <h4>Desventajas</h4>
+                    <ul>
+                        <li>Requiere que el número de niveles sea igual para los tres factores</li>
+                        <li>No permite estudiar interacciones entre filas, columnas y tratamientos</li>
+                        <li>Para K pequeño, los grados de libertad del error son limitados: $(K-1)(K-2)$</li>
+                    </ul>
+                </div>
+            </article>
+        </div>
+    </template><template id="module-3">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 3</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Modelo Estadístico
+                </h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm"
+                            style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Estudiar el planteamiento del modelo,
+                            estimación por máxima verosimilitud y residuos según las secciones 7.2.2-7.2.3 del PDF.</p>
+                    </div>
+                </div>
+            </div>
+            <article class="" id="modelo" style="">
+                <h2>7.2.2 Planteamiento del Modelo</h2>
+                <p>En un diseño en cuadro latino intervienen los siguientes factores: <strong>un factor
+                        principal</strong> y <strong>dos factores secundarios</strong> o variables de bloque. Se supone
+                    que <strong>no existe interacción</strong> entre esos tres factores. Así el modelo empleado es un
+                    <strong>modelo aditivo</strong>.
+                </p>
+
+                <div class="concepto-clave">
+                    <h4><i class="fas fa-square-root-alt"></i> Modelo Estadístico (Efectos Fijos)</h4>
+                    <p>Si consideramos que los tres factores son de efectos fijos, el modelo estadístico para este
+                        diseño es:</p>
+                    <div class="formula-box">
+                        <span class="formula-number">(7.1)</span>
+                        $$y_{ij(h)} = \mu + \tau_i + \beta_j + \gamma_h + \varepsilon_{ij(h)}$$
+                        $$\begin{cases}
+                        i = 1, 2, \ldots, K \\
+                        j = 1, 2, \ldots, K \\
+                        h = 1, 2, \ldots, K
+                        \end{cases}$$
+                    </div>
+                    <p>donde:</p>
+                    <ul>
+                        <li><strong>$y_{ij(h)}$</strong>: observación correspondiente a la i-ésima fila, j-ésima columna
+                            y h-ésima letra latina</li>
+                        <li><strong>$\mu$</strong>: media global</li>
+                        <li><strong>$\tau_i$</strong>: efecto producido por el i-ésimo nivel del factor fila, con
+                            restricción $\sum_i \tau_i = 0$</li>
+                        <li><strong>$\beta_j$</strong>: efecto producido por el j-ésimo nivel del factor columna, con
+                            restricción $\sum_j \beta_j = 0$</li>
+                        <li><strong>$\gamma_h$</strong>: efecto producido por la h-ésima letra latina, con restricción
+                            $\sum_h \gamma_h = 0$</li>
+                        <li><strong>$\varepsilon_{ij(h)}$</strong>: variables aleatorias independientes con distribución
+                            $N(0, \sigma^2)$</li>
+                    </ul>
+                </div>
+
+                <div class="nota">
+                    <h4><i class="fas fa-info-circle"></i> Notación $y_{ij(h)}$</h4>
+                    <p>La notación $y_{ij(h)}$ indica que los niveles $i$ y $j$ determinan la letra latina para un
+                        cuadro latino especificado. El subíndice $h$ toma valores que dependen de la celdilla $(i, j)$.
+                    </p>
+                </div>
+
+                <h2>Notación Estadística</h2>
+                <div class="definition-box">
+                    <h4>Definiciones de Totales y Medias</h4>
+                    <ul>
+                        <li><strong>$N = K^2$</strong>: número total de observaciones</li>
+                        <li><strong>Total y media global:</strong> $y_{...} = \sum_{i,j} y_{ij(\cdot)}$, $\bar{y}_{...}
+                            = \frac{y_{...}}{K^2}$ <span class="formula-number">(7.2)</span></li>
+                        <li><strong>Total y media por fila:</strong> $y_{i..} = \sum_{j=1}^{K} y_{ij(\cdot)}$,
+                            $\bar{y}_{i..} = \frac{y_{i..}}{K}$ <span class="formula-number">(7.3)</span></li>
+                        <li><strong>Total y media por columna:</strong> $y_{.j.} = \sum_{i=1}^{K} y_{ij(\cdot)}$,
+                            $\bar{y}_{.j.} = \frac{y_{.j.}}{K}$ <span class="formula-number">(7.4)</span></li>
+                        <li><strong>Total y media por letra latina:</strong> $y_{..h} = \sum_{i,j} y_{ij(h)}$,
+                            $\bar{y}_{..h} = \frac{y_{..h}}{K}$ <span class="formula-number">(7.5)</span></li>
+                    </ul>
+                </div>
+
+                <h2>7.2.3 Estimación de los Parámetros del Modelo</h2>
+                <h3>Estimación por Máxima Verosimilitud</h3>
+                <p>Se construye la función de verosimilitud asociada a la muestra para las $N = K^2$ observaciones:</p>
+                <div class="formula-box">
+                    <span class="formula-number">(7.6)</span>
+                    $$L(\mu, \tau_i, \beta_j, \gamma_h, \sigma^2) = (2\pi\sigma^2)^{-N/2}
+                    \exp\left(-\frac{1}{2\sigma^2}\sum_{i=1}^{K}\sum_{j=1}^{K}\left[y_{ij(h)} - \mu - \tau_i - \beta_j -
+                    \gamma_h\right]^2\right)$$
+                </div>
+                <p>El logaritmo de dicha función es:</p>
+                <div class="formula-box">
+                    <span class="formula-number">(7.7)</span>
+                    $$\ln L = -\frac{N}{2}\ln(2\pi) - \frac{N}{2}\ln(\sigma^2) -
+                    \frac{1}{2\sigma^2}\sum_{i=1}^{K}\sum_{j=1}^{K}\left[y_{ij(h)} - \mu - \tau_i - \beta_j -
+                    \gamma_h\right]^2$$
+                </div>
+
+                <h3>Derivadas Parciales</h3>
+                <p>Se calculan las correspondientes derivadas parciales:</p>
+                <div class="formula-box">
+                    <span class="formula-number">(7.8)</span>
+                    $$\frac{\partial \ln L}{\partial \mu} =
+                    \frac{1}{\sigma^2}\sum_{i=1}^{K}\sum_{j=1}^{K}\left[y_{ij(\cdot)} - \mu - \tau_i - \beta_j -
+                    \gamma_h\right]$$
+                </div>
+                <div class="formula-box">
+                    <span class="formula-number">(7.9)</span>
+                    $$\frac{\partial \ln L}{\partial \tau_i} = \frac{1}{\sigma^2}\sum_{j=1}^{K}\left[y_{ij(\cdot)} - \mu
+                    - \tau_i - \beta_j - \gamma_h\right], \quad i = 1, \ldots, K$$
+                </div>
+                <div class="formula-box">
+                    <span class="formula-number">(7.10)</span>
+                    $$\frac{\partial \ln L}{\partial \beta_j} = \frac{1}{\sigma^2}\sum_{i=1}^{K}\left[y_{ij(\cdot)} -
+                    \mu - \tau_i - \beta_j - \gamma_h\right], \quad j = 1, \ldots, K$$
+                </div>
+                <div class="formula-box">
+                    <span class="formula-number">(7.11)</span>
+                    $$\frac{\partial \ln L}{\partial \gamma_h} =
+                    \frac{1}{\sigma^2}\sum_{i=1}^{K}\sum_{j=1}^{K}\left[y_{ij(h)} - \mu - \tau_i - \beta_j -
+                    \gamma_h\right], \quad h = 1, \ldots, K$$
+                </div>
+
+                <h3>Estimadores Máximo Verosímiles</h3>
+                <p>Igualando a cero las derivadas parciales, se obtiene un sistema de ecuaciones que proporciona los
+                    estimadores:</p>
+                <div class="formula-box">
+                    <span class="formula-number">(7.12)</span>
+                    $$\hat{\mu} = \frac{\sum_i\sum_j y_{ij(\cdot)}}{K^2} = \bar{y}_{...}$$
+                </div>
+                <div class="formula-box">
+                    <span class="formula-number">(7.13)</span>
+                    $$\hat{\tau}_i = \frac{1}{K}\sum_{j=1}^{K} y_{ij(\cdot)} - \hat{\mu} = \bar{y}_{i..} -
+                    \bar{y}_{...}$$
+                </div>
+                <div class="formula-box">
+                    <span class="formula-number">(7.14)</span>
+                    $$\hat{\beta}_j = \frac{1}{K}\sum_{i=1}^{K} y_{ij(\cdot)} - \hat{\mu} = \bar{y}_{.j.} -
+                    \bar{y}_{...}$$
+                </div>
+                <div class="formula-box">
+                    <span class="formula-number">(7.15)</span>
+                    $$\hat{\gamma}_h = \frac{1}{K}\sum_{i,j} y_{ij(h)} - \hat{\mu} = \bar{y}_{..h} - \bar{y}_{...}$$
+                </div>
+                <p>Se puede comprobar fácilmente que estos estimadores verifican:</p>
+                $$\sum_i \hat{\tau}_i = \sum_j \hat{\beta}_j = \sum_h \hat{\gamma}_h = 0$$
+
+                <h3>Estimador de la Varianza</h3>
+                <p>Sustituyendo los estimadores en la última ecuación e igualando a cero, obtenemos:</p>
+                <div class="formula-box">
+                    <span class="formula-number">(7.16)</span>
+                    $$\hat{\sigma}^2 = \frac{1}{N}\sum_{i,j}\left[y_{ij(\cdot)} - \hat{\mu} - \hat{\tau}_i -
+                    \hat{\beta}_j - \hat{\gamma}_h\right]^2$$
+                </div>
+
+                <h3>Residuos</h3>
+                <div class="concepto-clave">
+                    <h4><i class="fas fa-chart-line"></i> Expresión de los Residuos</h4>
+                    <p>Los residuos en este modelo adoptan la expresión:</p>
+                    <div class="formula-box">
+                        <span class="formula-number">(7.17)</span>
+                        $$e_{ij(h)} = y_{ij(h)} - \hat{y}_{ij(h)} = y_{ij(h)} - \hat{\mu} - \hat{\tau}_i - \hat{\beta}_j
+                        - \hat{\gamma}_h = y_{ij(h)} - \bar{y}_{i..} - \bar{y}_{.j.} - \bar{y}_{..h} + 2\bar{y}_{...}$$
+                    </div>
+                </div>
+                <p>Se verifica que los residuos suman cero por filas, columnas y para cada letra:</p>
+                $$\sum_j e_{ij(\cdot)} = 0, \quad i = 1, \ldots, K$$
+                $$\sum_i e_{ij(\cdot)} = 0, \quad j = 1, \ldots, K$$
+                $$\sum_i\sum_j e_{ij(h)} = 0, \quad h = 1, \ldots, K$$
+
+                <h3>Grados de Libertad del Error</h3>
+                <div class="formula-box">
+                    <p>Por tanto, el número de grados de libertad de los residuos es <strong>$(K-1)(K-2)$</strong>:</p>
+                    $$K^2 - [K + (K-1) + (K-1)] = K^2 - 3K + 2 = (K-1)(K-2)$$
+                </div>
+
+                <p>El estimador insesgado de la varianza poblacional es:</p>
+                <div class="formula-box">
+                    <span class="formula-number">(7.18)</span>
+                    $$\hat{\sigma}^2 = S_R^2 = \frac{\sum_{i=1}^{K}\sum_{j=1}^{K}\left[y_{ij(h)} -
+                    \hat{y}_{ij(h)}\right]^2}{(K-1)(K-2)} = \frac{\sum_{i=1}^{K}\sum_{j=1}^{K}
+                    e_{ij(h)}^2}{(K-1)(K-2)}$$
+                </div>
+            </article>
+        </div>
+    </template><template id="module-4">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 4</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Propiedades del Diseño
+                </h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm"
+                            style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Conocer las propiedades estadísticas del
+                            cuadro latino.</p>
+                    </div>
+                </div>
+            </div>
+            <article class="" id="propiedades" style="">
+                <h2>Propiedades de los Cuadros Latinos</h2>
+                <div class="definition-box">
+                    <h4>Propiedad Fundamental</h4>
+                    <p>En un Cuadro Latino de orden $p$, cada tratamiento aparece exactamente $p$ veces: una vez en cada
+                        fila y una vez en cada columna.</p>
+                </div>
+                <h2>Cuadros Latinos Estándar</h2>
+                <p>Un Cuadro Latino se dice <strong>estándar</strong> o <strong>canónico</strong> si los tratamientos
+                    aparecen en orden en la primera fila y primera columna:</p>
+                <h3>Cuadro Latino Estándar de orden 3:</h3>
+                <div class="latin-square-grid grid-3" style="max-width: 200px;">
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                </div>
+                <h3>Cuadro Latino Estándar de orden 4:</h3>
+                <div class="latin-square-grid grid-4" style="max-width: 250px;">
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-D">D</div>
+                    <div class="latin-square-cell cell-A">A</div>
+                    <div class="latin-square-cell cell-B">B</div>
+                    <div class="latin-square-cell cell-C">C</div>
+                </div>
+                <h2>Número de Cuadros Latinos</h2>
+                <p>El número de Cuadros Latinos no estándar de orden $p$ es:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Orden ($p$)</th>
+                            <th>Número de Cuadros Latinos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>56</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>940</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>16,940</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>812,560</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h2>Operaciones con Cuadros Latinos</h2>
+                <h3>1. Cambio de Símbolos (Permutación de Tratamientos)</h3>
+                <p>Si se intercambian los nombres de los tratamientos, se obtiene otro Cuadro Latino válido.</p>
+                <h3>2. Permutación de Filas</h3>
+                <p>Cualquier reordenamiento de las filas produce otro Cuadro Latino.</p>
+                <h3>3. Permutación de Columnas</h3>
+                <p>Cualquier reordenamiento de las columnas produce otro Cuadro Latino.</p>
+                <h3>4. Transposición</h3>
+                <p>Intercambiar filas por columnas (trasposición) preserva la propiedad del Cuadro Latino.</p>
+                <div class="warning-box">
+                    <h4>Importante</h4>
+                    <p>Dos Cuadros Latinos se consideran esencialmente iguales si uno puede obtenerse del otro mediante
+                        una combinación de estas operaciones. A estos se les llama <strong>Cuadros Latinos
+                            isotópicos</strong>.</p>
+                </div>
+                <h2>Cuadros Greco-Latinos</h2>
+                <p>Un <strong>Cuadro Greco-Latino</strong> es la extensión del Cuadro Latino que permite controlar un
+                    tercer factor de bloqueo mediante el uso de letras griegas.</p>
+                <p>En un Cuadro Greco-Latino de orden $p$:</p>
+                <ul>
+                    <li>Cada letra latina aparece exactamente una vez en cada fila y columna</li>
+                    <li>Cada letra griega aparece exactamente una vez en cada fila y columna</li>
+                    <li>Cada combinación letra latina-griega aparece a lo sumo una vez</li>
+                </ul>
+                <div class="formula-box">
+                    <p><strong>Condición de existencia:</strong></p>
+                    <p>Un Cuadro Greco-Latino de orden $p$ existe si y solo si existe un par de Cuadros Latinos
+                        ortogonales de orden $p$.</p>
+                    <p>Esto ocurre cuando $p$ es un número primo o una potencia de un número primo.</p>
+                </div>
+                <p>Para $p = 2$ y $p = 6$, no existen pares de Cuadros Latinos ortogonales, por lo tanto, no existen
+                    Cuadros Greco-Latinos de esos órdenes. Euler conjeturó que no existían para ningún $p \equiv 2
+                    \pmod{4}$, pero esta conjetura fue refutada para $p \geq 10$.</p>
+            </article>
+        </div>
+    </template><template id="module-5">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 5</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Ejemplo Numérico
+                    (Ejemplo 5-1 del PDF)</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm"
+                            style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Aplicar el análisis de varianza del diseño en
+                            cuadro latino con los datos del Ejemplo 5-1 del PDF sobre rendimiento de semillas de trigo.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <article class="" id="ejemplo" style="">
+                <h2>7.2.5 Ejemplo Numérico - Experimento de Rendimiento de Trigo</h2>
+                <p>A fin de ilustrar el análisis de la varianza de los diseños en cuadro latino, consideremos la
+                    situación de referencia, en la que se ha realizado el experimento con la aleatorización
+                    correspondiente y hemos designado por las letras (A, B, C, D) a los tratamientos.</p>
+
+                <div class="example-box">
+                    <h4>Contexto del Experimento</h4>
+                    <p>Se estudian <strong>4 tipos de semilla de trigo</strong> (factor principal) controlando dos
+                        variables de bloque:</p>
+                    <ul>
+                        <li><strong>Filas:</strong> Tipos de insecticidas (i₁, i₂, i₃, i₄)</li>
+                        <li><strong>Columnas:</strong> Tipos de abonos (a₁, a₂, a₃, a₄)</li>
+                        <li><strong>Letras latinas (tratamientos):</strong> Semillas (s₁, s₂, s₃, s₄)</li>
+                    </ul>
+                </div>
+
+                <h2>Datos Observados (Tabla 5-5 del PDF)</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Insecticidas</th>
+                            <th colspan="4">Abonos</th>
+                            <th rowspan="2">$y_{i..}$</th>
+                            <th rowspan="2">$y_{i..}^2$</th>
+                        </tr>
+                        <tr>
+                            <th>a₁</th>
+                            <th>a₂</th>
+                            <th>a₃</th>
+                            <th>a₄</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>i₁</strong></td>
+                            <td>C: 7</td>
+                            <td>D: 8</td>
+                            <td>B: 4</td>
+                            <td>A: 3</td>
+                            <td><strong>22</strong></td>
+                            <td>484</td>
+                        </tr>
+                        <tr>
+                            <td><strong>i₂</strong></td>
+                            <td>B: 15</td>
+                            <td>A: 16</td>
+                            <td>C: 18</td>
+                            <td>D: 23</td>
+                            <td><strong>72</strong></td>
+                            <td>5184</td>
+                        </tr>
+                        <tr>
+                            <td><strong>i₃</strong></td>
+                            <td>D: 18</td>
+                            <td>C: 12</td>
+                            <td>A: 12</td>
+                            <td>B: 10</td>
+                            <td><strong>52</strong></td>
+                            <td>2704</td>
+                        </tr>
+                        <tr>
+                            <td><strong>i₄</strong></td>
+                            <td>A: 14</td>
+                            <td>B: 13</td>
+                            <td>D: 16</td>
+                            <td>C: 14</td>
+                            <td><strong>57</strong></td>
+                            <td>3249</td>
+                        </tr>
+                        <tr>
+                            <td><strong>$y_{.j.}$</strong></td>
+                            <td><strong>54</strong></td>
+                            <td><strong>49</strong></td>
+                            <td><strong>50</strong></td>
+                            <td><strong>50</strong></td>
+                            <td><strong>203</strong></td>
+                            <td><strong>11621</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>$y_{.j.}^2$</strong></td>
+                            <td>2916</td>
+                            <td>2401</td>
+                            <td>2500</td>
+                            <td>2500</td>
+                            <td>10317</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><strong>$\sum y_{ij(\cdot)}^2$</strong></td>
+                            <td>794</td>
+                            <td>633</td>
+                            <td>740</td>
+                            <td>834</td>
+                            <td><strong>3001</strong></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>Totales por Tratamiento (Tabla 5-6)</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Letra Latina</th>
+                            <th>Observaciones</th>
+                            <th>$y_{..h}$</th>
+                            <th>$y_{..h}^2$</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>A</strong></td>
+                            <td>3, 16, 12, 14</td>
+                            <td>45</td>
+                            <td>2025</td>
+                        </tr>
+                        <tr>
+                            <td><strong>B</strong></td>
+                            <td>4, 15, 10, 13</td>
+                            <td>42</td>
+                            <td>1764</td>
+                        </tr>
+                        <tr>
+                            <td><strong>C</strong></td>
+                            <td>7, 18, 12, 14</td>
+                            <td>51</td>
+                            <td>2601</td>
+                        </tr>
+                        <tr>
+                            <td><strong>D</strong></td>
+                            <td>8, 23, 18, 16</td>
+                            <td>65</td>
+                            <td>4225</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td><strong>203</strong></td>
+                            <td><strong>10615</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>Cálculo de Sumas de Cuadrados</h2>
+                <div class="formula-box">
+                    <p><strong>SC Total:</strong></p>
+                    $$\text{SCT} = \sum_{i=1}^{4}\sum_{j=1}^{4}y_{ij(\cdot)}^2 - \frac{y_{...}^2}{K^2} = 3001 -
+                    \frac{203^2}{4^2} = 3001 - 2575.5625 = 425.4375$$
+                </div>
+                <div class="formula-box">
+                    <p><strong>SC Filas (Insecticidas):</strong></p>
+                    $$\text{SCF} = \frac{1}{K}\sum_{i=1}^{4}y_{i..}^2 - \frac{y_{...}^2}{K^2} = \frac{11621}{4} -
+                    2575.5625 = 2905.25 - 2575.5625 = 329.6875$$
+                </div>
+                <div class="formula-box">
+                    <p><strong>SC Columnas (Abonos):</strong></p>
+                    $$\text{SCC} = \frac{1}{K}\sum_{j=1}^{4}y_{.j.}^2 - \frac{y_{...}^2}{K^2} = \frac{10317}{4} -
+                    2575.5625 = 2579.25 - 2575.5625 = 3.6875$$
+                </div>
+                <div class="formula-box">
+                    <p><strong>SC Tratamientos (Semillas):</strong></p>
+                    $$\text{SCL} = \frac{1}{K}\sum_{h=1}^{4}y_{..h}^2 - \frac{y_{...}^2}{K^2} = \frac{10615}{4} -
+                    2575.5625 = 2653.75 - 2575.5625 = 78.1875$$
+                </div>
+                <div class="formula-box">
+                    <p><strong>SC Error (por diferencia):</strong></p>
+                    $$\text{SCR} = \text{SCT} - \text{SCF} - \text{SCC} - \text{SCL} = 425.4375 - 329.6875 - 3.6875 -
+                    78.1875 = 13.875$$
+                </div>
+
+                <h2>Cálculos con Python</h2>
+                <div class="sourceCode" data-lang="Python">
+                    <div class="sourceCode-header">
+                        <span class="sourceCode-title">Python - Ejemplo 5-1</span>
+                        <div class="sourceCode-buttons">
+                            <button onclick="toggleCodeBlock(this)" type="button"><i class="fas fa-eye"></i>
+                                <span>Ocultar</span></button>
+                            <button onclick="copyCodeBlock(this)" type="button"><i class="fas fa-copy"></i>
+                                <span>Copiar</span></button>
+                        </div>
+                    </div>
+                    <pre><code>import numpy as np
+
+# Datos del Cuadro Latino 4x4 - Ejemplo 5-1 del PDF
+# Filas: Insecticidas (i1, i2, i3, i4)
+# Columnas: Abonos (a1, a2, a3, a4)
+# Letras: Semillas (A=s1, B=s2, C=s3, D=s4)
 y = np.array([
-    [42, 38, 51, 44],  # Bloque 1
-    [39, 54, 47, 45],  # Bloque 2
-    [50, 45, 49, 41],  # Bloque 3
-    [43, 47, 40, 53]   # Bloque 4
+    [7, 8, 4, 3],   # i1: C, D, B, A
+    [15, 16, 18, 23], # i2: B, A, C, D
+    [18, 12, 12, 10], # i3: D, C, A, B
+    [14, 13, 16, 14]  # i4: A, B, D, C
 ])
 
-p = 4  # orden del cuadro
-N = p ** 2  # total de observaciones
+K = 4  # orden del cuadro
+N = K ** 2  # total de observaciones
 
 # Totales
-y_i = y.sum(axis=1)  # totales de fila (bloques)
-y_j = y.sum(axis=0)  # totales de columna
+y_i = y.sum(axis=1)  # totales de fila (insecticidas)
+y_j = y.sum(axis=0)  # totales de columna (abonos)
 y_total = y.sum()
 
-print("=" * 50)
-print("ANÁLISIS DE CUADRO LATINO 4x4")
-print("=" * 50)
+# Totales por tratamiento (según disposición del cuadro latino)
+# A: (0,3), (1,1), (2,2), (3,0)
+# B: (0,2), (1,0), (2,3), (3,1)
+# C: (0,0), (1,2), (2,1), (3,3)
+# D: (0,1), (1,3), (2,0), (3,2)
+y_A = y[0,3] + y[1,1] + y[2,2] + y[3,0]
+y_B = y[0,2] + y[1,0] + y[2,3] + y[3,1]
+y_C = y[0,0] + y[1,2] + y[2,1] + y[3,3]
+y_D = y[0,1] + y[1,3] + y[2,0] + y[3,2]
+y_h = np.array([y_A, y_B, y_C, y_D])
+
+print("=" * 55)
+print("EJEMPLO 5-1 - ANÁLISIS DE CUADRO LATINO 4x4")
+print("=" * 55)
 print(f"\nTotal general: y... = {y_total}")
-print(f"\nTotales de fila (Bloques):")
+print(f"\nTotales de fila (Insecticidas):")
 for i, total in enumerate(y_i, 1):
     print(f"  y{i}.. = {total}")
 
-print(f"\nTotales de columna:")
+print(f"\nTotales de columna (Abonos):")
 for j, total in enumerate(y_j, 1):
-    print(f"  y.{j}. = {total}")</code></pre>
-</div>
-<div class="code-output">
-<div class="code-output-header">
-<span class="code-output-title">Output</span>
-</div>
-<pre class="code-output-body">==================================================
-ANÁLISIS DE CUADRO LATINO 4x4
-==================================================
+    print(f"  y.{j}. = {total}")
 
-Total general: y.. = 728
+print(f"\nTotales por tratamiento (Semillas):")
+print(f"  A (s1): {y_A}, B (s2): {y_B}, C (s3): {y_C}, D (s4): {y_D}")</code></pre>
+                </div>
+                <div class="code-output">
+                    <div class="code-output-header">
+                        <span class="code-output-title">Output</span>
+                    </div>
+                    <pre class="code-output-body">=======================================================
+EJEMPLO 5-1 - ANÁLISIS DE CUADRO LATINO 4x4
+=======================================================
 
-Totales de fila (Bloques):
-y1. = 175
-y2. = 185
-y3. = 185
-y4. = 183
+Total general: y... = 203
 
-Totales de columna:
-y.1. = 174
-y.2. = 184
-y.3. = 187
-y.4. = 183</pre>
-</div>
-<h2>Cálculo de Sumas de Cuadrados</h2>
-<div class="sourceCode" data-lang="Python">
-<div class="sourceCode-header">
-<span class="sourceCode-title">Python</span>
-<div class="sourceCode-buttons">
-<button onclick="toggleCodeBlock(this)" type="button"><i class="fas fa-eye"></i> <span>Ocultar</span></button>
-<button onclick="copyCodeBlock(this)" type="button"><i class="fas fa-copy"></i> <span>Copiar</span></button>
-</div>
-</div>
-<pre><code>import numpy as np
+Totales de fila (Insecticidas):
+y1.. = 22
+y2.. = 72
+y3.. = 52
+y4.. = 57
 
-# Datos del Cuadro Latino 4x4
+Totales de columna (Abonos):
+y.1. = 54
+y.2. = 49
+y.3. = 50
+y.4. = 50
+
+Totales por tratamiento (Semillas):
+A (s1): 45, B (s2): 42, C (s3): 51, D (s4): 65</pre>
+                </div>
+
+                <h2>Cálculo de Sumas de Cuadrados en Python</h2>
+                <div class="sourceCode" data-lang="Python">
+                    <div class="sourceCode-header">
+                        <span class="sourceCode-title">Python - Sumas de Cuadrados</span>
+                        <div class="sourceCode-buttons">
+                            <button onclick="toggleCodeBlock(this)" type="button"><i class="fas fa-eye"></i>
+                                <span>Ocultar</span></button>
+                            <button onclick="copyCodeBlock(this)" type="button"><i class="fas fa-copy"></i>
+                                <span>Copiar</span></button>
+                        </div>
+                    </div>
+                    <pre><code># Sumas de Cuadrados - Fórmulas del PDF (7.25-7.29)
+SCT = (y ** 2).sum() - y_total ** 2 / N
+SCF = (y_i ** 2).sum() / K - y_total ** 2 / N
+SCC = (y_j ** 2).sum() / K - y_total ** 2 / N
+SCL = (y_h ** 2).sum() / K - y_total ** 2 / N
+SCR = SCT - SCF - SCC - SCL
+
+print("=" * 55)
+print("SUMAS DE CUADRADOS")
+print("=" * 55)
+print(f"\nSC_Total = {SCT:.4f}")
+print(f"SC_Filas (Insecticidas) = {SCF:.4f}")
+print(f"SC_Columnas (Abonos) = {SCC:.4f}")
+print(f"SC_Tratamientos (Semillas) = {SCL:.4f}")
+print(f"SC_Error = {SCR:.4f}")</code></pre>
+                </div>
+                <div class="code-output">
+                    <div class="code-output-header">
+                        <span class="code-output-title">Output</span>
+                    </div>
+                    <pre class="code-output-body">=======================================================
+SUMAS DE CUADRADOS
+=======================================================
+
+SC_Total = 425.4375
+SC_Filas (Insecticidas) = 329.6875
+SC_Columnas (Abonos) = 3.6875
+SC_Tratamientos (Semillas) = 78.1875
+SC_Error = 13.8750</pre>
+                </div>
+
+                <div class="nota">
+                    <h4><i class="fas fa-check-circle"></i> Verificación</h4>
+                    <p>Los cálculos coinciden con los presentados en el PDF (Tablas 5-5 y 5-6):</p>
+                    <ul>
+                        <li>SCT = 425.4375 ✓</li>
+                        <li>SCF = 329.6875 ✓</li>
+                        <li>SCC = 3.6875 ✓</li>
+                        <li>SCL = 78.1875 ✓</li>
+                        <li>SCR = 13.875 ✓</li>
+                    </ul>
+                </div>
+            </article>
+        </div>
+    </template><template id="module-6">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 6</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Tabla ANOVA</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm"
+                            style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Construir la tabla ANOVA y realizar pruebas
+                            de hipótesis.</p>
+                    </div>
+                </div>
+            </div>
+            <article class="" id="anova" style="">
+                <h2>Cuadro ANOVA Completo</h2>
+                <div class="sourceCode" data-lang="Python">
+                    <div class="sourceCode-header">
+                        <span class="sourceCode-title">Python</span>
+                        <div class="sourceCode-buttons">
+                            <button onclick="toggleCodeBlock(this)" type="button"><i class="fas fa-eye"></i>
+                                <span>Ocultar</span></button>
+                            <button onclick="copyCodeBlock(this)" type="button"><i class="fas fa-copy"></i>
+                                <span>Copiar</span></button>
+                        </div>
+                    </div>
+                    <pre><code>import numpy as np
+from scipy import stats
+
+# Datos del Cuadro Latino 4x4 - Ejemplo 5-1 del PDF
+# Filas: Insecticidas (i1, i2, i3, i4)
+# Columnas: Abonos (a1, a2, a3, a4)
+# Letras: Semillas (A=s1, B=s2, C=s3, D=s4)
 y = np.array([
-    [42, 38, 51, 44],  # Bloque 1
-    [39, 54, 47, 45],  # Bloque 2
-    [50, 45, 49, 41],  # Bloque 3
-    [43, 47, 40, 53]   # Bloque 4
+    [7, 8, 4, 3],    # i1: C, D, B, A
+    [15, 16, 18, 23], # i2: B, A, C, D
+    [18, 12, 12, 10], # i3: D, C, A, B
+    [14, 13, 16, 14]  # i4: A, B, D, C
 ])
 
-p = 4  # orden del cuadro
-N = p ** 2  # total de observaciones
+p = 4
+N = p ** 2
 
 # Totales
-y_i = y.sum(axis=1)  # totales de fila (bloques)
-y_j = y.sum(axis=0)  # totales de columna
+y_i = y.sum(axis=1)  # totales de fila (insecticidas)
+y_j = y.sum(axis=0)  # totales de columna (abonos)
 y_total = y.sum()
 
-# Totales por tratamiento (según Cuadro Latino estándar)
-tratamientos = ['A', 'B', 'C', 'D']
-y_A = y[0,0] + y[1,3] + y[2,2] + y[3,1]
-y_B = y[0,1] + y[1,0] + y[2,3] + y[3,2]
-y_C = y[0,2] + y[1,1] + y[2,0] + y[3,3]
-y_D = y[0,3] + y[1,2] + y[2,1] + y[3,0]
+# Totales por tratamiento (según disposición del cuadro latino)
+y_A = y[0,3] + y[1,1] + y[2,2] + y[3,0]
+y_B = y[0,2] + y[1,0] + y[2,3] + y[3,1]
+y_C = y[0,0] + y[1,2] + y[2,1] + y[3,3]
+y_D = y[0,1] + y[1,3] + y[2,0] + y[3,2]
 y_k = np.array([y_A, y_B, y_C, y_D])
 
 # Sumas de Cuadrados
@@ -1409,55 +2239,6 @@ SC_filas = (y_i ** 2).sum() / p - y_total ** 2 / N
 SC_columnas = (y_j ** 2).sum() / p - y_total ** 2 / N
 SC_tratamientos = (y_k ** 2).sum() / p - y_total ** 2 / N
 SC_error = SC_total - SC_filas - SC_columnas - SC_tratamientos
-
-print("=" * 50)
-print("SUMAS DE CUADRADOS")
-print("=" * 50)
-print(f"\nSC_Total = {SC_total:.2f}")
-print(f"SC_Filas = {SC_filas:.2f}")
-print(f"SC_Columnas = {SC_columnas:.2f}")
-print(f"SC_Tratamientos = {SC_tratamientos:.2f}")
-print(f"SC_Error = {SC_error:.2f}")</code></pre>
-</div>
-<div class="code-output">
-<div class="code-output-header">
-<span class="code-output-title">Output</span>
-</div>
-<pre class="code-output-body">==================================================
-SUMAS DE CUADRADOS
-==================================================
-
-SC_Total = 310.00
-SC_Filas = 32.00
-SC_Columnas = 32.00
-SC_Tratamientos = 642.00
-SC_Error = 4.00</pre>
-</div>
-</article></div></template><template id="module-6"><div class="animate-fade-in">
-<div class="border-b border-gray-100 pb-6 mb-6">
-<div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
-<span>Módulo 6</span>
-</div>
-<h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Tabla ANOVA</h2>
-<div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
-<span class="text-xl">🎯</span>
-<div>
-<h3 class="font-bold text-gray-800 text-sm" style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
-<p class="text-gray-600 text-sm" style="margin:0;">Construir la tabla ANOVA y realizar pruebas de hipótesis.</p>
-</div>
-</div>
-</div>
-<article class="" id="anova" style="">
-<h2>Cuadro ANOVA Completo</h2>
-<div class="sourceCode" data-lang="Python">
-<div class="sourceCode-header">
-<span class="sourceCode-title">Python</span>
-<div class="sourceCode-buttons">
-<button onclick="toggleCodeBlock(this)" type="button"><i class="fas fa-eye"></i> <span>Ocultar</span></button>
-<button onclick="copyCodeBlock(this)" type="button"><i class="fas fa-copy"></i> <span>Copiar</span></button>
-</div>
-</div>
-<pre><code>from scipy import stats
 
 # Grados de libertad
 gl_filas = p - 1
@@ -1482,69 +2263,98 @@ p_val_filas = 1 - stats.f.cdf(F_filas, gl_filas, gl_error)
 p_val_columnas = 1 - stats.f.cdf(F_columnas, gl_columnas, gl_error)
 p_val_tratamientos = 1 - stats.f.cdf(F_tratamientos, gl_tratamientos, gl_error)
 
-print("=" * 70)
-print("TABLA ANOVA - DISEÑO EN CUADRO LATINO 4x4")
-print("=" * 70)
-print(f"{'Fuente':&lt;20} {'SC':&gt;10} {'GL':&gt;6} {'CM':&gt;10} {'F':&gt;8} {'Valor p':&gt;10}")
-print("-" * 70)
-print(f"{'Filas (Bloques)':&lt;20} {SC_filas:&gt;10.2f} {gl_filas:&gt;6} {CM_filas:&gt;10.2f} {F_filas:&gt;8.2f} {p_val_filas:&gt;10.4f}")
-print(f"{'Columnas (Bloques)':&lt;20} {SC_columnas:&gt;10.2f} {gl_columnas:&gt;6} {CM_columnas:&gt;10.2f} {F_columnas:&gt;8.2f} {p_val_columnas:&gt;10.4f}")
-print(f"{'Tratamientos':&lt;20} {SC_tratamientos:&gt;10.2f} {gl_tratamientos:&gt;6} {CM_tratamientos:&gt;10.2f} {F_tratamientos:&gt;8.2f} {p_val_tratamientos:&gt;10.4f}")
-print(f"{'Error':&lt;20} {SC_error:&gt;10.2f} {gl_error:&gt;6} {CM_error:&gt;10.2f}")
-print("-" * 70)
-print(f"{'Total':&lt;20} {SC_total:&gt;10.2f} {gl_total:&gt;6}")
-print("=" * 70)
+# Porcentaje explicado
+R2_filas = SC_filas / SC_total
+R2_columnas = SC_columnas / SC_total
+R2_tratamientos = SC_tratamientos / SC_total
+R2_total = R2_filas + R2_columnas + R2_tratamientos
 
-# Conclusión para tratamientos
+print("=" * 75)
+print("Tabla 5-7. Análisis de la varianza para los datos del Ejemplo 5-1")
+print("=" * 75)
+print(f"{'Fuente de Variación':&lt;22} {'SC':&gt;12} {'GL':&gt;6} {'CM':&gt;12} {'F_exp':&gt;8} {'% Explicado':&gt;12}")
+print("-" * 75)
+print(f"{'E. fila (Abonos)':&lt;22} {SC_filas:&gt;12.4f} {gl_filas:&gt;6} {CM_filas:&gt;12.5f} {F_filas:&gt;8.3f} {R2_filas*100:&gt;11.2f}%")
+print(f"{'E. colum. (Insect.)':&lt;22} {SC_columnas:&gt;12.4f} {gl_columnas:&gt;6} {CM_columnas:&gt;12.5f} {F_columnas:&gt;8.3f} {R2_columnas*100:&gt;11.2f}%")
+print(f"{'E. trat. (Semillas)':&lt;22} {SC_tratamientos:&gt;12.4f} {gl_tratamientos:&gt;6} {CM_tratamientos:&gt;12.5f} {F_tratamientos:&gt;8.3f} {R2_tratamientos*100:&gt;11.2f}%")
+print(f"{'Residual':&lt;22} {SC_error:&gt;12.4f} {gl_error:&gt;6} {CM_error:&gt;12.5f}")
+print(f"{'TOTAL':&lt;22} {SC_total:&gt;12.4f} {gl_total:&gt;6} {'':&gt;12} {'':&gt;8} {R2_total*100:&gt;11.2f}%")
+print("=" * 75)
+
+# Conclusión
 alpha = 0.05
+F_critico = stats.f.ppf(1 - alpha, gl_tratamientos, gl_error)
 print(f"\n--- CONCLUSIÓN (α = {alpha}) ---")
-if p_val_tratamientos &lt; alpha:
-    print(f"p = {p_val_tratamientos:.4f} &lt; {alpha}")
-    print("Se RECHAZA H0: Existe diferencia significativa entre los tratamientos.")
-    print("Al menos una variedad de trigo tiene un rendimiento diferente.")
-else:
-    print(f"p = {p_val_tratamientos:.4f} &gt;= {alpha}")
-    print("NO se rechaza H0: No hay evidencia de diferencia entre tratamientos.")</code></pre>
-</div>
-<div class="code-output">
-<div class="code-output-header">
-<span class="code-output-title">Output</span>
-</div>
-<pre class="code-output-body">===========================================================================
-TABLA ANOVA - DISEÑO EN CUADRO LATINO 4x4
-===========================================================================
-Fuente                        SC        GL        CM         F        Valor p
-----------------------------------------------------------------------
-Filas (Bloques)            32.00      3       10.67       5.33      0.0609
-Columnas (Bloques)         32.00      3       10.67       5.33      0.0609
-Tratamientos               642.00      3       214.00     107.00      0.0000
-Error                         4.00       6        0.67
-----------------------------------------------------------------------
-Total                        310.00     15
-===========================================================================</pre>
-</div>
-<div class="interpretation-box">
-<strong>Interpretación:</strong> Con un valor p de 0.0000 para tratamientos (menor que α = 0.05), se rechaza la hipótesis nula. Existe evidencia estadísticamente significativa de que al menos una variedad de trigo tiene un rendimiento diferente. El tratamiento C (208 bushels/acre) presenta el mayor rendimiento total, mientras que B (158 bushels/acre) tiene el menor.
+print(f"F teórico (F_0.05;{gl_tratamientos},{gl_error}) = {F_critico:.4f}")
+print(f"\nF_exp Filas (Abonos) = {F_filas:.3f}")
+print(f"F_exp Columnas (Insect.) = {F_columnas:.3f}")
+print(f"F_exp Tratamientos (Semillas) = {F_tratamientos:.3f}")
+print(f"\nSi realizamos el contraste al 5% y comparamos los valores de las F_exp")
+print(f"con el valor de la F teórica (F_0.05;{gl_tratamientos},{gl_error} = {F_critico:.4f}),")
+print(f"se concluye que son significativos los efectos de los abonos y semillas,")
+print(f"pero no lo son los efectos de los insecticidas.")</code></pre>
+                </div>
+                <div class="code-output">
+                    <div class="code-output-header">
+                        <span class="code-output-title">Output</span>
                     </div>
-<h2>Comparaciones Múltiples</h2>
-<p>Para determinar cuáles tratamientos difieren significativamente, se puede usar la Diferencia Mínima Significativa (DMS) o el método de Tukey.</p>
-<div class="sourceCode" data-lang="Python">
-<div class="sourceCode-header">
-<span class="sourceCode-title">Python</span>
-<div class="sourceCode-buttons">
-<button onclick="toggleCodeBlock(this)" type="button"><i class="fas fa-eye"></i> <span>Ocultar</span></button>
-<button onclick="copyCodeBlock(this)" type="button"><i class="fas fa-copy"></i> <span>Copiar</span></button>
-</div>
-</div>
-<pre><code>import numpy as np
+                    <pre class="code-output-body">===========================================================================
+Tabla 5-7. Análisis de la varianza para los datos del Ejemplo 5-1
+===========================================================================
+Fuente de Variación          SC       GL          CM    F_exp  % Explicado
+---------------------------------------------------------------------------
+E. fila (Abonos)         329.6875    3    109.89583   47.523       77.49%
+E. colum. (Insect.)        3.6875    3      1.22917    0.532        0.87%
+E. trat. (Semillas)       78.1875    3     26.06250   11.270       18.38%
+Residual                  13.8750    6      2.31250
+TOTAL                    425.4375   15                          96.74%
+===========================================================================
+
+--- CONCLUSIÓN (α = 0.05) ---
+F teórico (F_0.05;3,6) = 4.7571
+
+F_exp Filas (Abonos) = 47.523
+F_exp Columnas (Insect.) = 0.532
+F_exp Tratamientos (Semillas) = 11.270
+
+Si realizamos el contraste al 5% y comparamos los valores de las F_exp
+con el valor de la F teórica (F_0.05;3,6 = 4.7571),
+se concluye que son significativos los efectos de los abonos y semillas,
+pero no lo son los efectos de los insecticidas.</pre>
+                </div>
+                <div class="interpretation-box">
+                    <strong>Interpretación:</strong> Observamos, en la columna correspondiente al % explicado, que el
+                    coeficiente de determinación del modelo es R² = 0.9674, siendo el efecto más importante el
+                    referente al tipo de abono que explica un 77.49% de la variabilidad presente en el experimento.
+                    Los efectos de los abonos (F_exp = 47.523) y las semillas (F_exp = 11.270) son significativos
+                    al compararlos con F_0.05;3,6 = 4.7571, mientras que el efecto de los insecticidas (F_exp = 0.532)
+                    no lo es.
+                </div>
+                <h2>Comparaciones Múltiples</h2>
+                <p>Para determinar cuáles tratamientos difieren significativamente, se puede usar la Diferencia Mínima
+                    Significativa (DMS) o el método de Tukey.</p>
+                <div class="sourceCode" data-lang="Python">
+                    <div class="sourceCode-header">
+                        <span class="sourceCode-title">Python</span>
+                        <div class="sourceCode-buttons">
+                            <button onclick="toggleCodeBlock(this)" type="button"><i class="fas fa-eye"></i>
+                                <span>Ocultar</span></button>
+                            <button onclick="copyCodeBlock(this)" type="button"><i class="fas fa-copy"></i>
+                                <span>Copiar</span></button>
+                        </div>
+                    </div>
+                    <pre><code>import numpy as np
 from scipy.stats import t
 
-# Datos del Cuadro Latino 4x4
+# Datos del Cuadro Latino 4x4 - Ejemplo 5-1
+# Filas: Insecticidas (i1, i2, i3, i4)
+# Columnas: Abonos (a1, a2, a3, a4)
+# Letras: Semillas (A=s1, B=s2, C=s3, D=s4)
 y = np.array([
-    [42, 38, 51, 44],
-    [39, 54, 47, 45],
-    [50, 45, 49, 41],
-    [43, 47, 40, 53]
+    [7, 8, 4, 3],    # i1: C, D, B, A
+    [15, 16, 18, 23], # i2: B, A, C, D
+    [18, 12, 12, 10], # i3: D, C, A, B
+    [14, 13, 16, 14]  # i4: A, B, D, C
 ])
 
 p = 4
@@ -1555,11 +2365,11 @@ y_i = y.sum(axis=1)
 y_j = y.sum(axis=0)
 y_total = y.sum()
 
-# Totales por tratamiento
-y_A = y[0,0] + y[1,3] + y[2,2] + y[3,1]
-y_B = y[0,1] + y[1,0] + y[2,3] + y[3,2]
-y_C = y[0,2] + y[1,1] + y[2,0] + y[3,3]
-y_D = y[0,3] + y[1,2] + y[2,1] + y[3,0]
+# Totales por tratamiento (según disposición del cuadro latino)
+y_A = y[0,3] + y[1,1] + y[2,2] + y[3,0]
+y_B = y[0,2] + y[1,0] + y[2,3] + y[3,1]
+y_C = y[0,0] + y[1,2] + y[2,1] + y[3,3]
+y_D = y[0,1] + y[1,3] + y[2,0] + y[3,2]
 y_k = np.array([y_A, y_B, y_C, y_D])
 
 # Sumas de Cuadrados
@@ -1580,7 +2390,9 @@ DMS = t_value * np.sqrt(2 * CM_error / p)
 print("=" * 60)
 print("COMPARACIONES MÚLTIPLES - DMS")
 print("=" * 60)
-print(f"\nDMS = {DMS:.4f}")
+print(f"\nDMS = t_0.025, {gl_error} * sqrt(2*CM_error/p)")
+print(f"DMS = {t_value:.4f} * sqrt(2*{CM_error:.4f}/{p})")
+print(f"DMS = {DMS:.4f}")
 
 # Medias de tratamientos
 medias = y_k / p
@@ -1597,180 +2409,497 @@ for i in range(4):
 
 print(f"\nMedia general = {y_total/N:.2f}")
 print(f"CM Error = {CM_error:.4f}")</code></pre>
-</div>
-<div class="code-output">
-<div class="code-output-header">
-<span class="code-output-title">Output</span>
-</div>
-<pre class="code-output-body">============================================================
+                </div>
+                <div class="code-output">
+                    <div class="code-output-header">
+                        <span class="code-output-title">Output</span>
+                    </div>
+                    <pre class="code-output-body">============================================================
 COMPARACIONES MÚLTIPLES - DMS
 ============================================================
 
 DMS = t_0.025, 6 * sqrt(2*CM_error/p)
-DMS = 2.4469 * sqrt(2*0.6667/4)
-DMS = 1.4142
+DMS = 2.4469 * sqrt(2*2.3125/4)
+DMS = 2.6318
 
-Comparación      Diferencia   |&gt; DMS     Significativo
--------------------------------------------------------
-A vs B                6.25              6.25               Sí
-A vs C               -6.25              6.25               Sí
-A vs D               1.00              1.00               No
-B vs C                -12.50             12.50              Sí
-B vs D                -5.25              5.25               Sí
-C vs D                 7.25              7.25               Sí
+Comparación      Diferencia   Signif.
+----------------------------------------
+A vs B                3.75       Sí
+A vs C               -1.00       No
+A vs D               -2.25       No
+B vs C               -4.75       Sí
+B vs D                1.50       No
+C vs D                2.50       No
 
-Media general = 45.50
-CM Error = 0.6667</pre>
-</div>
-<div class="interpretation-box">
-<strong>Interpretación de Comparaciones Múltiples:</strong><br/>
-                        Las comparaciones revelan que:<br/>
-                        - <strong>C vs B:</strong> Diferencia de 12.50 bushels/acre (la mayor)<br/>
-                        - <strong>C vs A:</strong> Diferencia de 6.25 bushels/acre<br/>
-                        - <strong>C vs D:</strong> Diferencia de 7.25 bushels/acre<br/>
-                        - <strong>A vs D:</strong> Diferencia de 1.00 bushel/acre (NO significativa)<br/><br/>
-                        La variedad <strong>C</strong> difiere significativamente de todas las demás variedades. La variedad <strong>A</strong> y <strong>D</strong> no difieren significativamente entre sí.
+Media general = 12.69
+CM Error = 2.3125</pre>
+                </div>
+                <div class="interpretation-box">
+                    <strong>Interpretación de Comparaciones Múltiples:</strong><br />
+                    Las comparaciones revelan que:<br />
+                    - <strong>B vs A:</strong> Diferencia de 3.75 (significativa)<br />
+                    - <strong>C vs B:</strong> Diferencia de -4.75 (significativa)<br />
+                    - <strong>A vs C:</strong> Diferencia de -1.00 (NO significativa)<br />
+                    - <strong>A vs D:</strong> Diferencia de -2.25 (NO significativa)<br />
+                    - <strong>B vs D:</strong> Diferencia de 1.50 (NO significativa)<br />
+                    - <strong>C vs D:</strong> Diferencia de 2.50 (NO significativa)<br /><br />
+                    La semilla <strong>B (s2)</strong> difiere significativamente de <strong>A (s1)</strong> y
+                    <strong>C (s3)</strong>. Las semillas A, C y D no difieren significativamente entre sí.
+                    La semilla D (s4) tiene la media más alta (16.25), seguida de C (s3) con 12.75.
+                </div>
+
+                <h2>Esperanza de los Cuadrados Medios</h2>
+                <p>Siguiendo el mismo razonamiento que en los modelos anteriores, se demuestra que los valores esperados
+                    de los cuadrados medios correspondientes a las filas, columnas, letras latinas y residual son,
+                    respectivamente:</p>
+                <div class="formula-box">
+                    <span class="formula-number">(7.20)</span>
+                    $$E(\text{CMF}) = \sigma^2 + \frac{K\sum_{i=1}^{K}\tau_i^2}{K-1}$$
+                    $$E(\text{CMC}) = \sigma^2 + \frac{K\sum_{j=1}^{K}\beta_j^2}{K-1}$$
+                    $$E(\text{CML}) = \sigma^2 + \frac{K\sum_{h=1}^{K}\gamma_h^2}{K-1}$$
+                    $$E(\text{CMR}) = \sigma^2$$
+                </div>
+
+                <div class="concepto-clave">
+                    <h4><i class="fas fa-lightbulb"></i> Interpretación</h4>
+                    <ul>
+                        <li><strong>$S_R^2 = \text{SCR}/(K-1)(K-2)$</strong> es un estimador insesgado de la varianza
+                            poblacional $\sigma^2$.</li>
+                        <li>Bajo la hipótesis nula de cada factor, el correspondiente cuadrado medio también es
+                            estimador insesgado de $\sigma^2$.</li>
+                        <li>Si existen diferencias entre las medias de las filas, columnas o letras latinas, el
+                            respectivo valor esperado del cuadrado medio es <strong>mayor que $\sigma^2$</strong>.</li>
+                    </ul>
+                </div>
+
+                <h2>Estadísticos de Contraste</h2>
+                <p>Los estadísticos de contrastes siguen distribuciones F de Snedecor con $K-1$ y $(K-1)(K-2)$ grados de
+                    libertad:</p>
+                <div class="formula-box">
+                    <span class="formula-number">(7.22)</span>
+                    $$F_\tau = \frac{\text{SCF}/(K-1)}{\text{SCR}/(K-1)(K-2)} = \frac{S_F^2}{S_R^2} \sim F_{K-1,
+                    (K-1)(K-2)}$$
+                </div>
+                <div class="formula-box">
+                    <span class="formula-number">(7.23)</span>
+                    $$F_\beta = \frac{\text{SCC}/(K-1)}{\text{SCR}/(K-1)(K-2)} = \frac{S_C^2}{S_R^2} \sim F_{K-1,
+                    (K-1)(K-2)}$$
+                </div>
+                <div class="formula-box">
+                    <span class="formula-number">(7.24)</span>
+                    $$F_\gamma = \frac{\text{SCL}/(K-1)}{\text{SCR}/(K-1)(K-2)} = \frac{S_L^2}{S_R^2} \sim F_{K-1,
+                    (K-1)(K-2)}$$
+                </div>
+                <p>Se rechaza $H_0$, al nivel de significación $\alpha$, cuando el valor experimental del respectivo
+                    estadístico sea mayor que el valor crítico de la distribución F con $K-1$ y $(K-1)(K-2)$ grados de
+                    libertad.</p>
+
+                <h2>Coeficiente de Determinación $R^2$</h2>
+                <div class="concepto-clave">
+                    <h4><i class="fas fa-percentage"></i> $R^2$ y Coeficientes Parciales</h4>
+                    <p>El coeficiente de determinación se define como:</p>
+                    <div class="formula-box">
+                        $$R^2 = \frac{\text{SCF} + \text{SCC} + \text{SCL}}{\text{SCT}}$$
                     </div>
-</article></div></template><template id="module-7"><div class="animate-fade-in">
-<div class="border-b border-gray-100 pb-6 mb-6">
-<div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
-<span>Módulo 7</span>
-</div>
-<h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Ejercicios de Autoevaluación</h2>
-<div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
-<span class="text-xl">🎯</span>
-<div>
-<h3 class="font-bold text-gray-800 text-sm" style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
-<p class="text-gray-600 text-sm" style="margin:0;">Practicar conceptos del DCL.</p>
-</div>
-</div>
-</div>
-<article class="" id="ejercicios" style="">
-<h2>Ejercicio 1</h2>
-<div class="example-box">
-<p>Se conduce un experimento para comparar 4 dietas ($A$, $B$, $C$, $D$) en ganado bovino. Se usa un Cuadro Latino 4×4 donde las filas representan 4 potreros diferentes y las columnas representan 4 épocas del año.</p>
-<p><strong>a)</strong> ¿Cuántas observaciones se obtienen?</p>
-<p><strong>b)</strong> ¿Cuántos grados de libertad tiene el error?</p>
-<p><strong>c)</strong> Si $SC_{\text{Total}} = 150$ y $SC_{\text{Tratamientos}} = 80$, ¿cuál es la $SC_{\text{Error}}$?</p>
-</div>
-<details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
-<summary class="cursor-pointer font-semibold text-usta-primary">Solución</summary>
-<div class="mt-4">
-<p><strong>a)</strong> $N = p^2 = 4^2 = 16$ observaciones</p>
-<p><strong>b)</strong> $GL_{\text{Error}} = (p-1)(p-2) = (4-1)(4-2) = 3 \times 2 = 6$</p>
-<p><strong>c)</strong> $SC_{\text{Error}} = SC_{\text{Total}} - SC_{\text{Filas}} - SC_{\text{Columnas}} - SC_{\text{Tratamientos}}$</p>
-<p>Dado que no se proporcionan $SC_{\text{Filas}}$ ni $SC_{\text{Columnas}}$, no se puede calcular directamente. Con la información dada, tendríamos $SC_{\text{Error}} = 150 - SC_{\text{Filas}} - SC_{\text{Columnas}} - 80$.</p>
-</div>
-</details>
-<h2>Ejercicio 2</h2>
-<div class="example-box">
-<p>Un investigador utiliza un Cuadro Latino 5×5 para evaluar el efecto de 5 insecticidas ($A$, $B$, $C$, $D$, $E$) sobre el rendimiento de cultivos. Las filas representan 5 parcelas diferentes y las columnas 5 aplicaciones temporales.</p>
-<p><strong>a)</strong> Complete la tabla ANOVA indicando todos los grados de libertad</p>
-<p><strong>b)</strong> Si el $F$ calculado para tratamientos es 4.5, ¿qué conclusión obtiene con $\alpha = 0.05$?</p>
-<p>(Para $F_{0.05,\;4,\;12}$ use el valor de tablas)</p>
-</div>
-<details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
-<summary class="cursor-pointer font-semibold text-usta-primary">Solución</summary>
-<div class="mt-4">
-<p><strong>a)</strong> Tabla ANOVA:</p>
-<table>
-<thead>
-<tr><th>Fuente</th><th>GL</th></tr>
-</thead>
-<tbody>
-<tr><td>Filas</td><td>4</td></tr>
-<tr><td>Columnas</td><td>4</td></tr>
-<tr><td>Tratamientos</td><td>4</td></tr>
-<tr><td>Error</td><td>12</td></tr>
-<tr><td>Total</td><td>24</td></tr>
-</tbody>
-</table>
-<p><strong>b)</strong> Para $F_{0.05,\;4,\;12}$, el valor crítico es aproximadamente 3.26. Como $F_0 = 4.5 &gt; 3.26$, se rechaza $H_0$ y se concluye que existe diferencia significativa entre los insecticidas.</p>
-</div>
-</details>
-<h2>Ejercicio 3</h2>
-<div class="example-box">
-<p>Explique por qué un Diseño en Cuadro Latino es más eficiente que un Diseño Completamente Aleatorizado cuando se tienen dos fuentes de variación que se desean controlar.</p>
-</div>
-<details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
-<summary class="cursor-pointer font-semibold text-usta-primary">Solución</summary>
-<div class="mt-4">
-<p>Un Diseño Completamente Aleatorizado (DCA) con un solo factor de interés y $p$ niveles requiere $p \times r$ observaciones (donde $r$ es el número de repeticiones) para obtener $GL_{\text{Error}} = p \times (r-1)$.</p>
-<p>En un Cuadro Latino de orden $p$:</p>
-<ul>
-<li>Solo se necesitan $p^2$ observaciones</li>
-<li>Se controla tanto la variabilidad entre filas como entre columnas</li>
-<li>La $SC_{\text{Error}}$ es menor porque se eliminan dos fuentes de variabilidad del error</li>
-<li>Esto resulta en un menor $CM_{\text{Error}}$ y mayor potencia para detectar diferencias</li>
-</ul>
-<p>Por tanto, para el mismo número de repeticiones, el Cuadro Latino es más eficiente porque controla variaciones que en el DCA contribuirían al error experimental.</p>
-</div>
-</details>
-<h2>Ejercicio 4</h2>
-<div class="example-box">
-<p>¿Cuáles son las condiciones necesarias para que un diseño en Cuadro Latino sea apropiado? Mencione al menos 4.</p>
-</div>
-<details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
-<summary class="cursor-pointer font-semibold text-usta-primary">Solución</summary>
-<div class="mt-4">
-<ol>
-<li><strong>Número igual de niveles:</strong> Los tres factores (filas, columnas, tratamientos) deben tener el mismo número de niveles $p$</li>
-<li><strong>Sin interacciones:</strong> No debe existir interacción entre filas, columnas y tratamientos</li>
-<li><strong>Observaciones independientes:</strong> Cada observación debe ser independiente de las demás</li>
-<li><strong>Varianza constante:</strong> La varianza del error debe ser constante para todas las combinaciones</li>
-<li><strong>Normalidad:</strong> Los errores deben seguir una distribución aproximadamente normal</li>
-<li><strong>Aditividad del modelo:</strong> El modelo debe ser aditivo, sin efectos multiplicativos</li>
-</ol>
-</div>
-</details>
-</article></div></template><template id="module-8"><div class="animate-fade-in">
-<div class="border-b border-gray-100 pb-6 mb-6">
-<div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
-<span>Módulo 8</span>
-</div>
-<h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Problemas de Montgomery</h2>
-<div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
-<span class="text-xl">🎯</span>
-<div>
-<h3 class="font-bold text-gray-800 text-sm" style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
-<p class="text-gray-600 text-sm" style="margin:0;">Resolver problemas del texto de referencia.</p>
-</div>
-</div>
-</div>
-<article class="" id="problemas-montgomery" style="">
-<h2>Problema 4.1 (Montgomery)</h2>
-<div class="example-box">
-<p>Considere un Diseño en Cuadro Latino 4×4 que involucra cuatro tratamientos ($A$, $B$, $C$, $D$), cuatro bloques de filas y cuatro bloques de columnas. Los datos se presentan a continuación:</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>Col 1</th>
-<th>Col 2</th>
-<th>Col 3</th>
-<th>Col 4</th>
-</tr>
-</thead>
-<tbody>
-<tr><td><strong>Fila 1</strong></td><td>A: 6.9</td><td>B: 8.3</td><td>C: 8.0</td><td>D: 6.1</td></tr>
-<tr><td><strong>Fila 2</strong></td><td>B: 7.9</td><td>C: 9.1</td><td>D: 6.5</td><td>A: 6.8</td></tr>
-<tr><td><strong>Fila 3</strong></td><td>C: 9.3</td><td>D: 7.8</td><td>A: 7.6</td><td>B: 7.0</td></tr>
-<tr><td><strong>Fila 4</strong></td><td>D: 6.6</td><td>A: 7.4</td><td>B: 7.3</td><td>C: 9.2</td></tr>
-</tbody>
-</table>
-<p><strong>a)</strong> Realice el análisis de varianza</p>
-<p><strong>b)</strong> Use la DMS para comparar las medias de tratamientos</p>
-</div>
-<h3>Solución en Python</h3>
-<div class="sourceCode" data-lang="Python">
-<div class="sourceCode-header">
-<span class="sourceCode-title">Python</span>
-<div class="sourceCode-buttons">
-<button onclick="toggleCodeBlock(this)" type="button"><i class="fas fa-eye"></i> <span>Ocultar</span></button>
-<button onclick="copyCodeBlock(this)" type="button"><i class="fas fa-copy"></i> <span>Copiar</span></button>
-</div>
-</div>
-<pre><code>import numpy as np
+                    <p>Donde denotamos los <strong>coeficientes de determinación parciales</strong>:</p>
+                    <ul>
+                        <li>$R^2_\tau = \frac{\text{SCF}}{\text{SCT}}$: variabilidad explicada por las filas</li>
+                        <li>$R^2_\beta = \frac{\text{SCC}}{\text{SCT}}$: variabilidad explicada por las columnas</li>
+                        <li>$R^2_\gamma = \frac{\text{SCL}}{\text{SCT}}$: variabilidad explicada por las letras latinas
+                            (tratamientos)</li>
+                    </ul>
+                    <p>Entonces: $R^2 = R^2_\tau + R^2_\beta + R^2_\gamma$</p>
+                </div>
+
+                <div class="nota">
+                    <h4><i class="fas fa-info-circle"></i> Interpretación del $R^2$</h4>
+                    <p>Un $R^2$ cercano a 1 indica que el modelo explica gran parte de la variabilidad total del
+                        experimento. Cada coeficiente parcial muestra la contribución relativa de cada factor.</p>
+                </div>
+            </article>
+        </div>
+    </template><template id="module-6b">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 6b</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Formas de la Tabla
+                    ANOVA</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm"
+                            style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Presentar las dos formas de la tabla ANOVA
+                            para el modelo de cuadro latino según las Tablas 5-3 y 5-4 del PDF.</p>
+                    </div>
+                </div>
+            </div>
+            <article class="" id="anova-formas" style="">
+                <h2>7.2.4 Descomposición de la Variabilidad</h2>
+                <p>Siguiendo el mismo procedimiento que en el modelo en bloques aleatorizados, se comprueba que la
+                    ecuación básica del análisis de la varianza es:</p>
+                <div class="formula-box">
+                    <span class="formula-number">(7.19)</span>
+                    $$\sum_{i=1}^{K}\sum_{j=1}^{K}(y_{ij(h)}-\bar{y}_{...})^2 =
+                    K\sum_{i=1}^{K}(\bar{y}_{i..}-\bar{y}_{...})^2 + K\sum_{j=1}^{K}(\bar{y}_{.j.}-\bar{y}_{...})^2 +
+                    K\sum_{h=1}^{K}(\bar{y}_{..h}-\bar{y}_{...})^2 +
+                    \sum_{i=1}^{K}\sum_{j=1}^{K}(y_{ij(h)}-\bar{y}_{i..}-\bar{y}_{.j.}-\bar{y}_{..h}+2\bar{y}_{...})^2$$
+                </div>
+                <p>que simbólicamente se puede escribir:</p>
+                $$\text{SCT} = \text{SCF} + \text{SCC} + \text{SCL} + \text{SCR}$$
+
+                <h2>Tabla ANOVA - Forma Teórica (Tabla 5-3)</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fuente de Variación</th>
+                            <th>Suma de Cuadrados</th>
+                            <th>GL</th>
+                            <th>Cuadrado Medio</th>
+                            <th>$F_{exp}$</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>E. fila</td>
+                            <td>$K\sum_i(\bar{y}_{i..}-\bar{y}_{...})^2$</td>
+                            <td>$K-1$</td>
+                            <td>$S_F^2$</td>
+                            <td>$S_F^2/S_R^2$</td>
+                        </tr>
+                        <tr>
+                            <td>E. columna</td>
+                            <td>$K\sum_j(\bar{y}_{.j.}-\bar{y}_{...})^2$</td>
+                            <td>$K-1$</td>
+                            <td>$S_C^2$</td>
+                            <td>$S_C^2/S_R^2$</td>
+                        </tr>
+                        <tr>
+                            <td>E. letra lat.</td>
+                            <td>$K\sum_{h=1}^{K}(\bar{y}_{..h}-\bar{y}_{...})^2$</td>
+                            <td>$K-1$</td>
+                            <td>$S_L^2$</td>
+                            <td>$S_L^2/S_R^2$</td>
+                        </tr>
+                        <tr>
+                            <td>Residual</td>
+                            <td>$\text{SCT}-\text{SCF}-\text{SCC}-\text{SCL}$</td>
+                            <td>$(K-1)(K-2)$</td>
+                            <td>$S_R^2$</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><strong>TOTAL</strong></td>
+                            <td><strong>$\sum_i\sum_j(y_{ij(\cdot)}-\bar{y}_{...})^2$</strong></td>
+                            <td><strong>$K^2-1$</strong></td>
+                            <td><strong>$S_T^2$</strong></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>Tabla ANOVA - Forma Práctica (Tabla 5-4)</h2>
+                <p>Para una mayor sencillez en el cálculo se utilizan las expresiones abreviadas:</p>
+                <div class="formula-box">
+                    <span class="formula-number">(7.25)</span>
+                    $$\text{SCT} = \sum_{i=1}^{K}\sum_{j=1}^{K}y_{ij(\cdot)}^2 - \frac{y_{...}^2}{K^2}$$
+                </div>
+                <div class="formula-box">
+                    <span class="formula-number">(7.26)</span>
+                    $$\text{SCF} = \frac{1}{K}\sum_{i=1}^{K}y_{i..}^2 - \frac{y_{...}^2}{K^2}$$
+                </div>
+                <div class="formula-box">
+                    <span class="formula-number">(7.27)</span>
+                    $$\text{SCC} = \frac{1}{K}\sum_{j=1}^{K}y_{.j.}^2 - \frac{y_{...}^2}{K^2}$$
+                </div>
+                <div class="formula-box">
+                    <span class="formula-number">(7.28)</span>
+                    $$\text{SCL} = \frac{1}{K}\sum_{h=1}^{K}y_{..h}^2 - \frac{y_{...}^2}{K^2}$$
+                </div>
+                <div class="formula-box">
+                    <span class="formula-number">(7.29)</span>
+                    $$\text{SCR} = \text{SCT} - \text{SCF} - \text{SCC} - \text{SCL}$$
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fuente de Variación</th>
+                            <th>Suma de Cuadrados</th>
+                            <th>GL</th>
+                            <th>Cuadrado Medio</th>
+                            <th>$F_{exp}$</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>E. fila</td>
+                            <td>$\frac{1}{K}\sum_i y_{i..}^2 - \frac{y_{...}^2}{K^2}$</td>
+                            <td>$K-1$</td>
+                            <td>$S_F^2$</td>
+                            <td>$S_F^2/S_R^2$</td>
+                        </tr>
+                        <tr>
+                            <td>E. columna</td>
+                            <td>$\frac{1}{K}\sum_j y_{.j.}^2 - \frac{y_{...}^2}{K^2}$</td>
+                            <td>$K-1$</td>
+                            <td>$S_C^2$</td>
+                            <td>$S_C^2/S_R^2$</td>
+                        </tr>
+                        <tr>
+                            <td>E. letra lat.</td>
+                            <td>$\frac{1}{K}\sum_h y_{..h}^2 - \frac{y_{...}^2}{K^2}$</td>
+                            <td>$K-1$</td>
+                            <td>$S_L^2$</td>
+                            <td>$S_L^2/S_R^2$</td>
+                        </tr>
+                        <tr>
+                            <td>Residual</td>
+                            <td>$\text{SCT}-\text{SCF}-\text{SCC}-\text{SCL}$</td>
+                            <td>$(K-1)(K-2)$</td>
+                            <td>$S_R^2$</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><strong>TOTAL</strong></td>
+                            <td><strong>$\sum_i\sum_j y_{ij(\cdot)}^2 - \frac{y_{...}^2}{K^2}$</strong></td>
+                            <td><strong>$K^2-1$</strong></td>
+                            <td><strong>$S_T^2$</strong></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="tip-box">
+                    <p><strong>💡 Nota:</strong> La forma práctica es más conveniente para cálculos manuales o
+                        computacionales, ya que trabaja directamente con sumas de cuadrados de las observaciones
+                        totales.</p>
+                </div>
+            </article>
+        </div>
+    </template><template id="module-7">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 7</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Ejercicios de
+                    Autoevaluación</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm"
+                            style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Practicar conceptos del DCL.</p>
+                    </div>
+                </div>
+            </div>
+            <article class="" id="ejercicios" style="">
+                <h2>Ejercicio 1</h2>
+                <div class="example-box">
+                    <p>Se conduce un experimento para comparar 4 dietas ($A$, $B$, $C$, $D$) en ganado bovino. Se usa un
+                        Cuadro Latino 4×4 donde las filas representan 4 potreros diferentes y las columnas representan 4
+                        épocas del año.</p>
+                    <p><strong>a)</strong> ¿Cuántas observaciones se obtienen?</p>
+                    <p><strong>b)</strong> ¿Cuántos grados de libertad tiene el error?</p>
+                    <p><strong>c)</strong> Si $SC_{\text{Total}} = 150$ y $SC_{\text{Tratamientos}} = 80$, ¿cuál es la
+                        $SC_{\text{Error}}$?</p>
+                </div>
+                <details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <summary class="cursor-pointer font-semibold text-usta-primary">Solución</summary>
+                    <div class="mt-4">
+                        <p><strong>a)</strong> $N = p^2 = 4^2 = 16$ observaciones</p>
+                        <p><strong>b)</strong> $GL_{\text{Error}} = (p-1)(p-2) = (4-1)(4-2) = 3 \times 2 = 6$</p>
+                        <p><strong>c)</strong> $SC_{\text{Error}} = SC_{\text{Total}} - SC_{\text{Filas}} -
+                            SC_{\text{Columnas}} - SC_{\text{Tratamientos}}$</p>
+                        <p>Dado que no se proporcionan $SC_{\text{Filas}}$ ni $SC_{\text{Columnas}}$, no se puede
+                            calcular directamente. Con la información dada, tendríamos $SC_{\text{Error}} = 150 -
+                            SC_{\text{Filas}} - SC_{\text{Columnas}} - 80$.</p>
+                    </div>
+                </details>
+                <h2>Ejercicio 2</h2>
+                <div class="example-box">
+                    <p>Un investigador utiliza un Cuadro Latino 5×5 para evaluar el efecto de 5 insecticidas ($A$, $B$,
+                        $C$, $D$, $E$) sobre el rendimiento de cultivos. Las filas representan 5 parcelas diferentes y
+                        las columnas 5 aplicaciones temporales.</p>
+                    <p><strong>a)</strong> Complete la tabla ANOVA indicando todos los grados de libertad</p>
+                    <p><strong>b)</strong> Si el $F$ calculado para tratamientos es 4.5, ¿qué conclusión obtiene con
+                        $\alpha = 0.05$?</p>
+                    <p>(Para $F_{0.05,\;4,\;12}$ use el valor de tablas)</p>
+                </div>
+                <details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <summary class="cursor-pointer font-semibold text-usta-primary">Solución</summary>
+                    <div class="mt-4">
+                        <p><strong>a)</strong> Tabla ANOVA:</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Fuente</th>
+                                    <th>GL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Filas</td>
+                                    <td>4</td>
+                                </tr>
+                                <tr>
+                                    <td>Columnas</td>
+                                    <td>4</td>
+                                </tr>
+                                <tr>
+                                    <td>Tratamientos</td>
+                                    <td>4</td>
+                                </tr>
+                                <tr>
+                                    <td>Error</td>
+                                    <td>12</td>
+                                </tr>
+                                <tr>
+                                    <td>Total</td>
+                                    <td>24</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p><strong>b)</strong> Para $F_{0.05,\;4,\;12}$, el valor crítico es aproximadamente 3.26. Como
+                            $F_0 = 4.5 &gt; 3.26$, se rechaza $H_0$ y se concluye que existe diferencia significativa
+                            entre los insecticidas.</p>
+                    </div>
+                </details>
+                <h2>Ejercicio 3</h2>
+                <div class="example-box">
+                    <p>Explique por qué un Diseño en Cuadro Latino es más eficiente que un Diseño Completamente
+                        Aleatorizado cuando se tienen dos fuentes de variación que se desean controlar.</p>
+                </div>
+                <details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <summary class="cursor-pointer font-semibold text-usta-primary">Solución</summary>
+                    <div class="mt-4">
+                        <p>Un Diseño Completamente Aleatorizado (DCA) con un solo factor de interés y $p$ niveles
+                            requiere $p \times r$ observaciones (donde $r$ es el número de repeticiones) para obtener
+                            $GL_{\text{Error}} = p \times (r-1)$.</p>
+                        <p>En un Cuadro Latino de orden $p$:</p>
+                        <ul>
+                            <li>Solo se necesitan $p^2$ observaciones</li>
+                            <li>Se controla tanto la variabilidad entre filas como entre columnas</li>
+                            <li>La $SC_{\text{Error}}$ es menor porque se eliminan dos fuentes de variabilidad del error
+                            </li>
+                            <li>Esto resulta en un menor $CM_{\text{Error}}$ y mayor potencia para detectar diferencias
+                            </li>
+                        </ul>
+                        <p>Por tanto, para el mismo número de repeticiones, el Cuadro Latino es más eficiente porque
+                            controla variaciones que en el DCA contribuirían al error experimental.</p>
+                    </div>
+                </details>
+                <h2>Ejercicio 4</h2>
+                <div class="example-box">
+                    <p>¿Cuáles son las condiciones necesarias para que un diseño en Cuadro Latino sea apropiado?
+                        Mencione al menos 4.</p>
+                </div>
+                <details class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <summary class="cursor-pointer font-semibold text-usta-primary">Solución</summary>
+                    <div class="mt-4">
+                        <ol>
+                            <li><strong>Número igual de niveles:</strong> Los tres factores (filas, columnas,
+                                tratamientos) deben tener el mismo número de niveles $p$</li>
+                            <li><strong>Sin interacciones:</strong> No debe existir interacción entre filas, columnas y
+                                tratamientos</li>
+                            <li><strong>Observaciones independientes:</strong> Cada observación debe ser independiente
+                                de las demás</li>
+                            <li><strong>Varianza constante:</strong> La varianza del error debe ser constante para todas
+                                las combinaciones</li>
+                            <li><strong>Normalidad:</strong> Los errores deben seguir una distribución aproximadamente
+                                normal</li>
+                            <li><strong>Aditividad del modelo:</strong> El modelo debe ser aditivo, sin efectos
+                                multiplicativos</li>
+                        </ol>
+                    </div>
+                </details>
+            </article>
+        </div>
+    </template><template id="module-8">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 8</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Problemas de
+                    Montgomery</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm"
+                            style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Resolver problemas del texto de referencia.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <article class="" id="problemas-montgomery" style="">
+                <h2>Problema 4.1 (Montgomery)</h2>
+                <div class="example-box">
+                    <p>Considere un Diseño en Cuadro Latino 4×4 que involucra cuatro tratamientos ($A$, $B$, $C$, $D$),
+                        cuatro bloques de filas y cuatro bloques de columnas. Los datos se presentan a continuación:</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Col 1</th>
+                                <th>Col 2</th>
+                                <th>Col 3</th>
+                                <th>Col 4</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Fila 1</strong></td>
+                                <td>A: 6.9</td>
+                                <td>B: 8.3</td>
+                                <td>C: 8.0</td>
+                                <td>D: 6.1</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fila 2</strong></td>
+                                <td>B: 7.9</td>
+                                <td>C: 9.1</td>
+                                <td>D: 6.5</td>
+                                <td>A: 6.8</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fila 3</strong></td>
+                                <td>C: 9.3</td>
+                                <td>D: 7.8</td>
+                                <td>A: 7.6</td>
+                                <td>B: 7.0</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fila 4</strong></td>
+                                <td>D: 6.6</td>
+                                <td>A: 7.4</td>
+                                <td>B: 7.3</td>
+                                <td>C: 9.2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p><strong>a)</strong> Realice el análisis de varianza</p>
+                    <p><strong>b)</strong> Use la DMS para comparar las medias de tratamientos</p>
+                </div>
+                <h3>Solución en Python</h3>
+                <div class="sourceCode" data-lang="Python">
+                    <div class="sourceCode-header">
+                        <span class="sourceCode-title">Python</span>
+                        <div class="sourceCode-buttons">
+                            <button onclick="toggleCodeBlock(this)" type="button"><i class="fas fa-eye"></i>
+                                <span>Ocultar</span></button>
+                            <button onclick="copyCodeBlock(this)" type="button"><i class="fas fa-copy"></i>
+                                <span>Copiar</span></button>
+                        </div>
+                    </div>
+                    <pre><code>import numpy as np
 from scipy import stats
 
 # Datos del problema 4.1
@@ -1851,12 +2980,12 @@ if p_valor &lt; alpha:
 else:
     print(f"\nConclusión: p = {p_valor:.6f} &gt;= {alpha}")
     print("NO se rechaza H0: No hay diferencias significativas.")</code></pre>
-</div>
-<div class="code-output">
-<div class="code-output-header">
-<span class="code-output-title">Output</span>
-</div>
-<pre class="code-output-body">=====================================================
+                </div>
+                <div class="code-output">
+                    <div class="code-output-header">
+                        <span class="code-output-title">Output</span>
+                    </div>
+                    <pre class="code-output-body">=====================================================
 PROBLEMA 4.1 - DISEÑO EN CUADRO LATINO
 =====================================================
 
@@ -1886,44 +3015,75 @@ F_0 = 3.1275, p-value = 0.114826
 
 Conclusión: p = 0.114826 &gt;= 0.05
 NO se rechaza H0: No hay diferencias significativas.</pre>
-</div>
-<div class="interpretation-box">
-<strong>Interpretación:</strong> Con un valor p de 0.1148 (mayor que α = 0.05), no se rechaza la hipótesis nula. Aunque visualmente las medias de tratamientos difieren (A: 7.18, B: 7.63, C: 8.65, D: 11.18), la variabilidad dentro de los tratamientos no permite concluir que existan diferencias estadísticamente significativas con un nivel de confianza del 95%.
+                </div>
+                <div class="interpretation-box">
+                    <strong>Interpretación:</strong> Con un valor p de 0.1148 (mayor que α = 0.05), no se rechaza la
+                    hipótesis nula. Aunque visualmente las medias de tratamientos difieren (A: 7.18, B: 7.63, C: 8.65,
+                    D: 11.18), la variabilidad dentro de los tratamientos no permite concluir que existan diferencias
+                    estadísticamente significativas con un nivel de confianza del 95%.
+                </div>
+                <h2>Problema 4.3 (Montgomery)</h2>
+                <div class="example-box">
+                    <p>Se condujo un experimento para investigar el efecto de 4 catalizadores sobre el tiempo de
+                        reacción química. Se utilizó un Diseño en Cuadro Latino 4×4 con los siguientes resultados:</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Op 1</th>
+                                <th>Op 2</th>
+                                <th>Op 3</th>
+                                <th>Op 4</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Lote 1</strong></td>
+                                <td>A: 73</td>
+                                <td>B: 74</td>
+                                <td>C: 77</td>
+                                <td>D: 75</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lote 2</strong></td>
+                                <td>B: 75</td>
+                                <td>C: 79</td>
+                                <td>D: 76</td>
+                                <td>A: 74</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lote 3</strong></td>
+                                <td>C: 77</td>
+                                <td>D: 79</td>
+                                <td>A: 76</td>
+                                <td>B: 77</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lote 4</strong></td>
+                                <td>D: 75</td>
+                                <td>A: 76</td>
+                                <td>B: 76</td>
+                                <td>C: 79</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>Las columnas representan diferentes operaciones (operarios) y las filas diferentes lotes de
+                        materia prima.</p>
+                    <p><strong>a)</strong> Analice estos datos</p>
+                    <p><strong>b)</strong> ¿Existe diferencia entre los catalizadores?</p>
+                </div>
+                <h3>Solución en Python</h3>
+                <div class="sourceCode" data-lang="Python">
+                    <div class="sourceCode-header">
+                        <span class="sourceCode-title">Python</span>
+                        <div class="sourceCode-buttons">
+                            <button onclick="toggleCodeBlock(this)" type="button"><i class="fas fa-eye"></i>
+                                <span>Ocultar</span></button>
+                            <button onclick="copyCodeBlock(this)" type="button"><i class="fas fa-copy"></i>
+                                <span>Copiar</span></button>
+                        </div>
                     </div>
-<h2>Problema 4.3 (Montgomery)</h2>
-<div class="example-box">
-<p>Se condujo un experimento para investigar el efecto de 4 catalizadores sobre el tiempo de reacción química. Se utilizó un Diseño en Cuadro Latino 4×4 con los siguientes resultados:</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>Op 1</th>
-<th>Op 2</th>
-<th>Op 3</th>
-<th>Op 4</th>
-</tr>
-</thead>
-<tbody>
-<tr><td><strong>Lote 1</strong></td><td>A: 73</td><td>B: 74</td><td>C: 77</td><td>D: 75</td></tr>
-<tr><td><strong>Lote 2</strong></td><td>B: 75</td><td>C: 79</td><td>D: 76</td><td>A: 74</td></tr>
-<tr><td><strong>Lote 3</strong></td><td>C: 77</td><td>D: 79</td><td>A: 76</td><td>B: 77</td></tr>
-<tr><td><strong>Lote 4</strong></td><td>D: 75</td><td>A: 76</td><td>B: 76</td><td>C: 79</td></tr>
-</tbody>
-</table>
-<p>Las columnas representan diferentes operaciones (operarios) y las filas diferentes lotes de materia prima.</p>
-<p><strong>a)</strong> Analice estos datos</p>
-<p><strong>b)</strong> ¿Existe diferencia entre los catalizadores?</p>
-</div>
-<h3>Solución en Python</h3>
-<div class="sourceCode" data-lang="Python">
-<div class="sourceCode-header">
-<span class="sourceCode-title">Python</span>
-<div class="sourceCode-buttons">
-<button onclick="toggleCodeBlock(this)" type="button"><i class="fas fa-eye"></i> <span>Ocultar</span></button>
-<button onclick="copyCodeBlock(this)" type="button"><i class="fas fa-copy"></i> <span>Copiar</span></button>
-</div>
-</div>
-<pre><code>import numpy as np
+                    <pre><code>import numpy as np
 from scipy import stats
 
 # Datos del problema 4.3
@@ -2018,12 +3178,12 @@ if p_valor &lt; alpha:
 else:
     print(f"p = {p_valor:.4f} &gt;= {alpha}: NO se rechaza H0.")
     print("NO existe diferencia significativa entre catalizadores.")</code></pre>
-</div>
-<div class="code-output">
-<div class="code-output-header">
-<span class="code-output-title">Output</span>
-</div>
-<pre class="code-output-body">========================================================
+                </div>
+                <div class="code-output">
+                    <div class="code-output-header">
+                        <span class="code-output-title">Output</span>
+                    </div>
+                    <pre class="code-output-body">========================================================
 PROBLEMA 4.3 - CATALIZADORES
 ========================================================
 
@@ -2068,125 +3228,184 @@ C vs D          2.00        Sí
 *** CONCLUSIÓN ***
 p = 0.0509 &gt;= 0.05: NO se rechaza H0.
 NO existe diferencia significativa entre catalizadores.</pre>
-</div>
-<div class="interpretation-box">
-<strong>Interpretación:</strong> Aunque el catalizador C presenta la mayor media (77.75 minutos), el valor p de 0.0509 es marginalmente mayor que 0.05, por lo que al nivel de significancia del 5% no se rechazaría la hipótesis nula. Sin embargo, las comparaciones DMS muestran que C difiere significativamente de A y B, sugiriendo que el catalizador C podría ser el más efectivo para reducir el tiempo de reacción.
+                </div>
+                <div class="interpretation-box">
+                    <strong>Interpretación:</strong> Aunque el catalizador C presenta la mayor media (77.75 minutos), el
+                    valor p de 0.0509 es marginalmente mayor que 0.05, por lo que al nivel de significancia del 5% no se
+                    rechazaría la hipótesis nula. Sin embargo, las comparaciones DMS muestran que C difiere
+                    significativamente de A y B, sugiriendo que el catalizador C podría ser el más efectivo para reducir
+                    el tiempo de reacción.
+                </div>
+            </article>
+        </div>
+    </template><template id="module-9">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Módulo 9</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Referencias
+                    Principales</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm"
+                            style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Consultar las fuentes bibliográficas.</p>
                     </div>
-</article></div></template><template id="module-9"><div class="animate-fade-in">
-<div class="border-b border-gray-100 pb-6 mb-6">
-<div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
-<span>Módulo 9</span>
-</div>
-<h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Referencias Principales</h2>
-<div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3 mt-4">
-<span class="text-xl">🎯</span>
-<div>
-<h3 class="font-bold text-gray-800 text-sm" style="margin:0; border:none; padding:0; background:transparent;">Objetivo</h3>
-<p class="text-gray-600 text-sm" style="margin:0;">Consultar las fuentes bibliográficas.</p>
-</div>
-</div>
-</div>
-<article class="" id="referencias" style="">
-<h2>Referencias Bibliográficas</h2>
-<div class="reference-list">
-<div class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200 mb-4">
-<div class="flex items-center mb-3">
-<div class="w-10 h-10 bg-usta-primary text-white rounded-full flex items-center justify-center font-bold mr-3">1</div>
-<h4 class="font-semibold text-slate-800">Montgomery, D. C.</h4>
-</div>
-<p class="text-sm text-slate-600 italic mb-2">Design and Analysis of Experiments</p>
-<p class="text-sm text-slate-700">10th Edition. John Wiley &amp; Sons, 2019.</p>
-<p class="text-sm text-slate-500 mt-2">Capítulo 5: Diseños en Cuadros Latinos y related designs</p>
-</div>
-<div class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200 mb-4">
-<div class="flex items-center mb-3">
-<div class="w-10 h-10 bg-usta-secondary text-white rounded-full flex items-center justify-center font-bold mr-3">2</div>
-<h4 class="font-semibold text-slate-800">Fisher, R. A.</h4>
-</div>
-<p class="text-sm text-slate-600 italic mb-2">The Design of Experiments</p>
-<p class="text-sm text-slate-700">9th Edition. Macmillan, 1971.</p>
-<p class="text-sm text-slate-500 mt-2">Obra clásica fundamental en el diseño experimental</p>
-</div>
-<div class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200 mb-4">
-<div class="flex items-center mb-3">
-<div class="w-10 h-10 bg-amber-500 text-white rounded-full flex items-center justify-center font-bold mr-3">3</div>
-<h4 class="font-semibold text-slate-800">Cochran, W. G. &amp; Cox, G. M.</h4>
-</div>
-<p class="text-sm text-slate-600 italic mb-2">Experimental Designs</p>
-<p class="text-sm text-slate-700">2nd Edition. John Wiley &amp; Sons, 1992.</p>
-<p class="text-sm text-slate-500 mt-2">Referencia completa sobre diseños experimentales</p>
-</div>
-</div>
-<div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6 border border-indigo-200 mt-6">
-<h3 class="font-semibold text-indigo-800 mb-3">Recursos Adicionales</h3>
-<ul class="text-sm text-slate-700 space-y-2">
-<li>Miller, I. &amp; Miller, M. (2006). <em>John E. Freund's Mathematical Statistics</em>. Prentice Hall.</li>
-<li>Dean, A. &amp; Voss, D. (1999). <em>Design and Analysis of Experiments</em>. Springer.</li>
-<li>Mason, R. L., Gunst, R. F. &amp; Hess, J. L. (2003). <em>Statistical Design and Analysis of Experiments</em>. John Wiley &amp; Sons.</li>
-</ul>
-</div>
-</article></div></template><script>
+                </div>
+            </div>
+            <article class="" id="referencias" style="">
+                <h2>Referencias Bibliográficas</h2>
+                <div class="reference-list">
+                    <div
+                        class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200 mb-4">
+                        <div class="flex items-center mb-3">
+                            <div
+                                class="w-10 h-10 bg-usta-primary text-white rounded-full flex items-center justify-center font-bold mr-3">
+                                1</div>
+                            <h4 class="font-semibold text-slate-800">García Leal, J. &amp; Lara Porras, A.M.</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 italic mb-2">Diseño Estadístico de Experimentos. Análisis de la
+                            Varianza.</p>
+                        <p class="text-sm text-slate-700">Grupo Editorial Universitario, 1998.</p>
+                        <p class="text-sm text-slate-500 mt-2">Secciones 7.2.2-7.2.4: Modelo estadístico, estimación por
+                            máxima verosimilitud y tabla ANOVA para cuadros latinos</p>
+                    </div>
+                    <div
+                        class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200 mb-4">
+                        <div class="flex items-center mb-3">
+                            <div
+                                class="w-10 h-10 bg-usta-secondary text-white rounded-full flex items-center justify-center font-bold mr-3">
+                                2</div>
+                            <h4 class="font-semibold text-slate-800">Lara Porras, A.M.</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 italic mb-2">Diseño Estadístico de Experimentos, Análisis de la
+                            Varianza y Temas Relacionados: Tratamiento Informático mediante SPSS.</p>
+                        <p class="text-sm text-slate-700">Proyecto Sur de Ediciones, 2000.</p>
+                        <p class="text-sm text-slate-500 mt-2">Tablas 5-3 y 5-4: Formas teórica y práctica de la tabla
+                            ANOVA</p>
+                    </div>
+                    <div
+                        class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200 mb-4">
+                        <div class="flex items-center mb-3">
+                            <div
+                                class="w-10 h-10 bg-amber-500 text-white rounded-full flex items-center justify-center font-bold mr-3">
+                                3</div>
+                            <h4 class="font-semibold text-slate-800">Montgomery, D. C.</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 italic mb-2">Design and Analysis of Experiments</p>
+                        <p class="text-sm text-slate-700">9th Edition. John Wiley &amp; Sons, 2017.</p>
+                        <p class="text-sm text-slate-500 mt-2">Capítulo 5: Diseños en Cuadros Latinos y related designs
+                        </p>
+                    </div>
+                    <div
+                        class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200 mb-4">
+                        <div class="flex items-center mb-3">
+                            <div
+                                class="w-10 h-10 bg-usta-primary text-white rounded-full flex items-center justify-center font-bold mr-3">
+                                4</div>
+                            <h4 class="font-semibold text-slate-800">Fisher, R. A.</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 italic mb-2">The Design of Experiments</p>
+                        <p class="text-sm text-slate-700">9th Edition. Macmillan, 1971.</p>
+                        <p class="text-sm text-slate-500 mt-2">Obra clásica fundamental en el diseño experimental</p>
+                    </div>
+                    <div
+                        class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-200 mb-4">
+                        <div class="flex items-center mb-3">
+                            <div
+                                class="w-10 h-10 bg-amber-500 text-white rounded-full flex items-center justify-center font-bold mr-3">
+                                5</div>
+                            <h4 class="font-semibold text-slate-800">Cochran, W. G. &amp; Cox, G. M.</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 italic mb-2">Experimental Designs</p>
+                        <p class="text-sm text-slate-700">2nd Edition. John Wiley &amp; Sons, 1992.</p>
+                        <p class="text-sm text-slate-500 mt-2">Referencia completa sobre diseños experimentales</p>
+                    </div>
+                </div>
+                <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6 border border-indigo-200 mt-6">
+                    <h3 class="font-semibold text-indigo-800 mb-3">Recursos Adicionales</h3>
+                    <ul class="text-sm text-slate-700 space-y-2">
+                        <li>Miller, I. &amp; Miller, M. (2006). <em>John E. Freund's Mathematical Statistics</em>.
+                            Prentice Hall.</li>
+                        <li>Dean, A. &amp; Voss, D. (1999). <em>Design and Analysis of Experiments</em>. Springer.</li>
+                        <li>Mason, R. L., Gunst, R. F. &amp; Hess, J. L. (2003). <em>Statistical Design and Analysis of
+                                Experiments</em>. John Wiley &amp; Sons.</li>
+                    </ul>
+                </div>
+            </article>
+        </div>
+    </template>
+    <script>
 
         // --- COURSE DATA ---
         const courseData = {
-    "title": "Diseños en Cuadros Latinos (DCL)",
-    "modules": [
-        {
-            "id": 1,
-            "title": "Introducción al DCL",
-            "shortTitle": "Introducción",
-            "duration": "15 min"
-        },
-        {
-            "id": 2,
-            "title": "Fundamentos Teóricos",
-            "shortTitle": "Fundamentos",
-            "duration": "15 min"
-        },
-        {
-            "id": 3,
-            "title": "Modelo Estadístico",
-            "shortTitle": "Modelo",
-            "duration": "15 min"
-        },
-        {
-            "id": 4,
-            "title": "Propiedades del Diseño",
-            "shortTitle": "Propiedades",
-            "duration": "15 min"
-        },
-        {
-            "id": 5,
-            "title": "Ejemplo Numérico",
-            "shortTitle": "Ejemplo",
-            "duration": "15 min"
-        },
-        {
-            "id": 6,
-            "title": "Tabla ANOVA",
-            "shortTitle": "ANOVA",
-            "duration": "15 min"
-        },
-        {
-            "id": 7,
-            "title": "Ejercicios de Autoevaluación",
-            "shortTitle": "Ejercicios",
-            "duration": "15 min"
-        },
-        {
-            "id": 8,
-            "title": "Problemas de Montgomery",
-            "shortTitle": "Problemas",
-            "duration": "15 min"
-        },
-        {
-            "id": 9,
-            "title": "Referencias Principales",
-            "shortTitle": "Referencias",
-            "duration": "15 min"
-        }
-    ]
-};
+            "title": "Diseños en Cuadros Latinos (DCL)",
+            "modules": [
+                {
+                    "id": 1,
+                    "title": "Introducción al DCL",
+                    "shortTitle": "Introducción",
+                    "duration": "15 min"
+                },
+                {
+                    "id": 2,
+                    "title": "Fundamentos Teóricos",
+                    "shortTitle": "Fundamentos",
+                    "duration": "15 min"
+                },
+                {
+                    "id": 3,
+                    "title": "Modelo Estadístico",
+                    "shortTitle": "Modelo",
+                    "duration": "15 min"
+                },
+                {
+                    "id": 4,
+                    "title": "Propiedades del Diseño",
+                    "shortTitle": "Propiedades",
+                    "duration": "15 min"
+                },
+                {
+                    "id": 5,
+                    "title": "Ejemplo Numérico",
+                    "shortTitle": "Ejemplo",
+                    "duration": "15 min"
+                },
+                {
+                    "id": 6,
+                    "title": "Tabla ANOVA",
+                    "shortTitle": "ANOVA",
+                    "duration": "15 min"
+                },
+                {
+                    "id": "6b",
+                    "title": "Formas de la Tabla ANOVA",
+                    "shortTitle": "Formas ANOVA",
+                    "duration": "15 min"
+                },
+                {
+                    "id": 7,
+                    "title": "Ejercicios de Autoevaluación",
+                    "shortTitle": "Ejercicios",
+                    "duration": "15 min"
+                },
+                {
+                    "id": 8,
+                    "title": "Problemas de Montgomery",
+                    "shortTitle": "Problemas",
+                    "duration": "15 min"
+                },
+                {
+                    "id": 9,
+                    "title": "Referencias Principales",
+                    "shortTitle": "Referencias",
+                    "duration": "15 min"
+                }
+            ]
+        };
 
         // --- STATE MANAGEMENT ---
         let currentModuleIndex = 0;
@@ -2223,8 +3442,10 @@ NO existe diferencia significativa entre catalizadores.</pre>
             currentModuleIndex = index;
             renderNav();
 
-            // Get template content
-            const template = document.getElementById(`module-${index + 1}`);
+            // Get template content - handle special IDs like "6b"
+            const mod = courseData.modules[index];
+            const templateId = `module-${mod.id}`;
+            const template = document.getElementById(templateId);
             if (template) {
                 contentArea.innerHTML = '';
                 const content = template.content.cloneNode(true);
@@ -2316,16 +3537,16 @@ NO existe diferencia significativa entre catalizadores.</pre>
         });
 
         // ===== VS Code Style Code Blocks =====
-        
+
         function setupCodeBlocks() {
             var blocks = contentArea.querySelectorAll('div.sourceCode');
-            blocks.forEach(function(block, idx) {
+            blocks.forEach(function (block, idx) {
                 var lang = block.getAttribute('data-lang') || 'Código';
                 var pre = block.querySelector('pre');
                 var code = block.querySelector('code');
-                
+
                 if (!pre || !code) return;
-                
+
                 // Si ya tiene el toolbar, ignorar
                 if (block.querySelector('.sourceCode-titlebar')) return;
 
@@ -2346,29 +3567,29 @@ NO existe diferencia significativa entre catalizadores.</pre>
 
                 var titlebar = document.createElement('div');
                 titlebar.className = 'sourceCode-titlebar';
-                titlebar.innerHTML = 
+                titlebar.innerHTML =
                     '<div class="sourceCode-dots">' +
-                        '<span class="dot-close"></span>' +
-                        '<span class="dot-min"></span>' +
-                        '<span class="dot-max"></span>' +
+                    '<span class="dot-close"></span>' +
+                    '<span class="dot-min"></span>' +
+                    '<span class="dot-max"></span>' +
                     '</div>' +
                     '<div class="sourceCode-tab">' +
-                        langIcon +
-                        '<span>' + fileName + '</span>' +
+                    langIcon +
+                    '<span>' + fileName + '</span>' +
                     '</div>' +
                     '<div class="sourceCode-actions">' +
-                        '<button type="button" onclick="toggleCodeBlock(this)" title="Ocultar/Mostrar">' +
-                            '<i class="fas fa-eye"></i> Ocultar' +
-                        '</button>' +
-                        '<button type="button" onclick="copyCodeBlock(this)" title="Copiar código">' +
-                            '<i class="fas fa-copy"></i> Copiar' +
-                        '</button>' +
+                    '<button type="button" onclick="toggleCodeBlock(this)" title="Ocultar/Mostrar">' +
+                    '<i class="fas fa-eye"></i> Ocultar' +
+                    '</button>' +
+                    '<button type="button" onclick="copyCodeBlock(this)" title="Copiar código">' +
+                    '<i class="fas fa-copy"></i> Copiar' +
+                    '</button>' +
                     '</div>';
 
                 var codeText = code.textContent || '';
                 var lines = codeText.split('\\n');
                 if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
-                
+
                 var gutterHTML = '';
                 for (var j = 1; j <= lines.length; j++) {
                     gutterHTML += '<div>' + j + '</div>';
@@ -2395,7 +3616,7 @@ NO existe diferencia significativa entre catalizadores.</pre>
                 block.appendChild(bodyWrapper);
             });
         }
-        
+
 
         function toggleCodeBlock(btn) {
             var wrapper = btn.closest('div.sourceCode') || btn.closest('.sourceCode-wrapper');
@@ -2414,15 +3635,15 @@ NO existe diferencia significativa entre catalizadores.</pre>
             var code = wrapper.querySelector('code');
             if (!code) return;
             var text = code.textContent || code.innerText;
-            navigator.clipboard.writeText(text).then(function() {
+            navigator.clipboard.writeText(text).then(function () {
                 var originalHTML = btn.innerHTML;
                 btn.classList.add('copied');
                 btn.innerHTML = '<i class="fas fa-check"></i> Copiado';
-                setTimeout(function() {
+                setTimeout(function () {
                     btn.classList.remove('copied');
                     btn.innerHTML = originalHTML;
                 }, 2000);
-            }).catch(function(err) {
+            }).catch(function (err) {
                 console.error('Error al copiar:', err);
             });
         }
@@ -2433,4 +3654,5 @@ NO existe diferencia significativa entre catalizadores.</pre>
         });
     </script>
 </body>
+
 </html>

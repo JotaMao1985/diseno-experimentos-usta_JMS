@@ -1,0 +1,2840 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Material de estudio — Módulo III: Derivados, Opciones, Monte Carlo, Stress Testing y Backtesting">
+    <meta name="author" content="Z.ai">
+    <meta content="#3D008D" name="theme-color" />
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>" />
+    <title>Módulo III — Riesgo Financiero y Modelado Cuantitativo</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3D008D',
+                        secondary: '#ED1E79',
+                        navy: '#001A4D',
+                        gold: '#FDB913',
+                        bg: '#F8FAFC',
+                        surface: '#FFFFFF',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --usta-primary: #3D008D;
+            --usta-secondary: #ED1E79;
+            --usta-navy: #001A4D;
+            --usta-navy-light: #002868;
+            --usta-gold: #FDB913;
+            --usta-bg: #F8FAFC;
+            --usta-surface: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #F8FAFC;
+            color: #1E293B;
+            scroll-behavior: smooth;
+        }
+
+        code,
+        pre {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .usta-gradient {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+        }
+
+        .usta-header {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+        }
+
+        /* ===== SIDEBAR ===== */
+        #sidebar-panel {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+            flex-shrink: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            width: 16rem;
+            min-width: 16rem;
+            transition: width 0.3s ease, min-width 0.3s ease, opacity 0.25s ease;
+            z-index: 40;
+        }
+
+        #sidebar-panel.collapsed {
+            width: 0;
+            min-width: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-brand h2 {
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        .sidebar-brand p {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 0.25rem;
+            margin-bottom: 0;
+            text-align: left;
+        }
+
+        .sidebar-nav {
+            padding: 1rem;
+        }
+
+        .sidebar-nav-item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 0.65rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            text-align: left;
+            margin-bottom: 0.25rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: rgba(255, 255, 255, 0.6);
+            background: transparent;
+        }
+
+        .sidebar-nav-item:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-nav-item.active {
+            color: white;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            box-shadow: 0 4px 12px rgba(61, 0, 141, 0.3);
+        }
+
+        .sidebar-nav-item .check-mark {
+            color: #10B981;
+            flex-shrink: 0;
+        }
+
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 50;
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(61, 0, 141, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-toggle-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 18px rgba(61, 0, 141, 0.5);
+        }
+
+        .main-layout {
+            display: flex;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        .scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 3.5rem;
+            height: 3.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(61, 0, 141, 0.4);
+            transition: all 0.3s ease;
+            z-index: 50;
+            border: none;
+        }
+
+        .scroll-to-top.visible {
+            display: flex;
+        }
+
+        .scroll-to-top:hover {
+            background: linear-gradient(140deg, #4A00A8 0%, #FF2D8A 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(61, 0, 141, 0.5);
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #3D008D, #ED1E79);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #4A00A8, #FF2D8A);
+        }
+
+        button:focus-visible,
+        a:focus-visible {
+            outline: 2px solid #ED1E79;
+            outline-offset: 2px;
+        }
+
+        /* ===== MODULE CONTENT ===== */
+        .module-content h2 {
+            color: #3D008D;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid #ED1E79;
+        }
+
+        .module-content h3 {
+            color: #3D008D;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.75rem 0 1rem 0;
+        }
+
+        .module-content h4 {
+            color: #ED1E79;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        .module-content h5 {
+            color: #3D008D;
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 1.25rem 0 0.5rem 0;
+        }
+
+        .module-content p {
+            margin-bottom: 1rem;
+            text-align: justify;
+            line-height: 1.8;
+        }
+
+        .module-content ul,
+        .module-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .module-content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.7;
+        }
+
+        .module-content aside {
+            background: linear-gradient(135deg, rgba(253, 185, 19, 0.1) 0%, rgba(253, 185, 19, 0.05) 100%);
+            border-left: 4px solid #FDB913;
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .module-content aside strong {
+            color: #B8860B;
+        }
+
+        .module-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .module-content th,
+        .module-content td {
+            padding: 1rem 1.25rem;
+            text-align: center;
+        }
+
+        .module-content th {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .module-content tr:nth-child(even) {
+            background: rgba(61, 0, 141, 0.03);
+        }
+
+        .module-content tr:hover {
+            background: rgba(61, 0, 141, 0.08);
+        }
+
+        .module-content code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #3D008D;
+            background: rgba(61, 0, 141, 0.08);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        .module-content pre code {
+            background: transparent;
+            padding: 0;
+            color: #d4d4d4;
+        }
+
+        .module-content strong {
+            color: #3D008D;
+        }
+
+        .module-content em {
+            color: #ED1E79;
+        }
+
+        .module-content caption {
+            caption-side: top;
+            font-weight: 600;
+            color: #3D008D;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .katex-display {
+            margin: 1.25em 0;
+            overflow-x: auto;
+        }
+
+        /* ===== CONTENT BOXES ===== */
+        .definition-box {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-left: 4px solid #3b82f6;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .definition-box h4 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: #1e40af;
+            background: transparent;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+        }
+
+        .example-box {
+            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+            border-left: 4px solid var(--usta-primary);
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .example-box h4 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: var(--usta-primary);
+            background: transparent;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border-left: 4px solid #ef4444;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .warning-box h4 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            color: #991b1b;
+            background: transparent;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+        }
+
+        .formula-box {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.05) 0%, rgba(237, 30, 121, 0.05) 100%);
+            border: 1px solid rgba(61, 0, 141, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            overflow-x: auto;
+        }
+
+        .nota {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-left: 4px solid #10B981;
+            margin: 1.5rem 0;
+        }
+
+        .nota h4 {
+            color: #059669;
+            margin-top: 0;
+        }
+
+        .concepto-clave {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.06) 0%, rgba(237, 30, 121, 0.04) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #3D008D;
+            margin: 1.5rem 0;
+        }
+
+        .concepto-clave h4 {
+            color: #3D008D;
+            margin-top: 0;
+        }
+
+        .module-content .ejercicio {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.08) 0%, rgba(237, 30, 121, 0.05) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #ED1E79;
+            margin: 1.5rem 0;
+        }
+
+        .module-content .ejercicio h4 {
+            color: #3D008D;
+            margin-top: 0;
+        }
+
+        .interpretation-box {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border-left: 4px solid #10b981;
+            padding: 1rem 1.25rem;
+            margin: 1rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .interpretation-box strong {
+            color: #065f46;
+        }
+
+        /* ===== COLLAPSIBLE SOLUTIONS ===== */
+        .solucion-parcial {
+            margin-bottom: 1.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .solucion-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1.25rem;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            cursor: pointer;
+            font-weight: 700;
+            color: var(--usta-primary);
+            font-size: 0.95rem;
+            transition: background 0.2s ease;
+        }
+
+        .solucion-header:hover {
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+        }
+
+        .solucion-header i {
+            transition: transform 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .solucion-header i.rotated {
+            transform: rotate(90deg);
+        }
+
+        .solucion-content {
+            display: none;
+            padding: 1.25rem;
+            background: #f8fafc;
+        }
+
+        .solucion-content.open {
+            display: block;
+        }
+
+        /* ===== PASOS ===== */
+        .pasos {
+            list-style: none;
+            padding-left: 0;
+            counter-reset: paso-counter;
+        }
+
+        .pasos li {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.7;
+            counter-increment: paso-counter;
+        }
+
+        .pasos li::before {
+            content: counter(paso-counter);
+            position: absolute;
+            left: 0;
+            top: 0.15em;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--usta-primary), var(--usta-secondary));
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ===== TABLE RESPONSIVE ===== */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 1.5rem 0;
+        }
+
+        .table-responsive table {
+            margin: 0;
+        }
+
+        /* ===== VS Code Code Blocks ===== */
+        .sourceCode-wrapper {
+            position: relative;
+            margin: 1.75rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #1e1e1e;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+
+        .sourceCode-titlebar {
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            height: 36px;
+            background: #323233;
+            border-bottom: 1px solid #252526;
+            user-select: none;
+        }
+
+        .sourceCode-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .sourceCode-dots span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .sourceCode-dots .dot-close {
+            background: #ff5f57;
+        }
+
+        .sourceCode-dots .dot-min {
+            background: #ffbd2e;
+        }
+
+        .sourceCode-dots .dot-max {
+            background: #28c940;
+        }
+
+        .sourceCode-tab {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 12px;
+            height: 100%;
+            background: #1e1e1e;
+            border-top: 2px solid #007acc;
+            border-right: 1px solid #252526;
+            font-size: 0.78rem;
+            color: #cccccc;
+            font-family: 'Segoe UI', 'Montserrat', sans-serif;
+        }
+
+        .sourceCode-tab .tab-icon {
+            width: 14px;
+            height: 14px;
+        }
+
+        .sourceCode-tab .tab-icon.python {
+            color: #f7c948;
+        }
+
+        .sourceCode-actions {
+            display: flex;
+            gap: 4px;
+            margin-left: auto;
+        }
+
+        .sourceCode-actions button {
+            background: transparent;
+            border: none;
+            color: #858585;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-family: 'Segoe UI', 'Montserrat', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .sourceCode-actions button:hover {
+            background: #3c3c3c;
+            color: #cccccc;
+        }
+
+        .sourceCode-actions button.copied {
+            color: #4ec9b0;
+        }
+
+        .sourceCode-body {
+            display: flex;
+            margin: 0;
+            overflow-x: auto;
+            background: #1e1e1e;
+        }
+
+        .sourceCode-body.collapsed {
+            display: none;
+        }
+
+        .sourceCode-gutter {
+            padding: 16px 0;
+            text-align: right;
+            user-select: none;
+            color: #858585;
+            font-size: 0.82rem;
+            line-height: 1.65;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            min-width: 40px;
+            padding-right: 12px;
+            padding-left: 12px;
+            border-right: 1px solid #2d2d2d;
+            background: #1e1e1e;
+            flex-shrink: 0;
+        }
+
+        .sourceCode-gutter div {
+            height: 1.65em;
+        }
+
+        .sourceCode-wrapper pre {
+            margin: 0;
+            padding: 16px;
+            overflow-x: auto;
+            background: #1e1e1e;
+            flex: 1;
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+        }
+
+        .sourceCode-wrapper code {
+            font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+            font-size: 0.87rem;
+            line-height: 1.65;
+            color: #d4d4d4;
+            background: transparent !important;
+        }
+
+        .sourceCode-minimap {
+            width: 28px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border-left: 1px solid #2d2d2d;
+            flex-shrink: 0;
+        }
+
+        .sourceCode-wrapper pre::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .sourceCode-wrapper pre::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+
+        .sourceCode-wrapper pre::-webkit-scrollbar-thumb {
+            background: rgba(121, 121, 121, 0.4);
+            border-radius: 4px;
+        }
+
+        .hljs-keyword {
+            color: #569cd6;
+        }
+
+        .hljs-built_in {
+            color: #4ec9b0;
+        }
+
+        .hljs-type {
+            color: #4ec9b0;
+        }
+
+        .hljs-literal {
+            color: #569cd6;
+        }
+
+        .hljs-number {
+            color: #b5cea8;
+        }
+
+        .hljs-string {
+            color: #ce9178;
+        }
+
+        .hljs-comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .hljs-function {
+            color: #dcdcaa;
+        }
+
+        .hljs-title {
+            color: #dcdcaa;
+        }
+
+        .hljs-params {
+            color: #9cdcfe;
+        }
+
+        .hljs-operator {
+            color: #d4d4d4;
+        }
+
+        .hljs-punctuation {
+            color: #d4d4d4;
+        }
+
+        .hljs-variable {
+            color: #9cdcfe;
+        }
+
+        .hljs-attr {
+            color: #9cdcfe;
+        }
+
+        .hljs-class .hljs-title {
+            color: #4ec9b0;
+        }
+
+        .hljs-meta {
+            color: #c586c0;
+        }
+
+        .code-title {
+            display: none;
+        }
+
+        .formula-number {
+            float: right;
+            color: #64748B;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+
+    <button class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Mostrar/Ocultar menú" aria-label="Toggle sidebar">
+        <i class="fas fa-bars text-sm" id="sidebarToggleIcon"></i>
+    </button>
+
+    <div class="main-layout">
+
+        <div id="sidebar-panel">
+            <div class="sidebar-brand">
+                <h2><i class="fas fa-chart-line text-secondary"></i> Riesgo <span
+                        style="color: #FDB913;">Financiero</span></h2>
+                <p>Módulo III &bull; Posgrado 2026</p>
+            </div>
+            <nav class="sidebar-nav" id="module-nav"></nav>
+        </div>
+
+        <div class="flex-grow flex flex-col" style="min-width:0;">
+            <main class="flex-grow bg-white rounded-tl-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div id="content-area" class="p-6 md:p-10 module-content"></div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="usta-header mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <i class="fas fa-book-open"></i> Referencias Bibliográficas Principales
+            </h3>
+            <ul class="space-y-3 text-white/90 text-sm">
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Hull, J. C. (2022). <em class="text-gold">Options, Futures, and Other Derivatives</em>
+                        (11th ed.). Pearson.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>Glasserman, P. (2004). <em class="text-gold">Monte Carlo Methods in Financial
+                            Engineering</em>. Springer.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1"></i>
+                    <span>BCBS (2019). <em class="text-gold">Minimum Capital Requirements for Market Risk</em>
+                        (FRTB, d457). BIS.</span>
+                </li>
+            </ul>
+            <div class="mt-6 pt-6 border-t border-white/20 text-center">
+                <p class="text-white font-medium">Material de Estudio — <span class="text-gold">Posgrado</span></p>
+                <p class="text-xs mt-1 text-white/60">Módulo III &bull; Derivados, Opciones, Monte Carlo, Stress
+                    Testing &amp; Backtesting</p>
+            </div>
+        </div>
+    </footer>
+
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="Volver arriba">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- TEMPLATE: TEMA 1 — Derivados, Forwards y Futuros              -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <template id="module-1">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Tema 1</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Derivados, Contratos
+                    Forward y Futuros</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivos de aprendizaje</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Distinguir forwards de futuros, derivar
+                            precios por no-arbitraje, calcular exposiciones diarias, construir coberturas óptimas y
+                            evaluar el riesgo de base.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1.1 Objetivos -->
+            <h3>1.1 Objetivos de aprendizaje</h3>
+            <ul class="pasos">
+                <li>Distinguir formalmente un contrato <em>forward</em> de un <em>future</em> identificando al menos
+                    cinco diferencias contractuales, de liquidez y de riesgo de contraparte.</li>
+                <li>Derivar el precio teórico de un forward bajo el principio de no-arbitraje (<em>cost-of-carry</em>)
+                    para activos con y sin ingresos intermedios.</li>
+                <li>Calcular la exposición diaria (<em>mark-to-market</em>) y los requerimientos de margen de una
+                    posición en futuros.</li>
+                <li>Construir un <em>hedge ratio</em> óptimo de varianza mínima y evaluar su efectividad ex-post.</li>
+                <li>Evaluar críticamente el riesgo de base (<em>basis risk</em>) y las fuentes de error en coberturas
+                    cruzadas.</li>
+            </ul>
+
+            <!-- 1.2 Conceptos clave -->
+            <h3>1.2 Conceptos clave y alcance</h3>
+            <div class="definition-box">
+                <h4><i class="fas fa-cube"></i> Derivado (<em>derivative</em>)</h4>
+                <p>Contrato cuyo valor depende de un activo subyacente (<em>underlying</em>). Los <strong>forwards</strong> y
+                    <strong>futuros</strong> son los derivados lineales más simples: ambos fijan hoy el precio de una
+                    transacción futura.</p>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dimensión</th>
+                        <th>Forward</th>
+                        <th>Futuro (<em>Future</em>)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Mercado</td>
+                        <td>OTC (<em>over-the-counter</em>)</td>
+                        <td>Organizado (<em>exchange</em>)</td>
+                    </tr>
+                    <tr>
+                        <td>Estandarización</td>
+                        <td>Personalizado</td>
+                        <td>Estandarizado</td>
+                    </tr>
+                    <tr>
+                        <td>Liquidación</td>
+                        <td>Al vencimiento</td>
+                        <td>Diaria (<em>marking-to-market</em>)</td>
+                    </tr>
+                    <tr>
+                        <td>Riesgo de contraparte</td>
+                        <td>Alto (bilateral)</td>
+                        <td>Mitigado por <em>clearinghouse</em></td>
+                    </tr>
+                    <tr>
+                        <td>Márgenes</td>
+                        <td>Negociados</td>
+                        <td>Inicial y variación obligatorios</td>
+                    </tr>
+                    <tr>
+                        <td>Cierre anticipado</td>
+                        <td>Difícil</td>
+                        <td>Compensación en mercado</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>Supuestos centrales del modelo no-arbitraje:</strong> mercados sin fricciones, ventas en corto
+                permitidas, una misma tasa libre de riesgo para prestar y pedir prestado, divisibilidad perfecta y
+                ausencia de costos de transacción. En la práctica estos supuestos generan <em>bandas</em> de
+                no-arbitraje en lugar de un precio único.</p>
+
+            <!-- 1.3 Fundamentos -->
+            <h3>1.3 Fundamentos matemático-estadísticos</h3>
+            <p><strong>Notación.</strong> Sea $ S_t $ el precio spot en $ t $, $ F_{t,T} $ el precio forward pactado en
+                $ t $ para entrega en $ T $, $ r $ la tasa libre de riesgo (compuesta continuamente), $ \tau = T - t $
+                el tiempo al vencimiento, $ q $ la tasa continua de ingresos del activo.</p>
+
+            <h4>Precio forward (cost-of-carry)</h4>
+            <p>Para un activo que no paga ingresos:</p>
+            <div class="formula-box">
+                $$ F_{t,T} = S_t \, e^{r\tau} $$
+            </div>
+            <p>Para un activo con ingresos continuos $ q $ (acciones con dividendos, divisas donde $ q = r_f $):</p>
+            <div class="formula-box">
+                $$ F_{t,T} = S_t \, e^{(r - q)\tau} $$
+            </div>
+
+            <div class="concepto-clave">
+                <h4><i class="fas fa-lightbulb"></i> Derivación intuitiva</h4>
+                <p>Dos estrategias para adquirir una unidad del activo en $ T $: (A) comprar el forward hoy (costo 0) y
+                    pagar $ F_{t,T} $ en $ T $; (B) pedir prestado $ S_t $, comprar el activo y mantenerlo hasta $ T $,
+                    devolviendo $ S_t e^{r\tau} $. Por no-arbitraje: $ F_{t,T} = S_t e^{r\tau} $.</p>
+            </div>
+
+            <h4>Valor de un forward existente</h4>
+            <p>Un forward pactado a $ K $ con precio de mercado $ F_{t,T} $ tiene valor presente:</p>
+            <div class="formula-box">
+                $$ f_t = (F_{t,T} - K)\, e^{-r\tau} $$
+            </div>
+
+            <h4>Mark-to-market en futuros</h4>
+            <p>La P&amp;L diaria de una posición larga de $ N $ contratos es:</p>
+            <div class="formula-box">
+                $$ \text{P\&L}_t = N \cdot m \cdot (F_t - F_{t-1}) $$
+            </div>
+            <p>donde $ m $ es el multiplicador del contrato.</p>
+
+            <h4>Hedge ratio de varianza mínima</h4>
+            <div class="formula-box">
+                $$ h^* = \rho_{\Delta S, \Delta F} \cdot \frac{\sigma_{\Delta S}}{\sigma_{\Delta F}} =
+                \frac{\text{Cov}(\Delta S, \Delta F)}{\text{Var}(\Delta F)} $$
+            </div>
+            <p>La <strong>efectividad de cobertura</strong> (<em>hedging effectiveness</em>) se mide por el $ R^2 $ de
+                la regresión $ \Delta S = \alpha + h\,\Delta F + \varepsilon $.</p>
+
+            <!-- 1.4 Aplicación práctica -->
+            <h3>1.4 Aplicación práctica paso a paso</h3>
+            <div class="example-box">
+                <h4><i class="fas fa-calculator"></i> Problema</h4>
+                <p>Una empresa exportadora colombiana espera recibir USD 10 millones en 3 meses y quiere cubrir el
+                    riesgo cambiario usando futuros sobre USD/COP.</p>
+                <p>$ S_0 = 4{,}050 $ COP/USD, $ r_{\text{COP}} = 9{,}5\% $, $ r_{\text{USD}} = 4{,}8\% $, $ \tau =
+                    0{,}25 $ años, contrato = USD 50.000, $ \sigma_{\Delta S} = 85 $, $ \sigma_{\Delta F} = 92 $, $
+                    \rho = 0{,}94 $.</p>
+            </div>
+
+            <h4>Paso 1 — Precio forward teórico (paridad de tasas)</h4>
+            <div class="formula-box">
+                $$ F_{0,T} = 4{,}050 \cdot e^{(0{,}095 - 0{,}048)\cdot 0{,}25} = 4{,}097{,}86 \text{ COP/USD} $$
+            </div>
+
+            <h4>Paso 2 — Hedge ratio</h4>
+            <div class="formula-box">
+                $$ h^* = 0{,}94 \cdot \frac{85}{92} = 0{,}8685 $$
+            </div>
+
+            <h4>Paso 3 — Número de contratos</h4>
+            <div class="formula-box">
+                $$ N_F = 0{,}8685 \cdot \frac{10{,}000{,}000}{50{,}000} = 173{,}7 \approx 174 \text{ contratos cortos}
+                $$
+            </div>
+
+            <h4>Paso 4 — Efectividad</h4>
+            <p>$ R^2 = \rho^2 = 0{,}8836 $, es decir, se elimina aproximadamente el <strong>88,4%</strong> de la
+                varianza del riesgo cambiario.</p>
+
+            <pre><code data-language="Python">import numpy as np
+
+# Parámetros
+S0 = 4050
+r_cop, r_usd = 0.095, 0.048
+tau = 0.25
+notional_usd = 10_000_000
+contract_size = 50_000
+sigma_S, sigma_F, rho = 85, 92, 0.94
+
+# Forward teórico
+F_teorico = S0 * np.exp((r_cop - r_usd) * tau)
+
+# Hedge ratio de varianza mínima
+h_star = rho * sigma_S / sigma_F
+
+# Número de contratos
+N_contratos = np.ceil(h_star * notional_usd / contract_size)
+
+# Efectividad
+R2 = rho**2
+
+print(f"Forward teórico: {F_teorico:.2f} COP/USD")
+print(f"Hedge ratio óptimo: {h_star:.4f}")
+print(f"Contratos a vender: {int(N_contratos)}")
+print(f"Efectividad de cobertura: {R2:.2%}")</code></pre>
+
+            <div class="interpretation-box">
+                <p><strong>Interpretación:</strong> El exportador acepta pagar una prima implícita (la diferencia $ F -
+                    S $) a cambio de reducir su exposición al tipo de cambio. El 11,6% residual de varianza proviene del
+                    riesgo de base y de la imposibilidad de un hedge fraccional perfecto.</p>
+            </div>
+
+            <!-- 1.5 Ejercicios -->
+            <h3>1.5 Ejercicios de autoevaluación</h3>
+
+            <div class="ejercicio">
+                <h4><i class="fas fa-pencil-alt"></i> Ejercicio Básico</h4>
+                <p>Una acción cotiza a $ S_0 = 100 $ USD, paga dividendo continuo $ q = 2\% $, tasa libre de riesgo $ r
+                    = 5\% $, vencimiento 6 meses. Calcular $ F_{0,T} $.</p>
+            </div>
+            <div class="solucion-parcial">
+                <div class="solucion-header"><i class="fas fa-chevron-right"></i> Ver solución</div>
+                <div class="solucion-content">
+                    <p>$ F = 100 \cdot e^{(0{,}05 - 0{,}02) \cdot 0{,}5} = 100 \cdot e^{0{,}015} = 101{,}51 $</p>
+                    <p><strong>Rúbrica:</strong> Aplicar fórmula correcta con $ q $ (40%), cálculo numérico (40%),
+                        unidades e interpretación (20%).</p>
+                </div>
+            </div>
+
+            <div class="ejercicio">
+                <h4><i class="fas fa-pencil-alt"></i> Ejercicio Intermedio</h4>
+                <p>Un forward fue pactado hace 30 días a $ K = 98 $ USD sobre la misma acción ($ r = 5\% $, $ q = 2\% $,
+                    vencimiento original 6 meses). Si hoy $ S = 103 $, calcular su valor.</p>
+            </div>
+            <div class="solucion-parcial">
+                <div class="solucion-header"><i class="fas fa-chevron-right"></i> Ver solución</div>
+                <div class="solucion-content">
+                    <p>$ \tau = 5/12 $. Nuevo forward: $ F = 103 \cdot e^{(0{,}03)(5/12)} = 104{,}30 $.</p>
+                    <p>Valor: $ f = (104{,}30 - 98) \cdot e^{-0{,}05 \cdot 5/12} = 6{,}30 \cdot 0{,}9794 = 6{,}17 $
+                    </p>
+                    <p><strong>Rúbrica:</strong> Actualización de $ \tau $ (25%), nuevo forward (25%), descuento (25%),
+                        signo correcto (25%).</p>
+                </div>
+            </div>
+
+            <div class="ejercicio">
+                <h4><i class="fas fa-pencil-alt"></i> Ejercicio Avanzado</h4>
+                <p>Una aerolínea consume 500.000 galones de jet fuel mensuales y cubre con futuros de heating oil ($
+                    \rho = 0{,}89 $, $ \sigma_{\text{jet}} = 0{,}032 $, $ \sigma_{\text{HO}} = 0{,}040 $, tamaño
+                    contrato 42.000 galones). (a) Calcular $ h^* $ y número de contratos. (b) Identificar tres fuentes
+                    de basis risk. (c) Comparar estimación EWMA ($\lambda=0{,}94$) vs. histórica.</p>
+            </div>
+            <div class="solucion-parcial">
+                <div class="solucion-header"><i class="fas fa-chevron-right"></i> Ver solución</div>
+                <div class="solucion-content">
+                    <p>(a) $ h^* = 0{,}89 \cdot 0{,}032/0{,}040 = 0{,}712 $; $ N = 0{,}712 \cdot 500{,}000 / 42{,}000
+                        \approx 9 $ contratos largos.</p>
+                    <p>(b) Diferencia entre productos (jet ≠ HO), descalce temporal, diferencia geográfica de entrega.
+                    </p>
+                    <p>(c) EWMA pondera más la correlación reciente, generando $ h^* $ más reactivo pero con mayor
+                        varianza del estimador. Trade-off sesgo-varianza.</p>
+                    <p><strong>Rúbrica:</strong> Cálculo (30%), identificación completa de basis risk (30%), discusión
+                        estadística del estimador (40%).</p>
+                </div>
+            </div>
+
+            <!-- 1.6 Errores comunes -->
+            <h3>1.6 Errores comunes y limitaciones</h3>
+            <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> Errores frecuentes</h4>
+                <ol>
+                    <li><strong>Confundir $ F $ con $ E[S_T] $.</strong> Bajo medida real, $ F \neq E[S_T] $; bajo $
+                        \mathbb{Q} $ sí se cumple.</li>
+                    <li><strong>Ignorar el riesgo de base</strong> en cobertura cruzada. Monitorear el $ R^2 $ rolling.
+                    </li>
+                    <li><strong>Omitir el <em>tailing the hedge</em>:</strong> con futuros, ajustar $ h^* $ por $
+                        e^{-r\tau} $.</li>
+                    <li><strong>Ventana de estimación muy larga</strong> en presencia de cambios estructurales;
+                        mitigar con tests de Chow o CUSUM.</li>
+                    <li><strong>Olvidar el riesgo de liquidez en márgenes</strong> — movimientos adversos pueden generar
+                        margin calls insostenibles (ej. Metallgesellschaft, 1993).</li>
+                </ol>
+            </div>
+
+            <!-- 1.7 Conexión -->
+            <h3>1.7 Conexión con Módulos I y II</h3>
+            <div class="nota">
+                <p>El hedge ratio es formalmente idéntico al $ \beta $ del CAPM: ambos son proyecciones $ L^2 $ de un
+                    retorno sobre otro. La estimación robusta de $ \sigma $ y $ \rho $ para cobertura puede
+                    beneficiarse de los modelos EWMA/GARCH ya estudiados, conectando volatilidad condicional con gestión
+                    dinámica de coberturas.</p>
+            </div>
+
+            <!-- 1.8 Referencias -->
+            <h3>1.8 Referencias</h3>
+            <ul>
+                <li><strong>Hull, J. C.</strong> (2022). <em>Options, Futures, and Other Derivatives</em>, 11ª ed.
+                    Pearson. (Caps. 2–6).</li>
+                <li><strong>Cox, J., Ingersoll, J., Ross, S.</strong> (1981). "The Relation between Forward Prices and
+                    Futures Prices." <em>Journal of Financial Economics</em>, 9(4).</li>
+                <li><strong>Ederington, L.</strong> (1979). "The Hedging Performance of the New Futures Markets."
+                    <em>Journal of Finance</em>, 34(1).</li>
+                <li><strong>ISDA</strong> — Master Agreement (isda.org).</li>
+                <li><strong>BIS</strong> — Estadísticas OTC (bis.org/statistics/derstats.htm).</li>
+                <li><strong>IOSCO</strong> (2012). <em>Principles for Commodity Derivatives Markets</em>.</li>
+                <li><strong>Datos abiertos:</strong> CME Group, FRED (fred.stlouisfed.org), Banco de la República de
+                    Colombia.</li>
+            </ul>
+        </div>
+    </template>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- TEMPLATE: TEMA 2 — Opciones y valoración de opciones          -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <template id="module-2">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Tema 2</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Opciones y Valoración
+                    de Opciones</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivos de aprendizaje</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Derivar y aplicar Black-Scholes-Merton,
+                            valorar con CRR, interpretar las Griegas y reconocer limitaciones empíricas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>2.1 Objetivos de aprendizaje</h3>
+            <ul class="pasos">
+                <li>Distinguir opciones europeas, americanas y exóticas, e identificar sus payoffs al vencimiento.</li>
+                <li>Derivar y aplicar la fórmula de Black-Scholes-Merton (BSM) para call y put europeas.</li>
+                <li>Valorar opciones mediante el modelo binomial Cox-Ross-Rubinstein (CRR) y demostrar su convergencia a
+                    BSM.</li>
+                <li>Calcular e interpretar las Griegas (Delta, Gamma, Vega, Theta, Rho) como sensibilidades de
+                    cobertura.</li>
+                <li>Reconocer las limitaciones empíricas de BSM (<em>volatility smile</em>, colas pesadas) y justificar
+                    modelos alternativos.</li>
+            </ul>
+
+            <h3>2.2 Conceptos clave y alcance</h3>
+            <div class="definition-box">
+                <h4><i class="fas fa-cube"></i> Opción (<em>option</em>)</h4>
+                <p>Contrato que otorga al comprador el <strong>derecho</strong>, no la obligación, de comprar
+                    (<strong>call</strong>) o vender (<strong>put</strong>) un activo a un <strong>strike</strong> $ K $
+                    en o antes de un vencimiento $ T $. Las europeas solo se ejercen en $ T $; las americanas en
+                    cualquier $ t \leq T $.</p>
+            </div>
+
+            <h4>Payoffs al vencimiento</h4>
+            <div class="formula-box">
+                $$ C_T = \max(S_T - K,\, 0) \qquad\qquad P_T = \max(K - S_T,\, 0) $$
+            </div>
+
+            <h4>Paridad put-call (<em>European put-call parity</em>)</h4>
+            <div class="formula-box">
+                $$ C_t - P_t = S_t - K e^{-r(T-t)} $$
+            </div>
+            <p>Es una identidad libre de modelo: solo depende de no-arbitraje.</p>
+
+            <h4>Supuestos de Black-Scholes-Merton</h4>
+            <ol>
+                <li>$ dS_t = \mu S_t\, dt + \sigma S_t\, dW_t $ (movimiento browniano geométrico).</li>
+                <li>Volatilidad $ \sigma $ y tasa $ r $ constantes y conocidas.</li>
+                <li>Mercados sin fricciones, trading continuo, ventas en corto.</li>
+                <li>No-arbitraje.</li>
+                <li>Distribución log-normal de precios.</li>
+            </ol>
+
+            <h3>2.3 Fundamentos matemático-estadísticos</h3>
+            <h4>EDP de Black-Scholes-Merton</h4>
+            <p>Construyendo un portafolio replicante $ \Pi = V - \Delta S $ con $ \Delta = \partial V/\partial S $, por
+                Itô y no-arbitraje:</p>
+            <div class="formula-box">
+                $$ \frac{\partial V}{\partial t} + rS\frac{\partial V}{\partial S} + \frac{1}{2}\sigma^2 S^2
+                \frac{\partial^2 V}{\partial S^2} = rV $$
+            </div>
+
+            <h4>Solución cerrada para call europea</h4>
+            <div class="formula-box">
+                $$ C(S,t) = S_0 \,\Phi(d_1) - K\, e^{-r\tau}\, \Phi(d_2) $$
+                $$ d_1 = \frac{\ln(S_0/K) + (r + \tfrac{1}{2}\sigma^2)\tau}{\sigma\sqrt{\tau}}, \qquad d_2 = d_1 -
+                \sigma\sqrt{\tau} $$
+            </div>
+            <p>Para put: $ P = K e^{-r\tau}\Phi(-d_2) - S_0 \Phi(-d_1) $.</p>
+
+            <div class="concepto-clave">
+                <h4><i class="fas fa-lightbulb"></i> Interpretación</h4>
+                <p>$ \Phi(d_2) $ es la probabilidad neutral al riesgo de que la opción termine <em>in-the-money</em>.
+                    $ \Phi(d_1) $ es la delta de la call: la sensibilidad del precio al subyacente.</p>
+            </div>
+
+            <h4>Las Griegas</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Griega</th>
+                        <th>Definición</th>
+                        <th>Call europea</th>
+                        <th>Interpretación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Delta ($ \Delta $)</td>
+                        <td>$ \partial V/\partial S $</td>
+                        <td>$ \Phi(d_1) $</td>
+                        <td>Sensibilidad al precio</td>
+                    </tr>
+                    <tr>
+                        <td>Gamma ($ \Gamma $)</td>
+                        <td>$ \partial^2 V/\partial S^2 $</td>
+                        <td>$ \phi(d_1)/(S\sigma\sqrt{\tau}) $</td>
+                        <td>Convexidad / reajuste</td>
+                    </tr>
+                    <tr>
+                        <td>Vega ($ \mathcal{V} $)</td>
+                        <td>$ \partial V/\partial \sigma $</td>
+                        <td>$ S\phi(d_1)\sqrt{\tau} $</td>
+                        <td>Sensibilidad a volatilidad</td>
+                    </tr>
+                    <tr>
+                        <td>Theta ($ \Theta $)</td>
+                        <td>$ \partial V/\partial t $</td>
+                        <td>(complejo)</td>
+                        <td>Decaimiento temporal</td>
+                    </tr>
+                    <tr>
+                        <td>Rho ($ \rho $)</td>
+                        <td>$ \partial V/\partial r $</td>
+                        <td>$ K\tau e^{-r\tau}\Phi(d_2) $</td>
+                        <td>Sensibilidad a tasas</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Modelo binomial CRR</h4>
+            <p>En cada paso $ S \to Su $ o $ S \to Sd $, con $ u = e^{\sigma\sqrt{\Delta t}} $, $ d = 1/u $. Probabilidad
+                neutral al riesgo:</p>
+            <div class="formula-box">
+                $$ p = \frac{e^{r\Delta t} - d}{u - d} $$
+            </div>
+            <p>Valor por inducción hacia atrás: $ V_t = e^{-r\Delta t}[p\, V^u + (1-p)\, V^d] $. Cuando $ \Delta t \to
+                0 $, CRR converge a BSM.</p>
+
+            <aside>
+                <strong>📌 Nota para el estudiante.</strong> El cambio de medida a $ \mathbb{Q} $ (medida neutral al
+                riesgo) no implica que los inversionistas sean neutrales al riesgo: es una herramienta matemática
+                (teorema de Girsanov) que permite valorar por descuento con $ r $. La preferencia al riesgo se absorbe
+                en el cambio de medida.
+            </aside>
+
+            <!-- 2.4 Aplicación práctica -->
+            <h3>2.4 Aplicación práctica paso a paso</h3>
+            <div class="example-box">
+                <h4><i class="fas fa-calculator"></i> Problema</h4>
+                <p>Valorar una call europea con $ S_0 = 100 $, $ K = 105 $, $ r = 4\% $, $ \sigma = 25\% $, $ T =
+                    0{,}5 $ años. Comparar BSM vs. CRR (50 pasos) y calcular Delta y Vega.</p>
+            </div>
+
+            <h4>Paso 1 — BSM analítico</h4>
+            <div class="formula-box">
+                $$ d_1 = \frac{\ln(100/105) + (0{,}04 + 0{,}03125) \cdot 0{,}5}{0{,}25\sqrt{0{,}5}} = -0{,}0744
+                \qquad d_2 = -0{,}2512 $$
+                $$ \Phi(d_1) \approx 0{,}4704 \qquad \Phi(d_2) \approx 0{,}4008 $$
+                $$ C = 100(0{,}4704) - 105 \cdot e^{-0{,}02}(0{,}4008) \approx 5{,}80 $$
+            </div>
+
+            <h4>Paso 2 — Delta y Vega</h4>
+            <p>$ \Delta = 0{,}4704 $; Vega por 1% $ \approx 0{,}2811 $.</p>
+
+            <pre><code data-language="Python">import numpy as np
+from scipy.stats import norm
+
+def black_scholes(S, K, r, sigma, T, tipo='call'):
+    d1 = (np.log(S/K) + (r + 0.5*sigma**2)*T) / (sigma*np.sqrt(T))
+    d2 = d1 - sigma*np.sqrt(T)
+    if tipo == 'call':
+        precio = S*norm.cdf(d1) - K*np.exp(-r*T)*norm.cdf(d2)
+        delta = norm.cdf(d1)
+    else:
+        precio = K*np.exp(-r*T)*norm.cdf(-d2) - S*norm.cdf(-d1)
+        delta = norm.cdf(d1) - 1
+    vega = S * norm.pdf(d1) * np.sqrt(T)
+    return precio, delta, vega
+
+def crr_binomial(S, K, r, sigma, T, N, tipo='call', americana=False):
+    dt = T/N
+    u = np.exp(sigma*np.sqrt(dt))
+    d = 1/u
+    p = (np.exp(r*dt) - d) / (u - d)
+    ST = np.array([S * u**(N-i) * d**i for i in range(N+1)])
+    V = np.maximum(ST - K, 0) if tipo == 'call' else np.maximum(K - ST, 0)
+    for j in range(N-1, -1, -1):
+        V = np.exp(-r*dt) * (p*V[:-1] + (1-p)*V[1:])
+        if americana:
+            Sj = np.array([S * u**(j-i) * d**i for i in range(j+1)])
+            ej = np.maximum(Sj-K, 0) if tipo == 'call' else np.maximum(K-Sj, 0)
+            V = np.maximum(V, ej)
+    return V[0]
+
+C_bsm, delta, vega = black_scholes(100, 105, 0.04, 0.25, 0.5)
+C_crr = crr_binomial(100, 105, 0.04, 0.25, 0.5, 50)
+print(f"BSM: {C_bsm:.4f} | CRR(50): {C_crr:.4f}")
+print(f"Delta: {delta:.4f} | Vega/1%: {vega/100:.4f}")</code></pre>
+
+            <div class="interpretation-box">
+                <p><strong>Interpretación:</strong> La diferencia BSM–CRR(50) es del orden de $ 10^{-3} $. Delta $
+                    \approx 0{,}47 $: localmente, 1 call se replica con 0,47 acciones. Vega por 1% $ \approx 0{,}28 $:
+                    un aumento de 1 punto porcentual en $ \sigma $ eleva el precio en ~0,28 USD.</p>
+            </div>
+
+            <!-- 2.5 Ejercicios -->
+            <h3>2.5 Ejercicios de autoevaluación</h3>
+
+            <div class="ejercicio">
+                <h4><i class="fas fa-pencil-alt"></i> Ejercicio Básico</h4>
+                <p>Verificar la paridad put-call con $ S = 50 $, $ K = 52 $, $ r = 3\% $, $ T = 0{,}25 $, $ C = 2{,}10
+                    $. Calcular $ P $.</p>
+            </div>
+            <div class="solucion-parcial">
+                <div class="solucion-header"><i class="fas fa-chevron-right"></i> Ver solución</div>
+                <div class="solucion-content">
+                    <p>$ P = C - S + Ke^{-rT} = 2{,}10 - 50 + 52 \cdot e^{-0{,}0075} = 2{,}10 - 50 + 51{,}611 =
+                        3{,}711 $</p>
+                    <p><strong>Rúbrica:</strong> Fórmula correcta (50%), cálculo (50%).</p>
+                </div>
+            </div>
+
+            <div class="ejercicio">
+                <h4><i class="fas fa-pencil-alt"></i> Ejercicio Intermedio</h4>
+                <p>Una call BSM tiene $ C = 8{,}50 $, $ S = K = 100 $, $ r = 5\% $, $ T = 1 $. Encontrar la
+                    <strong>volatilidad implícita</strong> (<em>implied volatility</em>).</p>
+            </div>
+            <div class="solucion-parcial">
+                <div class="solucion-header"><i class="fas fa-chevron-right"></i> Ver solución</div>
+                <div class="solucion-content">
+                    <p>Resolver numéricamente $ \text{BSM}(100, 100, 0{,}05, \sigma, 1) = 8{,}50 $. Usando bisección o
+                        Newton-Raphson sobre Vega: $ \sigma \approx 17{,}6\% $.</p>
+                    <p><strong>Rúbrica:</strong> Planteamiento (30%), método numérico justificado (40%), valor correcto
+                        ±0,5% (30%).</p>
+                </div>
+            </div>
+
+            <div class="ejercicio">
+                <h4><i class="fas fa-pencil-alt"></i> Ejercicio Avanzado</h4>
+                <p>Derivar la delta de una call BSM a partir de la fórmula cerrada. Demostrar que $ \partial C/\partial S
+                    = \Phi(d_1) $ y no $ \Phi(d_1) + $ términos adicionales.</p>
+            </div>
+            <div class="solucion-parcial">
+                <div class="solucion-header"><i class="fas fa-chevron-right"></i> Ver solución</div>
+                <div class="solucion-content">
+                    <p>$ \partial C/\partial S = \Phi(d_1) + S\phi(d_1)\partial d_1/\partial S -
+                        Ke^{-rT}\phi(d_2)\partial d_2/\partial S $. Notando que $ \partial d_1/\partial S = \partial
+                        d_2/\partial S = 1/(S\sigma\sqrt{T}) $ y usando la identidad $ S\phi(d_1) = Ke^{-rT}\phi(d_2)
+                        $ (verificable sustituyendo $ d_2 = d_1 - \sigma\sqrt{T} $ en $ \phi $), los últimos dos
+                        términos se cancelan.</p>
+                    <p><strong>Rúbrica:</strong> Regla de la cadena (30%), identidad de densidades (40%), cancelación
+                        final (30%).</p>
+                </div>
+            </div>
+
+            <!-- 2.6 Errores -->
+            <h3>2.6 Errores comunes y limitaciones</h3>
+            <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> Errores frecuentes</h4>
+                <ol>
+                    <li><strong>Usar $ \sigma $ histórica como implícita.</strong> La implícita es forward-looking; la
+                        histórica es backward-looking.</li>
+                    <li><strong>Ignorar el <em>volatility smile/skew</em>.</strong> Mitigación: modelos de Dupire,
+                        Heston (1993), Merton (1976).</li>
+                    <li><strong>Aplicar BSM a americanas con dividendos.</strong> Requieren métodos numéricos.</li>
+                    <li><strong>Errores de cobertura delta discreta:</strong> proporcional a $ \Gamma \sigma^2 S^2
+                        \Delta t $. Mitigación: hedge gamma-neutral.</li>
+                    <li><strong>Riesgo de modelo:</strong> reservas por <em>model risk</em> son parte de Basel/FRTB.
+                    </li>
+                </ol>
+            </div>
+
+            <h3>2.7 Conexión con Módulos I y II</h3>
+            <div class="nota">
+                <p>La log-normalidad de BSM descansa sobre el mismo GBM que puede simularse por Monte Carlo para VaR
+                    del Módulo II. La $ \sigma $ de BSM puede estimarse con GARCH ya visto, aunque esto genera precios
+                    bajo medida real, no neutral al riesgo: el puente conceptual es el cambio de medida vía Girsanov.</p>
+            </div>
+
+            <h3>2.8 Referencias</h3>
+            <ul>
+                <li><strong>Black, F., Scholes, M.</strong> (1973). "The Pricing of Options and Corporate Liabilities."
+                    <em>Journal of Political Economy</em>, 81(3).</li>
+                <li><strong>Merton, R. C.</strong> (1973). "Theory of Rational Option Pricing." <em>Bell Journal of
+                        Economics</em>, 4(1).</li>
+                <li><strong>Cox, J., Ross, S., Rubinstein, M.</strong> (1979). "Option Pricing: A Simplified Approach."
+                    <em>Journal of Financial Economics</em>, 7(3).</li>
+                <li><strong>Heston, S.</strong> (1993). "A Closed-Form Solution for Options with Stochastic Volatility."
+                    <em>Review of Financial Studies</em>, 6(2).</li>
+                <li><strong>Hull, J. C.</strong> (2022). Caps. 15–20.</li>
+                <li><strong>Wilmott, P.</strong> (2006). <em>Paul Wilmott on Quantitative Finance</em>, 2ª ed.</li>
+                <li><strong>Datos abiertos:</strong> CBOE (cboe.com), OptionMetrics (WRDS), Deribit.</li>
+            </ul>
+        </div>
+    </template>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- TEMPLATE: TEMA 3 — Simulación Monte Carlo                     -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <template id="module-3">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Tema 3</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Simulación Monte Carlo
+                    en Riesgo y Valoración</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivos de aprendizaje</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Formular problemas como esperanzas,
+                            implementar simulación de trayectorias, aplicar reducción de varianza y valorar opciones
+                            americanas por LSM.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>3.1 Objetivos de aprendizaje</h3>
+            <ul class="pasos">
+                <li>Formular un problema de valoración o riesgo como $ E^{\mathbb{Q}}[g(X)] $ y aproximar por Monte
+                    Carlo.</li>
+                <li>Implementar simulación de trayectorias para GBM y Heston con discretización adecuada.</li>
+                <li>Aplicar técnicas de reducción de varianza (antitéticas, variable de control, estratificación).</li>
+                <li>Valorar opciones americanas mediante el algoritmo de Longstaff-Schwartz (2001).</li>
+                <li>Construir intervalos de confianza y diagnosticar convergencia y error de discretización.</li>
+            </ul>
+
+            <h3>3.2 Conceptos clave y alcance</h3>
+            <div class="definition-box">
+                <h4><i class="fas fa-cube"></i> Principio Monte Carlo</h4>
+                <p>Si $ \theta = E[g(X)] $ con $ X \sim f $, la estimación MC con $ n $ muestras i.i.d. es:
+                    $ \hat{\theta}_n = \frac{1}{n}\sum_{i=1}^n g(X_i) $ con error estándar $ \text{SE} =
+                    \sigma_g/\sqrt{n} $.</p>
+            </div>
+
+            <h4>Aplicaciones en finanzas</h4>
+            <ul>
+                <li>Derivados complejos (<em>path-dependent</em>, multi-activo).</li>
+                <li>VaR/ES para portafolios no lineales.</li>
+                <li>Exposiciones esperadas (<em>expected exposure</em>) y CVA.</li>
+                <li>Opciones asiáticas, barriers, lookback.</li>
+            </ul>
+
+            <h4>Límites</h4>
+            <ul>
+                <li>Convergencia $ O(n^{-1/2}) $: virtud en alta dimensión, defecto en baja.</li>
+                <li>Sesgo de discretización en SDEs sin solución cerrada.</li>
+                <li>Dependencia del generador pseudoaleatorio.</li>
+                <li>Problemas con colas extremas sin <em>importance sampling</em>.</li>
+            </ul>
+
+            <h3>3.3 Fundamentos matemático-estadísticos</h3>
+            <h4>Simulación exacta de GBM</h4>
+            <p>Bajo $ \mathbb{Q} $:</p>
+            <div class="formula-box">
+                $$ S_{t+\Delta t} = S_t \exp\left[\left(r - \tfrac{1}{2}\sigma^2\right)\Delta t +
+                \sigma\sqrt{\Delta t}\, Z\right], \qquad Z \sim N(0,1) $$
+            </div>
+            <p>Esta forma es <strong>exacta</strong> (sin error de discretización) porque GBM admite solución analítica.
+            </p>
+
+            <h4>Discretización de Euler-Maruyama</h4>
+            <div class="formula-box">
+                $$ X_{t+\Delta t} \approx X_t + \mu(X_t)\Delta t + \sigma(X_t)\sqrt{\Delta t}\, Z $$
+            </div>
+            <p>Orden de convergencia fuerte $ \sqrt{\Delta t} $.</p>
+
+            <h4>Reducción de varianza</h4>
+
+            <div class="concepto-clave">
+                <h4><i class="fas fa-lightbulb"></i> Antitéticas</h4>
+                <p>Por cada $ Z $, usar $ -Z $: $ \hat{\theta}_{AV} = \frac{1}{2n}\sum [g(Z_i) + g(-Z_i)] $. Reduce
+                    varianza si $ \text{Cov}(g(Z), g(-Z)) &lt; 0 $ (típico para funciones monótonas).</p>
+            </div>
+
+            <div class="concepto-clave">
+                <h4><i class="fas fa-lightbulb"></i> Variable de control</h4>
+                <p>Con $ Y $ de media conocida $ \mu_Y $: $ \hat{\theta}_{CV} = \frac{1}{n}\sum [g(X_i) - c(Y_i -
+                    \mu_Y)] $ donde $ c^* = \text{Cov}(g(X), Y)/\text{Var}(Y) $. Reducción: $ 1 - \rho^2_{g,Y} $.
+                    Ejemplo: para asiáticas aritméticas, usar la geométrica (con fórmula cerrada) como control.</p>
+            </div>
+
+            <h4>Algoritmo Longstaff-Schwartz (LSM)</h4>
+            <p>Regresión de flujos futuros descontados sobre una base de funciones del estado actual, en cada fecha de
+                ejercicio. Se ejerce cuando el payoff inmediato excede el valor de continuación estimado.</p>
+
+            <h4>Cuasi-Monte Carlo (QMC)</h4>
+            <p>Secuencias de baja discrepancia (Sobol, Halton) alcanzan $ O((\log n)^d/n) $ bajo regularidad, superior a
+                MC estándar en dimensiones moderadas.</p>
+
+            <!-- 3.4 Aplicación práctica -->
+            <h3>3.4 Aplicación práctica paso a paso</h3>
+            <div class="example-box">
+                <h4><i class="fas fa-calculator"></i> Problema</h4>
+                <p>Valorar una <strong>opción asiática aritmética</strong> call con $ S_0 = K = 100 $, $ r = 5\% $, $
+                    \sigma = 30\% $, $ T = 1 $, 12 observaciones mensuales. MC estándar vs. MC con variable de control
+                    (asiática geométrica).</p>
+            </div>
+
+            <pre><code data-language="Python">import numpy as np
+from scipy.stats import norm
+
+def asiatica_geom_bsm(S0, K, r, sigma, T, m):
+    sigma_G = sigma * np.sqrt((2*m + 1) / (6*(m + 1)))
+    mu_G = 0.5*(r - 0.5*sigma**2 + sigma_G**2)
+    d1 = (np.log(S0/K) + (mu_G + 0.5*sigma_G**2)*T) / (sigma_G*np.sqrt(T))
+    d2 = d1 - sigma_G*np.sqrt(T)
+    return np.exp(-r*T) * (S0*np.exp(mu_G*T)*norm.cdf(d1) - K*norm.cdf(d2))
+
+def mc_asiatica(S0, K, r, sigma, T, m, n_sims, control=False, seed=42):
+    rng = np.random.default_rng(seed)
+    dt = T/m
+    Z = rng.standard_normal((n_sims, m))
+    log_S = np.log(S0) + np.cumsum(
+        (r - 0.5*sigma**2)*dt + sigma*np.sqrt(dt)*Z, axis=1)
+    S = np.exp(log_S)
+    media_arit = S.mean(axis=1)
+    payoff_arit = np.maximum(media_arit - K, 0) * np.exp(-r*T)
+    if not control:
+        return payoff_arit.mean(), payoff_arit.std(ddof=1)/np.sqrt(n_sims)
+    # Variable de control: asiática geométrica
+    media_geom = np.exp(np.log(S).mean(axis=1))
+    payoff_geom = np.maximum(media_geom - K, 0) * np.exp(-r*T)
+    mu_geom = asiatica_geom_bsm(S0, K, r, sigma, T, m)
+    c_star = np.cov(payoff_arit, payoff_geom, ddof=1)[0,1] / np.var(payoff_geom, ddof=1)
+    ajustado = payoff_arit - c_star*(payoff_geom - mu_geom)
+    return ajustado.mean(), ajustado.std(ddof=1)/np.sqrt(n_sims)
+
+# Experimento
+params = dict(S0=100, K=100, r=0.05, sigma=0.30, T=1, m=12, n_sims=100_000)
+est_mc, err_mc = mc_asiatica(**params, control=False)
+est_cv, err_cv = mc_asiatica(**params, control=True)
+print(f"MC estándar:  {est_mc:.4f} ± {1.96*err_mc:.4f}")
+print(f"MC + control: {est_cv:.4f} ± {1.96*err_cv:.4f}")
+print(f"Reducción de varianza: {(err_mc/err_cv)**2:.1f}x")</code></pre>
+
+            <div class="interpretation-box">
+                <p><strong>Resultados típicos ($ n = 100{,}000 $):</strong> MC estándar ≈ 7,18 ± 0,08; MC + control ≈
+                    7,18 ± 0,005. <strong>Reducción de varianza ≈ 250x.</strong> Para el mismo error sin control se
+                    requerirían ~25 millones de simulaciones.</p>
+            </div>
+
+            <!-- 3.5 Ejercicios -->
+            <h3>3.5 Ejercicios de autoevaluación</h3>
+
+            <div class="ejercicio">
+                <h4><i class="fas fa-pencil-alt"></i> Ejercicio Básico</h4>
+                <p>Estimar $ \pi $ por MC generando puntos en $ [0,1]^2 $ y contando los que caen en el cuarto de
+                    círculo. Con $ n = 10{,}000 $, reportar IC al 95%.</p>
+            </div>
+            <div class="solucion-parcial">
+                <div class="solucion-header"><i class="fas fa-chevron-right"></i> Ver solución</div>
+                <div class="solucion-content">
+                    <p>$ \hat\pi = 4\bar p $ con $ p = \mathbb{1}\{x^2+y^2 \leq 1\} $. SE $ \approx 0{,}016 $, IC $
+                        \approx \hat\pi \pm 0{,}032 $.</p>
+                    <p><strong>Rúbrica:</strong> Generación correcta (30%), estimador (30%), IC (40%).</p>
+                </div>
+            </div>
+
+            <div class="ejercicio">
+                <h4><i class="fas fa-pencil-alt"></i> Ejercicio Intermedio</h4>
+                <p>Valorar una call europea por MC con $ S_0 = K = 100 $, $ r = 4\% $, $ \sigma = 20\% $, $ T = 1 $, $
+                    n = 50{,}000 $, con y sin antitéticas. Comparar con BSM analítico.</p>
+            </div>
+            <div class="solucion-parcial">
+                <div class="solucion-header"><i class="fas fa-chevron-right"></i> Ver solución</div>
+                <div class="solucion-content">
+                    <p>BSM ≈ 9,9248. Las antitéticas reducen la varianza ~3x porque la call es monótona en $ Z $.</p>
+                    <p><strong>Rúbrica:</strong> Implementación (40%), ratio de varianzas (30%), validación contra BSM
+                        (30%).</p>
+                </div>
+            </div>
+
+            <div class="ejercicio">
+                <h4><i class="fas fa-pencil-alt"></i> Ejercicio Avanzado</h4>
+                <p>Simular el modelo de Heston y discutir el problema de que $ v_t $ puede volverse negativo con
+                    Euler. Proponer al menos dos soluciones.</p>
+            </div>
+            <div class="solucion-parcial">
+                <div class="solucion-header"><i class="fas fa-chevron-right"></i> Ver solución</div>
+                <div class="solucion-content">
+                    <p>Euler estándar viola la condición de Feller y puede producir varianzas negativas. Soluciones: (1)
+                        <em>full truncation</em>: $ \max(v_t, 0) $; (2) esquema QE de Andersen (2008) con distribución
+                        exacta condicional; (3) reflexión $ |v_t| $. Trade-off sesgo–costo computacional.</p>
+                    <p><strong>Rúbrica:</strong> Identificación del problema (30%), al menos dos soluciones (40%),
+                        discusión del trade-off (30%).</p>
+                </div>
+            </div>
+
+            <!-- 3.6 Errores -->
+            <h3>3.6 Errores comunes y limitaciones</h3>
+            <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> Errores frecuentes</h4>
+                <ol>
+                    <li><strong>No fijar la semilla (seed):</strong> resultados irreproducibles.</li>
+                    <li><strong>Confundir SE con IC:</strong> IC 95% $ = \pm 1{,}96 \cdot \text{SE} $.</li>
+                    <li><strong>Pocas trayectorias para colas:</strong> regla práctica $ n \geq 100/\alpha $.</li>
+                    <li><strong>Discretización insuficiente:</strong> validar con paso decreciente.</li>
+                    <li><strong>Correlaciones mal impuestas:</strong> usar Cholesky sobre matriz verificada.</li>
+                    <li><strong>Snooping de semilla:</strong> promediar sobre múltiples semillas independientes.</li>
+                </ol>
+            </div>
+
+            <h3>3.7 Conexión con Módulos I y II</h3>
+            <div class="nota">
+                <p>El MC básico del Módulo II para VaR es el caso más simple de este marco: $ g(X) = $ pérdida del
+                    portafolio. El salto cualitativo aquí es (a) simular bajo $ \mathbb{Q} $ para valoración y bajo $
+                    \mathbb{P} $ para riesgo, (b) manejar <em>path-dependency</em>, (c) aplicar reducción de varianza.
+                </p>
+            </div>
+
+            <h3>3.8 Referencias</h3>
+            <ul>
+                <li><strong>Glasserman, P.</strong> (2004). <em>Monte Carlo Methods in Financial Engineering</em>.
+                    Springer.</li>
+                <li><strong>Longstaff, F., Schwartz, E.</strong> (2001). "Valuing American Options by Simulation."
+                    <em>Review of Financial Studies</em>, 14(1).</li>
+                <li><strong>Andersen, L.</strong> (2008). "Simulation of the Heston Model." <em>Journal of Computational
+                        Finance</em>, 11(3).</li>
+                <li><strong>Boyle, P.</strong> (1977). "Options: A Monte Carlo Approach." <em>Journal of Financial
+                        Economics</em>, 4(3).</li>
+                <li><strong>Datos abiertos:</strong> QuantLib (quantlib.org), <code>scipy.stats.qmc</code> (Sobol).
+                </li>
+            </ul>
+        </div>
+    </template>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- TEMPLATE: TEMA 4 — Stress Testing y Backtesting               -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <template id="module-4">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Tema 4</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Stress Testing y
+                    Backtesting</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">🎯</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Objetivos de aprendizaje</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Diseñar escenarios de stress, implementar
+                            tests de Kupiec y Christoffersen, interpretar resultados bajo el marco Basel y evaluar
+                            limitaciones.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>4.1 Objetivos de aprendizaje</h3>
+            <ul class="pasos">
+                <li>Distinguir stress testing de backtesting, identificando objetivos, marcos regulatorios y métricas.
+                </li>
+                <li>Diseñar escenarios de stress (históricos, hipotéticos, reverse stress).</li>
+                <li>Implementar los tests de Kupiec (POF) y Christoffersen (independencia, cobertura condicional).</li>
+                <li>Interpretar resultados dentro del marco regulatorio Basel (semáforo de excepciones, FRTB).</li>
+                <li>Evaluar críticamente las limitaciones y los riesgos de falsos positivos/negativos.</li>
+            </ul>
+
+            <h3>4.2 Conceptos clave y alcance</h3>
+            <div class="definition-box">
+                <h4><i class="fas fa-cube"></i> Backtesting</h4>
+                <p>Procedimiento estadístico para validar <em>ex-post</em> la precisión de un modelo de riesgo
+                    (típicamente VaR o ES) comparando predicciones con realizaciones observadas.</p>
+            </div>
+            <div class="definition-box">
+                <h4><i class="fas fa-cube"></i> Stress Testing</h4>
+                <p>Análisis de la resiliencia de un portafolio o institución frente a escenarios extremos pero
+                    plausibles, con o sin probabilidad asignada. Complementa al VaR evaluando pérdidas más allá del
+                    nivel de confianza.</p>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dimensión</th>
+                        <th>Backtesting</th>
+                        <th>Stress Testing</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Naturaleza</td>
+                        <td>Estadística, <em>ex-post</em></td>
+                        <td>Escenario, <em>ex-ante</em></td>
+                    </tr>
+                    <tr>
+                        <td>Horizonte</td>
+                        <td>Histórico observado</td>
+                        <td>Hipotético o histórico</td>
+                    </tr>
+                    <tr>
+                        <td>Objetivo</td>
+                        <td>Validar calibración del modelo</td>
+                        <td>Evaluar resiliencia</td>
+                    </tr>
+                    <tr>
+                        <td>Marco regulatorio</td>
+                        <td>BCBS (1996, 2019)</td>
+                        <td>Basel III pilar II, EBA, Fed CCAR/DFAST</td>
+                    </tr>
+                    <tr>
+                        <td>Métrica clave</td>
+                        <td>Número de excepciones</td>
+                        <td>Pérdida en escenario</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Tipos de stress tests</h4>
+            <ol>
+                <li><strong>Escenarios históricos:</strong> replicar crisis pasadas (1987, LTCM 1998, GFC 2008, COVID
+                    2020).</li>
+                <li><strong>Escenarios hipotéticos:</strong> shocks diseñados por expertos (ej. +200 pb de tasas + −30%
+                    equity).</li>
+                <li><strong>Reverse stress testing:</strong> identificar qué escenario haría inviable a la institución;
+                    exigido por Basel III.</li>
+                <li><strong>Sensibilidades:</strong> mover un solo factor.</li>
+            </ol>
+
+            <!-- 4.3 Fundamentos -->
+            <h3>4.3 Fundamentos matemático-estadísticos</h3>
+            <h4>Modelo de excepciones</h4>
+            <p>Para un VaR al nivel $ \alpha $ (ej. 99%), sea $ I_t = \mathbb{1}\{L_t > \text{VaR}_t\} $. Bajo H0 de
+                modelo correcto: $ I_t \sim \text{Bernoulli}(1-\alpha) $ i.i.d. Con $ T $ observaciones, el número
+                esperado de excepciones es $ T(1-\alpha) $.</p>
+
+            <h4>Test de Kupiec (Proportion of Failures, POF, 1995)</h4>
+            <div class="formula-box">
+                $$ LR_{POF} = -2\ln\left[\frac{(1-\alpha)^{T-x}\,\alpha^x}{(1-\hat{p})^{T-x}\,\hat{p}^x}\right]
+                \;\sim\; \chi^2_1 $$
+            </div>
+            <p>donde $ x $ = excepciones observadas y $ \hat{p} = x/T $. Rechaza si $ LR_{POF} > 3{,}841 $.</p>
+
+            <aside>
+                <strong>📌 Nota para el estudiante.</strong> Kupiec solo verifica la <strong>cobertura incondicional</strong>
+                (<em>unconditional coverage</em>). No detecta <em>clustering</em> de excepciones, un problema grave en
+                entornos de alta volatilidad persistente.
+            </aside>
+
+            <h4>Test de independencia de Christoffersen (1998)</h4>
+            <p>Modelo markoviano de dos estados. Con transiciones $ n_{ij} $ y $ \pi_{ij} = n_{ij}/(n_{i0}+n_{i1}) $:
+            </p>
+            <div class="formula-box">
+                $$ LR_{ind} =
+                -2\ln\left[\frac{(1-\hat\pi)^{n_{00}+n_{10}}\,\hat\pi^{n_{01}+n_{11}}}{(1-\hat\pi_{01})^{n_{00}}\,\hat\pi_{01}^{n_{01}}\,(1-\hat\pi_{11})^{n_{10}}\,\hat\pi_{11}^{n_{11}}}\right]
+                \;\sim\; \chi^2_1 $$
+            </div>
+
+            <h4>Cobertura condicional (<em>Conditional Coverage</em>)</h4>
+            <div class="formula-box">
+                $$ LR_{CC} = LR_{POF} + LR_{ind} \;\sim\; \chi^2_2 $$
+            </div>
+
+            <h4>Marco Basel — Semáforo de excepciones (VaR 99%, 250 días)</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Zona</th>
+                        <th>Excepciones</th>
+                        <th>Multiplicador $ k $</th>
+                        <th>Interpretación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="background:#d1fae5; color:#065f46; font-weight:700;">Verde</td>
+                        <td>0–4</td>
+                        <td>3,00</td>
+                        <td>Modelo aceptable</td>
+                    </tr>
+                    <tr>
+                        <td style="background:#fef3c7; color:#92400e; font-weight:700;">Amarilla</td>
+                        <td>5–9</td>
+                        <td>3,40–3,85</td>
+                        <td>Revisión requerida</td>
+                    </tr>
+                    <tr>
+                        <td style="background:#fee2e2; color:#991b1b; font-weight:700;">Roja</td>
+                        <td>≥10</td>
+                        <td>4,00</td>
+                        <td>Modelo rechazable</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>FRTB (BCBS 2019)</h4>
+            <p>Sustituye VaR por <strong>Expected Shortfall al 97,5%</strong> y requiere backtesting a nivel de
+                escritorio (<em>desk-level</em>). El backtesting de ES es más complejo porque ES no es <em>elicitable</em>
+                en sentido estricto (Gneiting, 2011); propuestas recientes: Acerbi-Székely (2014) y Fissler-Ziegel
+                (2016).</p>
+
+            <!-- 4.4 Aplicación práctica -->
+            <h3>4.4 Aplicación práctica paso a paso</h3>
+            <div class="example-box">
+                <h4><i class="fas fa-calculator"></i> Problema</h4>
+                <p>Un banco reporta VaR al 99% diario sobre 250 días. Observa 8 excepciones. (a) ¿Es estadísticamente
+                    rechazable? (b) ¿En qué zona Basel cae? (c) ¿Están las excepciones agrupadas?</p>
+            </div>
+
+            <h4>Paso 1 — Esperanza</h4>
+            <p>$ E[x] = 250 \cdot 0{,}01 = 2{,}5 $ excepciones.</p>
+
+            <h4>Paso 2 — Test de Kupiec</h4>
+            <p>$ \hat{p} = 8/250 = 0{,}032 $.</p>
+
+            <pre><code data-language="Python">import numpy as np
+from scipy.stats import chi2
+
+def kupiec_pof(x, T, alpha):
+    p = 1 - alpha
+    p_hat = x / T
+    if p_hat == 0:
+        return 0, 1.0
+    LR = -2 * (np.log((1-p)**(T-x) * p**x) -
+               np.log((1-p_hat)**(T-x) * p_hat**x))
+    p_value = 1 - chi2.cdf(LR, df=1)
+    return LR, p_value
+
+def christoffersen_ind(excep):
+    n00 = n01 = n10 = n11 = 0
+    for t in range(1, len(excep)):
+        a, b = excep[t-1], excep[t]
+        if   a == 0 and b == 0: n00 += 1
+        elif a == 0 and b == 1: n01 += 1
+        elif a == 1 and b == 0: n10 += 1
+        elif a == 1 and b == 1: n11 += 1
+    pi01 = n01 / (n00 + n01) if (n00 + n01) > 0 else 0
+    pi11 = n11 / (n10 + n11) if (n10 + n11) > 0 else 0
+    pi = (n01 + n11) / (n00 + n01 + n10 + n11)
+    if pi01 == 0 or pi11 == 0 or pi == 0 or pi == 1:
+        return 0, 1.0
+    num = (1 - pi)**(n00 + n10) * pi**(n01 + n11)
+    den = (1-pi01)**n00 * pi01**n01 * (1-pi11)**n10 * pi11**n11
+    LR = -2 * (np.log(num) - np.log(den))
+    return LR, 1 - chi2.cdf(LR, df=1)
+
+# Aplicación
+T, x, alpha = 250, 8, 0.99
+LR_pof, p_pof = kupiec_pof(x, T, alpha)
+print(f"Kupiec POF: LR = {LR_pof:.3f}, p-value = {p_pof:.4f}")
+
+# Simulamos excepciones dispersas para test de independencia
+np.random.seed(42)
+excepciones = np.zeros(250, dtype=int)
+excepciones[np.random.choice(250, 8, replace=False)] = 1
+LR_ind, p_ind = christoffersen_ind(excepciones)
+print(f"Christoffersen ind: LR = {LR_ind:.3f}, p-value = {p_ind:.4f}")</code></pre>
+
+            <div class="interpretation-box">
+                <p><strong>Resultados:</strong> $ LR_{POF} \approx 7{,}18 $, p-valor $ \approx 0{,}007 $ → se
+                    <strong>rechaza</strong> H0 al 5%. El modelo subestima el riesgo. 8 excepciones → zona
+                    <strong>amarilla</strong>, $ k \approx 3{,}65 $.</p>
+            </div>
+
+            <!-- 4.5 Ejercicios -->
+            <h3>4.5 Ejercicios de autoevaluación</h3>
+
+            <div class="ejercicio">
+                <h4><i class="fas fa-pencil-alt"></i> Ejercicio Básico</h4>
+                <p>Para VaR al 95%, 500 días, 30 excepciones. Calcular $ LR_{POF} $ y decidir al 5% de significancia.
+                </p>
+            </div>
+            <div class="solucion-parcial">
+                <div class="solucion-header"><i class="fas fa-chevron-right"></i> Ver solución</div>
+                <div class="solucion-content">
+                    <p>Esperadas = 25. $ \hat{p} = 0{,}06 $. $ LR_{POF} \approx 1{,}02 $. No se rechaza (crítico
+                        3,841). Modelo aceptable.</p>
+                    <p><strong>Rúbrica:</strong> Cálculo correcto (50%), decisión y justificación (50%).</p>
+                </div>
+            </div>
+
+            <div class="ejercicio">
+                <h4><i class="fas fa-pencil-alt"></i> Ejercicio Intermedio</h4>
+                <p>Diseñar un stress test hipotético combinado para un portafolio 60/40 (equity/bonos) que incluya:
+                    shock de equity, shift de curva, y shock de correlación (pasando de −0,3 a +0,5). Justificar por qué
+                    el shock de correlación es relevante.</p>
+            </div>
+            <div class="solucion-parcial">
+                <div class="solucion-header"><i class="fas fa-chevron-right"></i> Ver solución</div>
+                <div class="solucion-content">
+                    <p>La correlación equity-bonos suele ser negativa en régimen de crecimiento, pero puede volverse
+                        positiva en episodios inflacionarios (2022). Un portafolio 60/40 que asume diversificación pierde
+                        su cobertura cuando ambos activos caen simultáneamente. El shock debe aplicar correlación
+                        positiva junto con los shocks direccionales para capturar esta ruptura de régimen.</p>
+                    <p><strong>Rúbrica:</strong> Diseño completo (30%), justificación económica del shock de correlación
+                        (40%), cuantificación (30%).</p>
+                </div>
+            </div>
+
+            <div class="ejercicio">
+                <h4><i class="fas fa-pencil-alt"></i> Ejercicio Avanzado</h4>
+                <p>Discutir por qué el backtesting de Expected Shortfall es más difícil que el de VaR, qué significa que
+                    ES "no es elicitable" (<em>elicitable</em>) y proponer al menos dos enfoques de la literatura.</p>
+            </div>
+            <div class="solucion-parcial">
+                <div class="solucion-header"><i class="fas fa-chevron-right"></i> Ver solución</div>
+                <div class="solucion-content">
+                    <p>Un estadístico es <em>elicitable</em> si existe una <em>scoring function</em> $ S(y, x) $ tal que
+                        $ \arg\min_x E[S(Y, x)] = $ estadístico. VaR es elicitable (función pinball); ES no lo es
+                        individualmente (Gneiting, 2011). Enfoques: (1) Acerbi-Székely (2014) con residuos $ Z_t =
+                        L_t/ES_t $ en excepciones; (2) Fissler-Ziegel (2016) muestran que (VaR, ES) es <em>jointly
+                            elicitable</em>, permitiendo tests conjuntos; (3) FRTB usa backtest de VaR al 97,5% y 99%
+                        como proxy.</p>
+                    <p><strong>Rúbrica:</strong> Definición de elicitabilidad (30%), prueba del problema (30%), enfoques
+                        con referencias (40%).</p>
+                </div>
+            </div>
+
+            <!-- 4.6 Errores -->
+            <h3>4.6 Errores comunes y limitaciones</h3>
+            <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> Errores frecuentes</h4>
+                <ol>
+                    <li><strong>Confundir backtesting con stress testing.</strong> Son complementarios, no sustitutos.
+                    </li>
+                    <li><strong>Ignorar clustering.</strong> Kupiec no detecta dependencia; combinar con Christoffersen.
+                    </li>
+                    <li><strong>Data mining en escenarios:</strong> usar conjuntos estandarizados (EBA, Fed CCAR).</li>
+                    <li><strong>Baja potencia estadística:</strong> con 250 observaciones y eventos raros (1%), rechazar
+                        requiere desviaciones grandes.</li>
+                    <li><strong>Cambios de portafolio durante backtest:</strong> distinguir backtest hipotético vs. real.
+                    </li>
+                    <li><strong>Stress sin governance:</strong> Basel III exige documentación y revisión independiente.
+                    </li>
+                    <li><strong>Olvidar riesgo de liquidez</strong> en los escenarios.</li>
+                </ol>
+            </div>
+
+            <h3>4.7 Conexión con Módulos I y II</h3>
+            <div class="nota">
+                <p>Los modelos VaR paramétricos y no paramétricos del Módulo II son precisamente los objetos validados
+                    aquí. Las estimaciones GARCH tienden a desempeñarse mejor en tests de independencia porque absorben
+                    el clustering de volatilidad antes de que se manifieste como clustering de excepciones.</p>
+            </div>
+
+            <h3>4.8 Referencias</h3>
+            <ul>
+                <li><strong>Kupiec, P.</strong> (1995). "Techniques for Verifying the Accuracy of Risk Measurement
+                    Models." <em>Journal of Derivatives</em>, 3(2).</li>
+                <li><strong>Christoffersen, P.</strong> (1998). "Evaluating Interval Forecasts." <em>International
+                        Economic Review</em>, 39(4).</li>
+                <li><strong>Acerbi, C., Székely, B.</strong> (2014). "Back-testing Expected Shortfall." <em>Risk
+                        Magazine</em>.</li>
+                <li><strong>Fissler, T., Ziegel, J.</strong> (2016). "Higher Order Elicitability and Osband's Principle."
+                    <em>Annals of Statistics</em>, 44(4).</li>
+                <li><strong>Gneiting, T.</strong> (2011). "Making and Evaluating Point Forecasts." <em>JASA</em>,
+                    106(494).</li>
+                <li><strong>BCBS</strong> (2019). <em>Minimum capital requirements for market risk</em> (FRTB, d457).
+                </li>
+                <li><strong>BCBS</strong> (2009). <em>Principles for sound stress testing practices and supervision</em>.
+                </li>
+                <li><strong>EBA</strong> — EU-wide stress test methodology (eba.europa.eu).</li>
+                <li><strong>Federal Reserve</strong> — CCAR/DFAST (federalreserve.gov).</li>
+                <li><strong>Datos abiertos:</strong> FRED (VIX, spreads, tasas), BIS credit spreads.</li>
+            </ul>
+        </div>
+    </template>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- TEMPLATE: ACTIVIDAD APLICADA EN GRUPO                          -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <template id="module-5">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Actividad Aplicada</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">🛠️ Panel Interactivo de Gestión de Riesgo con Derivados</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">👥</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Proyecto integrador — Grupos de máximo 3 estudiantes</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Construir un tablero interactivo (Power BI, Shiny o Streamlit) que integre valoración de derivados, simulación Monte Carlo, backtesting y stress testing sobre un portafolio real.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ───────── CONTEXTO ───────── -->
+            <h3>Contexto y motivación</h3>
+            <p>En la práctica profesional, los analistas de riesgo no trabajan con fórmulas aisladas sino con <strong>sistemas integrados</strong> que conectan datos de mercado, modelos cuantitativos y visualizaciones ejecutivas en tiempo cercano al real. Este proyecto simula ese flujo completo: desde la obtención de datos abiertos hasta la entrega de un tablero (<em>dashboard</em>) que un comité de riesgos pudiera usar para tomar decisiones.</p>
+            <p>El uso de herramientas de <strong>inteligencia artificial generativa</strong> (ChatGPT, Claude, Gemini, GitHub Copilot, etc.) está <strong>explícitamente permitido y alentado</strong> como acelerador, bajo las condiciones que se detallan más adelante.</p>
+
+            <!-- ───────── ESCENARIO ───────── -->
+            <h3>Escenario del proyecto</h3>
+            <div class="example-box">
+                <h4><i class="fas fa-building"></i> Rol asignado</h4>
+                <p>Ustedes son el <strong>equipo de riesgo cuantitativo</strong> de una firma de inversión colombiana que gestiona un portafolio de <strong>3 a 5 acciones</strong> listadas en bolsas públicas (BVC, NYSE, NASDAQ o BMV). La firma utiliza <strong>opciones y/o futuros</strong> para cubrir parcialmente su exposición. El comité de riesgos les pide un <strong>tablero interactivo</strong> que les permita monitorear, simular escenarios y validar los modelos de riesgo de forma autónoma, sin necesidad de abrir código.</p>
+            </div>
+
+            <!-- ───────── FASES ───────── -->
+            <h3>Fases del proyecto</h3>
+
+            <h4>Fase 1 — Datos y portafolio (semana 1)</h4>
+            <div class="concepto-clave">
+                <h4><i class="fas fa-database"></i> Tareas</h4>
+                <ul>
+                    <li><strong>Seleccionar 3–5 acciones</strong> con al menos 2 años de datos históricos diarios de cierre ajustado. Fuentes sugeridas: Yahoo Finance (<code>yfinance</code>), FRED, Banco de la República, Alpha Vantage.</li>
+                    <li><strong>Definir pesos</strong> del portafolio (pueden ser iguales o justificados por criterio propio).</li>
+                    <li><strong>Calcular</strong> rendimientos logarítmicos, volatilidad histórica (ventana móvil de 60 días) y matriz de correlaciones.</li>
+                    <li><strong>Documentar</strong> las fuentes de datos y cualquier tratamiento de limpieza (dividendos, splits, datos faltantes).</li>
+                </ul>
+            </div>
+
+            <h4>Fase 2 — Valoración de derivados (semana 2)</h4>
+            <div class="concepto-clave">
+                <h4><i class="fas fa-chart-line"></i> Tareas</h4>
+                <ul>
+                    <li>Para <strong>al menos una acción</strong> del portafolio, valorar una <strong>call y una put europea</strong> usando BSM con la volatilidad histórica más reciente.</li>
+                    <li>Construir un <strong>árbol binomial CRR</strong> con al menos 50 pasos y comparar con BSM.</li>
+                    <li>Calcular y <strong>visualizar las Griegas</strong> (Delta, Gamma, Vega) como función del precio del subyacente.</li>
+                    <li>Si los datos lo permiten, calcular la <strong>volatilidad implícita</strong> a partir de precios de mercado reales de opciones (CBOE, Deribit o similar) y graficar la <em>volatility smile</em>.</li>
+                    <li><strong>Calcular el precio teórico de un forward</strong> para al menos un par de activos (ej. USD/COP o una acción) usando la paridad <em>cost-of-carry</em>.</li>
+                </ul>
+            </div>
+
+            <h4>Fase 3 — Simulación Monte Carlo (semana 3)</h4>
+            <div class="concepto-clave">
+                <h4><i class="fas fa-dice"></i> Tareas</h4>
+                <ul>
+                    <li><strong>Simular</strong> $ n \geq 10{,}000 $ trayectorias del portafolio completo (multi-activo, con Cholesky para correlaciones) a un horizonte de 10 días.</li>
+                    <li>Calcular <strong>VaR y ES</strong> al 95% y 99% a partir de la distribución simulada.</li>
+                    <li>Implementar al menos <strong>una técnica de reducción de varianza</strong> (antitéticas o variable de control) y reportar la ganancia de eficiencia.</li>
+                    <li>Visualizar la <strong>distribución de P&amp;L simulada</strong> con histograma, marcando VaR y ES.</li>
+                    <li>Permitir en el tablero que el usuario <strong>ajuste interactivamente</strong> el número de simulaciones, el horizonte y el nivel de confianza.</li>
+                </ul>
+            </div>
+
+            <h4>Fase 4 — Backtesting y stress testing (semana 4)</h4>
+            <div class="concepto-clave">
+                <h4><i class="fas fa-shield-alt"></i> Tareas</h4>
+                <ul>
+                    <li><strong>Backtesting del VaR:</strong> aplicar los tests de Kupiec (POF) y Christoffersen (independencia) sobre al menos los últimos 250 días de datos históricos. Reportar el número de excepciones, la zona del semáforo Basel y los p-valores.</li>
+                    <li><strong>Visualizar las excepciones</strong> en una serie temporal: línea del VaR predicho vs. P&amp;L realizado, marcando los días de excepción.</li>
+                    <li><strong>Stress testing:</strong> diseñar e implementar al menos 3 escenarios:
+                        <ul>
+                            <li>Un escenario <strong>histórico</strong> (ej. COVID marzo 2020 o GFC septiembre 2008): aplicar los retornos reales de esos días al portafolio actual.</li>
+                            <li>Un escenario <strong>hipotético</strong> definido por el grupo (ej. caída simultánea de equity + devaluación + aumento de tasas).</li>
+                            <li>Un ejercicio de <strong>reverse stress test:</strong> encontrar la combinación de shocks que generaría una pérdida igual al 100% del capital regulatorio o un umbral definido por el grupo.</li>
+                        </ul>
+                    </li>
+                    <li>Presentar los resultados en una <strong>tabla resumen</strong> y un <strong>gráfico comparativo</strong> de pérdidas por escenario.</li>
+                </ul>
+            </div>
+
+            <h4>Fase 5 — Tablero interactivo y entrega (semana 5)</h4>
+            <div class="concepto-clave">
+                <h4><i class="fas fa-tv"></i> Tareas</h4>
+                <ul>
+                    <li><strong>Integrar</strong> las fases 1–4 en un tablero unificado con navegación por pestañas o secciones.</li>
+                    <li><strong>Plataforma:</strong> el grupo elige una de las siguientes opciones:
+                        <ul>
+                            <li><strong>Streamlit</strong> (Python) — recomendado para equipos con experiencia en Python.</li>
+                            <li><strong>Shiny</strong> (R) — recomendado para equipos con experiencia en R.</li>
+                            <li><strong>Power BI</strong> — recomendado si se priorizan visualizaciones ejecutivas; los cálculos pueden hacerse en Python/R y conectarse vía archivos o scripts embebidos.</li>
+                        </ul>
+                    </li>
+                    <li>El tablero debe ser <strong>funcional y navegable sin código visible</strong>: un usuario no técnico debe poder explorar los resultados.</li>
+                    <li>Incluir una <strong>página/pestaña de metodología</strong> dentro del tablero que explique brevemente cada modelo usado.</li>
+                </ul>
+            </div>
+
+            <!-- ───────── ENTREGABLES ───────── -->
+            <h3>Entregables</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Entregable</th>
+                        <th>Formato</th>
+                        <th>Peso</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td><strong>Tablero interactivo funcional</strong></td>
+                        <td>URL desplegada (Streamlit Cloud, shinyapps.io) o archivo .pbix (Power BI)</td>
+                        <td>40%</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td><strong>Repositorio de código</strong></td>
+                        <td>GitHub (público o con acceso al docente), con README.md explicativo</td>
+                        <td>20%</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td><strong>Informe técnico</strong></td>
+                        <td>PDF, máx. 10 páginas (sin contar anexos), estructura IMRyD</td>
+                        <td>25%</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td><strong>Bitácora de uso de IA</strong></td>
+                        <td>Sección dentro del informe o anexo</td>
+                        <td>10%</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td><strong>Sustentación oral</strong></td>
+                        <td>15 minutos + 5 de preguntas, todos los integrantes participan</td>
+                        <td>5%</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- ───────── ESTRUCTURA DEL TABLERO ───────── -->
+            <h3>Estructura mínima sugerida del tablero</h3>
+            <div class="definition-box">
+                <h4><i class="fas fa-columns"></i> Pestañas o secciones recomendadas</h4>
+                <ol>
+                    <li><strong>📊 Resumen del portafolio:</strong> composición, pesos, rendimiento acumulado, volatilidad rolling, correlaciones (mapa de calor).</li>
+                    <li><strong>📈 Valoración de derivados:</strong> precios BSM/CRR, Griegas interactivas (sliders para $ S $, $ \sigma $, $ T $), smile de volatilidad si aplica, precio forward.</li>
+                    <li><strong>🎲 Simulación Monte Carlo:</strong> histograma de P&amp;L, VaR/ES con controles interactivos ($ n $, horizonte, confianza), comparativo con/sin reducción de varianza.</li>
+                    <li><strong>✅ Backtesting:</strong> serie temporal VaR vs. P&amp;L real, excepciones marcadas, resultados Kupiec/Christoffersen, semáforo Basel visual.</li>
+                    <li><strong>⚠️ Stress testing:</strong> tabla de escenarios con pérdida estimada, gráfico de barras comparativo, resultado del reverse stress test.</li>
+                    <li><strong>📝 Metodología:</strong> descripción de modelos, supuestos, limitaciones, fuentes de datos.</li>
+                </ol>
+            </div>
+
+            <p>A continuación se presenta un esqueleto de referencia en Streamlit para orientar la estructura. <strong>No es obligatorio usarlo tal cual</strong>; es un punto de partida que el grupo puede y debe modificar, extender y mejorar:</p>
+
+            <pre><code data-language="Python">import streamlit as st
+import numpy as np
+import pandas as pd
+import yfinance as yf
+from scipy.stats import norm, chi2
+import plotly.graph_objects as go
+
+st.set_page_config(page_title="Panel de Riesgo", layout="wide")
+st.title("🏦 Panel de Gestión de Riesgo con Derivados")
+
+# ─── SIDEBAR: Parámetros globales ───
+st.sidebar.header("⚙️ Configuración")
+tickers = st.sidebar.multiselect(
+    "Acciones del portafolio",
+    ["AAPL", "MSFT", "AMZN", "GOOGL", "JPM", "ECOPETROL.CL"],
+    default=["AAPL", "MSFT", "AMZN"]
+)
+fecha_inicio = st.sidebar.date_input("Fecha inicio", pd.Timestamp("2022-01-01"))
+nivel_confianza = st.sidebar.slider("Nivel de confianza VaR (%)", 90, 99, 99)
+n_sims = st.sidebar.select_slider("Simulaciones MC", [1000, 5000, 10000, 50000, 100000], 10000)
+horizonte = st.sidebar.slider("Horizonte (días)", 1, 30, 10)
+
+# ─── CARGA DE DATOS ───
+@st.cache_data
+def cargar_datos(tickers, inicio):
+    df = yf.download(tickers, start=inicio)["Adj Close"]
+    retornos = np.log(df / df.shift(1)).dropna()
+    return df, retornos
+
+precios, retornos = cargar_datos(tickers, fecha_inicio)
+
+# ─── PESTAÑAS ───
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+    "📊 Portafolio", "📈 Derivados", "🎲 Monte Carlo",
+    "✅ Backtesting", "⚠️ Stress Test", "📝 Metodología"
+])
+
+with tab1:
+    st.header("Resumen del Portafolio")
+    pesos = np.ones(len(tickers)) / len(tickers)
+    st.write("**Pesos:**", dict(zip(tickers, pesos)))
+    # TODO: rendimiento acumulado, volatilidad rolling, heatmap correlaciones
+    st.line_chart(precios / precios.iloc[0])
+
+with tab2:
+    st.header("Valoración de Derivados")
+    col1, col2 = st.columns(2)
+    with col1:
+        accion_opcion = st.selectbox("Acción para opción", tickers)
+        K = st.number_input("Strike (K)", value=float(precios[accion_opcion].iloc[-1]))
+        T_opcion = st.slider("Vencimiento (años)", 0.1, 2.0, 0.5)
+        r = st.number_input("Tasa libre de riesgo (%)", value=5.0) / 100
+    sigma_hist = retornos[accion_opcion].std() * np.sqrt(252)
+    S_actual = precios[accion_opcion].iloc[-1]
+    # TODO: implementar BSM, CRR, Griegas, gráficos interactivos
+    st.metric("Precio spot actual", f"${S_actual:.2f}")
+    st.metric("Volatilidad histórica anualizada", f"{sigma_hist:.2%}")
+
+with tab3:
+    st.header("Simulación Monte Carlo")
+    # TODO: simular trayectorias multi-activo con Cholesky
+    # TODO: calcular VaR y ES, histograma de P&L
+    # TODO: comparar con y sin reducción de varianza
+    st.info("Implementar simulación MC con los parámetros del sidebar.")
+
+with tab4:
+    st.header("Backtesting del VaR")
+    # TODO: backtest Kupiec y Christoffersen
+    # TODO: gráfico de excepciones, semáforo Basel
+    st.info("Implementar backtesting sobre últimos 250 días.")
+
+with tab5:
+    st.header("Stress Testing")
+    # TODO: escenarios históricos, hipotéticos, reverse stress test
+    st.info("Implementar al menos 3 escenarios de stress.")
+
+with tab6:
+    st.header("Metodología")
+    st.markdown("""
+    ### Modelos utilizados
+    - **VaR/ES:** Simulación Monte Carlo con GBM multivariado
+    - **Opciones:** Black-Scholes-Merton y árbol binomial CRR
+    - **Backtesting:** Tests de Kupiec (1995) y Christoffersen (1998)
+    - **Stress testing:** Escenarios históricos y diseñados
+    ### Fuentes de datos
+    - Yahoo Finance vía `yfinance`
+    ### Limitaciones
+    - Volatilidad constante en BSM (no captura smile)
+    - GBM asume log-normalidad (no captura colas pesadas)
+    - Backtesting con ventana limitada tiene baja potencia estadística
+    """)</code></pre>
+
+            <!-- ───────── USO DE IA ───────── -->
+            <h3>Política de uso de herramientas de inteligencia artificial</h3>
+            <div class="definition-box">
+                <h4><i class="fas fa-robot"></i> Lineamientos para el uso de IA</h4>
+                <p>El uso de herramientas de IA generativa (ChatGPT, Claude, Gemini, GitHub Copilot, Cursor, v0, etc.) es <strong>permitido y fomentado</strong> como parte del flujo de trabajo profesional contemporáneo. Sin embargo, la IA es un <strong>copiloto, no el piloto</strong>. Se aplican las siguientes reglas:</p>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>✅ Usos permitidos</th>
+                        <th>⚠️ Usos con condiciones</th>
+                        <th>❌ Usos prohibidos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align:left;">Generar borradores de código (Python, R, DAX)</td>
+                        <td style="text-align:left;">Generar texto para el informe → debe ser revisado, editado y validado por el grupo</td>
+                        <td style="text-align:left;">Entregar texto o código generado por IA sin revisión ni comprensión</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:left;">Depurar errores (<em>debugging</em>)</td>
+                        <td style="text-align:left;">Pedir explicaciones de fórmulas → documentar en la bitácora</td>
+                        <td style="text-align:left;">Copiar la bitácora de otro grupo</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:left;">Explorar opciones de visualización</td>
+                        <td style="text-align:left;">Generar datos sintéticos para pruebas → no como datos finales</td>
+                        <td style="text-align:left;">Fabricar resultados o p-valores</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:left;">Traducir código entre lenguajes (R↔Python)</td>
+                        <td style="text-align:left;">Optimizar rendimiento del código → entender la optimización</td>
+                        <td style="text-align:left;">Usar IA durante la sustentación oral</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:left;">Diseñar el layout del tablero</td>
+                        <td style="text-align:left;">—</td>
+                        <td style="text-align:left;">Presentar trabajo de otros grupos como propio</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <h4><i class="fas fa-file-alt"></i> Bitácora de uso de IA (obligatoria)</h4>
+                <p>Cada grupo debe incluir como anexo del informe una <strong>bitácora</strong> que registre:</p>
+                <ol>
+                    <li><strong>Herramienta utilizada</strong> (nombre y versión/modelo, ej. "Claude Sonnet 4").</li>
+                    <li><strong>Prompt empleado</strong> (textual o parafraseado).</li>
+                    <li><strong>Respuesta obtenida</strong> (resumen, no transcripción completa).</li>
+                    <li><strong>Modificaciones realizadas</strong> por el grupo sobre el output.</li>
+                    <li><strong>Verificación:</strong> cómo validaron que el resultado es correcto (ej. "comparamos con resultado analítico", "ejecutamos test unitario").</li>
+                </ol>
+                <p>La bitácora se evalúa por <strong>transparencia y reflexión crítica</strong>, no por cantidad de uso. Usar más IA no suma ni resta puntos; lo que importa es demostrar comprensión y criterio.</p>
+            </div>
+
+            <!-- ───────── RÚBRICA ───────── -->
+            <h3>Rúbrica de evaluación detallada</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Criterio</th>
+                        <th>Excelente (90–100)</th>
+                        <th>Bueno (70–89)</th>
+                        <th>Insuficiente (&lt;70)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Tablero (40%)</strong></td>
+                        <td style="text-align:left;">Funcional, interactivo, todas las pestañas completas, visualizaciones claras y profesionales, desplegado en la nube</td>
+                        <td style="text-align:left;">Funcional pero incompleto en 1–2 secciones, o con problemas de diseño menores</td>
+                        <td style="text-align:left;">No funciona, no interactivo, o faltan 3+ secciones</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Código (20%)</strong></td>
+                        <td style="text-align:left;">Repositorio organizado, código comentado, README completo, reproducible</td>
+                        <td style="text-align:left;">Funciona pero mal documentado, o sin README</td>
+                        <td style="text-align:left;">No reproducible, errores de ejecución, sin control de versiones</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Informe (25%)</strong></td>
+                        <td style="text-align:left;">Estructura IMRyD, rigor matemático, interpretación económica de resultados, limitaciones explícitas</td>
+                        <td style="text-align:left;">Estructura correcta pero análisis superficial o sin interpretación</td>
+                        <td style="text-align:left;">Sin estructura, errores conceptuales graves, ausencia de limitaciones</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bitácora IA (10%)</strong></td>
+                        <td style="text-align:left;">Registro completo, reflexión crítica sobre cada uso, verificaciones documentadas</td>
+                        <td style="text-align:left;">Registro incompleto pero honesto</td>
+                        <td style="text-align:left;">Ausente o evidencia de copia</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sustentación (5%)</strong></td>
+                        <td style="text-align:left;">Todos los integrantes demuestran dominio, responden preguntas con solvencia</td>
+                        <td style="text-align:left;">Un integrante no puede responder preguntas sobre su parte</td>
+                        <td style="text-align:left;">Evidencia de no comprensión del trabajo entregado</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- ───────── CALENDARIO ───────── -->
+            <h3>Calendario sugerido</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Semana</th>
+                        <th>Fase</th>
+                        <th>Entregable parcial</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Datos y portafolio</td>
+                        <td>Repositorio creado con datos descargados y EDA básico</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Valoración de derivados</td>
+                        <td>Funciones BSM/CRR funcionando + forward teórico</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Simulación Monte Carlo</td>
+                        <td>Módulo MC integrado al tablero con controles interactivos</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Backtesting y stress</td>
+                        <td>Tests estadísticos + escenarios implementados</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Integración y entrega</td>
+                        <td>Tablero desplegado + informe + bitácora + sustentación</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- ───────── BONUS ───────── -->
+            <h3>Extensiones opcionales (puntos adicionales)</h3>
+            <div class="nota">
+                <h4><i class="fas fa-star"></i> Bonificaciones (hasta +10 puntos sobre 100)</h4>
+                <ul>
+                    <li><strong>+3 pts:</strong> Incorporar volatilidad GARCH(1,1) estimada dinámicamente en lugar de volatilidad histórica fija, y comparar resultados de VaR con ambos enfoques.</li>
+                    <li><strong>+3 pts:</strong> Implementar el algoritmo Longstaff-Schwartz para valorar una opción americana sobre una de las acciones del portafolio y comparar con la europea.</li>
+                    <li><strong>+2 pts:</strong> Incluir un activo de renta fija (bono TES colombiano o US Treasury) y calcular su duración/convexidad, integrándolo al stress test con shock de tasas.</li>
+                    <li><strong>+2 pts:</strong> Desplegar el tablero con autenticación básica y/o programar actualizaciones automáticas diarias de datos.</li>
+                </ul>
+            </div>
+
+            <!-- ───────── PREGUNTAS GUÍA ───────── -->
+            <h3>Preguntas guía para la sustentación</h3>
+            <div class="ejercicio">
+                <h4><i class="fas fa-question-circle"></i> El comité de riesgos les preguntará</h4>
+                <ol>
+                    <li>¿Por qué eligieron esas acciones y esos pesos? ¿Qué criterio usaron?</li>
+                    <li>Si la volatilidad implícita difiere de la histórica, ¿qué les dice eso sobre las expectativas del mercado?</li>
+                    <li>¿Cuántas simulaciones necesitan para que el VaR al 99% sea confiable? ¿Cómo lo verificaron?</li>
+                    <li>Su modelo pasó/no pasó Kupiec. ¿Qué harían en cada caso?</li>
+                    <li>¿Qué escenario de stress genera la mayor pérdida y por qué tiene sentido económico?</li>
+                    <li>¿Dónde usaron IA y cómo verificaron que el resultado fuera correcto?</li>
+                    <li>Si tuvieran una semana más, ¿qué mejorarían?</li>
+                </ol>
+            </div>
+
+            <aside>
+                <strong>📌 Nota para el estudiante.</strong> Este proyecto está diseñado para ser desafiante pero alcanzable. No se espera perfección en cada componente, sino un <strong>flujo coherente de principio a fin</strong>: datos → modelos → validación → comunicación. La calidad de la integración y la interpretación importan más que la sofisticación de cualquier componente individual.
+            </aside>
+        </div>
+    </template>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- TEMPLATE: REFERENCIAS CONSOLIDADAS                             -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <template id="module-6">
+        <div class="animate-fade-in">
+            <div class="border-b border-gray-100 pb-6 mb-6">
+                <div
+                    class="flex items-center space-x-2 text-sm text-secondary font-semibold mb-2 uppercase tracking-wide">
+                    <span>Referencias</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4" style="border:none; padding:0;">Referencias
+                    Bibliográficas</h2>
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-start gap-3">
+                    <span class="text-xl">📚</span>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm" style="margin:0;">Fuentes</h3>
+                        <p class="text-gray-600 text-sm" style="margin:0;">Libros clásicos, papers seminales y marcos
+                            regulatorios citados en el módulo.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Libros de referencia</h3>
+            <ul>
+                <li><strong>Hull, J. C.</strong> (2022). <em>Options, Futures, and Other Derivatives</em>, 11ª ed.
+                    Pearson.</li>
+                <li><strong>Glasserman, P.</strong> (2004). <em>Monte Carlo Methods in Financial Engineering</em>.
+                    Springer.</li>
+                <li><strong>Wilmott, P.</strong> (2006). <em>Paul Wilmott on Quantitative Finance</em>, 2ª ed. Wiley.
+                </li>
+            </ul>
+
+            <h3>Papers seminales</h3>
+            <ul>
+                <li><strong>Black, F., Scholes, M.</strong> (1973). "The Pricing of Options and Corporate Liabilities."
+                    <em>Journal of Political Economy</em>, 81(3).</li>
+                <li><strong>Merton, R. C.</strong> (1973). "Theory of Rational Option Pricing." <em>Bell Journal of
+                        Economics</em>, 4(1).</li>
+                <li><strong>Cox, J., Ross, S., Rubinstein, M.</strong> (1979). "Option Pricing: A Simplified Approach."
+                    <em>Journal of Financial Economics</em>, 7(3).</li>
+                <li><strong>Cox, J., Ingersoll, J., Ross, S.</strong> (1981). "Forward vs. Futures Prices." <em>Journal
+                        of Financial Economics</em>, 9(4).</li>
+                <li><strong>Heston, S.</strong> (1993). "Stochastic Volatility Options." <em>Review of Financial
+                        Studies</em>, 6(2).</li>
+                <li><strong>Kupiec, P.</strong> (1995). "Verifying Risk Measurement Models." <em>Journal of
+                        Derivatives</em>, 3(2).</li>
+                <li><strong>Christoffersen, P.</strong> (1998). "Evaluating Interval Forecasts." <em>International
+                        Economic Review</em>, 39(4).</li>
+                <li><strong>Longstaff, F., Schwartz, E.</strong> (2001). "Valuing American Options by Simulation."
+                    <em>Review of Financial Studies</em>, 14(1).</li>
+                <li><strong>Andersen, L.</strong> (2008). "Simulation of the Heston Model." <em>Journal of Computational
+                        Finance</em>, 11(3).</li>
+                <li><strong>Gneiting, T.</strong> (2011). "Making and Evaluating Point Forecasts." <em>JASA</em>,
+                    106(494).</li>
+                <li><strong>Acerbi, C., Székely, B.</strong> (2014). "Back-testing Expected Shortfall." <em>Risk
+                        Magazine</em>.</li>
+                <li><strong>Fissler, T., Ziegel, J.</strong> (2016). "Higher Order Elicitability." <em>Annals of
+                        Statistics</em>, 44(4).</li>
+            </ul>
+
+            <h3>Marcos regulatorios y normativos</h3>
+            <ul>
+                <li><strong>BCBS</strong> (2019). <em>Minimum capital requirements for market risk</em> (FRTB, d457).
+                    bis.org/bcbs/publ/d457.htm</li>
+                <li><strong>BCBS</strong> (2009). <em>Principles for sound stress testing practices</em>.</li>
+                <li><strong>ISDA</strong> — Master Agreement y definiciones (isda.org).</li>
+                <li><strong>IOSCO</strong> (2012). <em>Principles for Commodity Derivatives Markets</em>.</li>
+                <li><strong>EBA</strong> — EU-wide stress test methodology (eba.europa.eu).</li>
+                <li><strong>Federal Reserve</strong> — CCAR/DFAST (federalreserve.gov).</li>
+            </ul>
+
+            <h3>Fuentes de datos abiertos</h3>
+            <ul>
+                <li><strong>FRED</strong> — Federal Reserve Economic Data (fred.stlouisfed.org)</li>
+                <li><strong>BIS</strong> — Estadísticas de derivados y credit spreads (bis.org)</li>
+                <li><strong>CME Group</strong> — Datos de futuros (cmegroup.com)</li>
+                <li><strong>CBOE</strong> — Datos de opciones (cboe.com)</li>
+                <li><strong>QuantLib</strong> — Librería open-source (quantlib.org)</li>
+                <li><strong>SciPy QMC</strong> — <code>scipy.stats.qmc</code> (secuencias Sobol)</li>
+                <li><strong>Banco de la República de Colombia</strong> — Tasas y tipo de cambio</li>
+            </ul>
+        </div>
+    </template>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- JAVASCRIPT                                                     -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <script>
+        const courseData = {
+            title: "Riesgo Financiero — Módulo III",
+            modules: [
+                { id: 1, title: "Derivados, Forwards y Futuros", shortTitle: "Derivados", duration: "30 min" },
+                { id: 2, title: "Opciones y Valoración", shortTitle: "Opciones", duration: "35 min" },
+                { id: 3, title: "Simulación Monte Carlo", shortTitle: "Monte Carlo", duration: "35 min" },
+                { id: 4, title: "Stress Testing y Backtesting", shortTitle: "Stress/Backtest", duration: "30 min" },
+                { id: 5, title: "Actividad Aplicada en Grupo", shortTitle: "Actividad", duration: "Proyecto" },
+                { id: 6, title: "Referencias Bibliográficas", shortTitle: "Referencias", duration: "5 min" }
+            ]
+        };
+
+        let currentModuleIndex = 0;
+        let completedModules = new Set();
+        const moduleNav = document.getElementById('module-nav');
+        const contentArea = document.getElementById('content-area');
+
+        function init() {
+            renderNav();
+            loadModule(0);
+        }
+
+        function renderNav() {
+            moduleNav.innerHTML = '';
+            courseData.modules.forEach((mod, index) => {
+                const btn = document.createElement('button');
+                const isActive = index === currentModuleIndex;
+                const isDone = completedModules.has(index);
+                btn.className = `sidebar-nav-item${isActive ? ' active' : ''}`;
+                btn.innerHTML = `
+                    <span style="line-height:1.3;">${mod.title}</span>
+                    ${isDone ? '<span class="check-mark">✓</span>' : ''}
+                `;
+                btn.onclick = () => loadModule(index);
+                moduleNav.appendChild(btn);
+            });
+        }
+
+        function loadModule(index) {
+            currentModuleIndex = index;
+            renderNav();
+
+            const template = document.getElementById(`module-${index + 1}`);
+            if (template) {
+                contentArea.innerHTML = '';
+                const content = template.content.cloneNode(true);
+                contentArea.appendChild(content);
+
+                const navButtons = document.createElement('div');
+                navButtons.className = 'mt-10 pt-6 border-t border-gray-200 flex justify-between items-center';
+                navButtons.innerHTML = `
+                    ${index > 0 ? `
+                    <button onclick="loadModule(${index - 1})" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-secondary transition-colors">
+                        <span>←</span> Anterior
+                    </button>` : '<div></div>'}
+                    <button onclick="markComplete(${index})" class="px-4 py-2 text-sm font-medium text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors ${completedModules.has(index) ? 'opacity-50' : ''}">
+                        ${completedModules.has(index) ? '✓ Completado' : 'Marcar como completado'}
+                    </button>
+                    ${index < courseData.modules.length - 1 ? `
+                    <button onclick="loadModule(${index + 1})" class="flex items-center gap-2 px-4 py-2 bg-secondary hover:bg-secondary/90 text-white rounded-lg text-sm font-medium transition-colors">
+                        Siguiente Tema <span>→</span>
+                    </button>` : `
+                    <div class="text-center">
+                        <span class="text-emerald-600 font-bold">🎉 ¡Módulo Completado!</span>
+                    </div>`}
+                `;
+                contentArea.appendChild(navButtons);
+
+                setupCodeBlocks();
+                setupSolucionesParciales();
+                wrapTables();
+
+                if (typeof renderMathInElement !== 'undefined') {
+                    renderMathInElement(contentArea, {
+                        delimiters: [
+                            { left: '$$', right: '$$', display: true },
+                            { left: '$', right: '$', display: false }
+                        ],
+                        throwOnError: false
+                    });
+                }
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function markComplete(index) {
+            if (!completedModules.has(index)) {
+                completedModules.add(index);
+                renderNav();
+                loadModule(index);
+            }
+        }
+
+        function setupSolucionesParciales() {
+            contentArea.querySelectorAll('.solucion-header').forEach(function (header) {
+                header.addEventListener('click', function () {
+                    var content = this.nextElementSibling;
+                    var icon = this.querySelector('i');
+                    if (content.classList.contains('open')) {
+                        content.classList.remove('open');
+                        if (icon) icon.classList.remove('rotated');
+                    } else {
+                        content.classList.add('open');
+                        if (icon) icon.classList.add('rotated');
+                    }
+                });
+            });
+        }
+
+        function wrapTables() {
+            contentArea.querySelectorAll('table').forEach(function (table) {
+                if (!table.closest('.table-responsive')) {
+                    var wrapper = document.createElement('div');
+                    wrapper.className = 'table-responsive';
+                    table.parentNode.insertBefore(wrapper, table);
+                    wrapper.appendChild(table);
+                }
+            });
+        }
+
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { scrollToTopBtn.classList.add('visible'); }
+            else { scrollToTopBtn.classList.remove('visible'); }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        const sidebarPanel = document.getElementById('sidebar-panel');
+        const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+        const sidebarToggleIcon = document.getElementById('sidebarToggleIcon');
+        let sidebarOpen = true;
+        sidebarToggleBtn.addEventListener('click', () => {
+            sidebarOpen = !sidebarOpen;
+            if (sidebarOpen) {
+                sidebarPanel.classList.remove('collapsed');
+                sidebarPanel.style.opacity = '1';
+                sidebarToggleIcon.className = 'fas fa-times text-sm';
+            } else {
+                sidebarPanel.classList.add('collapsed');
+                sidebarPanel.style.opacity = '0';
+                sidebarToggleIcon.className = 'fas fa-bars text-sm';
+            }
+        });
+
+        function setupCodeBlocks() {
+            var pres = contentArea.querySelectorAll('pre');
+            pres.forEach(function (pre) {
+                if (pre.closest('.sourceCode-wrapper')) return;
+
+                var code = pre.querySelector('code');
+                if (!code) return;
+
+                var prevEl = pre.previousElementSibling;
+                if (prevEl && prevEl.classList.contains('code-title')) { prevEl.remove(); }
+
+                var lang = code.getAttribute('data-language') || 'Python';
+                var fileExt = lang === 'Python' ? '.py' : lang === 'R' ? '.R' : '.txt';
+                var fileName = 'riesgo_financiero' + fileExt;
+                var langIcon = '';
+                if (lang === 'Python' || lang === 'python') {
+                    langIcon = '<svg class="tab-icon python" viewBox="0 0 24 24" fill="currentColor"><path d="M9.585 11.692h4.328s2.432.039 2.432-2.35V5.391S16.714 3 11.936 3C7.362 3 7.647 4.983 7.647 4.983l.006 2.055h4.363v.617H5.92s-2.927-.332-2.927 4.282 2.555 4.45 2.555 4.45h1.524v-2.141s-.083-2.554 2.513-2.554zm-.056-6.009a.784.784 0 1 1 0-1.569.784.784 0 0 1 0 1.569z"/><path d="M18.452 7.532h-1.524v2.141s.083 2.554-2.513 2.554h-4.328s-2.432-.04-2.432 2.35v3.951s-.369 2.391 4.409 2.391c4.573 0 4.288-1.983 4.288-1.983l-.006-2.054h-4.363v-.617h6.097s2.927.332 2.927-4.282-2.555-4.451-2.555-4.451zm-4.597 10.477a.784.784 0 1 1 0 1.569.784.784 0 0 1 0-1.569z"/></svg>';
+                } else {
+                    langIcon = '<i class="fas fa-code tab-icon" style="font-size:12px"></i>';
+                }
+
+                var wrapper = document.createElement('div');
+                wrapper.className = 'sourceCode-wrapper';
+
+                var titlebar = document.createElement('div');
+                titlebar.className = 'sourceCode-titlebar';
+                titlebar.innerHTML =
+                    '<div class="sourceCode-dots">' +
+                    '<span class="dot-close"></span>' +
+                    '<span class="dot-min"></span>' +
+                    '<span class="dot-max"></span>' +
+                    '</div>' +
+                    '<div class="sourceCode-tab">' +
+                    langIcon +
+                    '<span>' + fileName + '</span>' +
+                    '</div>' +
+                    '<div class="sourceCode-actions">' +
+                    '<button type="button" onclick="toggleCodeBlock(this)" title="Ocultar/Mostrar">' +
+                    '<i class="fas fa-eye"></i> Ocultar' +
+                    '</button>' +
+                    '<button type="button" onclick="copyCodeBlock(this)" title="Copiar código">' +
+                    '<i class="fas fa-copy"></i> Copiar' +
+                    '</button>' +
+                    '</div>';
+
+                var rawText = code.textContent;
+                code.innerHTML = '';
+                code.textContent = rawText;
+
+                var lines = rawText.split('\n');
+                if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+                var gutterHTML = '';
+                for (var i = 1; i <= lines.length; i++) {
+                    gutterHTML += '<div>' + i + '</div>';
+                }
+                var gutter = document.createElement('div');
+                gutter.className = 'sourceCode-gutter';
+                gutter.innerHTML = gutterHTML;
+
+                var minimap = document.createElement('div');
+                minimap.className = 'sourceCode-minimap';
+
+                var bodyWrapper = document.createElement('div');
+                bodyWrapper.className = 'sourceCode-body';
+
+                if (window.hljs) {
+                    code.classList.add('language-python');
+                    hljs.highlightElement(code);
+                }
+
+                pre.parentNode.insertBefore(wrapper, pre);
+                bodyWrapper.appendChild(gutter);
+                bodyWrapper.appendChild(pre);
+                bodyWrapper.appendChild(minimap);
+                wrapper.appendChild(titlebar);
+                wrapper.appendChild(bodyWrapper);
+            });
+        }
+
+        function toggleCodeBlock(btn) {
+            var wrapper = btn.closest('.sourceCode-wrapper');
+            var body = wrapper.querySelector('.sourceCode-body');
+            if (body.classList.contains('collapsed')) {
+                body.classList.remove('collapsed');
+                btn.innerHTML = '<i class="fas fa-eye"></i> Ocultar';
+            } else {
+                body.classList.add('collapsed');
+                btn.innerHTML = '<i class="fas fa-eye-slash"></i> Mostrar';
+            }
+        }
+
+        function copyCodeBlock(btn) {
+            var wrapper = btn.closest('.sourceCode-wrapper');
+            var code = wrapper.querySelector('code');
+            if (!code) return;
+            var text = code.textContent || code.innerText;
+            navigator.clipboard.writeText(text).then(function () {
+                var originalHTML = btn.innerHTML;
+                btn.classList.add('copied');
+                btn.innerHTML = '<i class="fas fa-check"></i> Copiado';
+                setTimeout(function () {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = originalHTML;
+                }, 2000);
+            }).catch(function (err) { console.error('Error al copiar:', err); });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(init, 100);
+        });
+    </script>
+</body>
+
+</html>
