@@ -808,71 +808,23 @@
             border-radius: 4px;
         }
 
-        /* VS Code Dark+ Syntax Highlighting */
-        .hljs-keyword {
-            color: #569cd6;
-        }
-
-        .hljs-built_in {
-            color: #4ec9b0;
-        }
-
-        .hljs-type {
-            color: #4ec9b0;
-        }
-
-        .hljs-literal {
-            color: #569cd6;
-        }
-
-        .hljs-number {
-            color: #b5cea8;
-        }
-
-        .hljs-string {
-            color: #ce9178;
-        }
-
-        .hljs-comment {
-            color: #6a9955;
-            font-style: italic;
-        }
-
-        .hljs-function {
-            color: #dcdcaa;
-        }
-
-        .hljs-title {
-            color: #dcdcaa;
-        }
-
-        .hljs-params {
-            color: #9cdcfe;
-        }
-
-        .hljs-operator {
-            color: #d4d4d4;
-        }
-
-        .hljs-punctuation {
-            color: #d4d4d4;
-        }
-
-        .hljs-variable {
-            color: #9cdcfe;
-        }
-
-        .hljs-attr {
-            color: #9cdcfe;
-        }
-
-        .hljs-class .hljs-title {
-            color: #4ec9b0;
-        }
-
-        .hljs-meta {
-            color: #c586c0;
-        }
+        /* R Syntax Highlighting */
+        .code-keyword { color: #569cd6; font-weight: bold; }
+        .code-built_in { color: #4ec9b0; }
+        .code-type { color: #4ec9b0; }
+        .code-literal { color: #569cd6; }
+        .code-number { color: #b5cea8; }
+        .code-string { color: #ce9178; }
+        .code-comment { color: #6a9955; font-style: italic; }
+        .code-function { color: #dcdcaa; }
+        .code-title { color: #dcdcaa; }
+        .code-params { color: #9cdcfe; }
+        .code-operator { color: #d4d4d4; }
+        .code-punctuation { color: #d4d4d4; }
+        .code-variable { color: #9cdcfe; }
+        .code-attr { color: #9cdcfe; }
+        .code-class .code-title { color: #4ec9b0; }
+        .code-meta { color: #c586c0; }
 
         .module-content .output {
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
@@ -1119,39 +1071,6 @@
             font-style: italic;
         }
 
-        /* Code output */
-        .code-output {
-            background: #1a1a2e;
-            border: 1px solid #2d2d4a;
-            border-radius: 0 0 8px 8px;
-            margin-top: -8px;
-            margin-bottom: 1.5rem;
-            overflow: hidden;
-        }
-
-        .code-output-header {
-            background: rgba(76, 175, 80, 0.15);
-            padding: 0.4rem 1rem;
-            border-bottom: 1px solid #2d2d4a;
-        }
-
-        .code-output-title {
-            color: #4CAF50;
-            font-weight: 700;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.85rem;
-        }
-
-        .code-output-body {
-            padding: 1rem;
-            color: #e0e0e0;
-            font-family: 'Fira Code', 'Courier New', monospace;
-            font-size: 0.85rem;
-            white-space: pre-wrap;
-            line-height: 1.6;
-            margin: 0;
-        }
-
         /* Output */
         .module-content .output {
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
@@ -1196,243 +1115,6 @@
         .definition-box {
             background: linear-gradient(135deg, rgba(61, 0, 141, 0.06) 0%, rgba(237, 30, 121, 0.04) 100%);
             border-left: 4px solid #3D008D;
-            padding: 1.25rem 1.5rem;
-            margin: 1.5rem 0;
-            border-radius: 0 12px 12px 0;
-        }
-
-        .definition-box h4 {
-            color: #3D008D;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
-            border: none;
-            border-radius: 0;
-            padding: 0;
-            background: transparent;
-        }
-
-        /* Warning box - USTA style */
-        .warning-box {
-            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
-            border: 2px solid #f59e0b;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-        }
-
-        .warning-box h4 {
-            color: #b45309;
-            border-left: 4px solid #f59e0b;
-            background: transparent;
-            margin: 0 0 1rem 0;
-            padding: 0.5rem 1rem;
-            border-top: none;
-            border-right: none;
-            border-bottom: none;
-            border-radius: 0;
-        }
-
-        /* Example box */
-        .example-box {
-            background: linear-gradient(135deg, rgba(61, 0, 141, 0.06) 0%, rgba(237, 30, 121, 0.04) 100%);
-            padding: 1.5rem;
-            border-radius: 12px;
-            border-left: 4px solid #3D008D;
-            margin: 1.5rem 0;
-        }
-
-        .example-box h4 {
-            color: #3D008D;
-            margin-top: 0;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Interpretation box */
-        .interpretation-box {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
-            padding: 1.25rem;
-            border-radius: 12px;
-            border-left: 4px solid #10B981;
-            margin: 1.5rem 0;
-        }
-
-        .interpretation-box strong {
-            color: #059669;
-        }
-
-        /* Reference list */
-        .reference-list {
-            margin: 1.5rem 0;
-        }
-
-        /* Step connector for pipeline */
-        .step-connector::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 100%;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, #3D008D, #ED1E79);
-            opacity: 0.3;
-            z-index: -1;
-        }
-
-        .step-connector:last-child::after {
-            display: none;
-        }
-
-        /* Latin Square & Flow Visualizations */
-        :root {
-            --usta-primary: #3D008D;
-        }
-
-        .latin-square-grid {
-            display: grid;
-            gap: 0.5rem;
-            margin: 2rem auto;
-            justify-content: center;
-        }
-
-        .latin-square-grid.grid-3 {
-            grid-template-columns: repeat(3, 3rem);
-        }
-
-        .latin-square-grid.grid-4 {
-            grid-template-columns: repeat(4, 3rem);
-        }
-
-        .latin-square-grid.grid-5 {
-            grid-template-columns: repeat(5, 3rem);
-        }
-
-        .latin-square-cell {
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Fira Code', monospace;
-            font-size: 1.25rem;
-            font-weight: 700;
-            border-radius: 0.375rem;
-            color: white;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
-        }
-
-        .latin-square-cell:hover {
-            transform: scale(1.05);
-        }
-
-        .cell-A {
-            background: linear-gradient(135deg, #10B981, #059669);
-        }
-
-        .cell-B {
-            background: linear-gradient(135deg, #3B82F6, #2563EB);
-        }
-
-        .cell-C {
-            background: linear-gradient(135deg, #F59E0B, #D97706);
-        }
-
-        .cell-D {
-            background: linear-gradient(135deg, #EF4444, #DC2626);
-        }
-
-        .cell-E {
-            background: linear-gradient(135deg, #8B5CF6, #7C3AED);
-        }
-
-        /* Concept Diagram */
-        .concept-diagram {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            margin: 2rem 0;
-            flex-wrap: wrap;
-        }
-
-        .diagram-box {
-            padding: 1rem;
-            border-radius: 0.5rem;
-            background: white;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            font-weight: 600;
-            min-width: 120px;
-            border: 1px solid #E2E8F0;
-        }
-
-        .diagram-row {
-            border-top: 4px solid #10B981;
-        }
-
-        .diagram-col {
-            border-top: 4px solid #3B82F6;
-        }
-
-        .diagram-treat {
-            border-top: 4px solid #F59E0B;
-        }
-
-        .diagram-arrow {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #64748B;
-        }
-
-        /* Legacy syntax highlighting */
-        .syntax-kwd {
-            color: #569cd6;
-            font-weight: bold;
-        }
-
-        .syntax-cls {
-            color: #4ec9b0;
-        }
-
-        .syntax-str {
-            color: #ce9178;
-        }
-
-        .syntax-com {
-            color: #6a9955;
-            font-style: italic;
-        }
-
-        .syntax-func {
-            color: #dcdcaa;
-        }
-
-        .syntax-self {
-            color: #9cdcfe;
-            font-style: italic;
-        }
-
-        .syntax-num {
-            color: #b5cea8;
-        }
-
-        /* Inline code */
-        .module-content code.inline,
-        code.inline {
-            font-family: 'Fira Code', monospace;
-            font-size: 0.9rem;
-            color: #3D008D;
-            background: rgba(61, 0, 141, 0.08);
-            padding: 0.15rem 0.4rem;
-            border-radius: 4px;
-        }
-
-        /* KaTeX display */
-        .katex-display {
-            margin: 1.25em 0;
-            overflow-x: auto;
-        }
     </style>
 </head>
 
@@ -1591,13 +1273,6 @@
                 <!-- SECCIÓN 1: ENTORNO DE TRABAJO -->
                 <section id="sec1" class="section-slide">
                     <h2>Sección 1: Entorno de Trabajo y RMarkdown</h2>
-
-                    <p>En esta sección estableceremos las bases para trabajar con R. Aprenderás a instalar y configurar
-                        el entorno, comprenderás los conceptos fundamentales del lenguaje y crearás tus primeros
-                        documentos reproducibles con RMarkdown.</p>
-
-                    <section id="s1-rstudio">
-                        <h3>1.1 Instalación y Configuración de R y RStudio</h3>
 
                         <h4>¿Qué es R?</h4>
                         <p>R es un <span class="highlight">lenguaje de programación</span> y un entorno de software
