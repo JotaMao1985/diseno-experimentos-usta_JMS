@@ -2765,13 +2765,36 @@ iris <span class="code-operator">%>%</span>
 
         // Sidebar navigation
         const navButtons = document.querySelectorAll('.sidebar-nav-item');
+        const subsectionMap = {
+            's1-rstudio': 'sec1',
+            's1-rmarkdown': 'sec1',
+            's1-basico': 'sec2',
+            's2-estructuras': 'sec2',
+            's2-importacion': 'sec3',
+            's2-filtrado': 'sec3',
+            's3-funciones': 'sec3',
+            's3-control': 'sec3',
+            's3-loops': 'sec3',
+            's4-pipe': 'sec4',
+            's4-verbos': 'sec4',
+            's4-agregacion': 'sec4',
+            's5-ggplot': 'sec5',
+            's5-tipos': 'sec5'
+        };
+
         navButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 const target = btn.getAttribute('data-target');
+                let targetSlideId = target;
 
-                // Find which section contains this target
+                // If clicking a subsection, map to its parent slide
+                if (subsectionMap[target]) {
+                    targetSlideId = subsectionMap[target];
+                }
+
+                // Find which section-slide contains this target
                 slides.forEach((slide, index) => {
-                    if (slide.id === target || slide.contains(document.getElementById(target))) {
+                    if (slide.id === targetSlideId) {
                         currentSlide = index;
                         showSlide(currentSlide);
                     }
