@@ -1,0 +1,3474 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Material de estudio sobre Diseños Factoriales para Diseño de Experimentos - Universidad Santo Tomás">
+    <meta content="#3D008D" name="theme-color" />
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>" />
+    <title>Diseños Factoriales — Material de Estudio USTA</title>
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- External Resources -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- MathJax 3 (conservado del documento original) -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            },
+            options: {
+                renderActions: {
+                    addMenu: [0, '', '']
+                }
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
+    <!-- Highlight.js VS Code Dark+ (con soporte R) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/r.min.js"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3D008D',
+                        secondary: '#ED1E79',
+                        navy: '#001A4D',
+                        gold: '#FDB913',
+                        bg: '#F8FAFC',
+                        surface: '#FFFFFF',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --usta-primary: #3D008D;
+            --usta-secondary: #ED1E79;
+            --usta-navy: #001A4D;
+            --usta-navy-light: #002868;
+            --usta-gold: #FDB913;
+            --usta-bg: #F8FAFC;
+            --usta-surface: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #F8FAFC;
+            color: #1E293B;
+            scroll-behavior: smooth;
+        }
+
+        code, pre {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .usta-gradient {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+        }
+
+        .usta-header {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+        }
+
+        .main-layout {
+            display: flex;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        .scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 3.5rem;
+            height: 3.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(61, 0, 141, 0.4);
+            transition: all 0.3s ease;
+            z-index: 50;
+            border: none;
+        }
+
+        .scroll-to-top.visible { display: flex; }
+
+        .scroll-to-top:hover {
+            background: linear-gradient(140deg, #4A00A8 0%, #FF2D8A 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(61, 0, 141, 0.5);
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #3D008D, #ED1E79); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #4A00A8, #FF2D8A); }
+
+        button:focus-visible, a:focus-visible {
+            outline: 2px solid #ED1E79;
+            outline-offset: 2px;
+        }
+
+        /* ===== Module content typography ===== */
+        .module-content h1 {
+            color: white;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border: none;
+            letter-spacing: -0.01em;
+        }
+
+        .module-content h2 {
+            color: #3D008D;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 2rem 0 1.25rem 0;
+            padding-bottom: 0.6rem;
+            border-bottom: 3px solid #ED1E79;
+        }
+
+        .module-content h3 {
+            color: #3D008D;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.75rem 0 0.85rem 0;
+        }
+
+        .module-content h4 {
+            color: #ED1E79;
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin: 1.4rem 0 0.6rem 0;
+        }
+
+        .module-content p {
+            margin-bottom: 1rem;
+            text-align: justify;
+            line-height: 1.75;
+        }
+
+        .module-content ul, .module-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .module-content li {
+            margin-bottom: 0.4rem;
+            line-height: 1.7;
+        }
+
+        .module-content strong { color: #3D008D; }
+        .module-content em { color: #ED1E79; font-style: italic; }
+
+        /* ===== Tables ===== */
+        .module-content table {
+            width: auto;
+            min-width: 60%;
+            border-collapse: collapse;
+            margin: 1.5rem auto;
+            font-size: 0.95rem;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .module-content th, .module-content td {
+            padding: 0.55rem 0.95rem;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .module-content th {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            font-weight: 600;
+            border: none;
+        }
+
+        .module-content tr:nth-child(even) td {
+            background: rgba(61, 0, 141, 0.03);
+        }
+
+        .module-content caption {
+            caption-side: top;
+            font-style: italic;
+            margin-bottom: 0.5rem;
+            color: #475569;
+            padding: 0.25rem;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 1.5rem 0;
+        }
+        .table-responsive table { margin: 0 auto; }
+
+        /* ===== Inline code ===== */
+        .module-content code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #3D008D;
+            background: rgba(61, 0, 141, 0.08);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        .module-content pre code {
+            background: transparent;
+            padding: 0;
+            color: #d4d4d4;
+        }
+
+        /* ===== Cajas semánticas ===== */
+        .module-content .ejercicio {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.08) 0%, rgba(237, 30, 121, 0.05) 100%);
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #ED1E79;
+            margin: 1.5rem 0;
+        }
+
+        .module-content .ejercicio strong:first-of-type {
+            color: #3D008D;
+            font-size: 1.05rem;
+        }
+
+        .module-content .nota {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            border-left: 4px solid #10B981;
+            margin: 1.5rem 0;
+        }
+
+        .module-content .nota strong:first-of-type {
+            color: #059669;
+        }
+
+        .module-content .solucion-parcial {
+            margin-bottom: 1.25rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .module-content .solucion-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1.25rem;
+            background: linear-gradient(135deg, #fdf5e6 0%, #fce8c8 100%);
+            cursor: pointer;
+            font-weight: 700;
+            color: #92400e;
+            font-size: 0.95rem;
+            transition: background 0.2s ease;
+        }
+
+        .module-content .solucion-header:hover {
+            background: linear-gradient(135deg, #fce8c8 0%, #fcd9a3 100%);
+        }
+
+        .module-content .solucion-header i {
+            transition: transform 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .module-content .solucion-header i.rotated { transform: rotate(90deg); }
+
+        .module-content .solucion-content {
+            display: none;
+            padding: 1.25rem;
+            background: #fffaf0;
+        }
+
+        .module-content .solucion-content.open { display: block; }
+
+        /* TOC navegación inicial */
+        .module-content .toc-nav {
+            background: linear-gradient(135deg, rgba(61, 0, 141, 0.04) 0%, rgba(237, 30, 121, 0.04) 100%);
+            border-left: 4px solid #3D008D;
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0 2rem;
+            display: block;
+        }
+
+        .module-content .toc-nav strong {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #3D008D;
+            font-size: 1rem;
+        }
+
+        .module-content .toc-nav a {
+            color: #3D008D;
+            text-decoration: none;
+            border-bottom: 1px dotted #ED1E79;
+        }
+
+        .module-content .toc-nav a:hover {
+            color: #ED1E79;
+            border-bottom-style: solid;
+        }
+
+        /* Salida R */
+        .module-content .r-output {
+            background: #1a1a2e;
+            color: #e0e0e0;
+            border: 1px solid #2d2d4a;
+            border-left: 4px solid #4CAF50;
+            border-radius: 0 0 8px 8px;
+            margin: -8px 0 1.5rem 0;
+            padding: 0.85rem 1.1rem;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .module-content .r-output::before {
+            content: '\25b8 Salida R';
+            display: block;
+            color: #4CAF50;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.78rem;
+            margin: -0.4rem -0.4rem 0.5rem;
+            padding: 0.25rem 0.4rem 0.4rem;
+            border-bottom: 1px solid #2d2d4a;
+        }
+
+        /* ===== Bloques de código estilo VS Code ===== */
+        .sourceCode-wrapper {
+            position: relative;
+            margin: 1.75rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #1e1e1e;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255,255,255,0.05);
+        }
+
+        .sourceCode-titlebar {
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            height: 36px;
+            background: #323233;
+            border-bottom: 1px solid #252526;
+            user-select: none;
+        }
+
+        .sourceCode-dots { display: flex; gap: 8px; }
+        .sourceCode-dots span { width: 12px; height: 12px; border-radius: 50%; display: block; }
+        .sourceCode-dots .dot-close { background: #ff5f57; }
+        .sourceCode-dots .dot-min { background: #ffbd2e; }
+        .sourceCode-dots .dot-max { background: #28c940; }
+
+        .sourceCode-tab {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 12px;
+            height: 100%;
+            background: #1e1e1e;
+            border-top: 2px solid #007acc;
+            border-right: 1px solid #252526;
+            margin-left: 12px;
+            font-size: 0.78rem;
+            color: #cccccc;
+            font-family: 'Segoe UI', 'Montserrat', sans-serif;
+        }
+
+        .sourceCode-tab .tab-icon { color: #2A75BC; font-size: 12px; }
+
+        .sourceCode-actions {
+            display: flex;
+            gap: 4px;
+            margin-left: auto;
+        }
+
+        .sourceCode-actions button {
+            background: transparent;
+            border: none;
+            color: #858585;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-family: 'Segoe UI', 'Montserrat', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .sourceCode-actions button:hover { background: #3c3c3c; color: #cccccc; }
+        .sourceCode-actions button.copied { color: #4ec9b0; }
+
+        .sourceCode-body {
+            display: flex;
+            margin: 0;
+            overflow-x: auto;
+            background: #1e1e1e;
+        }
+        .sourceCode-body.collapsed { display: none; }
+
+        .sourceCode-gutter {
+            padding: 16px 0;
+            text-align: right;
+            user-select: none;
+            color: #858585;
+            font-size: 0.82rem;
+            line-height: 1.65;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            min-width: 40px;
+            padding-right: 12px;
+            padding-left: 12px;
+            border-right: 1px solid #2d2d2d;
+            background: #1e1e1e;
+            flex-shrink: 0;
+        }
+
+        .sourceCode-gutter div { height: 1.65em; }
+
+        .sourceCode-wrapper pre {
+            margin: 0;
+            padding: 16px;
+            overflow-x: auto;
+            background: #1e1e1e;
+            flex: 1;
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+            white-space: pre;
+        }
+
+        .sourceCode-wrapper code {
+            font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+            font-size: 0.87rem;
+            line-height: 1.65;
+            color: #d4d4d4;
+            background: transparent !important;
+        }
+
+        .sourceCode-wrapper pre::-webkit-scrollbar { height: 8px; }
+        .sourceCode-wrapper pre::-webkit-scrollbar-track { background: #1e1e1e; }
+        .sourceCode-wrapper pre::-webkit-scrollbar-thumb { background: rgba(121,121,121,0.4); border-radius: 4px; }
+        .sourceCode-wrapper pre::-webkit-scrollbar-thumb:hover { background: rgba(121,121,121,0.7); }
+
+        /* VS Code Dark+ Syntax Highlighting */
+        .hljs-keyword { color: #569cd6; }
+        .hljs-built_in { color: #4ec9b0; }
+        .hljs-type { color: #4ec9b0; }
+        .hljs-literal { color: #569cd6; }
+        .hljs-number { color: #b5cea8; }
+        .hljs-string { color: #ce9178; }
+        .hljs-comment { color: #6a9955; font-style: italic; }
+        .hljs-function { color: #dcdcaa; }
+        .hljs-title { color: #dcdcaa; }
+        .hljs-params { color: #9cdcfe; }
+        .hljs-operator { color: #d4d4d4; }
+        .hljs-punctuation { color: #d4d4d4; }
+        .hljs-variable { color: #9cdcfe; }
+        .hljs-attr { color: #9cdcfe; }
+        .hljs-meta { color: #c586c0; }
+
+        /* Fade-in */
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header banner del documento */
+        .doc-header {
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            padding: 2rem 2.5rem;
+            border-radius: 12px 12px 0 0;
+            margin: -1.5rem -1.5rem 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .doc-header { margin: -2.5rem -2.5rem 2rem; }
+        }
+
+        .doc-header .doc-tagline {
+            color: rgba(255,255,255,0.85);
+            margin: 0.5rem 0 0;
+            font-size: 0.95rem;
+            font-style: italic;
+        }
+    
+        /* ===== SIDEBAR DARK STYLE (modular USTA) ===== */
+        #sidebar-panel {
+            background: linear-gradient(180deg, #001A4D 0%, #002868 100%);
+            flex-shrink: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            width: 16rem;
+            min-width: 16rem;
+            max-height: 100vh;
+            position: sticky;
+            top: 0;
+            transition: width 0.3s ease, min-width 0.3s ease, opacity 0.25s ease;
+            z-index: 40;
+        }
+
+        #sidebar-panel.collapsed {
+            width: 0;
+            min-width: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-brand h2 {
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        .sidebar-brand p {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 0.25rem;
+            margin-bottom: 0;
+            text-align: left;
+        }
+
+        .sidebar-nav {
+            padding: 0.75rem;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .sidebar-nav-item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 0.6rem 0.75rem;
+            font-size: 0.78rem;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            text-align: left;
+            margin-bottom: 0.2rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: rgba(255, 255, 255, 0.65);
+            background: transparent;
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.3;
+        }
+
+        .sidebar-nav-item:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-nav-item.active {
+            color: white;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            box-shadow: 0 4px 12px rgba(61, 0, 141, 0.3);
+        }
+
+        .sidebar-nav-item .check-mark {
+            color: #10B981;
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav-item .mod-num {
+            display: block;
+            font-size: 0.65rem;
+            opacity: 0.7;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.1rem;
+        }
+
+        /* Floating sidebar toggle button */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 50;
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(140deg, #3D008D 0%, #ED1E79 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(61, 0, 141, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-toggle-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 18px rgba(61, 0, 141, 0.5);
+        }
+
+        /* Module mini-header */
+        .module-mini-header {
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .module-mini-header .mod-tag {
+            display: inline-block;
+            color: #ED1E79;
+            font-weight: 700;
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+        }
+
+        .module-objective {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+            margin-top: 0.85rem;
+        }
+
+        .module-objective .objective-icon {
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+
+        .module-objective .objective-title {
+            font-weight: 700;
+            color: #334155;
+            font-size: 0.82rem;
+            margin: 0;
+        }
+
+        .module-objective .objective-text {
+            color: #64748b;
+            font-size: 0.85rem;
+            margin: 0.15rem 0 0;
+            line-height: 1.5;
+        }
+
+        /* Module navigation footer (Anterior / Siguiente) */
+        .module-nav-footer {
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .module-nav-footer button {
+            padding: 0.55rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            font-family: 'Montserrat', sans-serif;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .module-nav-footer .btn-prev {
+            background: transparent;
+            color: #64748b;
+        }
+
+        .module-nav-footer .btn-prev:hover { color: #ED1E79; }
+
+        .module-nav-footer .btn-complete {
+            background: transparent;
+            color: #059669;
+        }
+
+        .module-nav-footer .btn-complete:hover { background: rgba(16,185,129,0.1); }
+
+        .module-nav-footer .btn-next {
+            background: #ED1E79;
+            color: white;
+        }
+
+        .module-nav-footer .btn-next:hover { background: #d11268; }
+
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+
+    <!-- Floating Sidebar Toggle Button -->
+    <button class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Mostrar/Ocultar menú" aria-label="Toggle sidebar">
+        <i class="fas fa-bars text-sm" id="sidebarToggleIcon"></i>
+    </button>
+
+    <div class="main-layout">
+
+        <!-- Sidebar Navigation -->
+        <div id="sidebar-panel">
+            <div class="sidebar-brand">
+                <h2><i class="fas fa-chart-line" style="color:#FDB913;"></i> Capítulo 5 <span style="color:#FDB913;">· Factoriales</span></h2>
+                <p>Diseño de Experimentos &bull; USTA 2026</p>
+            </div>
+            <nav class="sidebar-nav" id="module-nav">
+                <!-- Items inyectados por JS -->
+            </nav>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-grow flex flex-col" style="min-width:0;">
+            <main class="flex-grow bg-white shadow-sm border border-gray-200 overflow-hidden">
+                <div id="content-area" class="p-6 md:p-10 module-content">
+                    <!-- Contenido inyectado por JS desde los templates module-1 .. module-13 -->
+                </div>
+            </main>
+        </div>
+
+    </div>
+
+    <!-- Templates con el contenido modularizado -->
+
+    <template id="module-1">
+        <div class="animate-fade-in">
+            <div class="module-mini-header">
+                <span class="mod-tag">Módulo 1 · Capítulo 5</span>
+                <div class="module-objective">
+                    <span class="objective-icon">🎯</span>
+                    <div>
+                        <p class="objective-title">Objetivo</p>
+                        <p class="objective-text">Comprender los conceptos básicos del diseño factorial: factor, nivel, tratamiento, efecto principal e interacción.</p>
+                    </div>
+                </div>
+            </div>
+
+<h2 id="sec-5-1">5.1 Definiciones básicas y principios</h2>
+
+    <p>
+        En muchos problemas experimentales es necesario estudiar el efecto de <strong>dos o más factores</strong>
+        sobre una variable de respuesta. Un <strong>diseño factorial</strong> es un diseño experimental en el que
+        se investigan <em>todas</em> las combinaciones posibles de los niveles de los factores involucrados. Si el
+        factor \(A\) tiene \(a\) niveles y el factor \(B\) tiene \(b\) niveles, el diseño factorial completo consta
+        de \(a \times b\) <strong>tratamientos</strong> (o combinaciones de tratamientos). Geométricamente, los
+        tratamientos pueden visualizarse como las celdas de una rejilla \(a\times b\); con tres factores serían
+        las celdas de un paralelepípedo \(a\times b\times c\), y así sucesivamente.
+    </p>
+
+    <p>
+        Se utilizan las siguientes definiciones clave:
+    </p>
+
+    <ul>
+        <li><strong>Factor:</strong> variable independiente controlada por el experimentador (p.&nbsp;ej., temperatura,
+            presión, tipo de catalizador). Puede ser cualitativo o cuantitativo.</li>
+        <li><strong>Nivel:</strong> cada uno de los valores o categorías que toma un factor.</li>
+        <li><strong>Tratamiento (combinación de tratamientos):</strong> una condición experimental específica definida
+            por una combinación particular de niveles de todos los factores.</li>
+        <li><strong>Diseño cruzado (<em>crossed</em>):</strong> cuando cada nivel de un factor se combina con cada nivel
+            de los demás factores. Un diseño factorial completo es, por definición, cruzado. Se contrapone al
+            <em>anidamiento</em>, que se estudia en capítulos posteriores.</li>
+        <li><strong>Réplica:</strong> cada ejecución independiente de una combinación de tratamientos.</li>
+        <li><strong>Efecto principal:</strong> el cambio promedio en la respuesta producido por un cambio en el nivel de
+            un factor, promediado sobre todos los niveles de los demás factores.</li>
+        <li><strong>Efecto de interacción:</strong> se produce cuando el efecto de un factor sobre la respuesta depende
+            del nivel de otro factor. Si no hay interacción, los efectos principales describen completamente el
+            comportamiento del sistema.</li>
+    </ul>
+
+    <h3>Ilustración: un experimento \(2^2\)</h3>
+
+    <p>
+        Considérese un experimento con dos factores, \(A\) y \(B\), cada uno en dos niveles codificados como
+        <em>bajo</em> (\(-\)) y <em>alto</em> (\(+\)). Supóngase una réplica por celda y las siguientes
+        respuestas observadas (Montgomery, Fig.&nbsp;5.1):
+    </p>
+
+    <table>
+        <caption>Tabla 5.0a. Respuestas observadas en un diseño \(2^2\) sin interacción.</caption>
+        <tr>
+            <th></th>
+            <th>\(A_-\)</th>
+            <th>\(A_+\)</th>
+        </tr>
+        <tr>
+            <th>\(B_-\)</th>
+            <td>20</td>
+            <td>40</td>
+        </tr>
+        <tr>
+            <th>\(B_+\)</th>
+            <td>30</td>
+            <td>52</td>
+        </tr>
+    </table>
+
+    <p>
+        El <strong>efecto principal</strong> de \(A\) es la diferencia entre la respuesta promedio con \(A\) alto y
+        con \(A\) bajo:
+    </p>
+
+    \[
+    A = \frac{40 + 52}{2} - \frac{20 + 30}{2} = 46 - 25 = 21
+    \]
+
+    <p>
+        De igual forma,
+    </p>
+
+    \[
+    B = \frac{30 + 52}{2} - \frac{20 + 40}{2} = 41 - 30 = 11
+    \]
+
+    <p>
+        El <strong>efecto de interacción</strong> \(AB\) es la semidiferencia entre el efecto de \(A\) en los dos
+        niveles de \(B\):
+    </p>
+
+    \[
+    AB = \tfrac{1}{2}\left[(52 - 30) - (40 - 20)\right] = \tfrac{1}{2}\left[22 - 20\right] = 1
+    \]
+
+    <p>
+        Como \(AB\) es pequeño frente a los efectos principales, las líneas de un gráfico de interacción serían
+        aproximadamente paralelas (Montgomery, Fig.&nbsp;5.3).
+    </p>
+
+    <p>
+        Ahora considérese un segundo escenario en el que la respuesta en \((A_+, B_+)\) cae a 12
+        (Montgomery, Fig.&nbsp;5.2):
+    </p>
+
+    <table>
+        <caption>Tabla 5.0b. Respuestas con interacción grande.</caption>
+        <tr>
+            <th></th>
+            <th>\(A_-\)</th>
+            <th>\(A_+\)</th>
+        </tr>
+        <tr>
+            <th>\(B_-\)</th>
+            <td>20</td>
+            <td>50</td>
+        </tr>
+        <tr>
+            <th>\(B_+\)</th>
+            <td>40</td>
+            <td>12</td>
+        </tr>
+    </table>
+
+    <p>
+        Ahora el efecto de \(A\) depende del nivel de \(B\):
+        en \(B_-\), \(A = 50-20 = 30\); en \(B_+\), \(A = 12-40 = -28\). Por lo tanto
+        \(AB = (-28 - 30)/2 = -29\), una interacción grande. El efecto principal promediado
+        \(A = (30 + (-28))/2 = 1\) es engañosamente pequeño: concluir que \(A\) no tiene efecto sería incorrecto,
+        ya que su efecto sí existe pero está enmascarado por la interacción. En este caso, las líneas del gráfico
+        de interacción se cruzarían (Montgomery, Fig.&nbsp;5.4).
+    </p>
+
+    <h3>Formalización con notación de contrastes</h3>
+
+    <p>
+        En un diseño \(2^2\) con \(n\) réplicas por celda es habitual denotar por
+        \((1), a, b, ab\) los <strong>totales</strong> de las respuestas observadas en las celdas
+        \((A_-, B_-)\), \((A_+, B_-)\), \((A_-, B_+)\) y \((A_+, B_+)\), respectivamente. Con esta
+        notación, los efectos anteriores se escriben como contrastes con signo:
+    </p>
+
+    \[
+    A = \frac{1}{2n}\left[ ab + a - b - (1) \right], \qquad
+    B = \frac{1}{2n}\left[ ab + b - a - (1) \right], \qquad
+    AB = \frac{1}{2n}\left[ ab - a - b + (1) \right]
+    \]
+
+    <p>
+        Esta forma se generaliza a diseños \(2^k\) (Capítulo&nbsp;6 de Montgomery, dedicado precisamente a los
+        factoriales con todos los factores a dos niveles) y es la base de la construcción sistemática de efectos
+        a partir de signos \(\pm\) en una tabla de tratamientos.
+    </p>
+
+    <h3>Representación con modelo de regresión</h3>
+
+    <p>
+        Cuando los factores son cuantitativos, el diseño factorial puede representarse mediante el modelo de
+        regresión
+    </p>
+
+    \[
+    y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_{12}\, x_1 x_2 + \varepsilon,
+    \]
+
+    <p>
+        con las variables <em>codificadas</em> \(x_1, x_2 \in \{-1, +1\}\) que representan los niveles bajo y alto
+        de \(A\) y \(B\). Los estimadores por mínimos cuadrados de los coeficientes cumplen las relaciones
+        \( \hat\beta_1 = A/2,\ \hat\beta_2 = B/2,\ \hat\beta_{12} = AB/2 \) y
+        \( \hat\beta_0 = \bar{y} \) (la media general aparece como intercepto porque, al codificar los niveles
+        en \(\{-1,+1\}\), las columnas \(x_1\) y \(x_2\) suman cero). Aplicado a la Tabla&nbsp;5.0a con
+        \(\bar{y} = (20+40+30+52)/4 = 35.5\), el modelo ajustado es
+    </p>
+
+    \[
+    \hat{y} = 35.5 + 10.5\,x_1 + 5.5\,x_2 + 0.5\,x_1 x_2 .
+    \]
+
+    <p>
+        El coeficiente de interacción es pequeño, lo que confirma la lectura geométrica del gráfico
+        paralelo. El modelo se puede visualizar como un plano en el espacio \((x_1, x_2, y)\); cuando la
+        interacción es grande, ese plano se <em>tuerce</em> y las curvas de nivel dejan de ser rectas
+        paralelas. Por lo tanto, <strong>la interacción es una forma de curvatura en la superficie de
+        respuesta subyacente</strong>, idea que se retoma formalmente en la sección 5.5.
+    </p>
+
+    <div class="nota">
+        <strong>Nota conceptual:</strong> La presencia de interacción tiene implicaciones prácticas importantes:
+        si la interacción es significativa, los efectos principales por sí solos no cuentan la historia completa.
+        En tal caso, se deben interpretar los efectos de un factor <em>condicionados</em> a los niveles del otro.
+        Este concepto se retoma con mayor formalidad en la sección 5.3.
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+        </div>
+    </template>
+
+    <template id="module-2">
+        <div class="animate-fade-in">
+            <div class="module-mini-header">
+                <span class="mod-tag">Módulo 2 · Capítulo 5</span>
+                <div class="module-objective">
+                    <span class="objective-icon">🎯</span>
+                    <div>
+                        <p class="objective-title">Objetivo</p>
+                        <p class="objective-text">Justificar la superioridad del diseño factorial frente al OFAT en eficiencia y detección de interacciones.</p>
+                    </div>
+                </div>
+            </div>
+
+<h2 id="sec-5-2">5.2 Ventajas de los diseños factoriales</h2>
+
+    <p>
+        Los diseños factoriales presentan ventajas sustanciales frente a la estrategia de experimentar con un
+        factor a la vez (<em>one-factor-at-a-time</em>, OFAT):
+    </p>
+
+    <ol>
+        <li><strong>Eficiencia:</strong> cada observación proporciona información sobre <em>todos</em> los factores
+            simultáneamente. En un diseño OFAT, la misma cantidad de información requeriría un número
+            considerablemente mayor de corridas experimentales.</li>
+        <li><strong>Detección de interacciones:</strong> solo un diseño factorial permite estimar y probar la
+            significancia de las interacciones entre factores. El enfoque OFAT asume implícitamente que no
+            existen interacciones, lo cual puede llevar a conclusiones erróneas.</li>
+        <li><strong>Espacio experimental más amplio:</strong> las conclusiones son válidas sobre un rango más
+            amplio de condiciones, ya que se observa la respuesta en todas las combinaciones de niveles.</li>
+        <li><strong>Base para diseños más avanzados:</strong> los diseños factoriales son el fundamento de los
+            diseños fraccionados, las superficies de respuesta y los diseños robustos (Taguchi).</li>
+    </ol>
+
+    <h3>Ilustración: eficiencia del factorial frente al OFAT</h3>
+
+    <p>
+        Considérese un experimento con dos factores, \(A\) y \(B\), cada uno en dos niveles
+        (\(A_-, A_+, B_-, B_+\)). Con la estrategia OFAT, la información de ambos factores se obtiene
+        variando un factor a la vez a partir de una condición base, por ejemplo
+        \((A_-, B_-)\) (ver Montgomery, Fig.&nbsp;5.7):
+    </p>
+
+    <ul>
+        <li>2 réplicas en \((A_-, B_-)\) y 2 réplicas en \((A_+, B_-)\): estiman el efecto de \(A\) con
+            varianza \(\sigma^2\).</li>
+        <li>2 réplicas en \((A_-, B_+)\): junto con las de \((A_-, B_-)\), estiman el efecto de \(B\) con
+            varianza \(\sigma^2\).</li>
+    </ul>
+
+    <p>
+        El uso de \(n=2\) réplicas por celda no es arbitrario: la varianza del estimador del efecto principal
+        en este OFAT es \(\sigma^2\) si y solo si cada media de celda se calcula con dos observaciones (porque
+        el efecto se obtiene como diferencia de medias y \(\mathrm{Var}(\bar y_1 - \bar y_2) = 2\sigma^2/n\)).
+        Total: \(3 \times 2 = 6\) observaciones, una estimación del efecto de \(A\), una del efecto de \(B\) y
+        <strong>ninguna</strong> del efecto de interacción.
+    </p>
+
+    <p>
+        Si en cambio se corre un diseño factorial \(2^2\) con \(n=1\) réplica por celda (4 observaciones), las
+        cuatro celdas alcanzan, al promediarse adecuadamente, dos estimaciones independientes del efecto de
+        \(A\) (una a cada nivel de \(B\)) que producen un estimador del efecto principal con la misma varianza
+        \(\sigma^2\) que el OFAT; análogamente para \(B\); y, adicionalmente, una estimación del efecto de
+        interacción. Por lo tanto,
+    </p>
+
+    \[
+    \text{ER} = \frac{\text{observaciones OFAT para igual precisión}}{\text{observaciones factoriales}}
+           = \frac{6}{4} = 1.5 .
+    \]
+
+    <p>
+        El resultado se generaliza a \(k\) factores, cada uno en 2 niveles. Al igualar la varianza del estimador
+        del efecto principal en ambos diseños, se obtiene
+    </p>
+
+    \[
+    \text{ER} = \frac{k + 1}{2}.
+    \]
+
+    <p>
+        Esto es lo que muestra la Figura&nbsp;5.8 de Montgomery: la ventaja del factorial crece linealmente con el
+        número de factores.
+    </p>
+
+    <pre><code data-language="R"># ── Eficiencia relativa factorial vs OFAT (k factores a 2 niveles) ──
+# Basado en Montgomery (2017), Sec. 5.2 y Fig. 5.8.
+
+eficiencia_rel_2niveles &lt;- function(k) (k + 1) / 2
+
+k_vals &lt;- 2:6
+tabla_ER &lt;- data.frame(k = k_vals, ER = eficiencia_rel_2niveles(k_vals))
+print(tabla_ER)
+
+# Visualización (reproduce Fig. 5.8 de Montgomery)
+plot(k_vals, eficiencia_rel_2niveles(k_vals),
+     type = "b", pch = 19, col = "steelblue",
+     xlab = "Número de factores (k)",
+     ylab = "Eficiencia relativa",
+     main = "ER del factorial frente al OFAT (factores a 2 niveles)")
+</code></pre>
+
+    <div class="r-output">  k  ER
+        1 2 1.5
+        2 3 2.0
+        3 4 2.5
+        4 5 3.0
+        5 6 3.5</div>
+
+    <p>
+        La tabla reproduce los valores de la Fig.&nbsp;5.8 de Montgomery. Cuando los factores tienen más
+        de dos niveles, los detalles cambian pero la conclusión se mantiene: el factorial es más eficiente
+        y, en presencia de interacciones, es la única estrategia válida, porque el OFAT <em>asume</em>
+        aditividad y por lo tanto puede producir conclusiones gravemente erróneas cuando las líneas del
+        gráfico de interacción no son paralelas (cf. Tabla&nbsp;5.0b y Montgomery, Fig.&nbsp;5.2).
+    </p>
+
+    <div class="ejercicio">
+        <strong>Ejercicio 5.2.1.</strong> Considérese un experimento con tres factores: \(A\) con 3 niveles,
+        \(B\) con 2 niveles y \(C\) con 4 niveles. (a) Determinar el número total de combinaciones de
+        tratamientos en un diseño factorial completo. (b) Si se utilizan \(n = 2\) réplicas por celda,
+        ¿cuántas corridas experimentales se requieren en total? (c) Comparar conceptualmente con la
+        cantidad de corridas que requeriría un enfoque OFAT para estudiar los tres factores por separado
+        con la misma precisión para los efectos principales.
+    </div>
+
+    <div class="ejercicio">
+        <strong>Ejercicio 5.2.2.</strong> Argumentar por qué el diseño OFAT es inadecuado cuando se sospecha
+        que dos factores interactúan. Utilizar un gráfico de interacción hipotético (líneas no paralelas) para
+        apoyar la argumentación.
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <h2 id="sec-5-3">5.3 Diseño factorial con dos factores</h2>
+
+    <p>
+        El diseño factorial con dos factores es el caso más sencillo de diseño factorial y sirve como base para
+        comprender los diseños con más factores. Se consideran dos factores, \(A\) con \(a\) niveles y \(B\)
+        con \(b\) niveles, y se realizan \(n\) réplicas de cada una de las \(ab\) combinaciones de tratamientos.
+        El número total de observaciones es \(N = abn\).
+    </p>
+        </div>
+    </template>
+
+    <template id="module-3">
+        <div class="animate-fade-in">
+            <div class="module-mini-header">
+                <span class="mod-tag">Módulo 3 · Capítulo 5</span>
+                <div class="module-objective">
+                    <span class="objective-icon">🎯</span>
+                    <div>
+                        <p class="objective-title">Objetivo</p>
+                        <p class="objective-text">Aplicar un diseño factorial 3×2 a un caso real e interpretar el gráfico de interacción.</p>
+                    </div>
+                </div>
+            </div>
+
+<h3 id="sec-5-3-1">5.3.1 Ejemplo ilustrativo</h3>
+
+    <p>
+        Se presenta un ejemplo adaptado del tipo de problemas de Montgomery (Cap.&nbsp;5). Un ingeniero desea
+        estudiar el efecto de la <strong>temperatura del horno</strong> (factor \(A\), con \(a = 3\) niveles:
+        150&nbsp;°C, 170&nbsp;°C, 190&nbsp;°C) y el <strong>tiempo de cocción</strong> (factor \(B\), con
+        \(b = 2\) niveles: 20&nbsp;min, 30&nbsp;min) sobre la <strong>resistencia a la tracción</strong> (en psi)
+        de un material compuesto. Se trata de un <em>diseño factorial \(3\times 2\) completo, completamente
+        aleatorizado</em>, con \(n = 3\) réplicas por celda y un total de \(N = abn = 18\) corridas. Los datos
+        se muestran en la Tabla&nbsp;5.1.
+    </p>
+
+    <p>
+        En el espíritu de Montgomery (pp.&nbsp;184), las preguntas de ingeniería que motivan el análisis son:
+    </p>
+
+    <ol>
+        <li>¿Qué efectos tienen la temperatura y el tiempo sobre la resistencia a la tracción?</li>
+        <li>¿Existe alguna combinación temperatura/tiempo que produzca una resistencia alta sin encarecer el
+            proceso? (Tiempos largos o temperaturas altas suelen implicar mayor costo.)</li>
+        <li>¿Hay evidencia de que el efecto de un factor dependa del nivel del otro (interacción)?</li>
+    </ol>
+
+    <p>
+        La tercera pregunta no puede responderse con un enfoque OFAT, como se discutió en §5.2. Es justamente
+        el tipo de pregunta para el que el diseño factorial es indispensable.
+    </p>
+
+    <table>
+        <caption>Tabla 5.1. Resistencia a la tracción (psi) – Datos simulados</caption>
+        <tr>
+            <th rowspan="2">Temperatura (A)</th>
+            <th colspan="3">Tiempo 20 min (B₁)</th>
+            <th colspan="3">Tiempo 30 min (B₂)</th>
+        </tr>
+        <tr>
+            <th>Rep 1</th>
+            <th>Rep 2</th>
+            <th>Rep 3</th>
+            <th>Rep 1</th>
+            <th>Rep 2</th>
+            <th>Rep 3</th>
+        </tr>
+        <tr>
+            <td>150°C</td>
+            <td>28</td>
+            <td>31</td>
+            <td>29</td>
+            <td>35</td>
+            <td>37</td>
+            <td>33</td>
+        </tr>
+        <tr>
+            <td>170°C</td>
+            <td>40</td>
+            <td>42</td>
+            <td>38</td>
+            <td>50</td>
+            <td>48</td>
+            <td>52</td>
+        </tr>
+        <tr>
+            <td>190°C</td>
+            <td>44</td>
+            <td>47</td>
+            <td>45</td>
+            <td>51</td>
+            <td>53</td>
+            <td>55</td>
+        </tr>
+    </table>
+
+    <pre><code data-language="R"># ── Ejemplo 5.3.1: Ingreso de datos y análisis exploratorio ──
+
+# Crear el data frame con los datos del experimento
+temperatura &lt;- factor(rep(c("150", "170", "190"), each = 6))
+tiempo &lt;- factor(rep(rep(c("20", "30"), each = 3), 3))
+resistencia &lt;- c(28, 31, 29,   35, 37, 33,
+                  40, 42, 38,   50, 48, 52,
+                  44, 47, 45,   51, 53, 55)
+
+datos &lt;- data.frame(temperatura, tiempo, resistencia)
+print(datos)
+
+# Medias por celda
+medias_celda &lt;- tapply(datos$resistencia, 
+                        list(datos$temperatura, datos$tiempo), 
+                        mean)
+print(round(medias_celda, 2))
+
+# Gráfico de interacción
+interaction.plot(x.factor = datos$temperatura,
+                 trace.factor = datos$tiempo,
+                 response = datos$resistencia,
+                 type = "b", pch = c(16, 17),
+                 col = c("blue", "red"),
+                 xlab = "Temperatura (°C)",
+                 ylab = "Resistencia (psi)",
+                 trace.label = "Tiempo",
+                 main = "Gráfico de interacción: Temperatura × Tiempo")
+</code></pre>
+
+    <div class="r-output"> temperatura tiempo resistencia
+        1 150 20 28
+        2 150 20 31
+        3 150 20 29
+        4 150 30 35
+        5 150 30 37
+        6 150 30 33
+        ...
+        (18 observaciones en total)
+
+        Medias por celda:
+        20 30
+        150 29.33 35.00
+        170 40.00 50.00
+        190 45.33 53.00</div>
+
+    <p>
+        El gráfico de interacción permite una primera inspección visual. La <strong>regla de lectura</strong> es:
+    </p>
+    <ul>
+        <li>Si las líneas son <em>perfectamente paralelas</em> (todas las diferencias verticales iguales), la
+            interacción es nula.</li>
+        <li>Si son <em>aproximadamente paralelas</em> (las diferencias varían pero conservan el mismo signo),
+            la interacción es pequeña.</li>
+        <li>Si las líneas <em>se cruzan</em> (las diferencias cambian de signo), la interacción es importante y
+            puede invertir las conclusiones sobre los efectos principales.</li>
+    </ul>
+    <p>
+        En este ejemplo, la <em>diferencia</em> entre tiempos 30 y 20 cambia según la temperatura:
+        \(+5.67\) psi a 150&nbsp;°C, \(+10.00\) psi a 170&nbsp;°C y \(+7.67\) psi a 190&nbsp;°C. Las tres
+        diferencias son positivas (las líneas no se cruzan) pero no iguales (no son perfectamente paralelas),
+        de modo que cabe esperar una interacción pequeña, posiblemente no significativa. Esta impresión debe
+        confirmarse formalmente con la prueba \(F\) del ANOVA (§5.3.2).
+    </p>
+
+    <!-- ── 5.3.2 ── -->
+        </div>
+    </template>
+
+    <template id="module-4">
+        <div class="animate-fade-in">
+            <div class="module-mini-header">
+                <span class="mod-tag">Módulo 4 · Capítulo 5</span>
+                <div class="module-objective">
+                    <span class="objective-icon">🎯</span>
+                    <div>
+                        <p class="objective-title">Objetivo</p>
+                        <p class="objective-text">Realizar el ANOVA de un diseño factorial de dos factores con efectos fijos y verificar manualmente las sumas de cuadrados.</p>
+                    </div>
+                </div>
+            </div>
+
+<h3 id="sec-5-3-2">5.3.2 Análisis estadístico del modelo de efectos fijos</h3>
+
+    <p>
+        El modelo estadístico para el diseño factorial de dos factores con efectos fijos se escribe como:
+    </p>
+
+    \[
+    y_{ijk} = \mu + \tau_i + \beta_j + (\tau\beta)_{ij} + \varepsilon_{ijk}
+    \quad \begin{cases}
+    i = 1, 2, \ldots, a \\
+    j = 1, 2, \ldots, b \\
+    k = 1, 2, \ldots, n
+    \end{cases}
+    \]
+
+    <p>donde:</p>
+    <ul>
+        <li>\(\mu\) es la media general,</li>
+        <li>\(\tau_i\) es el efecto del nivel \(i\) del factor \(A\),</li>
+        <li>\(\beta_j\) es el efecto del nivel \(j\) del factor \(B\),</li>
+        <li>\((\tau\beta)_{ij}\) es el efecto de la interacción \(AB\) en la celda \((i, j)\),</li>
+        <li>\(\varepsilon_{ijk} \sim \text{NID}(0, \sigma^2)\) es el error aleatorio.</li>
+    </ul>
+
+    <p>
+        Al igual que en el ANOVA de un factor (Capítulo 3), las restricciones habituales para el modelo de
+        efectos fijos son:
+    </p>
+
+    \[
+    \sum_{i=1}^{a} \tau_i = 0, \qquad \sum_{j=1}^{b} \beta_j = 0, \qquad
+    \sum_{i=1}^{a} (\tau\beta)_{ij} = 0 \;\forall\, j, \qquad
+    \sum_{j=1}^{b} (\tau\beta)_{ij} = 0 \;\forall\, i
+    \]
+
+    <p>
+        Las hipótesis de interés son tres:
+    </p>
+
+    \[
+    \begin{aligned}
+    &H_0^{(A)}: \tau_1 = \tau_2 = \cdots = \tau_a = 0 \quad \text{(no hay efecto del factor } A\text{)} \\
+    &H_0^{(B)}: \beta_1 = \beta_2 = \cdots = \beta_b = 0 \quad \text{(no hay efecto del factor } B\text{)} \\
+    &H_0^{(AB)}: (\tau\beta)_{ij} = 0 \;\forall\, i,j \quad \text{(no hay interacción)}
+    \end{aligned}
+    \]
+
+    <h4>Descomposición de la suma de cuadrados</h4>
+
+    <p>
+        La suma de cuadrados total se descompone como:
+    </p>
+
+    \[
+    SS_T = SS_A + SS_B + SS_{AB} + SS_E
+    \]
+
+    <p>donde, usando la notación de puntos (\(y_{i \cdot \cdot}\), \(y_{\cdot j \cdot}\), etc.):</p>
+
+    \[
+    \begin{aligned}
+    SS_T &= \sum_{i=1}^{a} \sum_{j=1}^{b} \sum_{k=1}^{n} (y_{ijk} - \bar{y}_{\cdots})^2
+    &\quad &\text{con } abn - 1 \text{ g.l.} \\[6pt]
+    SS_A &= bn \sum_{i=1}^{a} (\bar{y}_{i\cdot\cdot} - \bar{y}_{\cdots})^2
+    &\quad &\text{con } a - 1 \text{ g.l.} \\[6pt]
+    SS_B &= an \sum_{j=1}^{b} (\bar{y}_{\cdot j\cdot} - \bar{y}_{\cdots})^2
+    &\quad &\text{con } b - 1 \text{ g.l.} \\[6pt]
+    SS_{AB} &= n \sum_{i=1}^{a} \sum_{j=1}^{b} (\bar{y}_{ij\cdot} - \bar{y}_{i\cdot\cdot}
+    - \bar{y}_{\cdot j\cdot} + \bar{y}_{\cdots})^2
+    &\quad &\text{con } (a-1)(b-1) \text{ g.l.} \\[6pt]
+    SS_E &= \sum_{i=1}^{a} \sum_{j=1}^{b} \sum_{k=1}^{n} (y_{ijk} - \bar{y}_{ij\cdot})^2
+    &\quad &\text{con } ab(n-1) \text{ g.l.}
+    \end{aligned}
+    \]
+
+    <h4>Tabla ANOVA</h4>
+
+    <table>
+        <caption>Tabla 5.2. Estructura de la tabla ANOVA para el diseño factorial de dos factores</caption>
+        <tr>
+            <th>Fuente</th>
+            <th>g.l.</th>
+            <th>SS</th>
+            <th>MS</th>
+            <th>F₀</th>
+        </tr>
+        <tr>
+            <td>Factor \(A\)</td>
+            <td>\(a - 1\)</td>
+            <td>\(SS_A\)</td>
+            <td>\(MS_A = SS_A / (a-1)\)</td>
+            <td>\(F_0 = MS_A / MS_E\)</td>
+        </tr>
+        <tr>
+            <td>Factor \(B\)</td>
+            <td>\(b - 1\)</td>
+            <td>\(SS_B\)</td>
+            <td>\(MS_B = SS_B / (b-1)\)</td>
+            <td>\(F_0 = MS_B / MS_E\)</td>
+        </tr>
+        <tr>
+            <td>Interacción \(AB\)</td>
+            <td>\((a-1)(b-1)\)</td>
+            <td>\(SS_{AB}\)</td>
+            <td>\(MS_{AB} = SS_{AB} / [(a-1)(b-1)]\)</td>
+            <td>\(F_0 = MS_{AB} / MS_E\)</td>
+        </tr>
+        <tr>
+            <td>Error</td>
+            <td>\(ab(n-1)\)</td>
+            <td>\(SS_E\)</td>
+            <td>\(MS_E = SS_E / [ab(n-1)]\)</td>
+            <td>—</td>
+        </tr>
+        <tr>
+            <td>Total</td>
+            <td>\(abn - 1\)</td>
+            <td>\(SS_T\)</td>
+            <td>—</td>
+            <td>—</td>
+        </tr>
+    </table>
+
+    <pre><code data-language="R"># ── Ejemplo 5.3.2: ANOVA del diseño factorial ──
+
+# Ajustar el modelo con interacción
+modelo &lt;- aov(resistencia ~ temperatura * tiempo, data = datos)
+summary(modelo)
+
+# Equivalente con lm()
+modelo_lm &lt;- lm(resistencia ~ temperatura * tiempo, data = datos)
+anova(modelo_lm)
+</code></pre>
+
+    <div class="r-output">                    Df Sum Sq Mean Sq F value   Pr(&gt;F)
+        temperatura         2  942.1   471.1 136.758 5.51e-09 ***
+        tiempo              1  272.2   272.2  79.032 1.26e-06 ***
+        temperatura:tiempo  2   14.1     7.1   2.048    0.172
+        Residuals          12   41.3     3.4
+        ---
+        Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</div>
+
+    <p>
+        Los resultados indican que ambos efectos principales son altamente significativos: la temperatura tiene
+        \(F_0 = 136.76\) con \(p \approx 5.5 \times 10^{-9}\) y el tiempo \(F_0 = 79.03\) con
+        \(p \approx 1.3 \times 10^{-6}\). La interacción temperatura × tiempo, en cambio, no es significativa al
+        5&nbsp;% (\(F_0 = 2.05\), \(p = 0.172\)), lo que concuerda con la lectura del gráfico de interacción:
+        las diferencias entre niveles de tiempo son similares en las tres temperaturas. El cuadrado medio del
+        error \(\hat\sigma^2 = MS_E = 3.44\) estima la varianza del error; \(\hat\sigma = \sqrt{3.44} \approx
+        1.86\) psi.
+    </p>
+
+            <div class="nota">
+                <strong>Nota sobre la estrategia de análisis:</strong> Montgomery recomienda examinar primero la
+                interacción. Si la interacción es significativa, los efectos principales deben interpretarse con
+                cautela,
+                ya que el efecto de un factor depende del nivel del otro. Si la interacción no es significativa, se
+                procede a interpretar los efectos principales de manera independiente.
+            </div>
+
+            <h4>Verificación manual de \(SS_A\)</h4>
+
+            <p>
+                Para ilustrar el cálculo, se verifica \(SS_A\) directamente. Las medias por nivel de temperatura
+                y la media general son:
+            </p>
+
+            \[
+            \bar{y}_{1\cdot\cdot} = \tfrac{193}{6} = 32.1667, \quad
+            \bar{y}_{2\cdot\cdot} = \tfrac{270}{6} = 45.0000, \quad
+            \bar{y}_{3\cdot\cdot} = \tfrac{295}{6} = 49.1667, \quad
+            \bar{y}_{\cdots} = \tfrac{758}{18} = 42.1111
+            \]
+
+            \[
+            SS_A = bn \sum_{i=1}^{3} (\bar{y}_{i\cdot\cdot} - \bar{y}_{\cdots})^2
+                 = (2)(3)\left[ (-9.9444)^2 + (2.8889)^2 + (7.0556)^2 \right]
+            \]
+
+            \[
+            SS_A = 6 \left[ 98.8911 + 8.3458 + 49.7815 \right] = 6 \times 157.0185 = 942.11
+            \]
+
+            <p>
+                El valor coincide con el de la función <code>aov()</code>. El mismo cálculo en R:
+            </p>
+
+            <pre><code data-language="R"># ── Verificación manual de SS_A ──
+medias_A &lt;- tapply(datos$resistencia, datos$temperatura, mean)
+media_gral &lt;- mean(datos$resistencia)
+b &lt;- 2; n_rep &lt;- 3
+
+SS_A_manual &lt;- b * n_rep * sum((medias_A - media_gral)^2)
+SS_A_aov    &lt;- anova(modelo_lm)["temperatura", "Sum Sq"]
+
+cat("SS_A manual:", round(SS_A_manual, 2), "\n")
+cat("SS_A de aov:", round(SS_A_aov, 2), "\n")
+</code></pre>
+
+            <div class="r-output">SS_A manual: 942.11
+                SS_A de aov: 942.11</div>
+
+            <!-- ── 5.3.3 ── -->
+        </div>
+    </template>
+
+    <template id="module-5">
+        <div class="animate-fade-in">
+            <div class="module-mini-header">
+                <span class="mod-tag">Módulo 5 · Capítulo 5</span>
+                <div class="module-objective">
+                    <span class="objective-icon">🎯</span>
+                    <div>
+                        <p class="objective-title">Objetivo</p>
+                        <p class="objective-text">Verificar los supuestos de normalidad, homocedasticidad e independencia mediante el análisis de residuos.</p>
+                    </div>
+                </div>
+            </div>
+
+<h3 id="sec-5-3-3">5.3.3 Verificación de la adecuación del modelo</h3>
+
+            <p>
+                Siguiendo a Montgomery (§5.3.3), los residuos del modelo factorial con interacción son
+            </p>
+
+            \[
+            e_{ijk} = y_{ijk} - \hat{y}_{ijk} = y_{ijk} - \bar{y}_{ij\cdot},
+            \]
+
+            <p>
+                es decir, cada observación menos la media de su celda. La herramienta principal de diagnóstico
+                es el <em>análisis de residuos</em>, que permite verificar los tres supuestos del modelo:
+            </p>
+
+            <ol>
+                <li><strong>Normalidad de los residuos:</strong> se verifica mediante el gráfico de probabilidad
+                    normal (Q-Q plot) y, opcionalmente, pruebas formales como la de Shapiro-Wilk.</li>
+                <li><strong>Homogeneidad de varianzas (homocedasticidad):</strong> se verifica mediante el gráfico
+                    de residuos frente a valores ajustados y, opcionalmente, la prueba de Bartlett o Levene.</li>
+                <li><strong>Independencia:</strong> se verifica con el gráfico de residuos en el orden de corrida.
+                    Si la aleatorización se realizó correctamente, este supuesto suele cumplirse.</li>
+            </ol>
+
+            <p>
+                Una regla rápida para detectar observaciones anómalas es comparar los residuos con \(\hat\sigma =
+                \sqrt{MS_E}\): si \(|e_{ijk}|/\hat\sigma > 2\), la observación merece un examen particular
+                (Montgomery, p.&nbsp;191).
+            </p>
+
+            <pre><code data-language="R"># ── Diagnósticos del modelo ──
+
+# Residuos
+residuos &lt;- residuals(modelo)
+ajustados &lt;- fitted(modelo)
+
+# 1. Gráfico Q-Q de normalidad
+qqnorm(residuos, main = "Q-Q Normal de los Residuos")
+qqline(residuos, col = "red", lwd = 2)
+
+# 2. Prueba de Shapiro-Wilk
+shapiro.test(residuos)
+
+# 3. Residuos vs. Valores ajustados (homocedasticidad)
+plot(ajustados, residuos,
+     xlab = "Valores ajustados", ylab = "Residuos",
+     main = "Residuos vs. Valores Ajustados",
+     pch = 16, col = "steelblue")
+abline(h = 0, lty = 2, col = "red")
+
+# 4. Prueba de Bartlett para homogeneidad de varianzas
+bartlett.test(resistencia ~ interaction(temperatura, tiempo), data = datos)
+
+# 5. Prueba de Levene (más robusta a no normalidad; requiere paquete car)
+# install.packages("car")   # si no está instalado
+library(car)
+leveneTest(resistencia ~ temperatura * tiempo, data = datos)
+
+# 6. Residuos vs. orden de corrida (independencia)
+plot(1:length(residuos), residuos,
+     xlab = "Orden de corrida", ylab = "Residuos",
+     main = "Residuos vs. Orden de Corrida",
+     pch = 16, col = "darkgreen", type = "b")
+abline(h = 0, lty = 2, col = "red")
+</code></pre>
+
+            <div class="r-output">        Shapiro-Wilk normality test
+
+                data:  residuos
+                W = 0.86124, p-value = 0.0128
+
+
+                Bartlett test of homogeneity of variances
+
+                data:  resistencia by interaction(temperatura, tiempo)
+                Bartlett's K-squared = 0.30274, df = 5, p-value = 0.9976
+
+
+                Levene's Test for Homogeneity of Variance (center = median)
+                       Df F value Pr(>F)
+                group   5  0.0727 0.9953
+                       12</div>
+
+            <p>
+                <strong>Normalidad.</strong> La prueba de Shapiro-Wilk rechaza la hipótesis nula de normalidad
+                al 5&nbsp;% (\(W = 0.861\), \(p = 0.013\)). Esto no indica necesariamente un problema
+                sustancial. Los 18 residuos observados toman solo seis valores distintos
+                (\(\{-2, -\tfrac{4}{3}, -\tfrac{1}{3}, 0, \tfrac{5}{3}, 2\}\)), porque la respuesta está
+                registrada como número entero y solo hay \(n = 3\) réplicas por celda; con tan poca información
+                sobre las colas, Shapiro-Wilk detecta esa <em>discretización</em> como "no normalidad". El
+                gráfico Q-Q no revela asimetría marcada ni colas pesadas. Dado que el diseño está balanceado,
+                el ANOVA es razonablemente robusto a desviaciones moderadas de normalidad.
+            </p>
+
+            <p>
+                <strong>Homocedasticidad.</strong> La prueba de Bartlett no rechaza homogeneidad de varianzas
+                (\(K^2 = 0.303\), \(p = 0.998\)). La prueba de Levene, más robusta frente a desviaciones de
+                normalidad, llega a la misma conclusión (\(F = 0.073\), \(p = 0.995\)). Ambas son consistentes
+                con el gráfico de residuos frente a valores ajustados, que no muestra patrón en abanico.
+            </p>
+
+            <p>
+                <strong>Outliers.</strong> El residuo de mayor magnitud es \(|e| = 2\) psi, con
+                \(\hat\sigma = \sqrt{MS_E} \approx 1.86\) y cociente \(|e|/\hat\sigma \approx 1.08 &lt; 2\).
+                No hay observaciones anómalas.
+            </p>
+
+            <p>
+                <strong>Independencia.</strong> El gráfico de residuos en el orden de corrida no exhibe
+                tendencia ni ciclicidad, consistente con la aleatorización completa del diseño.
+            </p>
+
+            <p>
+                En conjunto, los supuestos se consideran razonablemente satisfechos y se mantienen las
+                conclusiones del ANOVA.
+            </p>
+
+            <!-- ── 5.3.4 ── -->
+        </div>
+    </template>
+
+    <template id="module-6">
+        <div class="animate-fade-in">
+            <div class="module-mini-header">
+                <span class="mod-tag">Módulo 6 · Capítulo 5</span>
+                <div class="module-objective">
+                    <span class="objective-icon">🎯</span>
+                    <div>
+                        <p class="objective-title">Objetivo</p>
+                        <p class="objective-text">Estimar los parámetros del modelo de efectos fijos y comprender las parametrizaciones de R.</p>
+                    </div>
+                </div>
+            </div>
+
+<h3 id="sec-5-3-4">5.3.4 Estimación de los parámetros del modelo</h3>
+
+            <p>
+                Los estimadores de mínimos cuadrados de los parámetros del modelo de efectos fijos son:
+            </p>
+
+            \[
+            \begin{aligned}
+            \hat{\mu} &= \bar{y}_{\cdots} \\
+            \hat{\tau}_i &= \bar{y}_{i\cdot\cdot} - \bar{y}_{\cdots} \\
+            \hat{\beta}_j &= \bar{y}_{\cdot j\cdot} - \bar{y}_{\cdots} \\
+            \widehat{(\tau\beta)}_{ij} &= \bar{y}_{ij\cdot} - \bar{y}_{i\cdot\cdot} - \bar{y}_{\cdot j\cdot} +
+            \bar{y}_{\cdots}
+            \end{aligned}
+            \]
+
+            <pre><code data-language="R"># ── Estimación de parámetros ──
+
+# Media general
+mu_hat &lt;- mean(datos$resistencia)
+cat("mu_hat =", round(mu_hat, 3), "\n")
+
+# Efectos del factor A (temperatura)
+medias_A &lt;- tapply(datos$resistencia, datos$temperatura, mean)
+tau_hat &lt;- medias_A - mu_hat
+cat("tau_hat (efectos de temperatura):\n")
+print(round(tau_hat, 3))
+
+# Efectos del factor B (tiempo)
+medias_B &lt;- tapply(datos$resistencia, datos$tiempo, mean)
+beta_hat &lt;- medias_B - mu_hat
+cat("beta_hat (efectos de tiempo):\n")
+print(round(beta_hat, 3))
+
+# Efectos de interacción
+medias_celda &lt;- tapply(datos$resistencia, 
+                        list(datos$temperatura, datos$tiempo), mean)
+tau_beta_hat &lt;- sweep(sweep(medias_celda, 1, medias_A), 2, medias_B) + mu_hat
+cat("Efectos de interacción (tau_beta):\n")
+print(round(tau_beta_hat, 3))
+
+# Verificación: los coeficientes del modelo lm()
+cat("\nCoeficientes del modelo lm() (parametrización de tratamiento):\n")
+print(round(coef(modelo_lm), 3))
+</code></pre>
+
+            <div class="r-output">mu_hat = 42.111
+
+                tau_hat (efectos de temperatura):
+                   150    170    190
+                -9.944  2.889  7.056
+
+                beta_hat (efectos de tiempo):
+                    20     30
+                -3.889  3.889
+
+                Efectos de interacción (tau_beta):
+                        20     30
+                150  1.056 -1.056
+                170 -1.111  1.111
+                190  0.056 -0.056
+
+                Coeficientes del modelo lm() (parametrización de tratamiento):
+                            (Intercept)          temperatura170          temperatura190
+                                 29.333                  10.667                  16.000
+                               tiempo30 temperatura170:tiempo30 temperatura190:tiempo30
+                                  5.667                   4.333                   2.000</div>
+
+            <p>
+                Las restricciones del modelo se cumplen (salvo errores de redondeo de punto flotante):
+                \(\sum_i \hat\tau_i = 0\), \(\sum_j \hat\beta_j = 0\) y
+                \(\sum_i \widehat{(\tau\beta)}_{ij} = \sum_j \widehat{(\tau\beta)}_{ij} = 0\). Por ejemplo, fila
+                \(i = 170\): \(-1.111 + 1.111 = 0\); columna \(j = 20\):
+                \(1.056 - 1.111 + 0.056 = 0\); columna \(j = 30\):
+                \(-1.056 + 1.111 - 0.056 = 0\).
+            </p>
+
+            <div class="nota">
+                <strong>Nota sobre la parametrización en R:</strong> La función <code>lm()</code> usa por defecto
+                la parametrización de <em>tratamiento</em> (<code>contr.treatment</code>): el primer nivel de cada
+                factor se toma como referencia y los coeficientes representan <em>diferencias respecto a esa
+                referencia</em>. Por eso en el output, <code>(Intercept) = 29.333</code> es la media de la celda
+                base \((150,20)\), y <code>temperatura170 = 10.667</code> coincide con
+                \(\bar y_{2,\cdot} - \bar y_{1,\cdot}\) restringido al nivel de tiempo de referencia. En general,
+                los efectos no coinciden directamente con los \(\hat\tau_i\) y \(\hat\beta_j\) de las fórmulas
+                de la sección.
+                Para recuperar la parametrización de efectos del modelo (con restricciones de suma cero), basta
+                con cambiar el sistema de contrastes antes de ajustar el modelo:
+                <code>options(contrasts = c("contr.sum", "contr.sum"))</code>. Una alternativa más cómoda es usar
+                <code>model.tables(modelo, type = "effects")</code>, que devuelve directamente los \(\hat\tau_i\),
+                \(\hat\beta_j\) y \(\widehat{(\tau\beta)}_{ij}\) sin alterar la parametrización del modelo.
+            </div>
+
+            <pre><code data-language="R"># ── Usar model.tables() para obtener los efectos ──
+model.tables(modelo, type = "effects")
+model.tables(modelo, type = "means")
+</code></pre>
+
+            <!-- ── 5.3.5 ── -->
+        </div>
+    </template>
+
+    <template id="module-7">
+        <div class="animate-fade-in">
+            <div class="module-mini-header">
+                <span class="mod-tag">Módulo 7 · Capítulo 5</span>
+                <div class="module-objective">
+                    <span class="objective-icon">🎯</span>
+                    <div>
+                        <p class="objective-title">Objetivo</p>
+                        <p class="objective-text">Determinar el tamaño de muestra mediante power.anova.test y verificarlo por simulación.</p>
+                    </div>
+                </div>
+            </div>
+
+<h3 id="sec-5-3-5">5.3.5 Elección del tamaño de muestra</h3>
+
+            <p>
+                Un aspecto crucial en el diseño de un experimento factorial es la determinación del número de réplicas
+                \(n\) necesarias para detectar diferencias de una magnitud especificada con una potencia deseada.
+                La potencia de la prueba F para un efecto dado depende de:
+            </p>
+
+            <ul>
+                <li>El nivel de significancia \(\alpha\).</li>
+                <li>El número de grados de libertad del numerador y del denominador.</li>
+                <li>El parámetro de no centralidad \(\lambda\) (o, equivalentemente, \(\Phi^2\)).</li>
+            </ul>
+
+            <p>
+                Para el factor \(A\) con \(a\) niveles, el parámetro de no centralidad es:
+            </p>
+
+            \[
+            \Phi_A^2 = \frac{bn \sum_{i=1}^{a} \tau_i^2}{a \sigma^2}
+            \]
+
+            <p>
+                Montgomery presenta curvas de potencia (curvas de operación característica, OC) para determinar \(n\).
+                En la práctica moderna, las funciones de R permiten realizar estos cálculos de manera más directa.
+                Para el efecto principal de \(A\) en un diseño factorial de dos factores se puede usar la función
+                <code>power.anova.test()</code> (válida estrictamente para ANOVA de un factor, pero aplicable como
+                <em>aproximación</em> al factorial cuando el balance es completo) o, alternativamente, realizar
+                simulaciones para obtener una estimación exacta de la potencia bajo el modelo factorial.
+            </p>
+
+            <pre><code data-language="R"># ── Ejemplo 5.3.5: Determinación del tamaño de muestra ──
+# Supóngase que, al planear el experimento, se desea detectar una diferencia
+# máxima entre medias de los niveles de temperatura de al menos D = 8 psi,
+# con sigma = 2.5 (estimación previa), alpha = 0.05 y potencia >= 0.90.
+
+# power.anova.test() es para ANOVA de un factor. Para niveles igualmente
+# espaciados, la varianza entre grupos se aproxima por D^2 / (2*a).
+
+a &lt;- 3   # niveles de temperatura
+D &lt;- 8   # diferencia máxima que se desea detectar
+sigma &lt;- 2.5
+
+between_var &lt;- D^2 / (2 * a)
+
+power.anova.test(groups      = a,
+                 between.var = between_var,
+                 within.var  = sigma^2,
+                 sig.level   = 0.05,
+                 power       = 0.90)
+</code></pre>
+
+            <div class="r-output">     Balanced one-way analysis of variance power calculation
+
+                         groups = 3
+                              n = 4.87322
+                    between.var = 10.66667
+                     within.var = 6.25
+                      sig.level = 0.05
+                          power = 0.9
+
+                NOTE: n is number in each group</div>
+
+            <p>
+                La función devuelve \(n \approx 4.87\) <em>observaciones por nivel de A</em>. Como
+                <code>power.anova.test()</code> trata el problema como un ANOVA de un factor con tres grupos, es
+                necesario traducir su resultado al diseño factorial: en el factorial \(3 \times 2\), cada nivel
+                de \(A\) contiene \(b \cdot n_{\text{rep}} = 2\,n_{\text{rep}}\) observaciones, de modo que la
+                restricción es \(2\,n_{\text{rep}} \geq 4.87\), es decir, \(n_{\text{rep}} \geq 2.44\) y por lo
+                tanto basta con <strong>3 réplicas por celda</strong> (redondeando al entero superior). Esta
+                traducción es válida como <em>aproximación</em> mientras los efectos de \(B\) y de la interacción
+                no consuman demasiados grados de libertad del error; cuando esos efectos son apreciables, conviene
+                verificar el resultado por simulación, como se hace a continuación. La conclusión coincide con el
+                número de réplicas efectivamente usadas en la Tabla&nbsp;5.1.
+            </p>
+
+            <h4>Enfoque por simulación</h4>
+
+            <pre><code data-language="R"># ── Simulación de potencia para el diseño factorial completo ──
+set.seed(2024)
+
+# Parámetros del diseño (consistentes con la planificación: D = 8, sigma = 2.5)
+a &lt;- 3; b &lt;- 2
+mu &lt;- 42
+tau &lt;- c(-4, 0, 4)        # efectos de A (suman 0, tau_max - tau_min = 8)
+beta_ef &lt;- c(-2, 2)       # efectos de B (arbitrarios, no afectan potencia_A)
+sigma &lt;- 2.5
+n_vals &lt;- 2:6             # réplicas a evaluar
+n_sim &lt;- 1000             # número de simulaciones
+alpha &lt;- 0.05
+
+potencia_A &lt;- numeric(length(n_vals))
+
+for (idx in seq_along(n_vals)) {
+  n_rep &lt;- n_vals[idx]
+  rechazos &lt;- 0
+
+  for (s in 1:n_sim) {
+    y &lt;- numeric(a * b * n_rep)
+    pos &lt;- 1
+    A_fac &lt;- character(0); B_fac &lt;- character(0)
+    for (i in 1:a) for (j in 1:b) for (k in 1:n_rep) {
+      y[pos] &lt;- mu + tau[i] + beta_ef[j] + rnorm(1, 0, sigma)
+      A_fac &lt;- c(A_fac, paste0("A", i))
+      B_fac &lt;- c(B_fac, paste0("B", j))
+      pos &lt;- pos + 1
+    }
+
+    sim_dat &lt;- data.frame(A = factor(A_fac), B = factor(B_fac), y = y)
+    mod &lt;- aov(y ~ A * B, data = sim_dat)
+    p_A &lt;- summary(mod)[[1]][1, "Pr(>F)"]
+    if (p_A &lt; alpha) rechazos &lt;- rechazos + 1
+  }
+
+  potencia_A[idx] &lt;- rechazos / n_sim
+}
+
+resultado &lt;- data.frame(n = n_vals, potencia = potencia_A)
+print(resultado)
+
+# Gráfico de potencia
+plot(n_vals, potencia_A, type = "b", pch = 16, col = "darkblue",
+     xlab = "Número de réplicas (n) por celda", ylab = "Potencia estimada",
+     main = "Curva de potencia simulada para el factor A",
+     ylim = c(0, 1))
+abline(h = 0.80, lty = 2, col = "red")
+abline(h = 0.90, lty = 2, col = "orange")
+legend("bottomright", legend = c("Potencia 0.80", "Potencia 0.90"),
+       lty = 2, col = c("red", "orange"))
+</code></pre>
+
+            <div class="r-output">  n potencia
+                1 2    0.869
+                2 3    0.988
+                3 4    1.000
+                4 5    1.000
+                5 6    1.000</div>
+
+            <p>
+                La simulación confirma la conclusión del cálculo analítico: con \(n = 2\) réplicas por celda la
+                potencia es insuficiente (\(\approx 0.87\)), mientras que con \(n = 3\) ya se supera holgadamente
+                el umbral de 0.90 (\(\approx 0.99\)). A partir de \(n = 4\) la potencia es prácticamente 1 y añadir
+                más réplicas ofrece rendimientos decrecientes. Nótese que los efectos de interacción se asumen
+                nulos en esta simulación; el <strong>Ejercicio&nbsp;5.3.3</strong> al final de esta sección explora
+                el caso en que la interacción es el efecto de interés.
+            </p>
+
+            <div class="ejercicio">
+                <strong>Ejercicio 5.3.1.</strong> Considérese un diseño factorial \(3 \times 3\) con factores
+                \(A\) (tipo de fertilizante, 3 niveles) y \(B\) (variedad de planta, 3 niveles). La variable de
+                respuesta es el rendimiento en gramos. Se dispone de los siguientes datos con \(n = 2\) réplicas
+                por celda:
+
+                <table style="margin-top:0.5rem">
+                    <tr>
+                        <th></th>
+                        <th>B₁</th>
+                        <th>B₂</th>
+                        <th>B₃</th>
+                    </tr>
+                    <tr>
+                        <td>A₁</td>
+                        <td>23, 25</td>
+                        <td>30, 28</td>
+                        <td>19, 21</td>
+                    </tr>
+                    <tr>
+                        <td>A₂</td>
+                        <td>31, 33</td>
+                        <td>36, 38</td>
+                        <td>28, 30</td>
+                    </tr>
+                    <tr>
+                        <td>A₃</td>
+                        <td>27, 29</td>
+                        <td>32, 34</td>
+                        <td>22, 24</td>
+                    </tr>
+                </table>
+
+                (a) Realizar el ANOVA factorial completo en R. (b) Construir el gráfico de interacción e interpretar.
+                (c) Verificar los supuestos del modelo.
+            </div>
+
+            <div class="ejercicio">
+                <strong>Ejercicio 5.3.2.</strong> Repetir el análisis del Ejemplo 5.3.1, pero esta vez usando la
+                parametrización de efectos (suma cero) en R. Utilizar
+                <code>options(contrasts = c("contr.sum", "contr.sum"))</code> antes de ajustar el modelo con
+                <code>lm()</code>. Comparar los coeficientes obtenidos con los calculados manualmente en la
+                Sección 5.3.4.
+            </div>
+
+            <div class="ejercicio">
+                <strong>Ejercicio 5.3.3.</strong> Mediante simulación en R, estimar la potencia de la prueba F para
+                la interacción en un diseño \(2 \times 3\) con \(\sigma = 4\) y efectos de interacción
+                \((\tau\beta)_{ij}\) dados por la matriz:
+                \[
+                \begin{pmatrix} 2 & -1 & -1 \\ -2 & 1 & 1 \end{pmatrix}
+                \]
+                Evaluar para \(n = 3, 4, 5, 6\) y determinar el \(n\) mínimo para alcanzar potencia \(\geq 0.80\).
+            </div>
+
+            <!-- ── 5.3.6 ── -->
+        </div>
+    </template>
+
+    <template id="module-8">
+        <div class="animate-fade-in">
+            <div class="module-mini-header">
+                <span class="mod-tag">Módulo 8 · Capítulo 5</span>
+                <div class="module-objective">
+                    <span class="objective-icon">🎯</span>
+                    <div>
+                        <p class="objective-title">Objetivo</p>
+                        <p class="objective-text">Decidir cuándo es razonable suponer aditividad y comparar el modelo aditivo con el completo.</p>
+                    </div>
+                </div>
+            </div>
+
+<h3 id="sec-5-3-6">5.3.6 Suposición de no interacción en un modelo de dos factores</h3>
+
+            <p>
+                En algunos contextos, el experimentador puede tener razones teóricas para suponer que la interacción
+                entre los dos factores es despreciable. Si se asume que \((\tau\beta)_{ij} = 0\) para todo \(i, j\),
+                el modelo se reduce a un <strong>modelo aditivo</strong>:
+            </p>
+
+            \[
+            y_{ijk} = \mu + \tau_i + \beta_j + \varepsilon_{ijk}
+            \]
+
+            <p>
+                En este caso, la suma de cuadrados de la interacción \(SS_{AB}\) se absorbe en la suma de cuadrados
+                del error, lo que aumenta los grados de libertad del error y, en principio, puede mejorar la potencia
+                de las pruebas para los efectos principales. Sin embargo, esta decisión debe tomarse con precaución:
+            </p>
+
+            <ul>
+                <li>Si la interacción realmente existe pero se ignora, el modelo es incorrecto y las pruebas para
+                    los efectos principales pueden ser sesgadas.</li>
+                <li>Se recomienda ajustar primero el modelo completo, verificar que la interacción no es significativa,
+                    y solo entonces considerar el modelo aditivo si los grados de libertad del error son muy pocos.</li>
+            </ul>
+
+            <pre><code data-language="R"># ── Modelo aditivo (sin interacción) ──
+modelo_aditivo &lt;- aov(resistencia ~ temperatura + tiempo, data = datos)
+summary(modelo_aditivo)
+
+# Comparar con el modelo completo
+anova(modelo_aditivo, modelo)
+</code></pre>
+
+            <div class="r-output"># summary(modelo_aditivo)
+                            Df Sum Sq Mean Sq F value   Pr(&gt;F)
+                temperatura  2  942.1   471.1  118.94 1.64e-09 ***
+                tiempo       1  272.2   272.2   68.74 9.02e-07 ***
+                Residuals   14   55.4     4.0
+
+                # anova(modelo_aditivo, modelo)
+                Analysis of Variance Table
+
+                Model 1: resistencia ~ temperatura + tiempo
+                Model 2: resistencia ~ temperatura * tiempo
+                  Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)
+                1     14 55.444
+                2     12 41.333  2    14.111 2.0484 0.1717</div>
+
+            <p>
+                La comparación formal de modelos confirma la conclusión de §5.3.2: añadir la interacción no
+                mejora significativamente el ajuste (\(F = 2.05\), \(p = 0.172\), idéntico al F de la fila
+                interacción del modelo completo, como debe ser). En el modelo aditivo, el MSE aumenta ligeramente
+                (de 3.44 a 3.96) porque absorbe los 14.11 de \(SS_{AB}\) junto con los 41.33 de error puro, pero
+                sigue siendo tan pequeño que los efectos principales permanecen altamente significativos.
+            </p>
+
+            <!-- ── 5.3.7 ── -->
+        </div>
+    </template>
+
+    <template id="module-9">
+        <div class="animate-fade-in">
+            <div class="module-mini-header">
+                <span class="mod-tag">Módulo 9 · Capítulo 5</span>
+                <div class="module-objective">
+                    <span class="objective-icon">🎯</span>
+                    <div>
+                        <p class="objective-title">Objetivo</p>
+                        <p class="objective-text">Analizar diseños con n=1 y aplicar la prueba de Tukey de no aditividad.</p>
+                    </div>
+                </div>
+            </div>
+
+<h3 id="sec-5-3-7">5.3.7 Una observación por celda</h3>
+
+            <p>
+                Cuando solo se dispone de una observación por celda (\(n = 1\)), no es posible estimar
+                separadamente los efectos de interacción y el error experimental, ya que ambos comparten los mismos
+                grados de libertad. En este caso, se tienen \(ab\) observaciones y \(ab - 1\) grados de libertad
+                totales; los efectos principales consumen \((a-1) + (b-1)\) grados de libertad, dejando
+                \((a-1)(b-1)\) grados de libertad que corresponden tanto a la interacción como al error.
+            </p>
+
+            <p>
+                Las estrategias usuales para abordar esta situación son:
+            </p>
+
+            <ol>
+                <li><strong>Asumir que no hay interacción:</strong> se usa \(SS_{AB}\) como estimación del error.
+                    El modelo resultante es aditivo. Esta es la estrategia más simple, pero requiere una justificación
+                    razonable.</li>
+                <li><strong>Prueba de Tukey para la no aditividad:</strong> se descompone \(SS_{AB}\) en un componente
+                    de un grado de libertad (la «no aditividad» de Tukey) y un residuo. La prueba evalúa si existe
+                    evidencia de una forma específica de interacción.</li>
+            </ol>
+
+            \[
+            SS_{\text{no adit}} = \frac{\left[ \sum_{i} \sum_{j} y_{ij} \hat{\tau}_i \hat{\beta}_j \right]^2}
+            {\sum_i \hat{\tau}_i^2 \cdot \sum_j \hat{\beta}_j^2}
+            \]
+
+            <pre><code data-language="R"># ── Ejemplo: una observación por celda ──
+
+# Tomamos la primera réplica de cada celda (n = 1 por celda)
+datos_1obs &lt;- data.frame(
+  temperatura = factor(rep(c("150", "170", "190"), each = 2)),
+  tiempo = factor(rep(c("20", "30"), 3)),
+  resistencia = c(28, 35, 40, 50, 44, 51)
+)
+
+# Modelo aditivo (única opción con n=1)
+mod_1obs &lt;- aov(resistencia ~ temperatura + tiempo, data = datos_1obs)
+summary(mod_1obs)
+
+# Prueba de Tukey para no aditividad
+# (implementación manual)
+mu_hat &lt;- mean(datos_1obs$resistencia)
+medias_A1 &lt;- tapply(datos_1obs$resistencia, datos_1obs$temperatura, mean)
+medias_B1 &lt;- tapply(datos_1obs$resistencia, datos_1obs$tiempo, mean)
+
+tau_hat1 &lt;- medias_A1 - mu_hat
+beta_hat1 &lt;- medias_B1 - mu_hat
+
+# Calcular el numerador de SS_nonadd
+numerador &lt;- 0
+for (i in 1:3) {
+  for (j in 1:2) {
+    y_ij &lt;- datos_1obs$resistencia[datos_1obs$temperatura == levels(datos_1obs$temperatura)[i] &
+                                    datos_1obs$tiempo == levels(datos_1obs$tiempo)[j]]
+    numerador &lt;- numerador + y_ij * tau_hat1[i] * beta_hat1[j]
+  }
+}
+
+SS_nonadd &lt;- numerador^2 / (sum(tau_hat1^2) * sum(beta_hat1^2))
+SS_residual_tukey &lt;- sum(residuals(mod_1obs)^2) - SS_nonadd
+
+cat("SS_nonaditividad:", round(SS_nonadd, 3), "(1 g.l.)\n")
+cat("SS_residuo Tukey:", round(SS_residual_tukey, 3), 
+    "(", (3-1)*(2-1) - 1, "g.l.)\n")
+F_tukey &lt;- (SS_nonadd / 1) / (SS_residual_tukey / ((3-1)*(2-1) - 1))
+p_tukey &lt;- 1 - pf(F_tukey, 1, (3-1)*(2-1) - 1)
+cat("F_Tukey:", round(F_tukey, 3), ", p-valor:", round(p_tukey, 4), "\n")
+</code></pre>
+
+            <div class="r-output">            Df Sum Sq Mean Sq F value Pr(&gt;F)
+                temperatura  2  296.3   148.2   98.78 0.0100 *
+                tiempo       1   96.0    96.0   64.00 0.0153 *
+                Residuals    2    3.0     1.5
+
+                SS_nonaditividad: 0.408 (1 g.l.)
+                SS_residuo Tukey: 2.592 ( 1 g.l.)
+                F_Tukey: 0.158 , p-valor: 0.7594</div>
+
+            <p>
+                Bajo el supuesto de aditividad, los efectos principales resultan significativos al 5&nbsp;%. La
+                prueba de Tukey no encuentra evidencia de no aditividad (\(F_{\text{Tukey}} = 0.158\),
+                \(p = 0.76\)): es plausible asumir que \((\tau\beta)_{ij} = 0\). Sin embargo, con solo
+                \((a-1)(b-1) - 1 = 1\) grado de libertad en el residuo, la potencia de la prueba es muy baja
+                y el no rechazo debe interpretarse con cautela. En la práctica, se recomienda fuertemente tener al
+                menos \(n \geq 2\) réplicas por celda.
+            </p>
+
+            <!-- ═══════════════════════════════════════════════════════ -->
+        </div>
+    </template>
+
+    <template id="module-10">
+        <div class="animate-fade-in">
+            <div class="module-mini-header">
+                <span class="mod-tag">Módulo 10 · Capítulo 5</span>
+                <div class="module-objective">
+                    <span class="objective-icon">🎯</span>
+                    <div>
+                        <p class="objective-title">Objetivo</p>
+                        <p class="objective-text">Generalizar el ANOVA factorial a tres o más factores e interpretar interacciones de orden superior.</p>
+                    </div>
+                </div>
+            </div>
+
+<h2 id="sec-5-4">5.4 Diseño factorial general</h2>
+
+            <p>
+                El diseño factorial se extiende naturalmente a más de dos factores. Considérese un experimento con
+                tres factores: \(A\) con \(a\) niveles, \(B\) con \(b\) niveles y \(C\) con \(c\) niveles. El
+                modelo de efectos fijos con tres factores es:
+            </p>
+
+            \[
+            y_{ijkl} = \mu + \tau_i + \beta_j + \gamma_k + (\tau\beta)_{ij} + (\tau\gamma)_{ik}
+            + (\beta\gamma)_{jk} + (\tau\beta\gamma)_{ijk} + \varepsilon_{ijkl}
+            \]
+
+            <p>
+                donde \(\gamma_k\) es el efecto del nivel \(k\) del factor \(C\), y aparecen tres interacciones
+                de dos factores (\(AB\), \(AC\), \(BC\)) y una interacción de tres factores (\(ABC\)). El número
+                total de tratamientos es \(a \times b \times c\), y con \(n\) réplicas se requieren \(abcn\)
+                observaciones.
+            </p>
+
+            <p>
+                La tabla ANOVA se construye de manera análoga, descomponiendo \(SS_T\) en componentes para cada efecto
+                principal, cada interacción de dos factores, la interacción de tres factores y el error:
+            </p>
+
+            \[
+            SS_T = SS_A + SS_B + SS_C + SS_{AB} + SS_{AC} + SS_{BC} + SS_{ABC} + SS_E
+            \]
+
+            <p>
+                En el modelo de efectos fijos, todos los estadísticos \(F\) se construyen dividiendo el cuadrado
+                medio correspondiente entre \(MS_E\) (Montgomery, Tabla&nbsp;5.12). Es necesario que \(n \geq 2\)
+                para disponer de grados de libertad para estimar \(\sigma^2\) cuando el modelo incluye todas las
+                interacciones.
+            </p>
+
+            <h3>Ejemplo: diseño factorial \(2 \times 2 \times 2\)</h3>
+
+            <pre><code data-language="R"># ── Ejemplo: Diseño 2 × 2 × 2 con n = 3 réplicas ──
+# Factores:
+#   A = Tipo de material (M1, M2)
+#   B = Temperatura (baja, alta)
+#   C = Presión (P1, P2)
+# Respuesta: resistencia del producto
+
+set.seed(100)
+
+# Definir efectos (simulación)
+mu &lt;- 50
+tau_A &lt;- c(-3, 3)       # efecto de A
+beta_B &lt;- c(-4, 4)      # efecto de B
+gamma_C &lt;- c(-2, 2)     # efecto de C
+tb_AB &lt;- matrix(c(1, -1, -1, 1), 2, 2)   # interacción AB
+sigma &lt;- 3
+
+# Generar datos
+diseno &lt;- expand.grid(
+  A = factor(c("M1", "M2")),
+  B = factor(c("Baja", "Alta")),
+  C = factor(c("P1", "P2")),
+  rep = 1:3
+)
+
+diseno$y &lt;- mu +
+  tau_A[as.numeric(diseno$A)] +
+  beta_B[as.numeric(diseno$B)] +
+  gamma_C[as.numeric(diseno$C)] +
+  tb_AB[cbind(as.numeric(diseno$A), as.numeric(diseno$B))] +
+  rnorm(nrow(diseno), 0, sigma)
+
+# ANOVA
+modelo_3fact &lt;- aov(y ~ A * B * C, data = diseno)
+summary(modelo_3fact)
+</code></pre>
+
+            <div class="r-output">            Df Sum Sq Mean Sq F value   Pr(&gt;F)
+                A            1  438.5   438.5 166.942 7.00e-10 ***
+                B            1  298.5   298.5 113.642 1.12e-08 ***
+                C            1  116.2   116.2  44.250 5.56e-06 ***
+                A:B          1   15.8    15.8   6.019    0.026 *
+                A:C          1    1.8     1.8   0.688    0.419
+                B:C          1    5.6     5.6   2.129    0.164
+                A:B:C        1    3.1     3.1   1.190    0.291
+                Residuals   16   42.0     2.6
+                ---
+                Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</div>
+
+            <p>
+                En este ejemplo simulado los tres efectos principales son altamente significativos (\(p &lt; 0.001\))
+                y la interacción \(AB\) es significativa al 5&nbsp;% (\(p = 0.026\)), como se esperaba por el
+                diseño de la simulación. Las otras dos interacciones de dos factores (\(AC\), \(BC\)) y la
+                interacción triple \(ABC\) no son significativas, también como se simuló (no se incluyeron
+                en los efectos generadores).
+            </p>
+
+            <div class="nota">
+                <strong>Nota práctica:</strong> A medida que aumenta el número de factores, el número de interacciones
+                crece rápidamente. Con \(k\) factores, existen \(\binom{k}{2}\) interacciones de dos factores,
+                \(\binom{k}{3}\) de tres factores, etc. Para \(k = 4\) factores, hay 11 efectos a estimar
+                (4 principales + 6 de dos factores + 4 de tres factores + 1 de cuatro factores). Esto motiva
+                el uso de diseños factoriales fraccionados (Capítulo 8), que permiten estudiar los efectos
+                principales y las interacciones de bajo orden con menos corridas.
+            </div>
+
+            <div class="ejercicio">
+                <strong>Ejercicio 5.4.1.</strong> Un experimento factorial \(3 \times 2 \times 2\) estudia el efecto
+                del tipo de recubrimiento (3 niveles), la velocidad de aplicación (2 niveles) y el espesor
+                (2 niveles) sobre la dureza de una superficie. Con \(n = 2\) réplicas por celda:
+                (a) ¿Cuántas corridas experimentales se necesitan?
+                (b) ¿Cuántos grados de libertad tiene el error?
+                (c) Escribir el modelo estadístico completo, incluyendo todas las interacciones.
+            </div>
+
+            <div class="ejercicio">
+                <strong>Ejercicio 5.4.2.</strong> Simular en R un diseño factorial \(2 \times 3\) (factores A y B)
+                con \(n = 4\) réplicas, donde solo el factor B y la interacción AB son significativos. Verificar
+                con el ANOVA que los resultados de la simulación son consistentes con los efectos especificados.
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════════ -->
+        </div>
+    </template>
+
+    <template id="module-11">
+        <div class="animate-fade-in">
+            <div class="module-mini-header">
+                <span class="mod-tag">Módulo 11 · Capítulo 5</span>
+                <div class="module-objective">
+                    <span class="objective-icon">🎯</span>
+                    <div>
+                        <p class="objective-title">Objetivo</p>
+                        <p class="objective-text">Ajustar superficies de respuesta de segundo orden e interpretar la curvatura del modelo.</p>
+                    </div>
+                </div>
+            </div>
+
+<h2 id="sec-5-5">5.5 Ajuste de curvas y superficies de respuesta</h2>
+
+            <p>
+                Cuando los niveles de los factores son cuantitativos (numéricos), es natural preguntarse si existe
+                una relación funcional entre los factores y la respuesta. En este contexto, se puede ajustar un
+                <strong>modelo de regresión</strong> que describa la superficie de respuesta. Este enfoque es la base
+                de la <strong>metodología de superficies de respuesta</strong> (RSM), que se estudia con mayor
+                profundidad en capítulos posteriores.
+            </p>
+
+            <p>
+                Para un diseño factorial con dos factores cuantitativos \(x_1\) y \(x_2\), un modelo de segundo
+                orden (cuadrático completo) es:
+            </p>
+
+            \[
+            y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_{12} x_1 x_2
+            + \beta_{11} x_1^2 + \beta_{22} x_2^2 + \varepsilon
+            \]
+
+            <p>
+                Este modelo puede ajustarse mediante mínimos cuadrados ordinarios con la función <code>lm()</code>.
+                Los gráficos de contorno y las superficies tridimensionales permiten visualizar la relación
+                estimada.
+            </p>
+
+            <p>
+                <strong>Restricción importante de los grados de libertad.</strong> Para poder estimar un término
+                cuadrático en un factor cuantitativo, ese factor debe tener <em>al menos tres niveles distintos</em>.
+                Por eso, en el ejemplo de la resistencia a la tracción, se puede ajustar el término cuadrático
+                \(\beta_{11} x_1^2\) en temperatura (3 niveles) pero no \(\beta_{22} x_2^2\) en tiempo (2 niveles):
+                con dos niveles, \(x_2^2\) es perfectamente colineal con \(x_2\) (de hecho, \(x_2^2\) es constante
+                cuando se centran los niveles), por lo que el término no es identificable y R lo marca como
+                <code>NA</code> en el ajuste. Esta es la misma convención que sigue Montgomery (Ejemplo&nbsp;5.5)
+                al ajustar modelos de superficie en factoriales mixtos.
+            </p>
+
+            <h3>Ejemplo: superficie de respuesta para el ejemplo de resistencia</h3>
+
+            <pre><code data-language="R"># ── Ejemplo 5.5: Ajuste de superficie de respuesta ──
+
+# Crear variables numéricas para los factores
+datos$temp_num &lt;- as.numeric(as.character(datos$temperatura))
+datos$tiempo_num &lt;- as.numeric(as.character(datos$tiempo))
+
+# Modelo de segundo orden (sin I(tiempo_num^2): aliasado porque tiempo tiene solo 2 niveles)
+modelo_rs &lt;- lm(resistencia ~ temp_num + tiempo_num +
+                  I(temp_num^2) +
+                  temp_num:tiempo_num,
+                data = datos)
+summary(modelo_rs)
+
+# Crear grilla para predicción
+temp_seq &lt;- seq(145, 195, length.out = 50)
+tiempo_seq &lt;- seq(18, 32, length.out = 50)
+grilla &lt;- expand.grid(temp_num = temp_seq, tiempo_num = tiempo_seq)
+grilla$pred &lt;- predict(modelo_rs, newdata = grilla)
+
+# Gráfico de contorno
+z_mat &lt;- matrix(grilla$pred, nrow = 50, ncol = 50)
+contour(temp_seq, tiempo_seq, z_mat,
+        xlab = "Temperatura (°C)", ylab = "Tiempo (min)",
+        main = "Contornos de Resistencia Predicha (psi)",
+        nlevels = 15, col = "steelblue", labcex = 0.8)
+
+# Superficie 3D
+persp(temp_seq, tiempo_seq, z_mat,
+      xlab = "Temperatura", ylab = "Tiempo", zlab = "Resistencia",
+      main = "Superficie de Respuesta",
+      theta = 30, phi = 25, col = "lightblue",
+      shade = 0.3, border = NA)
+</code></pre>
+
+            <div class="r-output">Coefficients:
+                                     Estimate Std. Error t value Pr(&gt;|t|)
+                (Intercept)         -3.385e+02  7.619e+01  -4.443 0.000663 ***
+                temp_num             3.983e+00  8.663e-01   4.598 0.000500 ***
+                tiempo_num          -7.222e-02  9.902e-01  -0.073 0.942968
+                I(temp_num^2)       -1.083e-02  2.511e-03  -4.315 0.000840 ***
+                temp_num:tiempo_num  5.000e-03  5.798e-03   0.862 0.404124
+                ---
+                Residual standard error: 2.009 on 13 degrees of freedom
+                Multiple R-squared: 0.9587, Adjusted R-squared: 0.946</div>
+
+            <p>
+                El modelo explica el 95.9&nbsp;% de la variabilidad en resistencia. Los términos
+                \(\beta_1\) (lineal de temperatura) y \(\beta_{11}\) (cuadrático de temperatura) son
+                altamente significativos: la respuesta crece con la temperatura pero con <em>curvatura</em>,
+                tal como sugiere la secuencia de medias marginales por temperatura (32.17, 45.00, 49.17), donde
+                el salto de 150 → 170 (+12.8) es mayor que el de 170 → 190 (+4.2).
+            </p>
+
+            <p>
+                El coeficiente lineal de tiempo aparece como no significativo (\(p = 0.94\)) <em>solo aparentemente</em>:
+                como las variables se introdujeron en sus unidades originales (sin centrar), el coeficiente
+                <code>tiempo_num</code> mide la pendiente parcial de tiempo cuando <code>temp_num = 0</code>, valor
+                que está muy fuera del rango experimental (\(150\,°C \le T \le 190\,°C\)). En presencia del término
+                de interacción, esta extrapolación produce un error estándar enorme y un \(p\)-valor poco informativo.
+                El ANOVA de §5.3.2 (que no depende de la parametrización) ya estableció que el efecto principal de
+                tiempo es altamente significativo. La forma <em>correcta</em> de interpretar coeficientes en un
+                modelo de superficie es trabajar con variables <strong>codificadas</strong> a \([-1, +1]\); en ese
+                caso el coeficiente de tiempo recupera su significado y su \(p\)-valor pequeño (véase el
+                Ejercicio&nbsp;5.5.2 y la Solución correspondiente). La interacción \(\beta_{12}\) tampoco es
+                significativa, lo que refuerza la conclusión de §5.3.2.
+            </p>
+
+            <pre><code data-language="R"># ── Comparación con un modelo de primer orden (sin curvatura) ──
+modelo_lineal &lt;- lm(resistencia ~ temp_num + tiempo_num, data = datos)
+summary(modelo_lineal)
+
+# Test de falta de ajuste: ¿justifica añadir los términos de orden superior?
+anova(modelo_lineal, modelo_rs)
+</code></pre>
+
+            <div class="r-output"># summary(modelo_lineal): R^2 = 0.8972, Adj R^2 = 0.8835, sigma_hat = 2.95
+
+                # anova(modelo_lineal, modelo_rs):
+                Analysis of Variance Table
+
+                Model 1: resistencia ~ temp_num + tiempo_num
+                Model 2: resistencia ~ temp_num + tiempo_num + I(temp_num^2) + temp_num:tiempo_num
+                  Res.Df     RSS Df Sum of Sq      F   Pr(&gt;F)
+                1     15 130.556
+                2     13  52.444  2    78.111 9.6811 0.002663 **</div>
+
+            <p>
+                La comparación formal confirma que añadir los términos \(x_1^2\) y \(x_1 x_2\) mejora
+                significativamente el ajuste (\(F = 9.68\), \(p = 0.003\)). El modelo de segundo orden es
+                preferible al lineal para estos datos.
+            </p>
+
+            <div class="nota">
+                <strong>Conexión con RSM:</strong> La metodología de superficies de respuesta (Capítulo 11 de
+                Montgomery) formaliza el proceso de búsqueda del óptimo de la respuesta. Los diseños centrales
+                compuestos y los diseños de Box-Behnken están especialmente diseñados para ajustar modelos
+                cuadráticos de forma eficiente.
+            </div>
+
+            <div class="ejercicio">
+                <strong>Ejercicio 5.5.1.</strong> Considérese un experimento con dos factores cuantitativos:
+                concentración (factor A: 5%, 10%, 15%) y temperatura (factor B: 60°C, 80°C, 100°C), con
+                \(n = 2\) réplicas. Los datos de rendimiento (%) son:
+
+                <table style="margin-top:0.5rem">
+                    <tr>
+                        <th></th>
+                        <th>60°C</th>
+                        <th>80°C</th>
+                        <th>100°C</th>
+                    </tr>
+                    <tr>
+                        <td>5%</td>
+                        <td>45, 48</td>
+                        <td>55, 52</td>
+                        <td>50, 53</td>
+                    </tr>
+                    <tr>
+                        <td>10%</td>
+                        <td>60, 58</td>
+                        <td>72, 70</td>
+                        <td>65, 68</td>
+                    </tr>
+                    <tr>
+                        <td>15%</td>
+                        <td>52, 55</td>
+                        <td>68, 65</td>
+                        <td>60, 62</td>
+                    </tr>
+                </table>
+
+                (a) Ajustar un modelo de segundo orden completo. (b) Determinar si los términos cuadráticos son
+                significativos. (c) Generar el gráfico de contorno del modelo ajustado. (d) Estimar la combinación
+                de concentración y temperatura que maximiza el rendimiento (dentro del rango experimental).
+            </div>
+
+            <div class="ejercicio">
+                <strong>Ejercicio 5.5.2.</strong> Investigar el uso del paquete <code>rsm</code> en R. Ajustar un
+                modelo de segundo orden al ejercicio anterior usando la función <code>rsm()</code> y comparar
+                los resultados con los obtenidos mediante <code>lm()</code>. Usar <code>contour()</code> del
+                paquete <code>rsm</code> para generar los gráficos.
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════════ -->
+        </div>
+    </template>
+
+    <template id="module-12">
+        <div class="animate-fade-in">
+            <div class="module-mini-header">
+                <span class="mod-tag">Módulo 12 · Capítulo 5</span>
+                <div class="module-objective">
+                    <span class="objective-icon">🎯</span>
+                    <div>
+                        <p class="objective-title">Objetivo</p>
+                        <p class="objective-text">Incorporar bloques al diseño factorial para controlar fuentes de variabilidad sistemática.</p>
+                    </div>
+                </div>
+            </div>
+
+<h2 id="sec-5-6">5.6 Bloqueo en un diseño factorial</h2>
+
+            <p>
+                En muchos experimentos factoriales, existen fuentes de variabilidad conocidas (como lotes de materia
+                prima, días de producción, operadores) que pueden afectar la respuesta pero que no son de interés
+                primario. Estas fuentes pueden controlarse mediante el uso de <strong>bloques</strong>, de manera
+                análoga a los diseños en bloques completamente aleatorizados (RCBD) del Capítulo 4.
+            </p>
+
+            <p>
+                En un diseño factorial con bloques, todas las \(ab\) combinaciones de tratamientos se ejecutan dentro
+                de cada bloque. Si se tienen \(n\) bloques (atención al cambio de notación: en §5.3, \(n\) era el
+                número de réplicas <em>por celda</em>; aquí \(n\) es el número de bloques, y dentro de cada bloque
+                cada combinación aparece una sola vez), el modelo para un diseño factorial de dos factores con
+                bloques es:
+            </p>
+
+            \[
+            y_{ijl} = \mu + \tau_i + \beta_j + (\tau\beta)_{ij} + \delta_l + \varepsilon_{ijl}
+            \quad \begin{cases}
+            i = 1, \ldots, a \\
+            j = 1, \ldots, b \\
+            l = 1, \ldots, n
+            \end{cases}
+            \]
+
+            <p>
+                donde \(\delta_l\) es el efecto del bloque \(l\). Se asume que no existe interacción entre los
+                bloques y los tratamientos. La descomposición de \(SS_T\) incluye ahora un componente para bloques:
+            </p>
+
+            \[
+            SS_T = SS_A + SS_B + SS_{AB} + SS_{\text{Bloques}} + SS_E
+            \]
+
+            <p>
+                Los grados de libertad del error se reducen de \(ab(n-1)\) a \((n-1)(ab-1) = abn - ab - n + 1\).
+            </p>
+
+            <h3>Ejemplo: diseño factorial \(3 \times 2\) en bloques</h3>
+
+            <pre><code data-language="R"># ── Ejemplo 5.6: Diseño factorial en bloques ──
+
+# Se añade un factor de bloqueo (lote de materia prima) al ejemplo 5.3.1
+# Cada bloque contiene las 6 combinaciones de tratamientos (3 × 2)
+
+set.seed(123)
+
+# Crear datos con efecto de bloque
+bloque &lt;- factor(rep(1:3, each = 6))
+temperatura_b &lt;- factor(rep(rep(c("150", "170", "190"), each = 2), 3))
+tiempo_b &lt;- factor(rep(c("20", "30"), 9))
+
+# Efectos simulados
+mu_b &lt;- 42
+tau_b &lt;- c(-10, 3, 7)      # efectos de temperatura
+beta_b &lt;- c(-5, 5)         # efectos de tiempo
+delta_b &lt;- c(-3, 0, 3)     # efectos de bloque (lotes)
+sigma_b &lt;- 2
+
+resistencia_b &lt;- numeric(18)
+for (obs in 1:18) {
+  i &lt;- as.numeric(temperatura_b[obs])
+  j &lt;- as.numeric(tiempo_b[obs])
+  l &lt;- as.numeric(bloque[obs])
+  resistencia_b[obs] &lt;- mu_b + tau_b[i] + beta_b[j] + delta_b[l] + 
+                          rnorm(1, 0, sigma_b)
+}
+
+datos_bloq &lt;- data.frame(bloque, temperatura = temperatura_b, 
+                          tiempo = tiempo_b, resistencia = resistencia_b)
+
+# ANOVA con bloque
+modelo_bloq &lt;- aov(resistencia ~ bloque + temperatura * tiempo, 
+                    data = datos_bloq)
+summary(modelo_bloq)
+</code></pre>
+
+            <div class="r-output">                    Df Sum Sq Mean Sq F value   Pr(&gt;F)
+                bloque              2   82.5    41.3   7.217   0.0115 *
+                temperatura         2 1070.8   535.4  93.651 3.34e-07 ***
+                tiempo              1  404.5   404.5  70.766 7.56e-06 ***
+                temperatura:tiempo  2    3.5     1.8   0.307   0.7423
+                Residuals          10   57.2     5.7
+                ---
+                Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</div>
+
+            <p>
+                El efecto del bloque (lote) es significativo (\(p = 0.012\)), lo que confirma que la
+                variabilidad entre lotes merecía ser controlada. Los efectos principales de temperatura y
+                tiempo siguen siendo altamente significativos y la interacción no aparece como significativa,
+                consistente con el diseño de la simulación (en el que sólo los efectos principales y el bloque
+                tenían componente determinística).
+            </p>
+
+            <p>
+                Para cuantificar el beneficio del bloqueo se compara \(MS_E\) del modelo con bloques frente al
+                modelo equivalente sin el término de bloque sobre <em>los mismos datos</em>:
+            </p>
+
+            <pre><code data-language="R"># Mismo dataset, modelo sin bloques
+modelo_sin_bloq &lt;- aov(resistencia ~ temperatura * tiempo, data = datos_bloq)
+summary(modelo_sin_bloq)
+</code></pre>
+
+            <div class="r-output">                    Df Sum Sq Mean Sq F value   Pr(&gt;F)
+                temperatura         2 1070.8   535.4  45.994 2.36e-06 ***
+                tiempo              1  404.5   404.5  34.755 7.31e-05 ***
+                temperatura:tiempo  2    3.5     1.8   0.151    0.862
+                Residuals          12  139.7    11.6</div>
+
+            <p>
+                Ignorando los bloques, \(MS_E\) sube de <strong>5.7 a 11.6</strong>, aproximadamente el doble;
+                los estadísticos \(F\) de los efectos principales caen y los intervalos de confianza serían más
+                anchos. Esto cuantifica el beneficio de haber bloqueado por lote: la variabilidad entre lotes se
+                "absorbe" en el término de bloque y no contamina la estimación del error experimental.
+            </p>
+
+            <div class="nota">
+                <strong>Nota importante:</strong> Al igual que en el RCBD del Capítulo 4, se asume que no existe
+                interacción entre los bloques y los tratamientos. Si esta interacción existiera, el modelo no
+                la puede separar del error. En diseños factoriales con muchos tratamientos, puede ser difícil
+                ejecutar todas las combinaciones dentro de un solo bloque; esto motiva los diseños factoriales
+                <em>confundidos</em> (<em>confounded</em>), donde ciertos efectos de interacción de orden alto
+                se confunden con los bloques (Capítulo 7 de Montgomery).
+            </div>
+
+            <div class="ejercicio">
+                <strong>Ejercicio 5.6.1.</strong> Un diseño factorial \(2 \times 3\) estudia el efecto del tipo de
+                soldadura (2 niveles) y la velocidad de enfriamiento (3 niveles) sobre la resistencia de una unión.
+                El experimento se realiza en 4 bloques (4 operadores diferentes). Cada bloque contiene las 6
+                combinaciones de tratamientos. Los datos son:
+
+                <table style="margin-top:0.5rem">
+                    <tr>
+                        <th>Bloque</th>
+                        <th>S₁V₁</th>
+                        <th>S₁V₂</th>
+                        <th>S₁V₃</th>
+                        <th>S₂V₁</th>
+                        <th>S₂V₂</th>
+                        <th>S₂V₃</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>45</td>
+                        <td>52</td>
+                        <td>48</td>
+                        <td>50</td>
+                        <td>58</td>
+                        <td>53</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>43</td>
+                        <td>50</td>
+                        <td>46</td>
+                        <td>48</td>
+                        <td>55</td>
+                        <td>51</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>47</td>
+                        <td>54</td>
+                        <td>50</td>
+                        <td>52</td>
+                        <td>60</td>
+                        <td>55</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>44</td>
+                        <td>51</td>
+                        <td>47</td>
+                        <td>49</td>
+                        <td>57</td>
+                        <td>52</td>
+                    </tr>
+                </table>
+
+                (a) Realizar el ANOVA con bloques en R. (b) ¿Es significativo el efecto de bloque? (c) Comparar
+                el \(MS_E\) con el que se obtendría ignorando los bloques. (d) Verificar los supuestos del modelo.
+            </div>
+
+            <div class="ejercicio">
+                <strong>Ejercicio 5.6.2.</strong> Explicar por qué en un diseño factorial en bloques no se incluye
+                la interacción bloque × tratamiento en el modelo. ¿Qué consecuencias tendría incluirla?
+                ¿Bajo qué circunstancias podría ser razonable sospechar de esta interacción?
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════════ -->
+            <hr>
+        </div>
+    </template>
+
+    <template id="module-13">
+        <div class="animate-fade-in">
+            <div class="module-mini-header">
+                <span class="mod-tag">Módulo 13 · Capítulo 5</span>
+                <div class="module-objective">
+                    <span class="objective-icon">🎯</span>
+                    <div>
+                        <p class="objective-title">Objetivo</p>
+                        <p class="objective-text">Comparar tu intento con la solución sugerida de cada ejercicio del capítulo.</p>
+                    </div>
+                </div>
+            </div>
+
+<h2 id="soluciones">Soluciones de los ejercicios</h2>
+
+            <p>
+                A continuación se presentan las soluciones de los ejercicios propuestos en las secciones anteriores.
+                Se recomienda al estudiante intentar resolver cada ejercicio antes de consultar la solución.
+            </p>
+
+            <div class="nota">
+                <strong>Soluciones colapsables.</strong> Cada solución está oculta por defecto. Haz clic en su
+                cabecera para desplegarla cuando quieras comparar tu intento con la respuesta sugerida.
+            </div>
+
+            <div class="lista-soluciones">
+
+                <!-- ── Soluciones 5.2 ── -->
+                <h3>Soluciones – Sección 5.2</h3>
+
+                <div class="solucion-parcial">
+                    <div class="solucion-header">
+                        <i class="fas fa-chevron-right"></i>
+                        <span>Solución Ejercicio 5.2.1</span>
+                    </div>
+                    <div class="solucion-content">
+                        (a) Número de combinaciones: \(3 \times 2 \times 4 = 24\).<br>
+                    (b) Total de corridas: \(24 \times 2 = 48\).<br>
+                    (c) Un experimento OFAT parte de una celda base (por ejemplo \(A_1, B_1, C_1\)) y varía
+                    un solo factor a la vez, recorriendo \(a + b + c - 2 = 3 + 2 + 4 - 2 = 7\) celdas en
+                    total. La comparación correcta (Montgomery §5.2) no es el conteo de corridas sino la
+                    <em>varianza</em> del estimador del efecto principal. En el factorial, cada nivel de \(A\)
+                    se observa en \(bc\cdot n = 2\cdot 4\cdot 2 = 16\) unidades, de modo que
+                    \(\mathrm{Var}(\hat A_{\text{factorial}}) = 2\sigma^2/16 = \sigma^2/8\). Para que el
+                    OFAT alcance esa misma precisión, se necesitarían \(n_O = 16\) réplicas por celda, es decir
+                    \(7 \cdot 16 = 112\) corridas totales, más del doble que el factorial.
+                    Además, con OFAT las conclusiones solo son válidas para los niveles fijos elegidos para los
+                    otros dos factores y no pueden estimarse interacciones.
+                </div>
+                </div>
+
+                <div class="solucion-parcial">
+                    <div class="solucion-header">
+                        <i class="fas fa-chevron-right"></i>
+                        <span>Solución Ejercicio 5.2.2</span>
+                    </div>
+                    <div class="solucion-content">
+                        El diseño OFAT varía un solo factor a la vez, manteniendo los demás en un nivel fijo. Si los
+                    factores
+                    interactúan, el efecto observado del factor A dependerá del nivel fijo elegido para B. El OFAT puede
+                    encontrar que A no tiene efecto cuando B está en nivel bajo, pero A podría tener un efecto grande
+                    cuando B está en nivel alto. Solo el diseño factorial explora todas las combinaciones y permite
+                    detectar y cuantificar esta interacción. Un gráfico de interacción con líneas no paralelas ilustra
+                    esta situación: el efecto de A (pendiente de la línea) cambia según el nivel de B.
+
+                    <pre><code data-language="R"># ── Gráfico ilustrativo de interacción ──
+# Ejemplo hipotético con interacción fuerte
+datos_ej &lt;- data.frame(
+  A = factor(rep(c("Bajo", "Alto"), each = 2)),
+  B = factor(rep(c("Bajo", "Alto"), 2)),
+  y = c(20, 22, 25, 40)  # interacción: efecto de A depende de B
+)
+interaction.plot(datos_ej$A, datos_ej$B, datos_ej$y,
+                 type = "b", col = c("blue", "red"),
+                 xlab = "Factor A", ylab = "Respuesta",
+                 trace.label = "Factor B",
+                 main = "Interacción A × B (líneas no paralelas)")
+</code></pre>
+                </div>
+                </div>
+
+                <!-- ── Soluciones 5.3 ── -->
+                <h3>Soluciones – Sección 5.3</h3>
+
+                <div class="solucion-parcial">
+                    <div class="solucion-header">
+                        <i class="fas fa-chevron-right"></i>
+                        <span>Solución Ejercicio 5.3.1</span>
+                    </div>
+                    <div class="solucion-content">
+                        <pre><code data-language="R"># ── Datos del ejercicio ──
+A_fert &lt;- factor(rep(paste0("A", 1:3), each = 6))
+B_var &lt;- factor(rep(rep(paste0("B", 1:3), each = 2), 3))
+rend &lt;- c(23, 25, 30, 28, 19, 21,
+           31, 33, 36, 38, 28, 30,
+           27, 29, 32, 34, 22, 24)
+
+datos_ej531 &lt;- data.frame(A = A_fert, B = B_var, rendimiento = rend)
+
+# (a) ANOVA factorial completo
+mod_531 &lt;- aov(rendimiento ~ A * B, data = datos_ej531)
+summary(mod_531)
+
+# (b) Gráfico de interacción
+interaction.plot(datos_ej531$A, datos_ej531$B, datos_ej531$rendimiento,
+                 type = "b", col = c("blue", "red", "darkgreen"),
+                 xlab = "Fertilizante (A)", ylab = "Rendimiento (g)",
+                 trace.label = "Variedad (B)",
+                 main = "Interacción Fertilizante × Variedad")
+# Interpretación: las líneas son aproximadamente paralelas, lo que sugiere
+# que no hay interacción significativa. El factor A y el factor B tienen
+# efectos principales claros.
+
+# (c) Verificación de supuestos
+qqnorm(residuals(mod_531)); qqline(residuals(mod_531), col = "red")
+shapiro.test(residuals(mod_531))
+plot(fitted(mod_531), residuals(mod_531), pch = 16)
+abline(h = 0, lty = 2, col = "red")
+</code></pre>
+
+                    <div class="r-output">            Df Sum Sq Mean Sq F value   Pr(&gt;F)
+                        A            2 209.33  104.67  52.333 1.11e-05 ***
+                        B            2 244.00  122.00  61.000 5.84e-06 ***
+                        A:B          4   2.67    0.67   0.333    0.849
+                        Residuals    9  18.00    2.00
+
+                        Shapiro-Wilk normality test
+                        W = 0.64232, p-value = 1.83e-05</div>
+
+                    <p>
+                        Los dos efectos principales son altamente significativos
+                        (\(p &lt; 10^{-4}\)) y la interacción no es significativa (\(F = 0.33\), \(p = 0.85\)).
+                        Respecto a los supuestos, Shapiro-Wilk rechaza normalidad formalmente (\(p \approx
+                        10^{-5}\)), pero la causa es la misma que en §5.3.3: con \(n = 2\) réplicas por celda y
+                        respuesta entera, los residuos adoptan únicamente los valores \(\pm 1\), y el estadístico
+                        pierde sentido como prueba de distribución continua. El diseño balanceado hace que la
+                        ANOVA sea robusta a esa discretización.
+                    </p>
+                </div>
+                </div>
+
+                <div class="solucion-parcial">
+                    <div class="solucion-header">
+                        <i class="fas fa-chevron-right"></i>
+                        <span>Solución Ejercicio 5.3.2</span>
+                    </div>
+                    <div class="solucion-content">
+                        <pre><code data-language="R"># ── Parametrización de efectos (suma cero) ──
+options(contrasts = c("contr.sum", "contr.sum"))
+
+mod_efec &lt;- lm(resistencia ~ temperatura * tiempo, data = datos)
+summary(mod_efec)
+
+# Comparar con las estimaciones manuales de la Sección 5.3.4:
+# mu_hat = 42.111
+# tau_hat: -9.944, 2.889, 7.056
+# beta_hat: -3.889, 3.889
+
+cat("Intercepto (mu_hat):", coef(mod_efec)[1], "\n")
+cat("tau_1 y tau_2:", coef(mod_efec)[2:3], "\n")
+cat("tau_3 (por restricción):", -sum(coef(mod_efec)[2:3]), "\n")
+cat("beta_1:", coef(mod_efec)[4], "\n")
+cat("beta_2 (por restricción):", -coef(mod_efec)[4], "\n")
+
+# Restaurar contrasts por defecto
+options(contrasts = c("contr.treatment", "contr.poly"))
+</code></pre>
+                </div>
+                </div>
+
+                <div class="solucion-parcial">
+                    <div class="solucion-header">
+                        <i class="fas fa-chevron-right"></i>
+                        <span>Solución Ejercicio 5.3.3</span>
+                    </div>
+                    <div class="solucion-content">
+                        <pre><code data-language="R"># ── Simulación de potencia para la interacción ──
+set.seed(2024)
+
+a &lt;- 2; b &lt;- 3
+mu &lt;- 50
+tau_sim &lt;- c(-2, 2)
+beta_sim &lt;- c(-3, 0, 3)
+tb_sim &lt;- matrix(c(2, -1, -1, -2, 1, 1), nrow = 2, byrow = TRUE)
+sigma_sim &lt;- 4
+n_vals &lt;- 3:6
+n_sim &lt;- 2000
+
+potencia_AB &lt;- numeric(length(n_vals))
+
+for (idx in seq_along(n_vals)) {
+  n_rep &lt;- n_vals[idx]
+  rechazos &lt;- 0
+  
+  for (s in 1:n_sim) {
+    diseno_s &lt;- expand.grid(A = 1:a, B = 1:b, rep = 1:n_rep)
+    diseno_s$y &lt;- mu + tau_sim[diseno_s$A] + beta_sim[diseno_s$B] +
+                   tb_sim[cbind(diseno_s$A, diseno_s$B)] +
+                   rnorm(nrow(diseno_s), 0, sigma_sim)
+    diseno_s$A &lt;- factor(diseno_s$A)
+    diseno_s$B &lt;- factor(diseno_s$B)
+    
+    mod_s &lt;- aov(y ~ A * B, data = diseno_s)
+    p_AB &lt;- summary(mod_s)[[1]]["A:B", "Pr(>F)"]
+    if (p_AB &lt; 0.05) rechazos &lt;- rechazos + 1
+  }
+  potencia_AB[idx] &lt;- rechazos / n_sim
+}
+
+data.frame(n = n_vals, potencia = round(potencia_AB, 3))
+# El n mínimo para potencia >= 0.80 se lee directamente de la tabla.
+</code></pre>
+
+                    <div class="r-output">  n potencia
+                        1 3    0.206
+                        2 4    0.268
+                        3 5    0.364
+                        4 6    0.430</div>
+
+                    <p>
+                        Con los efectos de interacción especificados y \(\sigma = 4\), ninguno de los valores
+                        evaluados (\(n = 3\) a \(6\)) alcanza una potencia de 0.80; incluso con \(n = 6\) la
+                        potencia estimada es \(\approx 0.43\). Extendiendo la simulación (\(n = 8, 10, 12, 15\))
+                        se obtienen potencias \(\approx 0.55, 0.69, 0.75, 0.84\), de modo que el mínimo para
+                        potencia \(\geq 0.80\) en este escenario es \(n \approx 14\)–\(15\) réplicas por celda.
+                        El estudiante puede verificarlo extendiendo <code>n_vals</code>.
+                    </p>
+                </div>
+                </div>
+
+                <!-- ── Soluciones 5.4 ── -->
+                <h3>Soluciones – Sección 5.4</h3>
+
+                <div class="solucion-parcial">
+                    <div class="solucion-header">
+                        <i class="fas fa-chevron-right"></i>
+                        <span>Solución Ejercicio 5.4.1</span>
+                    </div>
+                    <div class="solucion-content">
+                        (a) Corridas totales: \(3 \times 2 \times 2 \times 2 = 24\).<br>
+                    (b) Grados de libertad del error: \(3 \times 2 \times 2 \times (2 - 1) = 12\).<br>
+                    (c) Modelo completo:
+                    \[
+                    y_{ijkl} = \mu + \alpha_i + \beta_j + \gamma_k + (\alpha\beta)_{ij} + (\alpha\gamma)_{ik}
+                    + (\beta\gamma)_{jk} + (\alpha\beta\gamma)_{ijk} + \varepsilon_{ijkl}
+                    \]
+                    con \(i = 1, 2, 3\); \(j = 1, 2\); \(k = 1, 2\); \(l = 1, 2\), donde \(\alpha_i\) es el efecto
+                    del recubrimiento, \(\beta_j\) es el efecto de la velocidad, \(\gamma_k\) es el efecto del espesor.
+
+                </div>
+                </div>
+
+                <div class="solucion-parcial">
+                    <div class="solucion-header">
+                        <i class="fas fa-chevron-right"></i>
+                        <span>Solución Ejercicio 5.4.2</span>
+                    </div>
+                    <div class="solucion-content">
+                        <pre><code data-language="R"># ── Simulación: solo B y AB significativos ──
+set.seed(100)
+
+a &lt;- 2; b &lt;- 3; n_rep &lt;- 4
+mu_sim &lt;- 30
+tau_nulo &lt;- c(0, 0)               # A NO es significativo
+beta_sig &lt;- c(-5, 0, 5)           # B SÍ es significativo
+tb_sig &lt;- matrix(c(3, 0, -3,      # AB SÍ es significativo
+                    -3, 0, 3), nrow = 2, byrow = TRUE)
+sigma_sim &lt;- 3
+
+dis &lt;- expand.grid(A = 1:a, B = 1:b, rep = 1:n_rep)
+dis$y &lt;- mu_sim + tau_nulo[dis$A] + beta_sig[dis$B] +
+          tb_sig[cbind(dis$A, dis$B)] + rnorm(nrow(dis), 0, sigma_sim)
+dis$A &lt;- factor(dis$A); dis$B &lt;- factor(dis$B)
+
+mod_sim &lt;- aov(y ~ A * B, data = dis)
+summary(mod_sim)
+# Se espera: A no significativo, B significativo, A:B significativo
+</code></pre>
+                </div>
+                </div>
+
+                <!-- ── Soluciones 5.5 ── -->
+                <h3>Soluciones – Sección 5.5</h3>
+
+                <div class="solucion-parcial">
+                    <div class="solucion-header">
+                        <i class="fas fa-chevron-right"></i>
+                        <span>Solución Ejercicio 5.5.1</span>
+                    </div>
+                    <div class="solucion-content">
+                        <pre><code data-language="R"># ── Datos del ejercicio ──
+conc &lt;- rep(c(5, 10, 15), each = 6)
+temp &lt;- rep(rep(c(60, 80, 100), each = 2), 3)
+rendim &lt;- c(45, 48, 55, 52, 50, 53,
+             60, 58, 72, 70, 65, 68,
+             52, 55, 68, 65, 60, 62)
+
+datos_rs &lt;- data.frame(conc = conc, temp = temp, rendimiento = rendim)
+
+# (a) Modelo de segundo orden completo
+mod_rs2 &lt;- lm(rendimiento ~ conc + temp + I(conc^2) + I(temp^2) + conc:temp,
+               data = datos_rs)
+summary(mod_rs2)
+
+# (b) Los términos cuadráticos:
+# Revisar los p-valores de I(conc^2) y I(temp^2)
+# Si p < 0.05, son significativos.
+
+# (c) Gráfico de contorno
+conc_seq &lt;- seq(4, 16, length.out = 50)
+temp_seq &lt;- seq(55, 105, length.out = 50)
+grilla &lt;- expand.grid(conc = conc_seq, temp = temp_seq)
+grilla$pred &lt;- predict(mod_rs2, newdata = grilla)
+z_mat &lt;- matrix(grilla$pred, 50, 50)
+
+contour(conc_seq, temp_seq, z_mat,
+        xlab = "Concentración (%)", ylab = "Temperatura (°C)",
+        main = "Contornos de Rendimiento (%)",
+        nlevels = 12, col = "darkgreen")
+
+# (d) Optimizar dentro del rango experimental
+opt &lt;- grilla[which.max(grilla$pred), ]
+cat("Máximo predicho:", round(max(grilla$pred), 2),
+    "en conc =", round(opt$conc, 1),
+    "y temp =", round(opt$temp, 1), "\n")
+</code></pre>
+
+                    <p>
+                        <strong>Resultados esperados.</strong> El ajuste de <code>lm()</code> da
+                        \(R^2 = 0.954\) y los dos términos cuadráticos son altamente significativos
+                        (\(\hat\beta_{11} \approx -0.403\), \(p < 10^{-6}\); \(\hat\beta_{22} \approx -0.018\),
+                        \(p < 10^{-4}\)), lo que confirma que ambos factores presentan curvatura. La interacción
+                        <code>conc:temp</code> no es significativa (\(p \approx 0.41\)). El máximo predicho dentro
+                        del rango experimental se sitúa cerca de \((\text{conc}\approx 11.2\,\%,\ T \approx 85\,°C)\)
+                        con un rendimiento estimado de \(\approx 71.4\,\%\), consistente con que la celda
+                        \((10\,\%, 80\,°C)\) sea la mejor en los datos observados.
+                    </p>
+                </div>
+                </div>
+
+                <div class="solucion-parcial">
+                    <div class="solucion-header">
+                        <i class="fas fa-chevron-right"></i>
+                        <span>Solución Ejercicio 5.5.2</span>
+                    </div>
+                    <div class="solucion-content">
+                        <pre><code data-language="R"># ── Uso del paquete rsm ──
+# install.packages("rsm")
+library(rsm)
+
+# Codificar las variables
+datos_rs$conc_cod &lt;- coded.data(datos_rs$conc, 
+                                  conc ~ (conc - 10) / 5)
+# Alternativa manual de codificación:
+datos_rs$x1 &lt;- (datos_rs$conc - 10) / 5
+datos_rs$x2 &lt;- (datos_rs$temp - 80) / 20
+
+# Ajustar modelo con rsm
+# Nota: rsm requiere variables codificadas
+mod_rsm &lt;- rsm(rendimiento ~ SO(x1, x2), data = datos_rs)
+summary(mod_rsm)
+
+# Comparar coeficientes con lm() usando variables codificadas
+mod_lm_cod &lt;- lm(rendimiento ~ x1 + x2 + I(x1^2) + I(x2^2) + x1:x2,
+                   data = datos_rs)
+summary(mod_lm_cod)
+# Los coeficientes deben coincidir.
+
+# Gráfico de contorno del paquete rsm
+contour(mod_rsm, ~ x1 + x2, image = TRUE,
+        main = "Superficie de respuesta (paquete rsm)")
+</code></pre>
+                </div>
+                </div>
+
+                <!-- ── Soluciones 5.6 ── -->
+                <h3>Soluciones – Sección 5.6</h3>
+
+                <div class="solucion-parcial">
+                    <div class="solucion-header">
+                        <i class="fas fa-chevron-right"></i>
+                        <span>Solución Ejercicio 5.6.1</span>
+                    </div>
+                    <div class="solucion-content">
+                        <pre><code data-language="R"># ── Datos del ejercicio ──
+bloque_ej &lt;- factor(rep(1:4, each = 6))
+soldadura &lt;- factor(rep(rep(c("S1", "S2"), each = 3), 4))
+velocidad &lt;- factor(rep(c("V1", "V2", "V3"), 8))
+resist_ej &lt;- c(45, 52, 48, 50, 58, 53,
+                43, 50, 46, 48, 55, 51,
+                47, 54, 50, 52, 60, 55,
+                44, 51, 47, 49, 57, 52)
+
+datos_ej561 &lt;- data.frame(bloque = bloque_ej, soldadura, velocidad,
+                           resistencia = resist_ej)
+
+# (a) ANOVA con bloque
+mod_561 &lt;- aov(resistencia ~ bloque + soldadura * velocidad, 
+                data = datos_ej561)
+summary(mod_561)
+
+# (b) Verificar si el bloque es significativo (p-valor de bloque)
+
+# (c) Comparar con modelo sin bloques
+mod_sin_bloq &lt;- aov(resistencia ~ soldadura * velocidad, 
+                      data = datos_ej561)
+cat("MSE con bloques:", 
+    summary(mod_561)[[1]]["Residuals", "Mean Sq"], "\n")
+cat("MSE sin bloques:", 
+    summary(mod_sin_bloq)[[1]]["Residuals", "Mean Sq"], "\n")
+
+# (d) Diagnósticos
+qqnorm(residuals(mod_561)); qqline(residuals(mod_561), col = "red")
+shapiro.test(residuals(mod_561))
+plot(fitted(mod_561), residuals(mod_561), pch = 16)
+abline(h = 0, lty = 2, col = "red")
+</code></pre>
+
+                    <div class="r-output">                    Df Sum Sq Mean Sq F value   Pr(&gt;F)
+                        bloque               3  56.13   18.71     449 6.65e-15 ***
+                        soldadura            1 165.37  165.37    3969  &lt; 2e-16 ***
+                        velocidad            2 220.08  110.04    2641  &lt; 2e-16 ***
+                        soldadura:velocidad  2   0.75    0.38       9   0.0027 **
+                        Residuals           15   0.62    0.04
+
+                        MSE con bloques: 0.0417
+                        MSE sin bloques: 3.1528</div>
+
+                    <p>
+                        El efecto de bloque es altamente significativo (\(p \approx 10^{-14}\)), lo que confirma
+                        que los operadores introdujeron variabilidad sistemática controlada correctamente por el
+                        bloqueo. El \(MS_E\) se reduce drásticamente de 3.15 (sin bloques) a 0.042 (con bloques),
+                        aproximadamente un factor 75 — una reducción que <em>eleva muchísimo la potencia</em> de
+                        las pruebas de tratamiento. Conviene aclarar que un cociente tan extremo es producto de
+                        datos didácticos artificialmente limpios (los efectos de bloque y de tratamiento se
+                        construyeron sin ruido aleatorio observable); en experimentos reales, una reducción
+                        típica al bloquear bien va de un factor 2 a un factor 10. Tanto los efectos principales
+                        como la interacción soldadura × velocidad resultan significativos
+                        (\(F_{AB} = 9\), \(p = 0.003\)), lo que invita a examinar el gráfico de interacción antes
+                        de interpretar los efectos principales.
+                    </p>
+                </div>
+                </div>
+
+                <div class="solucion-parcial">
+                    <div class="solucion-header">
+                        <i class="fas fa-chevron-right"></i>
+                        <span>Solución Ejercicio 5.6.2</span>
+                    </div>
+                    <div class="solucion-content">
+                        La interacción bloque × tratamiento no se incluye porque:
+                    <ol>
+                        <li>Los bloques representan una fuente de variabilidad <em>no controlable</em> que se desea
+                            eliminar,
+                            no un factor de interés experimental. Se asume que el efecto de los tratamientos es el mismo
+                            en todos los bloques (modelo aditivo).</li>
+                        <li>Si se incluyera la interacción bloque × tratamiento, los grados de libertad del error se
+                            reducirían a cero (en un diseño sin réplicas dentro de bloque), haciendo imposible las
+                            pruebas F.</li>
+                        <li>Si se sospecha que la interacción existe (los tratamientos se comportan diferente en
+                            diferentes bloques), se necesitan réplicas dentro de cada celda bloque × tratamiento para
+                            poder estimarla. Esto puede ocurrir, por ejemplo, cuando los bloques representan
+                            ubicaciones geográficas muy diferentes o periodos de tiempo con condiciones cambiantes.</li>
+                    </ol>
+                </div>
+                </div>
+
+            </div><!-- fin lista-soluciones -->
+
+            <!-- ═══════════════════════════════════════════════════════ -->
+        </div>
+    </template>
+
+    <!-- Footer USTA -->
+    <footer class="usta-header mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <i class="fas fa-book-open"></i> Referencias bibliográficas
+            </h3>
+            <ul class="space-y-3 text-white/90 text-sm" style="list-style:none; margin-left:0;">
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1" style="color:#ED1E79;"></i>
+                    <span>Montgomery, D. C. (2017). <em style="color:#FDB913; font-style:italic;">Diseño y Análisis de Experimentos</em> (2.ª ed. en español). Limusa Wiley. <strong style="color:#FDB913;">Capítulo&nbsp;5</strong>.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1" style="color:#ED1E79;"></i>
+                    <span>Box, G. E. P., Hunter, J. S. &amp; Hunter, W. G. (2005). <em style="color:#FDB913; font-style:italic;">Statistics for Experimenters</em> (2nd ed.). Wiley.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1" style="color:#ED1E79;"></i>
+                    <span>Cochran, W. G. &amp; Cox, G. M. (1992). <em style="color:#FDB913; font-style:italic;">Experimental Designs</em> (2nd ed.). Wiley.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-bookmark text-secondary mt-1" style="color:#ED1E79;"></i>
+                    <span>Fisher, R. A. (1971). <em style="color:#FDB913; font-style:italic;">The Design of Experiments</em> (9th ed.). Macmillan.</span>
+                </li>
+            </ul>
+            <div class="mt-6 pt-6 border-t border-white/20 text-center">
+                <p class="text-white font-medium">Material de Estudio — <span style="color:#FDB913;">USTA 2026</span></p>
+                <p class="text-xs mt-1 text-white/60">Diseño de Experimentos &bull; Capítulo&nbsp;5: Diseños Factoriales &bull; Datos simulados con fines pedagógicos &bull; Código R verificado y reproducible</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scrollToTopBtn" aria-label="Volver arriba">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Scripts: navegación modular + bloques VS Code + soluciones colapsables -->
+    <script>
+        // ===== COURSE DATA =====
+        const courseData = {
+            title: "Capítulo 5 — Diseños Factoriales",
+            modules: [
+                { id: 1,  title: "5.1 Definiciones básicas y principios" },
+                { id: 2,  title: "5.2 Ventajas de los diseños factoriales" },
+                { id: 3,  title: "5.3.1 Ejemplo ilustrativo" },
+                { id: 4,  title: "5.3.2 Análisis del modelo de efectos fijos" },
+                { id: 5,  title: "5.3.3 Adecuación del modelo" },
+                { id: 6,  title: "5.3.4 Estimación de parámetros" },
+                { id: 7,  title: "5.3.5 Tamaño de muestra" },
+                { id: 8,  title: "5.3.6 Suposición de no interacción" },
+                { id: 9,  title: "5.3.7 Una observación por celda" },
+                { id: 10, title: "5.4 Diseño factorial general" },
+                { id: 11, title: "5.5 Superficies de respuesta" },
+                { id: 12, title: "5.6 Bloqueo en factorial" },
+                { id: 13, title: "Soluciones de los ejercicios" }
+            ]
+        };
+
+        // ===== STATE =====
+        let currentModuleIndex = 0;
+        const completedModules = new Set();
+
+        // ===== DOM =====
+        const moduleNav   = document.getElementById('module-nav');
+        const contentArea = document.getElementById('content-area');
+
+        // ===== INIT =====
+        function init() {
+            renderNav();
+            // Cargar el módulo indicado por el hash si existe (#mod-N) o el 0 por defecto
+            const hash = (location.hash || '').replace('#mod-', '');
+            const idx = (/^\d+$/.test(hash)) ? Math.max(0, Math.min(courseData.modules.length-1, parseInt(hash,10)-1)) : 0;
+            loadModule(idx);
+        }
+
+        function renderNav() {
+            moduleNav.innerHTML = '';
+            courseData.modules.forEach((mod, index) => {
+                const btn = document.createElement('button');
+                const isActive = index === currentModuleIndex;
+                const isDone   = completedModules.has(index);
+                btn.className = 'sidebar-nav-item' + (isActive ? ' active' : '');
+                btn.innerHTML =
+                    '<span><span class="mod-num">Módulo ' + mod.id + '</span>' + mod.title + '</span>' +
+                    (isDone ? '<span class="check-mark"><i class="fas fa-check"></i></span>' : '');
+                btn.addEventListener('click', () => loadModule(index));
+                moduleNav.appendChild(btn);
+            });
+        }
+
+        function loadModule(index) {
+            currentModuleIndex = index;
+            renderNav();
+
+            const tpl = document.getElementById('module-' + (index + 1));
+            if (!tpl) return;
+
+            contentArea.innerHTML = '';
+            contentArea.appendChild(tpl.content.cloneNode(true));
+
+            // Botones Anterior / Marcar / Siguiente
+            const navFooter = document.createElement('div');
+            navFooter.className = 'module-nav-footer';
+            const lastIdx = courseData.modules.length - 1;
+            navFooter.innerHTML =
+                (index > 0 ?
+                    '<button class="btn-prev" onclick="loadModule(' + (index - 1) + ')">← Anterior</button>'
+                    : '<span></span>') +
+                '<button class="btn-complete" onclick="markComplete(' + index + ')">' +
+                    (completedModules.has(index) ? '✓ Completado' : 'Marcar como completado') +
+                '</button>' +
+                (index < lastIdx ?
+                    '<button class="btn-next" onclick="loadModule(' + (index + 1) + ')">Siguiente →</button>'
+                    : '<span></span>');
+            contentArea.appendChild(navFooter);
+
+            // Sincronizar URL hash
+            history.replaceState(null, '', '#mod-' + (index + 1));
+
+            postRender();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function markComplete(index) {
+            if (!completedModules.has(index)) {
+                completedModules.add(index);
+                renderNav();
+                loadModule(index);
+            }
+        }
+
+        function postRender() {
+            setupCodeBlocks();
+            setupSolucionesParciales();
+            wrapTables();
+            // Re-renderizar MathJax sobre el nuevo contenido
+            if (window.MathJax && MathJax.typesetPromise) {
+                MathJax.typesetPromise([contentArea]).catch(function(err){ console.error(err); });
+            }
+        }
+
+        // ===== Soluciones colapsables =====
+        function setupSolucionesParciales() {
+            contentArea.querySelectorAll('.solucion-header').forEach(function(header) {
+                if (header.dataset.bound === '1') return;
+                header.dataset.bound = '1';
+                header.addEventListener('click', function() {
+                    var content = this.nextElementSibling;
+                    var icon = this.querySelector('i');
+                    if (content.classList.contains('open')) {
+                        content.classList.remove('open');
+                        if (icon) icon.classList.remove('rotated');
+                    } else {
+                        content.classList.add('open');
+                        if (icon) icon.classList.add('rotated');
+                    }
+                });
+            });
+        }
+
+        // ===== Tablas responsive =====
+        function wrapTables() {
+            contentArea.querySelectorAll('table').forEach(function(table) {
+                if (!table.closest('.table-responsive')) {
+                    var wrapper = document.createElement('div');
+                    wrapper.className = 'table-responsive';
+                    table.parentNode.insertBefore(wrapper, table);
+                    wrapper.appendChild(table);
+                }
+            });
+        }
+
+        // ===== Bloques de código estilo VS Code (R) =====
+        function setupCodeBlocks() {
+            var pres = contentArea.querySelectorAll('pre');
+            pres.forEach(function(pre) {
+                if (pre.closest('.sourceCode-wrapper')) return;
+                if (pre.classList && pre.classList.contains('r-output')) return;
+
+                var code = pre.querySelector('code');
+                if (!code) return;
+
+                var lang = code.getAttribute('data-language') || 'R';
+                var fileName = 'analisis_factoriales' + (lang === 'R' ? '.R' : '.txt');
+
+                var wrapper = document.createElement('div');
+                wrapper.className = 'sourceCode-wrapper';
+
+                var titlebar = document.createElement('div');
+                titlebar.className = 'sourceCode-titlebar';
+                titlebar.innerHTML =
+                    '<div class="sourceCode-dots">' +
+                        '<span class="dot-close"></span>' +
+                        '<span class="dot-min"></span>' +
+                        '<span class="dot-max"></span>' +
+                    '</div>' +
+                    '<div class="sourceCode-tab">' +
+                        '<i class="fab fa-r-project tab-icon"></i>' +
+                        '<span>' + fileName + '</span>' +
+                    '</div>' +
+                    '<div class="sourceCode-actions">' +
+                        '<button type="button" onclick="toggleCodeBlock(this)" title="Ocultar/Mostrar">' +
+                            '<i class="fas fa-eye"></i> Ocultar' +
+                        '</button>' +
+                        '<button type="button" onclick="copyCodeBlock(this)" title="Copiar código">' +
+                            '<i class="fas fa-copy"></i> Copiar' +
+                        '</button>' +
+                    '</div>';
+
+                var rawText = code.textContent;
+                code.innerHTML = '';
+                code.textContent = rawText;
+
+                var lines = rawText.split('\n');
+                if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+                var gutterHTML = '';
+                for (var i = 1; i <= lines.length; i++) {
+                    gutterHTML += '<div>' + i + '</div>';
+                }
+                var gutter = document.createElement('div');
+                gutter.className = 'sourceCode-gutter';
+                gutter.innerHTML = gutterHTML;
+
+                var bodyWrapper = document.createElement('div');
+                bodyWrapper.className = 'sourceCode-body';
+
+                if (window.hljs) {
+                    code.classList.add('language-r');
+                    hljs.highlightElement(code);
+                }
+
+                pre.parentNode.insertBefore(wrapper, pre);
+                bodyWrapper.appendChild(gutter);
+                bodyWrapper.appendChild(pre);
+                wrapper.appendChild(titlebar);
+                wrapper.appendChild(bodyWrapper);
+            });
+        }
+
+        function toggleCodeBlock(btn) {
+            var wrapper = btn.closest('.sourceCode-wrapper');
+            var body = wrapper.querySelector('.sourceCode-body');
+            if (body.classList.contains('collapsed')) {
+                body.classList.remove('collapsed');
+                btn.innerHTML = '<i class="fas fa-eye"></i> Ocultar';
+            } else {
+                body.classList.add('collapsed');
+                btn.innerHTML = '<i class="fas fa-eye-slash"></i> Mostrar';
+            }
+        }
+
+        function copyCodeBlock(btn) {
+            var wrapper = btn.closest('.sourceCode-wrapper');
+            var code = wrapper.querySelector('code');
+            if (!code) return;
+            var text = code.textContent || code.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+                var originalHTML = btn.innerHTML;
+                btn.classList.add('copied');
+                btn.innerHTML = '<i class="fas fa-check"></i> Copiado';
+                setTimeout(function() {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = originalHTML;
+                }, 2000);
+            });
+        }
+
+        // ===== Sidebar Toggle =====
+        const sidebarPanel      = document.getElementById('sidebar-panel');
+        const sidebarToggleBtn  = document.getElementById('sidebarToggleBtn');
+        const sidebarToggleIcon = document.getElementById('sidebarToggleIcon');
+        let sidebarOpen = true;
+
+        sidebarToggleBtn.addEventListener('click', () => {
+            sidebarOpen = !sidebarOpen;
+            if (sidebarOpen) {
+                sidebarPanel.classList.remove('collapsed');
+                sidebarToggleIcon.className = 'fas fa-bars text-sm';
+            } else {
+                sidebarPanel.classList.add('collapsed');
+                sidebarToggleIcon.className = 'fas fa-bars text-sm';
+            }
+        });
+
+        // ===== Scroll to Top =====
+        const scrollBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) scrollBtn.classList.add('visible');
+            else scrollBtn.classList.remove('visible');
+        });
+        scrollBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ===== Bootstrap =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pequeño delay para asegurar que MathJax (async) ya se haya inicializado
+            setTimeout(init, 150);
+        });
+    </script>
+
+</body>
+
+</html>
